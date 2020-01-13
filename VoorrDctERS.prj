@@ -1,0 +1,2 @@
+#pragma define(_ERSLinkMode_=>0)
+#pragma define(_ERSDllMode_=>0)

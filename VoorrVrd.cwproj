@@ -1,0 +1,148 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{53C4F69C-F6D0-4557-89A7-29D4CF499522}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>VoorrVrd</RootNamespace>
+    <AssemblyName>VoorrVrd</AssemblyName>
+    <OutputName>VoorrVrd</OutputName>
+    <CWOutputType>Exe</CWOutputType>
+    <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bStringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0%3b_NetTalkDllMode_=&gt;1%3b_NetTalkLinkMode_=&gt;0%3b</DefineConstants>
+    <Model>Dll</Model>
+    <stack_size>16384</stack_size>
+    <CopyCore>False</CopyCore>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <vid>full</vid>
+    <check_stack>True</check_stack>
+    <check_index>True</check_index>
+    <GenerateMap>True</GenerateMap>
+    <line_numbers>True</line_numbers>
+    <warnings>on</warnings>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <vid>off</vid>
+    <check_stack>False</check_stack>
+    <check_index>False</check_index>
+    <OutputPath>Werk</OutputPath>
+    <GenerateMap>True</GenerateMap>
+    <line_numbers>False</line_numbers>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="VoorrDct.cwproj">
+      <Project>{148B4D9D-7E61-422E-B76E-8034DAC73042}</Project>
+      <Name>VoorrDct</Name>
+    </ProjectReference>
+    <ProjectReference Include="VoorrPln.cwproj">
+      <Project>{9A0BC9CB-5F3D-411C-840C-EC207496F394}</Project>
+      <Name>VoorrPln</Name>
+      <Generated>True</Generated>
+    </ProjectReference>
+    <ProjectReference Include="VoorrRpt.cwproj">
+      <Project>{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}</Project>
+      <Name>VoorrRpt</Name>
+      <Generated>True</Generated>
+    </ProjectReference>
+    <ProjectReference Include="VoorrStm.cwproj">
+      <Project>{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}</Project>
+      <Name>VoorrStm</Name>
+      <Generated>True</Generated>
+    </ProjectReference>
+    <FileDriver Include="DOS" />
+    <FileDriver Include="MEMORY" />
+    <FileDriver Include="MSSQL" />
+    <FileDriver Include="TOPSPEED" />
+    <Compile Include="EFOCUS.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd003.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd004.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd008.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd009.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd010.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd011.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd012.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrVrd013.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Library Include="c%25V%25net.lib" />
+    <Library Include="C%25V%25WE%25X%25%25L%25.Lib" />
+    <Library Include="clanet.lib" />
+    <Library Include="CLAWE.Lib" />
+    <Library Include="off.ico" />
+    <Library Include="on.ico" />
+    <None Include="caroot.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="clawe.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="libeay32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="libssl32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="msvcr120.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="ssleay32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+    <None Include="zlibwapi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generated>True</Generated>
+      <ProjectGenerated>True</ProjectGenerated>
+    </None>
+  </ItemGroup>
+  <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
+</Project>

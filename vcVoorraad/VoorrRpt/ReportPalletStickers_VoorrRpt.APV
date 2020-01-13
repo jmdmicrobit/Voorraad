@@ -1,0 +1,1129 @@
+[MODULE]
+NAME 'ReportPalletStickers_VoorrRpt.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME ReportPalletStickers
+PROTOTYPE '(),Long'
+[COMMON]
+FROM ABC Report
+[DATA]
+Progress:Thermometer     BYTE
+!!> GUID('a71d814e-1671-484b-9a9d-6191e5bf842d')
+[SCREENCONTROLS]
+! PROMPT('Loc : Aansturings String:'),USE(?Loc:AansturingsString:Prompt)
+! ENTRY(@s255),USE(Loc:AansturingsString)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:AansturingsString)
+Loc:AansturingsString    STRING(256)
+!!> GUID('dea1e71c-5ef8-41d9-ad0a-4c52ffc81ad9'),PROMPT('Loc : Aansturings String:'),HEADER('Loc : Aansturings String'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Pallet Nummer:'),USE(?Loc:PalletNummer:Prompt),RIGHT
+! ENTRY(@n-14),USE(Loc:PalletNummer),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:PalletNummer),RIGHT(1)
+Loc:PalletNummer         LONG
+!!> GUID('83dbb8fe-8768-4fcb-9615-4d644366b185'),PROMPT('Loc : Pallet Nummer:'),HEADER('Loc : Pallet Nummer'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Aantal Pallets:'),USE(?Loc:AantalPallets:Prompt)
+! ENTRY(@n3),USE(Loc:AantalPallets)
+[REPORTCONTROLS]
+! STRING(@n3),USE(Loc:AantalPallets)
+Loc:AantalPallets        BYTE
+!!> GUID('db077172-924b-47da-9c72-70022768b192'),PROMPT('Loc : Aantal Pallets:'),HEADER('Loc : Aantal Pallets'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Pallet Etiket Printer:'),USE(?Loc:PalletEtiketPrinter:Prompt)
+! ENTRY(@s198),USE(Loc:PalletEtiketPrinter)
+[REPORTCONTROLS]
+! STRING(@s198),USE(Loc:PalletEtiketPrinter)
+Loc:PalletEtiketPrinter  CSTRING(199)
+!!> GUID('8489bab5-efbc-4523-86c6-f431f888a0f4'),PROMPT('Loc : Pallet Etiket Printer:'),HEADER('Loc : Pallet Etiket Printer'),PICTURE(@s198),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Label Length:'),USE(?LOC:LabelLength:Prompt),RIGHT
+! ENTRY(@n_10),USE(LOC:LabelLength),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:LabelLength),RIGHT(1)
+LOC:LabelLength          LONG
+!!> GUID('4ab2e86d-7939-4858-97cb-d71bb6c9a248'),PROMPT('LOC : Label Length:'),HEADER('LOC : Label Length'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Label Length ZPL:'),USE(?LOC:LabelLengthZPL:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:LabelLengthZPL),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:LabelLengthZPL),RIGHT(1)
+LOC:LabelLengthZPL       LONG
+!!> GUID('63a04105-3e71-438e-8203-499bcc70982b'),PROMPT('LOC : Label Length ZPL:'),HEADER('LOC : Label Length ZPL'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Label Positie ZPL:'),USE(?LOC:LabelPositieZPL:Prompt),CENTER
+! ENTRY(@s50),USE(LOC:LabelPositieZPL),DECIMAL
+[REPORTCONTROLS]
+! STRING(@s50),USE(LOC:LabelPositieZPL),DECIMAL
+LOC:LabelPositieZPL      STRING(50)
+!!> GUID('e490eb1c-2817-4389-8522-d1a81d6189ed'),PROMPT('LOC : Label Positie ZPL:'),HEADER('LOC : Label Positie ZPL'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('SAV : Printer:'),USE(?SAV:Printer:Prompt)
+! ENTRY(@s198),USE(SAV:Printer)
+[REPORTCONTROLS]
+! STRING(@s198),USE(SAV:Printer)
+SAV:Printer              CSTRING(199)
+!!> GUID('57e5ec97-9540-46a7-9b54-8dd31573ea14'),PROMPT('SAV : Printer:'),HEADER('SAV : Printer'),PICTURE(@s198),TYPEMODE(INS)
+[FILES]
+[PRIMARY]
+Partij
+[INSTANCE]
+0
+[KEY]
+Par:Partij_PK
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('BreakMgr', 'Default', 'Previewer', 'Process', 'ProgressMgr', |
+  'TargetSelector', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakManagerClass')
+WHEN  ('Default') ('ReportManager')
+WHEN  ('Previewer') ('PrintPreviewClass')
+WHEN  ('Process') ('ProcessClass')
+WHEN  ('ProgressMgr') ('StepClass')
+WHEN  ('TargetSelector') ('ReportTargetSelectorClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('')
+WHEN  ('Default') ('')
+WHEN  ('Previewer') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('StepLongClass')
+WHEN  ('TargetSelector') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 2
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Init {19}PROCEDURE(ProcessClass PC,<<REPORT R>,<<PrintPreviewClass PV>)', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Next {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'OpenReport {13}PROCEDURE(),BYTE,PROC,DERIVED', 'Paused {17}BYTE', 'Timer {18}LONG', |
+  'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+WHEN  ('Process') ('Close {18}PROCEDURE(),DERIVED', 'TakeRecord {13}PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  (Loc:AantalPallets)
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('NO')
+WHEN  ('Default') ('NO')
+WHEN  ('Previewer') ('NO')
+WHEN  ('Process') ('NO')
+WHEN  ('ProgressMgr') ('NO')
+WHEN  ('TargetSelector') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakMgr')
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('Previewer') ('Previewer')
+WHEN  ('Process') ('ThisReport')
+WHEN  ('ProgressMgr') ('ProgressMgr')
+WHEN  ('TargetSelector') ('TargetSelector')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('')
+WHEN  ('Default') ('')
+WHEN  ('Previewer') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('')
+WHEN  ('TargetSelector') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (0)
+WHEN  ('Default') (0)
+WHEN  ('Previewer') (0)
+WHEN  ('Process') (0)
+WHEN  ('ProgressMgr') (0)
+WHEN  ('TargetSelector') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 5
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('Process')TIMES 0
+WHEN  ('ProgressMgr')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 5
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('Process')TIMES 0
+WHEN  ('ProgressMgr')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%WindowMessage DEFAULT  ('')
+%ReportTargetList MULTI LONG  ()
+%ReportTargetListName DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetListClass DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetListObject DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetListCondition DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetHiddenControls MULTI LONG  ()
+%ReportTargetHiddenControl DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%ReportTargetHiddenControlTemplate DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%EnablePrintPreview LONG  (0)
+%ReportDataSource DEFAULT  ('Memory')
+%MDIProgressWindow LONG  (0)
+%ProgressInterval DEFAULT  ('10')
+%EnableQuickScan LONG  (1)
+%RecordFilter DEFAULT  ('')
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%AddConditionalSort MULTI LONG  ()
+%AddConditionalSortCondition DEPEND %AddConditionalSort DEFAULT TIMES 0
+
+%AddConditionalSortFieldsAssisted DEPEND %AddConditionalSort MULTI LONG TIMES 0
+
+%AddConditionalSortFieldAssisted DEPEND %AddConditionalSortFieldsAssisted FIELD TIMES 0
+
+%AddConditionalSortFieldAssistedOrder DEPEND %AddConditionalSortFieldsAssisted DEFAULT TIMES 0
+
+%AddSortDynamicNamed MULTI LONG  ()
+%AddSortFieldDinNameDescription DEPEND %AddSortDynamicNamed DEFAULT TIMES 0
+
+%AddSortFieldsDinName DEPEND %AddSortDynamicNamed MULTI LONG TIMES 0
+
+%AddSortFieldDinName DEPEND %AddSortFieldsDinName FIELD TIMES 0
+
+%AddSortFieldDinNameOrder DEPEND %AddSortFieldsDinName DEFAULT TIMES 0
+
+%AddSortFieldsDinSort MULTI LONG  ()
+%AddSortFieldDinSortDescription DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AddSortFieldDinSort DEPEND %AddSortFieldsDinSort FIELD TIMES 0
+
+%AddSortFieldDinSortOrder DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AdditionalSortWindowTitle DEFAULT  ('Select the Order')
+%AdditionalSortWindowMessage DEFAULT  ('Select the order to process the data.')
+%AdditionalSortWindowOkButtonText DEFAULT  ('&OK')
+%AdditionalSortWindowOkButtonIcon DEFAULT  ('SOK.ICO')
+%AdditionalSortWindowOkButtonCursor DEFAULT  ('')
+%AdditionalSortWindowOkButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowOkButtonMsg DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonTip DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonFlat LONG  (1)
+%AdditionalSortWindowOkButtonSkip LONG  (0)
+%AdditionalSortWindowOkButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowCancelButtonText DEFAULT  ('&Cancel')
+%AdditionalSortWindowCancelButtonIcon DEFAULT  ('SCANCEL.ICO')
+%AdditionalSortWindowCancelButtonCursor DEFAULT  ('')
+%AdditionalSortWindowCancelButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowCancelButtonMsg DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonTip DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonFlat LONG  (1)
+%AdditionalSortWindowCancelButtonSkip LONG  (0)
+%AdditionalSortWindowCancelButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowUpButtonText DEFAULT  ('')
+%AdditionalSortWindowUpButtonIcon DEFAULT  ('SUP.ICO')
+%AdditionalSortWindowUpButtonCursor DEFAULT  ('')
+%AdditionalSortWindowUpButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowUpButtonMsg DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonTip DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonFlat LONG  (1)
+%AdditionalSortWindowUpButtonSkip LONG  (0)
+%AdditionalSortWindowUpButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowDownButtonText DEFAULT  ('')
+%AdditionalSortWindowDownButtonIcon DEFAULT  ('SDOWN.ICO')
+%AdditionalSortWindowDownButtonCursor DEFAULT  ('')
+%AdditionalSortWindowDownButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowDownButtonMsg DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonTip DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonFlat LONG  (1)
+%AdditionalSortWindowDownButtonSkip LONG  (0)
+%AdditionalSortWindowDownButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowChOrdButtonText DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonIcon DEFAULT  ('SCH-ORD.ICO')
+%AdditionalSortWindowChOrdButtonCursor DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonMsg DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonTip DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonFlat LONG  (1)
+%AdditionalSortWindowChOrdButtonSkip LONG  (0)
+%AdditionalSortWindowChOrdButtonJustification DEFAULT  ('Left')
+%ApproxRecordCount DEFAULT  ('')
+%ManuallySetProgressLimits LONG  (0)
+%LowLimit DEFAULT  ('')
+%HighLimit DEFAULT  ('')
+%ReportDataSourceQueueName DEFAULT  ('')
+%UseMRP LONG  (1)
+%ReportTargetOutput DEFAULT  ('Printer')
+%ReportTargetAskWithPrint LONG  (1)
+%ReportTargetOtherOutput DEFAULT  ('')
+%RangeField COMPONENT  ()
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%RuntimeSkipPreview DEFAULT  ('False')
+%InitialZoom DEFAULT  ('No Zoom')
+%AllowUserZooms LONG  (1)
+%InitWindowPosition LONG  (0)
+%WinXPos DEFAULT  ('')
+%WinYPos DEFAULT  ('')
+%WinWidth DEFAULT  ('315')
+%WinHeight DEFAULT  ('200')
+%MaximizePreviewWindow LONG  (0)
+%MDIPreviewer LONG  (0)
+%ProcessBreaks MULTI LONG  ()
+%BreakName DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakLevelCero DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevelBreakNumber DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevel DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakFields DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakField DEPEND %BreakFields FIELD TIMES 0
+
+%BreakTotals DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakTotalTarget DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalType DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalField DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalFieldWeight DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalBasedOn DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalCondition DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalReset DEPEND %BreakTotals LONG TIMES 0
+
+%BreakReportHeaderYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportHeader DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakReportFooterYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportFooter DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldRestoreOnBreak DEPEND %HotFields LONG TIMES 0
+
+%DetailFilter DEPEND %ReportControl DEFAULT TIMES 0
+
+%DetailFilterExclusive DEPEND %ReportControl LONG TIMES 0
+
+%DetailFilterExternal DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('')
+WHEN  ('?Detail') ('')
+WHEN  ('?Loc:AansturingsString') ('')
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Default')
+WHEN  ('?Pause') ('Default')
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('No Special Action')
+WHEN  ('?Pause') ('No Special Action')
+WHEN  ('?Progress:Cancel') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 1
+WHEN  ('?Pause') ()
+
+%ButtonThread DEPEND %Control LONG TIMES 1
+WHEN  ('?Pause') (0)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('25000')
+WHEN  ('?Pause') ('25000')
+WHEN  ('?Progress:Cancel') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?Pause') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 1
+WHEN  ('?Pause') (0)
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('None')
+WHEN  ('?Pause') ('None')
+WHEN  ('?Progress:Cancel') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?Pause') ()
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 3
+WHEN  ('') (1)
+WHEN  ('?Loc:AantalPallets') (1)
+WHEN  ('?Pause') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Pause')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Pause')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Pause')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Pause')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Pause')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Pause')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FirstPage DEFAULT  ('')
+%ReportTargetOpen LONG  (0)
+%HideOutputProgress LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Loc:AantalPallets:Prompt')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %ProcessManagerMethodCodeSection
+[INSTANCES]
+WHEN 'TakeRecord'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5500
+PROPERTY:END
+Loc:AansturingsString = '^XA'
+PRINT(RPT:Detail)
+Loc:AansturingsString = '^LL'&CLIP(LOC:LabelLengthZPL) ! was 816
+PRINT(RPT:Detail)
+Loc:AansturingsString = '^LH2,2'
+PRINT(RPT:Detail)
+Loc:AansturingsString = '^FO1,1^AD,1,1^FD.^FS'
+PRINT(RPT:Detail)
+Loc:AansturingsString = CLIP(LOC:LabelPositieZPL)&'.'&CLIP(Par:PartijID)&'^FS'
+!Loc:AansturingsString = '^FO100,120^AFR,560,200^FD.'&CLIP(Par:PartijID)&'^FS'
+PRINT(RPT:Detail)
+Loc:AansturingsString = '^PQ'&Loc:AantalPallets
+PRINT(RPT:Detail)
+Loc:AansturingsString = '^XZ'
+[END]
+[END]
+WHEN 'Close'
+[INSTANCES]
+WHEN '()'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7500
+PROPERTY:END
+	if SAV:Printer<>''
+		PRINTER{PROPPRINT:Device}=SAV:Printer
+	END
+[END]
+[END]
+[END]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7700
+PROPERTY:END
+db.DebugOut('Printen pallets ' & Par:Pallets & ',' & Par:PalletsGeprint)
+IF Par:Pallets>=Par:PalletsGeprint THEN
+	Loc:AantalPallets=Par:Pallets-Par:PalletsGeprint
+ELSE
+	Loc:AantalPallets=0
+END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7001
+PROPERTY:END
+Loc:PalletEtiketPrinter=GETINI('Printer','PalletEtiket',,'.\Voorraad.ini')
+LOC:LabelLength=GETINI('Printer','LabelLength',104, '.\Voorraad.ini')
+LOC:LabelLengthZPL=ROUND(LOC:LabelLength*8.8173,1)
+LOC:LabelPositieZPL=GETINI('Printer','LabelPositieZPL','^FO100,120^AFR,560,200^FD','.\Voorraad.ini')
+db.DebugOut('LOC:LabelLengthZPL:'&LOC:LabelLengthZPL)
+[END]
+[END]
+WHEN 'OpenReport'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+	SAV:Printer=PRINTER{PROPPRINT:Device}
+	IF Loc:PalletEtiketPrinter<>''
+		PRINTER{PROPPRINT:Device}=Loc:PalletEtiketPrinter
+	End
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME SVReportToPDFSupport SVReportToPDF
+[INSTANCE]
+INSTANCE 4
+OWNER 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('PDFReporter')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReportGenerator')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
+
+%Populate DEFAULT  ('Always')
+%PopulateCondition DEFAULT  ('')
+%OutputNameType DEFAULT  ('Runtime')
+%OutputNameFixed DEFAULT  ('')
+%OutputNameVariable DEFAULT  ('')
+%DocumentTitle DEFAULT  ('CW Report')
+%ApplicationName DEFAULT  ('VoorrRpt')
+%ProgramName DEFAULT  ('ReportPalletStickers')
+%PDFSubject DEFAULT  ('ReportPalletStickers')
+%PDFAuthor DEFAULT  ('')
+%PDFKeywords DEFAULT  ('')
+%PagesAsParentBookmark LONG  (0)
+%UseScanCopyMode LONG  (0)
+%ScanCopyModeRes DEFAULT  ('Original')
+%CompressText LONG  (1)
+%CompressImages LONG  (1)
+%Encryptdoc DEFAULT  ('Never')
+%EncryptDocCondition DEFAULT  ('')
+%PDFPassword DEFAULT  ('')
+%PDFUseVariableAccess LONG  (0)
+%PDFVariableAccess DEFAULT  ('')
+%PDFAccessPrint LONG  (1)
+%PDFAccessModifyContent LONG  (1)
+%PDFAccessCopy LONG  (1)
+%PDFAccessModifyAnnotations LONG  (1)
+%PDFTempControlInstance DEFAULT  ('2')
+%PDFTempReportControl DEFAULT  ('?Loc:AansturingsString')
+%PDFHideControl DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFSkipControl DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFHideControlOnPDF DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFPossibleTextOrigin DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:AansturingsString') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFPossibleBookmarkTextOrigin DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:AansturingsString') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFFieldAction DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFFieldActionType DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('Hyperlink')
+WHEN  ('?Detail') ('Hyperlink')
+WHEN  ('?Loc:AansturingsString') ('Hyperlink')
+
+%PDFAnnotationOrigin DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Loc:AansturingsString') ('Text')
+
+%PDFAnnotationHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFAnnotationDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFPageAction DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('NEXT')
+WHEN  ('?Detail') ('NEXT')
+WHEN  ('?Loc:AansturingsString') ('NEXT')
+
+%PDFTargetCommand DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('notepad.exe')
+WHEN  ('?Detail') ('notepad.exe')
+WHEN  ('?Loc:AansturingsString') ('notepad.exe')
+
+%PDFTargetParameters DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('note.txt')
+WHEN  ('?Detail') ('note.txt')
+WHEN  ('?Loc:AansturingsString') ('note.txt')
+
+%PDFTargetOrigin DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Loc:AansturingsString') ('Text')
+
+%PDFTargetHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFTargetDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkType DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('None')
+WHEN  ('?Detail') ('None')
+WHEN  ('?Loc:AansturingsString') ('None')
+
+%PDFHyperlinkTypeOther DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkTypeOtherDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperLinkBoxed DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFHyperLinkBoxColor DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (255)
+WHEN  ('?Detail') (255)
+WHEN  ('?Loc:AansturingsString') (255)
+
+%PDFBookmark DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFBookmarkOrigin DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Loc:AansturingsString') ('Text')
+
+%PDFBookmarkHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkParent DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFParentBookmark DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('?Detail')
+WHEN  ('?Detail') ('?Detail')
+WHEN  ('?Loc:AansturingsString') ('?Detail')
+
+%PDFUsePDFFont DEPEND %ReportControl LONG TIMES 3
+WHEN  ('') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Loc:AansturingsString') (0)
+
+%PDFOriginalFont DEPEND %ReportControl DEFAULT TIMES 3
+WHEN  ('') ('HELVETICA')
+WHEN  ('?Detail') ('HELVETICA')
+WHEN  ('?Loc:AansturingsString') ('HELVETICA')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReporter')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 3
+OWNER 5
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 2
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC PauseButton
+[INSTANCE]
+INSTANCE 1
+[PROMPTS]
+%PauseText DEFAULT  ('Pause')
+%RestartText DEFAULT  ('Restart')
+%DeferOpen LONG  (1)
+%StartText DEFAULT  ('F2 = Start')
+%MultiStart LONG  (0)
+[WINDOW]
+ProgressWindow WINDOW('Voortgang Palletstickers...'),AT(,,142,77),FONT('Microsoft Sans Serif', |
+          10,,,CHARSET:DEFAULT),DOUBLE,CENTER,GRAY,TIMER(1)
+          PROMPT('Aantal Pallets:'),AT(14,3),USE(?Loc:AantalPallets:Prompt),#ORDINAL(1)
+          ENTRY(@n3),AT(64,2,20,10),USE(Loc:AantalPallets),#ORDINAL(2)
+          PROGRESS,AT(15,34,111,12),USE(Progress:Thermometer),RANGE(0,100),#ORIG(Progress:Thermometer), |
+            #ORDINAL(3)
+          STRING(''),AT(0,22,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString), |
+            #ORDINAL(4)
+          STRING(''),AT(0,48,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText), |
+            #ORDINAL(5)
+          BUTTON('Cancel'),AT(76,60,50,15),USE(?Progress:Cancel),#ORIG(?Progress:Cancel),#ORDINAL(6)
+          BUTTON('Pause'),AT(19,62),USE(?Pause),KEY(F2Key),DEFAULT,#ORIG(?Pause),#SEQ(1),#ORDINAL(7)
+        END
+
+[REPORT]
+Report  REPORT,AT(0,0,7740,10875),PRE(RPT),PAPER(PAPER:A4),FONT(,,,,CHARSET:ANSI),THOUS
+Detail    DETAIL,AT(0,0),USE(?Detail),#ORDINAL(1)
+            STRING(@s255),AT(0,0,7365),USE(Loc:AansturingsString),#ORDINAL(2)
+          END
+        END
+
+[END]

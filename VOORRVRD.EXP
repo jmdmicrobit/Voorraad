@@ -1,0 +1,25 @@
+LIBRARY 'VOORRVRD' GUI
+EXPORTS
+;Start of initialisation function
+  VOORRVRD:INIT@F10ERRORCLASS8INICLASS                    @?
+  VOORRVRD:KILL@F                                         @?
+;End of initialisation functions
+
+;Start of Exported Procedures
+  BROWSEPALLETTEGOEDEN@F                                  @?
+  WIJZIGLOCATIE@Fll                                       @?
+  UPDATEVIEWVOORRAAD@F                                    @?
+  BROWSEVOORRAADVERLOOP@Fsb                               @?
+  WIJZIGLOCATIE_ORGINEEL@Fll                              @?
+  BROWSEPALLETS@F                                         @?
+  BROWSEVOORRAADVERLOOPPERARTIKELCEL@Fsbl                 @?
+  BROWSEPARTIJVOORRAAD_WORDTNIETGEBRUIKT@F                @?
+  BROWSEPARTIJVOORRAADVIEW@F                              @?
+  UPDATEPALLETMUTATIE@Flllll                              @?
+  BROWSEVOORRAADVIEW@F                                    @?
+  UPDATEVOORRAADVERLOOP@F                                 @?
+  BROWSEVOORRAADVERLOOPPERPARTIJ@Fsbl                     @?
+;End of Exported Procedures
+
+
+

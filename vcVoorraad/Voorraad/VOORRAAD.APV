@@ -1,0 +1,80 @@
+[PROGRAM]
+[COMMON]
+FROM ABC ABC
+[EMBED]
+EMBED %ProgramProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+NetRefreshPlanningViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Planning|APlanning|AAPlanning|ViewPlanningPartij|ViewVoorraadPlanning|PlanningInkoop|PlanningVerkoop|PlanningOverboeking|APlanningInkoop|APlanningVerkoop|APlanningOverboeking|Inkoop|AInkoop|Verkoop|AVerkoop|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+NetRefreshVoorraadViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Partij|APartij|Mutatie|AMutatie|ViewVoorraadCelTotaal|AViewVoorraadCelTotaal|ViewVoorraadPartij|AViewVoorraadPartij|AAViewVoorraadPartij|AAAViewVoorraadPartij|AAAAViewVoorraadPartij|ViewVoorraadPlanning|VoorraadVerloop|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+include('VoorraadClassSrc.inc')
+include('GlobalClassSrc.inc')
+[END]
+EMBED %GlobalMap
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+LABEL
+PROPERTY:END
+	INCLUDE('CWUTIL.INC'),ONCE
+
+	MODULE('win32')
+		OMIT('***',_WIDTH32_)
+		FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW
+		***
+
+		COMPILE('***',_WIDTH32_)
+		FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW, NAME('FindWindowA')
+		***
+			
+		SetForegroundWindow(UNSIGNED), SIGNED, PROC, PASCAL
+	END
+
+	NetRefreshPlanningViews()
+	NetRefreshVoorraadViews()
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+! GetComputerName()
+MODULE('Windows API')
+	GetComputerName(*CSTRING,*LONG),BOOL,RAW,PASCAL,NAME('GetComputerNameA'),PROC
+END
+[END]
+EMBED %GlobalData
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('VoorraadClassDef.inc')
+include('GlobalClassDef.inc')
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+! GetComputerName()
+MAX_COMPUTERNAME_LENGTH EQUATE(31)
+ComputerLen LONG(MAX_COMPUTERNAME_LENGTH)
+ComputerName CSTRING(MAX_COMPUTERNAME_LENGTH+1)
+[END]
+[END]
+[END]

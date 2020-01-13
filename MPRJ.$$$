@@ -1,0 +1,80 @@
+#!---------------------------------------------------------------------------
+#! Created by CapeSoft Multi-Proj
+#!---------------------------------------------------------------------------
+#Extension(Activate_VoorrDCT,'Activate VoorrDCT Functions'),Application
+  #SHEET
+    #TAB('General')
+      #PROMPT('This _APP_ uses',DROP('| ')),%TestInApp,Default('')
+    #ENDTAB
+    #TAB('Info')
+    #ENDTAB
+    #TAB('Procedures')
+         #prepare
+         #endprepare
+      #BUTTON('Function'), MULTI(%MPFunctions,  %MPFuncName & ' ' & %MPFuncParmList & ', ' & %MPFuncReturns), INLINE
+        #Prompt('Function:', @s252), %MPFunctionDLL
+        #Prompt('Function cannot be bound', check), %MPFuncCannotBeBound
+        #enable(%MPFuncCannotBeBound=0)
+          #Prompt('Bind to name (no quotes):', @s252), %MPFuncName
+        #endenable
+        #Prompt('Returns:', @s252), %MPFuncReturns
+        #Prompt('Description:', @s252), %MPFuncDesc
+        #Prompt('Parameter list: ', @s252), %MPFuncParmList
+        #Prompt('Parameters: ', @s252), %MPFuncParameters
+        #enable(1=0)
+          #prompt('From Application:',@s252),%MPFuncApplication
+        #endenable
+      #ENDBUTTON
+    #ENDTAB
+  #ENDSHEET
+#!---------------------------------------------------------------------------
+#At(%CustomGlobalDeclarations)
+  #IF((%Target32=1) and (%ApplicationLocalLibrary=0) and (%TestInApp=''))
+    #Project('VrrDct32.Lib')
+  #EndIf
+#EndAt
+#!---------------------------------------------------------------------------
+#At(%GlobalMap)
+  Module('VoorrDCT')                                                  ! Activate_VoorrDCT Template
+    VoorrDct:Init (ErrorClass,INIClass),DLL(dll_mode)   !
+    VoorrDct:Kill (),DLL(dll_mode)                        !
+  End ! Module('VoorrDCT')                                            ! End Of Activate_VoorrDCT Template
+#EndAt
+#!---------------------------------------------------------------------------
+#At(%AfterGlobalIncludes)
+#EndAt
+#!---------------------------------------------------------------------------
+#GlobalData
+#EndGlobalData
+#!---------------------------------------------------------------------------
+#At(%GlobalData)
+ABCInitalised:VoorrDct  Byte        ! placed by Activate_VoorrDCT Template
+#EndAt
+#!---------------------------------------------------------------------------
+#At(%ProgramSetup)
+ #IF(%ProgramExtension='EXE')
+If not ABCInitalised:VoorrDct
+  VoorrDct:Init(GlobalErrors,INIMgr)  ! placed by Activate_VoorrDCT Template
+  ABCInitalised:VoorrDct = 1
+End
+ #ENDIF
+#EndAt
+#At(%ProgramEnd)
+ #IF(%ProgramExtension='EXE')
+If ABCInitalised:VoorrDct
+VoorrDct:Kill                       ! placed by Activate_VoorrDCT Template
+  ABCInitalised:VoorrDct = 0
+End
+ #ENDIF
+#EndAt
+#!---------------------------------------------------------------------------
+#At(%mpLibX )
+%#pragma link ("VrrDct32.Lib")
+#EndAt
+
+#At(%mpDefineX )
+%#pragma define(DependOn:VrrDct32.Prj=>on)
+#EndAt
+#!---------------------------------------------------------------------------
+#!---------------------------------------------------------------------------
+#!---------------------------------------------------------------------------

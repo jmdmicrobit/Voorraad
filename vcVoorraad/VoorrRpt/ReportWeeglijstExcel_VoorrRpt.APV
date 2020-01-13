@@ -1,0 +1,1250 @@
+[MODULE]
+NAME 'ReportWeeglijstExcel_VoorrRpt.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME ReportWeeglijstExcel
+PROTOTYPE '(STRING, LONG)'
+PARAMETERS '(PRM:TypeID, PRM:ID)'
+[COMMON]
+DESCRIPTION 'Weeglijst in Excel'
+FROM ABC Process
+CATEGORY 'Process'
+[DATA]
+Progress:Thermometer     BYTE
+!!> GUID('33146211-3c66-4c0d-bb9a-f3f40c9764db')
+[SCREENCONTROLS]
+! PROMPT('LOC : Type ID:'),USE(?LOC:TypeID:Prompt)
+! ENTRY(@s10),USE(LOC:TypeID)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:TypeID)
+LOC:TypeID               STRING(10)
+!!> GUID('cf71a81f-45a2-45ce-8fd1-c147b8c1ec0c'),PROMPT('LOC : Type ID:'),HEADER('LOC : Type ID'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : ID:'),USE(?LOC:ID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:ID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:ID),RIGHT(1)
+LOC:ID                   LONG
+!!> GUID('fc64c2f9-363c-423c-8cb2-22e602f93da4'),PROMPT('LOC : ID:'),HEADER('LOC : ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Rij:'),USE(?LOC:Rij:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:Rij),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:Rij),RIGHT(1)
+LOC:Rij                  LONG
+!!> GUID('fd3bd65f-7418-457a-b4ce-a4bba4c01558'),PROMPT('LOC : Rij:'),HEADER('LOC : Rij'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Gewicht Tekst:'),USE(?LOC:GewichtTekst:Prompt)
+! ENTRY(@s100),USE(LOC:GewichtTekst)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:GewichtTekst)
+LOC:GewichtTekst         STRING(100)
+!!> GUID('a1c7cabf-2ad4-4093-9efc-f4c8ac8989ab'),PROMPT('LOC : Gewicht Tekst:'),HEADER('LOC : Gewicht Tekst'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Aantal Records:'),USE(?LOC:AantalRecords:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:AantalRecords),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:AantalRecords),RIGHT(1)
+LOC:AantalRecords        LONG
+!!> GUID('06667c82-1f6b-419b-ad69-ba684bc14ed2'),PROMPT('LOC : Aantal Records:'),HEADER('LOC : Aantal Records'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Count Records:'),USE(?LOC:CountRecords:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:CountRecords),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:CountRecords),RIGHT(1)
+LOC:CountRecords         LONG
+!!> GUID('8d572de8-e104-4f7e-a785-8e657603c04f'),PROMPT('LOC : Count Records:'),HEADER('LOC : Count Records'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Adres 1:'),USE(?LOC:Adres1:Prompt)
+! ENTRY(@s100),USE(LOC:Adres1)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:Adres1)
+LOC:Adres1               CSTRING(101)
+!!> GUID('00201fa1-5f06-45e9-94d4-3cc42d757301'),PROMPT('LOC : Adres 1:'),HEADER('LOC : Adres 1'),PICTURE(@s100),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Postcode:'),USE(?LOC:Postcode:Prompt)
+! ENTRY(@s20),USE(LOC:Postcode)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:Postcode)
+LOC:Postcode             CSTRING(21)
+!!> GUID('9a0f2c41-b6da-412c-a781-04307285662a'),PROMPT('Postcode:'),HEADER('Postcode'),PICTURE(@s20),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Plaats:'),USE(?LOC:Plaats:Prompt)
+! ENTRY(@s100),USE(LOC:Plaats)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:Plaats)
+LOC:Plaats               CSTRING(101)
+!!> GUID('d9d0c91f-193a-4bdd-b5c9-dbc639edc4ef'),PROMPT('Plaats:'),HEADER('Plaats'),PICTURE(@s100),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Partij ID:'),USE(?LOC:PartijID:Prompt),CENTER
+! ENTRY(@n-14),USE(LOC:PartijID),REQ,DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:PartijID),DECIMAL
+LOC:PartijID             LONG
+!!> GUID('8523f78d-5970-4d93-9a55-bc7a9669f003'),VALID(NONZERO),PROMPT('LOC : Partij ID:'),HEADER('LOC : Partij ID'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Extern Partijnr:'),USE(?LOC:ExternPartijID:Prompt)
+! ENTRY(@s20),USE(LOC:ExternPartijID)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:ExternPartijID)
+LOC:ExternPartijID       CSTRING(21)
+!!> GUID('781de8fe-7cdf-48da-ba46-5139c3571749'),PROMPT('Extern Partijnr:'),HEADER('Extern Partijnr'),PICTURE(@s20),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Totaal Bruto Gewicht:'),USE(?LOC:TotaalBrutoGewicht:Prompt)
+! ENTRY(@n-13.2),USE(LOC:TotaalBrutoGewicht),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LOC:TotaalBrutoGewicht),DECIMAL(12)
+LOC:TotaalBrutoGewicht   DECIMAL(9,2)
+!!> GUID('91459539-e5ab-4ca7-b9c3-d8a31236e435'),PROMPT('LOC : Totaal Bruto Gewicht:'),HEADER('LOC : Totaal Bruto Gewicht'),PICTURE(@n-13.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('LOC : Totaal Netto Gewicht:'),USE(?LOC:TotaalNettoGewicht:Prompt)
+! ENTRY(@n-13.2),USE(LOC:TotaalNettoGewicht),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LOC:TotaalNettoGewicht),DECIMAL(12)
+LOC:TotaalNettoGewicht   DECIMAL(9,2)
+!!> GUID('85622f23-6796-4640-9d2d-e785a0203d20'),PROMPT('LOC : Totaal Netto Gewicht:'),HEADER('LOC : Totaal Netto Gewicht'),PICTURE(@n-13.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('LOC : Totaal Tarra Gewicht:'),USE(?LOC:TotaalTarraGewicht:Prompt)
+! ENTRY(@n-13.2),USE(LOC:TotaalTarraGewicht),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LOC:TotaalTarraGewicht),DECIMAL(12)
+LOC:TotaalTarraGewicht   DECIMAL(9,2)
+!!> GUID('b875b024-deab-4f8f-9d84-52c06b803a4e'),PROMPT('LOC : Totaal Tarra Gewicht:'),HEADER('LOC : Totaal Tarra Gewicht'),PICTURE(@n-13.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('LOC : First:'),USE(?LOC:First:Prompt)
+! ENTRY(@n3),USE(LOC:First)
+[REPORTCONTROLS]
+! STRING(@n3),USE(LOC:First)
+LOC:First                BYTE
+!!> GUID('995af663-66e6-4dee-a5c0-d4628dc29b32'),PROMPT('LOC : First:'),HEADER('LOC : First'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : NR:'),USE(?LOC:NR:Prompt),RIGHT
+! ENTRY(@n_10),USE(LOC:NR),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:NR),RIGHT(1)
+LOC:NR                   LONG
+!!> GUID('5c050d9b-523a-41ec-85a0-53879e4ede5b'),PROMPT('LOC : NR:'),HEADER('LOC : NR'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Datum Nu:'),USE(?LOC:DatumNu:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:DatumNu),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:DatumNu),RIGHT(1)
+LOC:DatumNu              LONG
+!!> GUID('c09ca8e8-d5d0-49a8-ba0e-40601340f859'),PROMPT('LOC : Datum Nu:'),HEADER('LOC : Datum Nu'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Artikel Totaal:'),USE(?LOC:ArtikelTotaal:Prompt)
+! ENTRY(@s20),USE(LOC:ArtikelTotaal)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:ArtikelTotaal)
+LOC:ArtikelTotaal        QUEUE,PRE(LAT)
+!!> GUID('002a4f1b-b173-43e4-9572-913cdb0d6cae'),PROMPT('LOC : Artikel Totaal:'),HEADER('LOC : Artikel Totaal'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Artikel ID:'),USE(?LAT:ArtikelID:Prompt)
+! ENTRY(@s30),USE(LAT:ArtikelID),REQ
+[REPORTCONTROLS]
+! STRING(@s30),USE(LAT:ArtikelID)
+ArtikelID                  CSTRING(31)
+!!> GUID('9511b592-9ba8-4172-990d-dc4b89791dd1'),VALID(NONZERO),PROMPT('Artikel ID:'),HEADER('Artikel ID'),PICTURE(@s30),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Artikel Oms:'),USE(?LAT:ArtikelOms:Prompt)
+! ENTRY(@s60),USE(LAT:ArtikelOms)
+[REPORTCONTROLS]
+! STRING(@s60),USE(LAT:ArtikelOms)
+ArtikelOms                 CSTRING(61)
+!!> GUID('0cb8e9c5-5758-41b8-a0c9-2cc78952189f'),PROMPT('Artikel Oms:'),HEADER('Artikel Oms'),PICTURE(@s60),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Netto Gewicht:'),USE(?LAT:NettoGewicht:Prompt)
+! ENTRY(@n-13.2),USE(LAT:NettoGewicht),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LAT:NettoGewicht),DECIMAL(12)
+NettoGewicht               DECIMAL(9,2)
+!!> GUID('19db18da-9c1c-453c-8e18-0fffd4118448'),PROMPT('Netto Gewicht:'),HEADER('Netto Gewicht'),PICTURE(@n-13.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Bruto Gewicht:'),USE(?LAT:BrutoGewicht:Prompt)
+! ENTRY(@n-13.2),USE(LAT:BrutoGewicht),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LAT:BrutoGewicht),DECIMAL(12)
+BrutoGewicht               DECIMAL(9,2)
+!!> GUID('97cfec18-07eb-4c29-9bfc-40b23977d60b'),PROMPT('Bruto Gewicht:'),HEADER('Bruto Gewicht'),PICTURE(@n-13.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Tarra Gewicht:'),USE(?LAT:TarraGewicht:Prompt)
+! ENTRY(@n-13.2),USE(LAT:TarraGewicht),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LAT:TarraGewicht),DECIMAL(12)
+TarraGewicht               DECIMAL(9,2)
+!!> GUID('91c82d07-1dff-45c9-9553-72f1f8d326de'),PROMPT('Tarra Gewicht:'),HEADER('Tarra Gewicht'),PICTURE(@n-13.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+                         END
+!!> GUID('82d2fd49-5c8d-455b-bc1c-faf80049dba0')
+[FILES]
+[PRIMARY]
+Planning
+[INSTANCE]
+0
+[KEY]
+Pla:PK_Planning
+[SECONDARY]
+Inkoop Planning
+Verkoop Planning
+[OTHERS]
+PalletSoort
+ARelatie
+ViewArtikel
+RelatieAdres
+Relatie
+Partij
+Mutatie
+Weging
+[PROMPTS]
+%ButtonAction DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('No Special Action')
+WHEN  ('?Progress:Cancel') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('25000')
+WHEN  ('?Progress:Cancel') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('None')
+WHEN  ('?Progress:Cancel') ('None')
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'Process', 'ProgressMgr', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 3
+WHEN  ('Default') ('ReportManager')
+WHEN  ('Process') ('ProcessClass')
+WHEN  ('ProgressMgr') ('StepClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 3
+WHEN  ('Default') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('StepLongClass')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Init {19}PROCEDURE(ProcessClass PC,<<REPORT R>,<<PrintPreviewClass PV>)', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeRecord {13}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 4
+WHEN  ('Default') ('NO')
+WHEN  ('Process') ('NO')
+WHEN  ('ProgressMgr') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 3
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('Process') ('ThisProcess')
+WHEN  ('ProgressMgr') ('ProgressMgr')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('Default') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('Default') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 4
+WHEN  ('Default') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('Default') (0)
+WHEN  ('Process') (0)
+WHEN  ('ProgressMgr') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('ProgressMgr')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('ProgressMgr')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  (1, 2, 3, 4, 5)
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 5
+WHEN  (1) ('LOC:TypeID')
+WHEN  (2) ('PLA:InkoopID')
+WHEN  (3) ('LOC:ID')
+WHEN  (4) ('PLA:VerkoopID')
+WHEN  (5) ('PLA:PlanningID')
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 5
+WHEN  (1) ('Process')
+WHEN  (2) ('WinEvent(WinEvent)')
+WHEN  (3) ('Process')
+WHEN  (4) ('WinEvent(WinEvent)')
+WHEN  (5) ('WinEvent(WinEvent)')
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ReportDataSource DEFAULT  ('File')
+%WindowMessage DEFAULT  ('Exporteren Weeglijst')
+%ProcessAction DEFAULT  ('No record action')
+%UseProcessActionToTitle LONG  (1)
+%RIProcessAction LONG  (0)
+%UseMRP LONG  (1)
+%QueryDelete LONG  (0)
+%MDIProgressWindow LONG  (0)
+%ProgressInterval DEFAULT  ('10')
+%EnableQuickScan LONG  (1)
+%RecordFilter DEFAULT  ('(LOC:TypeID=''Inkoop'' AND PLA:InkoopID=LOC:ID) OR (LOC:TypeID=''Verkoop'' AND PLA:VerkoopID=LOC:ID) OR (LOC:TypeID=''Planning'' AND PLA:PlanningID=LOC:ID)')
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%AddConditionalSort MULTI LONG  ()
+%AddConditionalSortCondition DEPEND %AddConditionalSort DEFAULT TIMES 0
+
+%AddConditionalSortFieldsAssisted DEPEND %AddConditionalSort MULTI LONG TIMES 0
+
+%AddConditionalSortFieldAssisted DEPEND %AddConditionalSortFieldsAssisted FIELD TIMES 0
+
+%AddConditionalSortFieldAssistedOrder DEPEND %AddConditionalSortFieldsAssisted DEFAULT TIMES 0
+
+%AddSortDynamicNamed MULTI LONG  ()
+%AddSortFieldDinNameDescription DEPEND %AddSortDynamicNamed DEFAULT TIMES 0
+
+%AddSortFieldsDinName DEPEND %AddSortDynamicNamed MULTI LONG TIMES 0
+
+%AddSortFieldDinName DEPEND %AddSortFieldsDinName FIELD TIMES 0
+
+%AddSortFieldDinNameOrder DEPEND %AddSortFieldsDinName DEFAULT TIMES 0
+
+%AddSortFieldsDinSort MULTI LONG  ()
+%AddSortFieldDinSortDescription DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AddSortFieldDinSort DEPEND %AddSortFieldsDinSort FIELD TIMES 0
+
+%AddSortFieldDinSortOrder DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AdditionalSortWindowTitle DEFAULT  ('Select the Order')
+%AdditionalSortWindowMessage DEFAULT  ('Select the order to process the data.')
+%AdditionalSortWindowOkButtonText DEFAULT  ('&OK')
+%AdditionalSortWindowOkButtonIcon DEFAULT  ('SOK.ICO')
+%AdditionalSortWindowOkButtonCursor DEFAULT  ('')
+%AdditionalSortWindowOkButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowOkButtonMsg DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonTip DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonFlat LONG  (1)
+%AdditionalSortWindowOkButtonSkip LONG  (0)
+%AdditionalSortWindowOkButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowCancelButtonText DEFAULT  ('&Cancel')
+%AdditionalSortWindowCancelButtonIcon DEFAULT  ('SCANCEL.ICO')
+%AdditionalSortWindowCancelButtonCursor DEFAULT  ('')
+%AdditionalSortWindowCancelButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowCancelButtonMsg DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonTip DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonFlat LONG  (1)
+%AdditionalSortWindowCancelButtonSkip LONG  (0)
+%AdditionalSortWindowCancelButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowUpButtonText DEFAULT  ('')
+%AdditionalSortWindowUpButtonIcon DEFAULT  ('SUP.ICO')
+%AdditionalSortWindowUpButtonCursor DEFAULT  ('')
+%AdditionalSortWindowUpButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowUpButtonMsg DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonTip DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonFlat LONG  (1)
+%AdditionalSortWindowUpButtonSkip LONG  (0)
+%AdditionalSortWindowUpButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowDownButtonText DEFAULT  ('')
+%AdditionalSortWindowDownButtonIcon DEFAULT  ('SDOWN.ICO')
+%AdditionalSortWindowDownButtonCursor DEFAULT  ('')
+%AdditionalSortWindowDownButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowDownButtonMsg DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonTip DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonFlat LONG  (1)
+%AdditionalSortWindowDownButtonSkip LONG  (0)
+%AdditionalSortWindowDownButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowChOrdButtonText DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonIcon DEFAULT  ('SCH-ORD.ICO')
+%AdditionalSortWindowChOrdButtonCursor DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonMsg DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonTip DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonFlat LONG  (1)
+%AdditionalSortWindowChOrdButtonSkip LONG  (0)
+%AdditionalSortWindowChOrdButtonJustification DEFAULT  ('Left')
+%ApproxRecordCount DEFAULT  ('')
+%ManuallySetProgressLimits LONG  (0)
+%LowLimit DEFAULT  ('')
+%HighLimit DEFAULT  ('')
+%RangeField COMPONENT  ()
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%HotFields MULTI LONG  (1, 2, 3)
+%HotField DEPEND %HotFields FIELD TIMES 3
+WHEN  (1) (Pla:PlanningID)
+WHEN  (2) (Pla:VerkoopID)
+WHEN  (3) (Pla:InkoopID)
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 3
+WHEN  (1) (1)
+WHEN  (2) (1)
+WHEN  (3) (1)
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Default')
+WHEN  ('?Progress:Cancel') ('Default')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 2
+WHEN  ('') (1)
+WHEN  ('?Progress:Cancel') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Progress:Thermometer')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7001
+PROPERTY:END
+LOC:TypeID = PRM:TypeID
+LOC:ID = PRM:ID
+
+LOC:GewichtTekst = ''
+
+LOC:AantalRecords = 0
+LOC:CountRecords = 0
+
+FREE(LOC:ArtikelTotaal)
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+! Bepaal het aantal planning-records dat aan de filter voldoet
+! (LOC:TypeID='Inkoop' AND PLA:InkoopID=LOC:ID) OR (LOC:TypeID='Verkoop' AND PLA:VerkoopID=LOC:ID) OR (LOC:TypeID='Planning' AND PLA:PlanningID=LOC:ID)
+CASE LOC:TypeID
+OF 'Inkoop'
+	CLEAR(Pla:Record)
+	PLA:InkoopID = LOC:ID
+	SET(Pla:Planning_FK01, Pla:Planning_FK01)
+	LOOP UNTIL Access:Planning.Next()
+		IF ERROR() OR PLA:InkoopID <> LOC:ID THEN BREAK.
+		LOC:AantalRecords += 1
+	END
+OF 'Verkoop'
+	CLEAR(Pla:Record)
+	PLA:VerkoopID = LOC:ID
+	SET(Pla:Planning_FK02, Pla:Planning_FK02)
+	LOOP UNTIL Access:Planning.Next()
+		IF ERROR() OR PLA:VerkoopID <> LOC:ID THEN BREAK.
+		LOC:AantalRecords += 1
+	END
+OF 'Planning'
+	LOC:AantalRecords = 1
+END
+
+db.DebugOut('AantalRecords: ' & LOC:AantalRecords)
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8001
+PROPERTY:END
+LOC:First = TRUE
+LOC:Rij = 1
+[END]
+[END]
+WHEN 'TakeRecord'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+db.DebugOut('ReportWeeglijstExcel - TakeRecord (Pre) ' & Pla:PlanningID & ', ' & Ver2:VerkoopID & ', ' & Ink:InkoopID)
+Access:Planning.TryFetch(Pla:PK_Planning)
+
+! Ophalen Inkoop
+
+! Ophalen Verkoop
+
+! Ophalen klant
+IF Ver2:VerkoopID <> 0 THEN
+	db.DebugOut('ReportWeeglijstExcel - (Ophalen Klant) ' & Ver2:Klant)	
+	CLEAR(Rel:Record)
+	Rel:RelatieID = Ver2:Klant
+	Access:Relatie.TryFetch(Rel:Relatie_PK)
+
+	LOC:Adres1 = Rel:Adres1
+	LOC:Postcode = Rel:Postcode
+	LOC:Plaats = Rel:Plaats
+	
+	IF Ver2:KlantAlternatiefAdres <> 0 THEN
+		CLEAR(RAD:Record)
+		RAD:ID = Ver2:KlantAlternatiefAdres
+		Access:RelatieAdres.TryFetch(RAD:PK_RelatieAdres)
+		
+		LOC:Adres1 = RAD:Adres1
+		LOC:Postcode = RAD:Postcode
+		LOC:Plaats = RAD:Plaats
+	.
+.
+
+IF Ink:InkoopID <> 0 THEN
+	db.DebugOut('ReportWeeglijstExcel - (Ophalen Leverancier) ' & Ink:Leverancier)	
+	CLEAR(Rel:Record)
+	Rel:RelatieID = Ink:Leverancier
+	Access:Relatie.TryFetch(Rel:Relatie_PK)
+	
+	LOC:Adres1 = Rel:Adres1
+	LOC:Postcode = Rel:Postcode
+	LOC:Plaats = Rel:Plaats
+.
+
+IF LOC:First THEN
+	DO InitExcel
+	DO WeegHeader
+	
+	LOC:First = FALSE
+END
+
+! Mutaties afdrukken van de planningsregel
+found_mutatie# = FALSE
+
+db.DebugOut('Planning-Excel:' & Pla:PlanningID)
+
+LOC:NR = 1
+
+CLEAR(Mut:Record)
+Mut:PlanningID = Pla:PlanningID
+SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+LOOP UNTIL Access:Mutatie.TryNext()
+	IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+	
+	CLEAR(Art:Record)
+	Art:ArtikelID = Mut:ArtikelID
+	Access:ViewArtikel.TryFetch(Art:Artikel_PK)
+	
+	CLEAR(Par:Record)
+	Par:PartijID = Mut:PartijID
+	Access:Partij.TryFetch(Par:Partij_PK)
+	
+	CLEAR(AREL:Record)
+	AREL:RelatieID = Par:Leverancier
+	Access:ARelatie.TryFetch(AREL:Relatie_PK)
+	
+	db.DebugOut('Planning-Excel:' & Pla:PlanningID & '-' & Mut:MutatieID)
+	
+	! Wegingen afdrukken per mutatie
+	found_weging# = FALSE
+	CLEAR(Weg:Record)
+	Weg:MutatieID=Mut:MutatieID
+	SET(Weg:FK_Weging, Weg:FK_Weging)
+	LOOP
+		Access:Weging.TryNext()
+		IF ERROR() OR Weg:MutatieID<>Mut:MutatieID THEN BREAK.
+		
+		found_weging# = TRUE
+		
+		LOC:PartijID = Mut:PartijID
+		LOC:ExternPartijID = Par:ExternPartijnr
+		
+		LAT:ArtikelID = Art:ArtikelID
+		GET(LOC:ArtikelTotaal, +LAT:ArtikelID)
+		IF NOT(ERROR())
+			LAT:BrutoGewicht += Weg:BrutoGewicht
+			LAT:TarraGewicht += Weg:Tarra
+			LAT:NettoGewicht += Weg:NettoGewicht
+			PUT(LOC:ArtikelTotaal, +LAT:ArtikelID)
+		ELSE
+			LAT:ArtikelID = Art:ArtikelID
+			LAT:ArtikelOms = Art:ArtikelOms
+			LAT:BrutoGewicht = Weg:BrutoGewicht
+			LAT:TarraGewicht = Weg:Tarra
+			LAT:NettoGewicht = Weg:NettoGewicht
+			ADD(LOC:ArtikelTotaal, +LAT:ArtikelID)
+		.
+		
+		CLEAR(PalSrt:Record)
+		PalSrt:PalletSoortID = Weg:PalletSoortID
+		Access:PalletSoort.TryFetch(PalSrt:PK_PalletSoort)
+		
+		db.DebugOut('Planning-Excel:' & Pla:PlanningID & '-' & Mut:MutatieID & '-' & Weg:WegingID)
+		
+		DO WeegDetail
+		LOC:NR += 1
+	END
+	
+	IF NOT(found_weging#)
+		CLEAR(Weg:Record)
+		LOC:GewichtTekst = 'Geen weging bij deze mutatie'
+		
+		LOC:PartijID = Mut:PartijID
+		LOC:ExternPartijID = Par:ExternPartijnr
+		
+		DO WeegDetail
+		LOC:GewichtTekst = ''
+	.
+	
+	found_mutatie# = TRUE
+END
+
+! Geen mutaties gevonden
+IF NOT(found_mutatie#)
+	CLEAR(Art:Record)
+	Art:ArtikelID = Pla:ArtikelID
+	Access:ViewArtikel.TryFetch(Art:Artikel_PK)
+	
+	CLEAR(Par:Record)
+	Par:PartijID = Pla:PartijID
+	Access:Partij.TryFetch(Par:Partij_PK)
+	
+	LOC:PartijID = Pla:PartijID
+	LOC:ExternPartijID = Par:ExternPartijnr
+	
+	CLEAR(Weg:Record)
+	LOC:GewichtTekst = 'Geen mutatie bij deze planningsregel'
+	
+	DO WeegDetail
+	
+	LOC:GewichtTekst = ''
+END
+
+LOC:CountRecords += 1
+
+IF LOC:AantalRecords = LOC:CountRecords
+	LOC:TotaalBrutoGewicht = 0
+	LOC:TotaalNettoGewicht = 0
+	LOC:TotaalTarraGewicht = 0
+	IF RECORDS(LOC:ArtikelTotaal) > 0 THEN
+		DO ArtikelWeegHeader
+		
+		LOOP i# = 1 TO RECORDS(LOC:ArtikelTotaal)
+			GET(LOC:ArtikelTotaal, i#)
+			
+			LOC:TotaalBrutoGewicht += LAT:BrutoGewicht
+			LOC:TotaalNettoGewicht += LAT:NettoGewicht
+			LOC:TotaalTarraGewicht += LAT:TarraGewicht
+			
+			DO ArtikelWeegDetail
+		.
+		
+		DO ArtikelWeegFooter
+	END
+	
+	DO KillExcel
+END
+
+db.DebugOut('ReportWeeglijstExcel - TakeRecord (Post) ' & Pla:PlanningID)
+[END]
+[END]
+[END]
+EMBED %ProcedureRoutines
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3240
+PROPERTY:END
+WeegHeader          ROUTINE
+	IF LOC:TypeID = 'Verkoop' THEN
+		Loc:Ole{'Application.Range(A1).Value'}='WEEGLIJST-UIT'
+		LOC:DatumNU = Ver2:Planning_DATE
+	ELSIF LOC:TypeID = 'Inkoop' THEN
+		Loc:Ole{'Application.Range(A1).Value'}='WEEGLIJST-IN'
+		LOC:DatumNU = Ink:Planning_DATE
+	ELSE
+		Loc:Ole{'Application.Range(A1).Value'}='WEEGLIJST'
+		LOC:DatumNU = Pla:Planning_DATE
+	END
+		
+	Do Vet
+	LOC:Rij += 1	
+	
+	Execute  (Loc:DAtumNU%7 )+ 1
+    	Loc:Ole{'Application.Range(A1).Value'}='Zondag '&Format(Loc:DAtumNU,@d6-)
+    	Loc:Ole{'Application.Range(A1).Value'}='Maandag '&Format(Loc:DAtumNU,@d6-)
+    	Loc:Ole{'Application.Range(A1).Value'}='Dinsdag '&Format(Loc:DAtumNU,@d6-)
+    	Loc:Ole{'Application.Range(A1).Value'}='Woensdag '&Format(Loc:DAtumNU,@d6-)
+    	Loc:Ole{'Application.Range(A1).Value'}='Donderdag '&Format(Loc:DAtumNU,@d6-)
+    	Loc:Ole{'Application.Range(A1).Value'}='Vrijdag '&Format(Loc:DAtumNU,@d6-)
+    	Loc:Ole{'Application.Range(A1).Value'}='Zaterdag '&Format(Loc:DAtumNU,@d6-)
+	End
+	Do Vet
+	
+	Loc:Ole{'Application.Range(B3).Value'}='Ven Poultry'
+	Loc:Ole{'Application.Range(B4).Value'}='Stipdonk 46'
+	Loc:Ole{'Application.Range(B5).Value'}='5715 PD Lierop'
+	Loc:Ole{'Application.Range(B6).Value'}='Tel: 0492-537066'
+	Loc:Ole{'Application.Range(B7).Value'}='Fax: 0492-537066'
+	
+	! Ophalen klant
+	IF LOC:TypeID = 'Verkoop' THEN
+		CLEAR(Rel:Record)
+		Rel:RelatieID = Ver2:Klant
+		Access:Relatie.TryFetch(Rel:Relatie_PK)
+		
+    	Loc:Ole{'Application.Range(F2).Value'}=Rel:FirmaNaam
+		Loc:Ole{'Application.Range(F3).Value'}=Rel:Adres1
+		Loc:Ole{'Application.Range(F4).Value'}=Rel:Postcode&' '&Rel:Plaats
+		
+		IF Ver2:KlantAlternatiefAdres <> 0 THEN
+			CLEAR(RAD:Record)
+			RAD:ID = Ver2:KlantAlternatiefAdres
+			Access:RelatieAdres.TryFetch(RAD:PK_RelatieAdres)
+			Loc:Ole{'Application.Range(F3).Value'}=RAD:Adres1
+			Loc:Ole{'Application.Range(F4).Value'}=RAD:Postcode&' '&RAD:Plaats		
+		.
+	ELSIF LOC:TypeID = 'Inkoop' THEN
+		CLEAR(Rel:Record)
+		Rel:RelatieID = Ink:Leverancier
+		Access:Relatie.TryFetch(Rel:Relatie_PK)
+		
+		Loc:Ole{'Application.Range(F2).Value'}=Rel:FirmaNaam
+		Loc:Ole{'Application.Range(F3).Value'}=Rel:Adres1
+		Loc:Ole{'Application.Range(F4).Value'}=Rel:Postcode&' '&Rel:Plaats
+
+	ELSE
+		!CLEAR(Rel:Record)
+		!Rel:RelatieID = Pla:Ver2:Klant
+		!Access:Relatie.TryFetch(Rel:Relatie_PK)
+	END
+
+	LOC:Rij += 8
+	
+   	Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}='Artikel'
+   	Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}='Int. Partijnr.'
+	Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}='Ext. Partijnr.'
+	Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}='Bruto (KG)'
+	Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}='Pallet'
+	Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}='Tarra (KG)'
+	Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}='Netto (KG)'
+
+	Do TrekLijntjes
+	Do Vet
+	
+	LOC:Rij += 1
+	
+	Loc:Ole{'Application.Columns(A:A).ColumnWidth'}=10
+	Loc:Ole{'Application.Columns(B:B).ColumnWidth'}=20
+	Loc:Ole{'Application.Columns(C:C).ColumnWidth'}=30
+	Loc:Ole{'Application.Columns(D:E).ColumnWidth'}=10
+	Loc:Ole{'Application.Columns(F:I).ColumnWidth'}=10
+	EXIT	
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+WeegDetail        ROUTINE
+   	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}=LOC:NR
+   	Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}=Art:ArtikelID
+   	Loc:Ole{'Application.Range(C'&Loc:Rij&').Value'}=Art:ArtikelOms
+   	Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}=LOC:PartijID
+	Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}=LOC:ExternPartijID
+	IF LOC:GewichtTekst = '' THEN
+		Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=Weg:BrutoGewicht
+		Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}=PalSrt:PalletOmschrijving
+		Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}=Weg:Tarra
+		Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}=Weg:NettoGewicht
+	ELSE
+		Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=LOC:GewichtTekst
+	END
+	
+	LOC:Rij += 1
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+ArtikelWeegHeader   ROUTINE
+	LOC:Rij += 1
+	
+   	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Totaal per artikel'
+
+	Do Vet
+	
+	LOC:Rij += 1
+	
+	EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+ArtikelWeegDetail    ROUTINE
+   	Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}=LAT:ArtikelID
+   	Loc:Ole{'Application.Range(C'&Loc:Rij&').Value'}=LAT:ArtikelOms
+	Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}=''
+   	Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}=''
+	Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=LAT:BrutoGewicht
+	Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}=LAT:TarraGewicht
+	Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}=LAT:NettoGewicht
+	
+	LOC:Rij += 1
+	
+	EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+ArtikelWeegFooter   ROUTINE
+   	Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}=''
+   	Loc:Ole{'Application.Range(C'&Loc:Rij&').Value'}=''
+   	Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}=''
+	Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}='Totaal:'
+	Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=LOC:TotaalBrutoGewicht
+	Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}=LOC:TotaalTarraGewicht
+	Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}=LOC:TotaalNettoGewicht
+	
+	DO Vet
+	
+	LOC:Rij += 1
+	EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+InitExcel           ROUTINE
+	db.DebugOut('ReportWeeglijst - InitExcel (Pre)')
+	GlobalClass.InitExcelOle()
+	db.DebugOut('ReportWeeglijst - InitExcel (Post: InitExcelOle2)')	
+	GlobalClass.MaakExcel('')
+	db.DebugOut('ReportWeeglijst - InitExcel (Post: MaakExcel) - ' & LOC:Ole)	
+
+	LOC:Rij = 1
+	
+KillExcel           ROUTINE
+	Loc:Ole{'Cells.Select'}
+	Loc:Ole{'Application.Selection.Font.Name'} = 'Ariel'
+	Loc:Ole{'Application.Selection.Font.Size'} = 11
+	
+	Loc:Ole{'Application.Rows(1:'&Loc:Rij&').AutoFit'}
+	Loc:Ole{'Application.ActiveSheet.PageSetup.Zoom'} = 60 != Loc:Ole{'Application.ActiveSheet.PageSetup.BlackAndWhite'}!
+	Loc:Ole{'Application.ActiveSheet.PageSetup.Orientation'} = 2 != Landscape
+	Loc:Ole{'Application.ActiveSheet.PageSetup.TopMargin'} = 30 != Points (1/72 inch
+	Loc:Ole{'Application.ActiveSheet.PageSetup.BottomMargin'} = 30 != Points (1/72 inch
+	Loc:Ole{'Application.ActiveSheet.PageSetup.LeftMargin'} = 30 != Points (1/72 inch
+	Loc:Ole{'Application.ActiveSheet.PageSetup.RightMargin'} = 30 != Points (1/72 inch
+	
+	Loc:Ole{'Application.Visible'}=true ! nu pas excel laten zien
+	Loc:Ole{'Application.ActiveWindow.SelectedSheets.PrintPreview'}
+	!LOC:ExcelMacroFile = CLIP(GETINI('Excel', 'MacroXLS',,'.\Voorraad.ini'))
+	
+	!Loc:Ole{'Application.Workbooks.Open('&CLIP(LOC:ExcelMacroFile)&')'}
+	
+	!pos# = INSTRING('\', CLIP(LOC:ExcelMacroFile), -1, LEN(CLIP(LOC:ExcelMacroFile)))
+	!Loc:Ole{'Application.Run('&CLIP(SUB(CLIP(LOC:ExcelMacroFile), pos# + 1, LEN(CLIP(LOC:ExcelMacroFile)) - pos#)) & '!Macro1)'}
+	
+TrekLijntjes            Routine
+	  Loc:Ole{'Application.Range(A'&Loc:Rij&':I'&Loc:Rij&').Select'}
+	  Loc:Ole{'Application.Selection.Borders(9).Weight'}=2 ! xlEdgeBottom
+      Loc:Ole{'Application.Selection.Borders(10).Weight'}=2 ! xlEdgeRight
+      Loc:Ole{'Application.Selection.Borders(7).Weight'}=2 ! xlEdgeLeft
+      Loc:Ole{'Application.Selection.Borders(8).Weight'}=2 ! xlEdgeTop
+      Loc:Ole{'Application.Selection.Borders(11).Weight'}=2 ! xlInsideVertical
+!      ?Ole{'Application.Selection.Borders(12).Weight'}=2 ! xlInsideHorizontal
+
+! [Priority 4000]
+Vet                     Routine
+	  Loc:Ole{'Application.Range(A'&Loc:Rij&':I'&Loc:Rij&').Font.Bold'}=True
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 4
+OWNER 5
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (1)
+%locCloseDownWhenWindowClosesSet LONG  (1)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 3
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[WINDOW]
+ProgressWindow WINDOW('Process Planning'),AT(,,142,59),FONT('MS Sans Serif',8,,FONT:regular, |
+          CHARSET:DEFAULT),DOUBLE,CENTER,GRAY,TIMER(1)
+          PROGRESS,AT(15,15,111,12),USE(Progress:Thermometer),RANGE(0,100),#ORIG(Progress:Thermometer), |
+            #ORDINAL(1)
+          STRING(''),AT(0,3,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString), |
+            #ORDINAL(2)
+          STRING(''),AT(0,30,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText), |
+            #ORDINAL(3)
+          BUTTON('Cancel'),AT(46,42,49,15),USE(?Progress:Cancel),LEFT,ICON('WACANCEL.ICO'), |
+            FLAT,HIDE,MSG('Cancel Process'),TIP('Cancel Process'),#ORIG(?Progress:Cancel), |
+            #ORDINAL(4)
+        END
+
+[END]

@@ -1,0 +1,3 @@
+  MODULE('VOORRAAD004.CLW')
+SourceCheckVersie      PROCEDURE
+  END

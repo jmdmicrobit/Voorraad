@@ -1,0 +1,4258 @@
+[MODULE]
+NAME 'ReportCMR_VoorrRpt.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME ReportCMR
+PROTOTYPE '(LONG)'
+PARAMETERS '(PRM:PlanningID)'
+[COMMON]
+FROM ABC Report
+[DATA]
+Progress:Thermometer     BYTE
+!!> GUID('b9f104a0-07e1-466d-9b4b-b4cf9b2a7d6e')
+[SCREENCONTROLS]
+! PROMPT('Loc : Artikel Q:'),USE(?Loc:ArtikelQ:Prompt)
+! ENTRY(@s20),USE(Loc:ArtikelQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:ArtikelQ)
+Loc:ArtikelQ             QUEUE,PRE(LAQ)
+!!> GUID('ecffe300-1b67-4566-99fb-f46fcc7bb88f'),PROMPT('Loc : Artikel Q:'),HEADER('Loc : Artikel Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Artikel ID:'),USE(?LAQ:ArtikelID:Prompt)
+! ENTRY(@s30),USE(LAQ:ArtikelID)
+[REPORTCONTROLS]
+! STRING(@s30),USE(LAQ:ArtikelID)
+ArtikelID                  CSTRING(31)
+!!> GUID('f35dbf6f-58b8-46e7-a7d3-379dedb2549c'),PROMPT('Artikel ID:'),HEADER('Artikel ID'),PICTURE(@s30),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Verpakking Omschrijving:'),USE(?LAQ:VerpakkingOmschrijving:Prompt)
+! ENTRY(@s50),USE(LAQ:VerpakkingOmschrijving)
+[REPORTCONTROLS]
+! STRING(@s50),USE(LAQ:VerpakkingOmschrijving)
+VerpakkingOmschrijving     CSTRING(51)
+!!> GUID('a88bbc92-1571-4c73-8648-0f6dadd25f10'),PROMPT('Verpakking Omschrijving:'),HEADER('Verpakking Omschrijving'),PICTURE(@s50),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Artikel Oms:'),USE(?LAQ:ArtikelOms:Prompt)
+! ENTRY(@s60),USE(LAQ:ArtikelOms)
+[REPORTCONTROLS]
+! STRING(@s60),USE(LAQ:ArtikelOms)
+ArtikelOms                 CSTRING(61)
+!!> GUID('acb8c957-0d1d-4813-b340-e04428cf6117'),PROMPT('Artikel Oms:'),HEADER('Artikel Oms'),PICTURE(@s60),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Bruto KG:'),USE(?LAQ:BrutoKG:Prompt),CENTER
+! ENTRY(@n-13.2),USE(LAQ:BrutoKG),DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LAQ:BrutoKG),DECIMAL
+BrutoKG                    DECIMAL(7,2)
+!!> GUID('afe64d92-378d-4786-a30e-ff678eabde0f'),PROMPT('Bruto KG:'),HEADER('Bruto KG'),PICTURE(@n-13.2),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?LAQ:NettoKG:Prompt),CENTER
+! ENTRY(@n-13.2),USE(LAQ:NettoKG),DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(LAQ:NettoKG),DECIMAL
+NettoKG                    DECIMAL(7,2)
+!!> GUID('6ee2a6d3-2e43-44df-b58e-f9f339d411bb'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-13.2),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Gewogen:'),USE(?LAQ:Gewogen:Prompt)
+! ENTRY(@n3),USE(LAQ:Gewogen)
+[REPORTCONTROLS]
+! STRING(@n3),USE(LAQ:Gewogen)
+Gewogen                    BYTE
+!!> GUID('3d178f2f-5e68-4667-a2d2-24981e6a72a3'),PROMPT('Gewogen:'),HEADER('Gewogen'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Pallets:'),USE(?LAQ:Pallets:Prompt),CENTER
+! ENTRY(@n-14),USE(LAQ:Pallets),DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LAQ:Pallets),DECIMAL
+Pallets                    LONG
+!!> GUID('f105ea0c-8b75-4025-9c89-c0e179ed8b55'),PROMPT('Pallets:'),HEADER('Pallets'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Partijnr:'),USE(?LAQ:Partijnr:Prompt)
+! ENTRY(@n-14),USE(LAQ:Partijnr),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LAQ:Partijnr),RIGHT(1)
+Partijnr                   LONG
+!!> GUID('92758092-aa85-4afb-b816-b6677f13ec2c'),PROMPT('Partijnr:'),HEADER('Partijnr'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('ecc21936-198c-4c5c-acbb-8394309d01bb')
+[SCREENCONTROLS]
+! PROMPT('LOC : Planning ID:'),USE(?LOC:PlanningID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:PlanningID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:PlanningID),RIGHT(1)
+LOC:PlanningID           LONG
+!!> GUID('56869609-4ba4-48d4-b959-aa2468244ae0'),PROMPT('LOC : Planning ID:'),HEADER('LOC : Planning ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Extra Documenten:'),USE(?LOC:ExtraDocumenten:Prompt)
+! ENTRY(@s255),USE(LOC:ExtraDocumenten)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:ExtraDocumenten)
+LOC:ExtraDocumenten      STRING(255)
+!!> GUID('e2afa9ab-c2aa-4599-94d0-4586ca0a6884'),PROMPT('LOC : Extra Documenten:'),HEADER('LOC : Extra Documenten'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Artikel:'),USE(?Loc:Artikel:Prompt)
+! ENTRY(@s255),USE(Loc:Artikel)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:Artikel)
+Loc:Artikel              STRING(1200)
+!!> GUID('0543728f-745d-4fc3-abde-0476a1e7c26d'),PROMPT('Loc : Artikel:'),HEADER('Loc : Artikel'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Artikel Bepaald:'),USE(?LOC:ArtikelBepaald:Prompt),CENTER
+! ENTRY(@s255),USE(LOC:ArtikelBepaald),DECIMAL
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:ArtikelBepaald),DECIMAL
+LOC:ArtikelBepaald       CSTRING(1201)
+!!> GUID('7ef89882-d7b6-409a-baca-ff677865cfc6'),PROMPT('LOC : Artikel Bepaald:'),HEADER('LOC : Artikel Bepaald'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Artikel Wide:'),USE(?LOC:ArtikelWide:Prompt)
+! ENTRY(@s255),USE(LOC:ArtikelWide)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:ArtikelWide)
+LOC:ArtikelWide          STRING(1200)
+!!> GUID('455ab036-e9d4-42d6-9e85-d6fb9e3cabe2'),PROMPT('LOC : Artikel Wide:'),HEADER('LOC : Artikel Wide'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Expediteur:'),USE(?Loc:Expediteur:Prompt)
+! ENTRY(@s255),USE(Loc:Expediteur)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:Expediteur)
+Loc:Expediteur           CSTRING(1001)
+!!> GUID('5a0e526c-2821-4696-a5c8-3d9f807ff9d4'),PROMPT('Loc : Expediteur:'),HEADER('Loc : Expediteur'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Geadresseerde:'),AT(0,0,0,0),USE(?Loc:Geadresseerde:Prompt)
+! ENTRY(@s100),AT(0,0,0,0),USE(Loc:Geadresseerde)
+[REPORTCONTROLS]
+! STRING(@s100),USE(Loc:Geadresseerde)
+Loc:Geadresseerde        CSTRING(101)
+!!> GUID('22ccad0c-73bf-41a8-b565-48cf2f8ccde7'),PROMPT('Loc : Geadresseerde:'),HEADER('Loc : Geadresseerde'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Aflevering Adres:'),USE(?Loc:AfleveringAdres:Prompt)
+! ENTRY(@s255),USE(Loc:AfleveringAdres)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:AfleveringAdres)
+Loc:AfleveringAdres      STRING(600)
+!!> GUID('3f466998-6a58-421b-86a9-e88da70ab5b8'),PROMPT('Loc : Aflevering Adres:'),HEADER('Loc : Aflevering Adres'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Afkomst Adres:'),USE(?Loc:AfkomstAdres:Prompt)
+! ENTRY(@s255),USE(Loc:AfkomstAdres)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:AfkomstAdres)
+Loc:AfkomstAdres         STRING(600)
+!!> GUID('9c32de77-8fc2-4784-a616-c97728fe0aad'),PROMPT('Loc : Afkomst Adres:'),HEADER('Loc : Afkomst Adres'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Instructie:'),USE(?LOC:Instructie:Prompt)
+! ENTRY(@s255),USE(LOC:Instructie)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:Instructie)
+LOC:Instructie           STRING(600)
+!!> GUID('cb34bfa6-1fd0-4fc9-bde7-c240e9540747'),PROMPT('LOC : Instructie:'),HEADER('LOC : Instructie'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Afleverings Plaats:'),USE(?LOC:AfleveringsPlaats:Prompt)
+! ENTRY(@s250),USE(LOC:AfleveringsPlaats)
+[REPORTCONTROLS]
+! STRING(@s250),USE(LOC:AfleveringsPlaats)
+LOC:AfleveringsPlaats    STRING(250)
+!!> GUID('d23f1f71-1f7d-484b-8f27-7b9bee92e16a'),PROMPT('LOC : Afleverings Plaats:'),HEADER('LOC : Afleverings Plaats'),PICTURE(@s250),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Opgemaakt Te:'),USE(?LOC:OpgemaaktTe:Prompt)
+! ENTRY(@s255),USE(LOC:OpgemaaktTe)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:OpgemaaktTe)
+LOC:OpgemaaktTe          STRING(300)
+!!> GUID('b76e8407-a096-46d7-ad58-72136f7a4aa7'),PROMPT('LOC : Opgemaakt Te:'),HEADER('LOC : Opgemaakt Te'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Handtekening Stempel Afzender:'),USE(?LOC:HandtekeningStempelAfzender:Prompt)
+! ENTRY(@s255),USE(LOC:HandtekeningStempelAfzender)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:HandtekeningStempelAfzender)
+LOC:HandtekeningStempelAfzender STRING(300)
+!!> GUID('fcfde9ac-0473-4e47-b609-665890760623'),PROMPT('LOC : Handtekening Stempel Afzender:'),HEADER('LOC : Handtekening Stempel Afzender'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Kenteken:'),USE(?LOC:Kenteken:Prompt)
+! ENTRY(@s255),USE(LOC:Kenteken)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:Kenteken)
+LOC:Kenteken             STRING(255)
+!!> GUID('35e03b8f-9e98-41fd-bdd5-2a7a85b0191e'),PROMPT('LOC : Kenteken:'),HEADER('LOC : Kenteken'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Frankeringsvoorschrift:'),USE(?LOC:Frankeringsvoorschrift:Prompt)
+! ENTRY(@s255),USE(LOC:Frankeringsvoorschrift)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:Frankeringsvoorschrift)
+LOC:Frankeringsvoorschrift STRING(255)
+!!> GUID('79cf2f6a-fc0d-45ef-8110-dd5ff19e0cb0'),PROMPT('LOC : Frankeringsvoorschrift:'),HEADER('LOC : Frankeringsvoorschrift'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Transporteur:'),USE(?LOC:Transporteur:Prompt)
+! ENTRY(@s255),USE(LOC:Transporteur)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:Transporteur)
+LOC:Transporteur         STRING(255)
+!!> GUID('b2f24b49-beff-4b82-8184-acebd87d854d'),PROMPT('LOC : Transporteur:'),HEADER('LOC : Transporteur'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Transporteur Extra:'),USE(?LOC:TransporteurExtra:Prompt)
+! ENTRY(@s255),USE(LOC:TransporteurExtra)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:TransporteurExtra)
+LOC:TransporteurExtra    STRING(255)
+!!> GUID('6bcd9689-0e1e-4959-ab1c-d33fbf9fb31f'),PROMPT('LOC : Transporteur Extra:'),HEADER('LOC : Transporteur Extra'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Opmerkingen Vervoerder:'),USE(?LOC:OpmerkingenVervoerder:Prompt)
+! ENTRY(@s255),USE(LOC:OpmerkingenVervoerder)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:OpmerkingenVervoerder)
+LOC:OpmerkingenVervoerder STRING(255)
+!!> GUID('726798b2-9f2c-4c48-a146-fcfb9c0983f8'),PROMPT('LOC : Opmerkingen Vervoerder:'),HEADER('LOC : Opmerkingen Vervoerder'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Speciale Overeenkomst:'),USE(?LOC:SpecialeOvereenkomst:Prompt)
+! ENTRY(@s255),USE(LOC:SpecialeOvereenkomst)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:SpecialeOvereenkomst)
+LOC:SpecialeOvereenkomst STRING(255)
+!!> GUID('2534d06f-b26d-45e5-97ae-6f50ec012a6d'),PROMPT('LOC : Speciale Overeenkomst:'),HEADER('LOC : Speciale Overeenkomst'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : CMRP rinter:'),USE(?Loc:CMRPrinter:Prompt),CENTER
+! ENTRY(@s198),USE(Loc:CMRPrinter),DECIMAL
+[REPORTCONTROLS]
+! STRING(@s198),USE(Loc:CMRPrinter),DECIMAL
+Loc:CMRPrinter           CSTRING(199)
+!!> GUID('f5b33f5b-5d90-4a11-b7d3-ece7d907cb1a'),PROMPT('Loc : CMRP rinter:'),HEADER('Loc : CMRP rinter'),PICTURE(@s198),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('SAV : Printer:'),USE(?SAV:Printer:Prompt)
+! ENTRY(@s198),USE(SAV:Printer)
+[REPORTCONTROLS]
+! STRING(@s198),USE(SAV:Printer)
+SAV:Printer              CSTRING(199)
+!!> GUID('aaf96e50-bc33-4a8a-ba13-2594e664f12c'),PROMPT('SAV : Printer:'),HEADER('SAV : Printer'),PICTURE(@s198),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('SAV : Paper Bin:'),USE(?SAV:PaperBin:Prompt)
+! ENTRY(@n-14),USE(SAV:PaperBin),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(SAV:PaperBin),RIGHT(1)
+SAV:PaperBin             LONG
+!!> GUID('de99e20a-f7d0-4faa-842f-12dff13227c5'),PROMPT('SAV : Paper Bin:'),HEADER('SAV : Paper Bin'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! CHECK('Loc : Is Truck Clear:'),USE(Loc:IsTruckClear)
+[REPORTCONTROLS]
+! CHECK('Loc : Is Truck Clear:'),USE(Loc:IsTruckClear)
+Loc:IsTruckClear         BYTE
+!!> GUID('718f9bc3-70bb-4452-b165-8143b4d91e98'),VALID(BOOLEAN),PROMPT('Loc : Is Truck Clear:'),HEADER('Loc : Is Truck Clear'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! CHECK('Loc : Is Packing Goods OK:'),USE(Loc:IsPackingGoodsOK)
+[REPORTCONTROLS]
+! CHECK('Loc : Is Packing Goods OK:'),USE(Loc:IsPackingGoodsOK)
+Loc:IsPackingGoodsOK     BYTE
+!!> GUID('ba5011a3-1c88-4fd8-a053-2d32b5bfa008'),VALID(BOOLEAN),PROMPT('Loc : Is Packing Goods OK:'),HEADER('Loc : Is Packing Goods OK'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! CHECK('Loc : ISD river Dressed Correctly:'),USE(Loc:ISDriverDressedCorrectly)
+[REPORTCONTROLS]
+! CHECK('Loc : ISD river Dressed Correctly:'),USE(Loc:ISDriverDressedCorrectly)
+Loc:ISDriverDressedCorrectly BYTE
+!!> GUID('7e0de6f5-80a7-47ca-aef6-69496186e33c'),VALID(BOOLEAN),PROMPT('Loc : ISD river Dressed Correctly:'),HEADER('Loc : ISD river Dressed Correctly'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! CHECK('Loc : EC Labels On The Goods:'),USE(Loc:EC_LabelsOnTheGoods)
+[REPORTCONTROLS]
+! CHECK('Loc : EC Labels On The Goods:'),USE(Loc:EC_LabelsOnTheGoods)
+Loc:EC_LabelsOnTheGoods  BYTE
+!!> GUID('9ad8d0ba-6ad9-41be-bfe3-ad589cbf9761'),VALID(BOOLEAN),PROMPT('Loc : EC Labels On The Goods:'),HEADER('Loc : EC Labels On The Goods'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 1:'),USE(?LOC:PalletSoort1:Prompt)
+! ENTRY(@s10),USE(LOC:PalletSoort1)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:PalletSoort1)
+LOC:PalletSoort1         STRING(10)
+!!> GUID('87b642bd-6dc8-4803-af28-5e7e9b23d8d6'),PROMPT('LOC : Pallet Soort 1:'),HEADER('LOC : Pallet Soort 1'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 5:'),USE(?LOC:PalletSoort5:Prompt)
+! ENTRY(@s10),USE(LOC:PalletSoort5)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:PalletSoort5)
+LOC:PalletSoort5         STRING(10)
+!!> GUID('6254a5a2-1551-4144-b66a-78f8791fa5fd'),PROMPT('LOC : Pallet Soort 5:'),HEADER('LOC : Pallet Soort 5'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 3:'),USE(?LOC:PalletSoort3:Prompt)
+! ENTRY(@s10),USE(LOC:PalletSoort3)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:PalletSoort3)
+LOC:PalletSoort3         STRING(10)
+!!> GUID('ba5d47e3-2ffa-4012-af3e-57ae826536ab'),PROMPT('LOC : Pallet Soort 3:'),HEADER('LOC : Pallet Soort 3'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 6:'),USE(?LOC:PalletSoort6:Prompt)
+! ENTRY(@s10),USE(LOC:PalletSoort6)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:PalletSoort6)
+LOC:PalletSoort6         STRING(10)
+!!> GUID('7c9bcc13-a0f7-43e6-94b6-a6ae8b416949'),PROMPT('LOC : Pallet Soort 6:'),HEADER('LOC : Pallet Soort 6'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 1 OUT:'),USE(?LOC:PalletSoort1_OUT:Prompt),RIGHT
+! ENTRY(@n-14.),USE(LOC:PalletSoort1_OUT),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14.),USE(LOC:PalletSoort1_OUT),RIGHT(1)
+LOC:PalletSoort1_OUT     LONG
+!!> GUID('d891eacc-e764-4699-b18b-0bbe072d60f1'),PROMPT('LOC : Pallet Soort 1 OUT:'),HEADER('LOC : Pallet Soort 1 OUT'),PICTURE(@n-14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 2 OUT:'),USE(?LOC:PalletSoort2_OUT:Prompt),RIGHT
+! ENTRY(@n14.),USE(LOC:PalletSoort2_OUT),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n14.),USE(LOC:PalletSoort2_OUT),RIGHT(1)
+LOC:PalletSoort2_OUT     LONG
+!!> GUID('111e9406-d06b-466a-8700-7971ea315a5d'),PROMPT('LOC : Pallet Soort 2 OUT:'),HEADER('LOC : Pallet Soort 2 OUT'),PICTURE(@n14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 3 IN:'),USE(?LOC:PalletSoort3_IN:Prompt),RIGHT
+! ENTRY(@n14.),USE(LOC:PalletSoort3_IN),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n14.),USE(LOC:PalletSoort3_IN),RIGHT(1)
+LOC:PalletSoort3_IN      LONG
+!!> GUID('547c0de7-0a02-4818-95d5-dd66d64fc8ea'),PROMPT('LOC : Pallet Soort 3 IN:'),HEADER('LOC : Pallet Soort 3 IN'),PICTURE(@n14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 3 OUT:'),USE(?LOC:PalletSoort3_OUT:Prompt),RIGHT
+! ENTRY(@n14.),USE(LOC:PalletSoort3_OUT),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n14.),USE(LOC:PalletSoort3_OUT),RIGHT(1)
+LOC:PalletSoort3_OUT     LONG
+!!> GUID('feb304fc-7be5-40a3-9f7a-ac47fecab4fe'),PROMPT('LOC : Pallet Soort 3 OUT:'),HEADER('LOC : Pallet Soort 3 OUT'),PICTURE(@n14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 2 IN:'),USE(?LOC:PalletSoort2_IN:Prompt),RIGHT
+! ENTRY(@n14.),USE(LOC:PalletSoort2_IN),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n14.),USE(LOC:PalletSoort2_IN),RIGHT(1)
+LOC:PalletSoort2_IN      LONG
+!!> GUID('a0bc8e0b-4fec-4e5b-9514-b73fa25d788f'),PROMPT('LOC : Pallet Soort 2 IN:'),HEADER('LOC : Pallet Soort 2 IN'),PICTURE(@n14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 1 IN:'),USE(?LOC:PalletSoort1_IN:Prompt),RIGHT
+! ENTRY(@n14.),USE(LOC:PalletSoort1_IN),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n14.),USE(LOC:PalletSoort1_IN),RIGHT(1)
+LOC:PalletSoort1_IN      LONG
+!!> GUID('c02cf2b5-538e-40fc-aa61-62cdceadaa19'),PROMPT('LOC : Pallet Soort 1 IN:'),HEADER('LOC : Pallet Soort 1 IN'),PICTURE(@n14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 4 IN:'),USE(?LOC:PalletSoort4_IN:Prompt),RIGHT
+! ENTRY(@n14.),USE(LOC:PalletSoort4_IN),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n14.),USE(LOC:PalletSoort4_IN),RIGHT(1)
+LOC:PalletSoort4_IN      LONG
+!!> GUID('9b65f603-8afd-41c9-936d-d5231140491e'),PROMPT('LOC : Pallet Soort 4 IN:'),HEADER('LOC : Pallet Soort 4 IN'),PICTURE(@n14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Pallet Soort 4 OUT:'),USE(?LOC:PalletSoort4_OUT:Prompt),RIGHT
+! ENTRY(@n14.),USE(LOC:PalletSoort4_OUT),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n14.),USE(LOC:PalletSoort4_OUT),RIGHT(1)
+LOC:PalletSoort4_OUT     LONG
+!!> GUID('dd47a467-9bce-4324-9e8f-f2f4ed9cca73'),PROMPT('LOC : Pallet Soort 4 OUT:'),HEADER('LOC : Pallet Soort 4 OUT'),PICTURE(@n14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Aantal Regels:'),USE(?LOC:AantalRegels:Prompt),RIGHT
+! ENTRY(@n_10),USE(LOC:AantalRegels),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:AantalRegels),RIGHT(1)
+LOC:AantalRegels         LONG
+!!> GUID('849f3962-e1f0-4ff3-83d1-a4613618d132'),PROMPT('LOC : Aantal Regels:'),HEADER('LOC : Aantal Regels'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Transporteur ID:'),USE(?LOC:TransporteurID:Prompt),RIGHT
+! ENTRY(@n_10),USE(LOC:TransporteurID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:TransporteurID),RIGHT(1)
+LOC:TransporteurID       LONG
+!!> GUID('8ed81493-fb60-4f0f-99f2-d4073cb746f6'),PROMPT('LOC : Transporteur ID:'),HEADER('LOC : Transporteur ID'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Country:'),USE(?LOC:Country:Prompt)
+! ENTRY(@s60),USE(LOC:Country)
+[REPORTCONTROLS]
+! STRING(@s60),USE(LOC:Country)
+LOC:Country              STRING(60)
+!!> GUID('5e3d4f14-da9d-4a62-afbc-ee4c100a32db'),PROMPT('LOC : Country:'),HEADER('LOC : Country'),PICTURE(@s60),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Verkoop ID:'),USE(?LOC:VerkoopID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:VerkoopID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:VerkoopID),RIGHT(1)
+LOC:VerkoopID            LONG
+!!> GUID('470b7544-d2f9-43d7-8625-58a1ca1a18e2'),PROMPT('LOC : Verkoop ID:'),HEADER('LOC : Verkoop ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('tekst:'),USE(?LOC:ArtikelOms:Prompt)
+! ENTRY(@s160),USE(LOC:ArtikelOms)
+[REPORTCONTROLS]
+! STRING(@s160),USE(LOC:ArtikelOms)
+LOC:ArtikelOms           STRING(160)
+!!> GUID('cb3a3285-6f55-4cf3-b80e-5f04b2f6ebad'),PROMPT('tekst:'),HEADER('tekst'),PICTURE(@s160),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Uitslag KG:'),USE(?LOC:NettoKG:Prompt)
+! ENTRY(@n-10`2),USE(LOC:NettoKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10`2),USE(LOC:NettoKG),DECIMAL(12)
+LOC:NettoKG              DECIMAL(7,2)
+!!> GUID('093fccd4-a0c6-47b2-a106-1a58ead06530'),PROMPT('Uitslag KG:'),HEADER('Uitslag KG'),PICTURE(@n-10`2),TYPEMODE(INS),JUSTIFY(DECIMAL,12),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Uitslag KG:'),USE(?LOC:BrutoKG:Prompt)
+! ENTRY(@n-10`2),USE(LOC:BrutoKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10`2),USE(LOC:BrutoKG),DECIMAL(12)
+LOC:BrutoKG              DECIMAL(7,2)
+!!> GUID('68eddaa7-0328-4e91-aa99-8d49079e6e74'),PROMPT('Uitslag KG:'),HEADER('Uitslag KG'),PICTURE(@n-10`2),TYPEMODE(INS),JUSTIFY(DECIMAL,12),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Waarschuwing:'),USE(?LOC:Waarschuwing:Prompt)
+! ENTRY(@s100),USE(LOC:Waarschuwing)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:Waarschuwing)
+LOC:Waarschuwing         STRING(100)
+!!> GUID('1cd8a9e4-afbd-4228-83cd-453b78a15ef0'),PROMPT('LOC : Waarschuwing:'),HEADER('LOC : Waarschuwing'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Printer:'),USE(?Loc:Printer:Prompt)
+! LIST,USE(Loc:Printer),FROM('Kies Printer|Receptie|Vrieshuis')
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:Printer)
+Loc:Printer              STRING(20)
+!!> GUID('6e730589-ba63-47b2-878d-5e894dab87bb'),VALID(INLIST('Kies Printer|Receptie|Vrieshuis')),PROMPT('Loc : Printer:'),HEADER('Loc : Printer'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : CMR nr:'),USE(?Loc:CMRnr:Prompt),RIGHT
+! ENTRY(@n_6B),USE(Loc:CMRnr),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_6B),USE(Loc:CMRnr),RIGHT(1)
+Loc:CMRnr                LONG
+!!> GUID('f45e801f-cc84-433f-a105-18905ff799e3'),PROMPT('Loc : CMR nr:'),HEADER('Loc : CMR nr'),PICTURE(@n_6B),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+Loc:SavePath             STRING(255)
+!!> GUID('a802b4ff-f2b8-4aa5-b58c-5f427f1240d3')
+Loc:TMPDirectory         STRING(255)
+!!> GUID('656bfbcf-8333-4075-b4c8-b91c13d3069e')
+Loc:Commando             CSTRING(10000)
+!!> GUID('4f9c7d02-454d-4a45-aee4-15a4f98c7553')
+Loc:TmpAtt               STRING(255)
+!!> GUID('bcea5a34-aa62-4cd5-8be5-122ed2719b08')
+Loc:Landscape            BYTE
+!!> GUID('bfa9c522-055b-4c05-a3f7-41da53c721fb')
+Loc:LandscapeOverride    BYTE
+!!> GUID('942aec82-821d-468e-8cce-c596372bf7d7')
+Loc:MailButtonID         LONG
+!!> GUID('8f111058-2112-4ce4-b911-1120601e68e4')
+[FILES]
+[PRIMARY]
+ViewTransporteur
+[INSTANCE]
+2
+[KEY]
+VTRA:ViewTransporteur_FK1
+[PRIMARY]
+Planning
+[INSTANCE]
+0
+[KEY]
+Pla:PK_Planning
+[SECONDARY]
+Verkoop Planning
+ARelatie Verkoop
+[OTHERS]
+AViewArtikel
+RelatieArtikelOmschrijving
+Mutatie
+Partij
+ViewArtikel
+Verpakking
+ArtikelOmschrijvingExtraGroep
+ArtikelOmschrijvingExtra
+CMR
+Weging
+PalletVerloop
+Relatie
+Transporteur
+PalletMutatie
+RelatieAdres
+APlanning
+[PROMPTS]
+%RangeLimitType DEFAULT  ('Single Value')
+%ClassItem UNIQUE DEFAULT  ('BreakMgr', 'Default', 'Previewer', 'Process', 'ProgressMgr', |
+  'TargetSelector', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakManagerClass')
+WHEN  ('Default') ('ReportManager')
+WHEN  ('Previewer') ('PrintPreviewClass')
+WHEN  ('Process') ('ProcessClass')
+WHEN  ('ProgressMgr') ('StepClass')
+WHEN  ('TargetSelector') ('ReportTargetSelectorClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('')
+WHEN  ('Default') ('')
+WHEN  ('Previewer') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('StepLongClass')
+WHEN  ('TargetSelector') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 2
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Init {19}PROCEDURE(ProcessClass PC,<<REPORT R>,<<PrintPreviewClass PV>)', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'OpenReport {13}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Paused {17}BYTE', 'Timer {18}LONG', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+WHEN  ('Process') ('Close {18}PROCEDURE(),DERIVED', 'TakeRecord {13}PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (0)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('NO')
+WHEN  ('Default') ('NO')
+WHEN  ('Previewer') ('NO')
+WHEN  ('Process') ('NO')
+WHEN  ('ProgressMgr') ('NO')
+WHEN  ('TargetSelector') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakMgr')
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('Previewer') ('Previewer')
+WHEN  ('Process') ('ThisReport')
+WHEN  ('ProgressMgr') ('ProgressMgr')
+WHEN  ('TargetSelector') ('TargetSelector')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('ADOBlob')
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('Previewer') ('ADOBlob')
+WHEN  ('Process') ('ADOBlob')
+WHEN  ('ProgressMgr') ('ADOBlob')
+WHEN  ('TargetSelector') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (0)
+WHEN  ('Default') (0)
+WHEN  ('Previewer') (0)
+WHEN  ('Process') (0)
+WHEN  ('ProgressMgr') (0)
+WHEN  ('TargetSelector') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 4
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('ProgressMgr')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 4
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('ProgressMgr')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, |
+  14)
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 14
+WHEN  (1) ('Mut:UitslagKG')
+WHEN  (2) ('Mut:UitslagPallet')
+WHEN  (3) ('AREL:FirmaNaam')
+WHEN  (4) ('AREL:Adres1')
+WHEN  (5) ('AREL:Postcode')
+WHEN  (6) ('AREL:Plaats')
+WHEN  (7) ('Rel:FirmaNaam')
+WHEN  (8) ('Rel:Adres1')
+WHEN  (9) ('Rel:Postcode')
+WHEN  (10) ('Rel:Plaats')
+WHEN  (11) ('Ver2:Instructie')
+WHEN  (12) ('Par:InslagQATemperatuur1')
+WHEN  (13) ('Par:ExternPartijnr')
+WHEN  (14) ('Par:PartijID')
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 14
+WHEN  (1) ('Report')
+WHEN  (2) ('Report')
+WHEN  (3) ('Report')
+WHEN  (4) ('Report')
+WHEN  (5) ('Report')
+WHEN  (6) ('Report')
+WHEN  (7) ('Report')
+WHEN  (8) ('Report')
+WHEN  (9) ('Report')
+WHEN  (10) ('Report')
+WHEN  (11) ('Report')
+WHEN  (12) ('Report')
+WHEN  (13) ('Report')
+WHEN  (14) ('Report')
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%WindowMessage DEFAULT  ('')
+%ReportTargetList MULTI LONG  ()
+%ReportTargetListName DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetListClass DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetListObject DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetListCondition DEPEND %ReportTargetList DEFAULT TIMES 0
+
+%ReportTargetHiddenControls MULTI LONG  ()
+%ReportTargetHiddenControl DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%ReportTargetHiddenControlTemplate DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%EnablePrintPreview LONG  (0)
+%ReportDataSource DEFAULT  ('File')
+%MDIProgressWindow LONG  (0)
+%ProgressInterval DEFAULT  ('10')
+%EnableQuickScan LONG  (1)
+%RecordFilter DEFAULT  ('')
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%AddConditionalSort MULTI LONG  ()
+%AddConditionalSortCondition DEPEND %AddConditionalSort DEFAULT TIMES 0
+
+%AddConditionalSortFieldsAssisted DEPEND %AddConditionalSort MULTI LONG TIMES 0
+
+%AddConditionalSortFieldAssisted DEPEND %AddConditionalSortFieldsAssisted FIELD TIMES 0
+
+%AddConditionalSortFieldAssistedOrder DEPEND %AddConditionalSortFieldsAssisted DEFAULT TIMES 0
+
+%AddSortDynamicNamed MULTI LONG  ()
+%AddSortFieldDinNameDescription DEPEND %AddSortDynamicNamed DEFAULT TIMES 0
+
+%AddSortFieldsDinName DEPEND %AddSortDynamicNamed MULTI LONG TIMES 0
+
+%AddSortFieldDinName DEPEND %AddSortFieldsDinName FIELD TIMES 0
+
+%AddSortFieldDinNameOrder DEPEND %AddSortFieldsDinName DEFAULT TIMES 0
+
+%AddSortFieldsDinSort MULTI LONG  ()
+%AddSortFieldDinSortDescription DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AddSortFieldDinSort DEPEND %AddSortFieldsDinSort FIELD TIMES 0
+
+%AddSortFieldDinSortOrder DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AdditionalSortWindowTitle DEFAULT  ('Select the Order')
+%AdditionalSortWindowMessage DEFAULT  ('Select the order to process the data.')
+%AdditionalSortWindowOkButtonText DEFAULT  ('&OK')
+%AdditionalSortWindowOkButtonIcon DEFAULT  ('SOK.ICO')
+%AdditionalSortWindowOkButtonCursor DEFAULT  ('')
+%AdditionalSortWindowOkButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowOkButtonMsg DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonTip DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonFlat LONG  (1)
+%AdditionalSortWindowOkButtonSkip LONG  (0)
+%AdditionalSortWindowOkButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowCancelButtonText DEFAULT  ('&Cancel')
+%AdditionalSortWindowCancelButtonIcon DEFAULT  ('SCANCEL.ICO')
+%AdditionalSortWindowCancelButtonCursor DEFAULT  ('')
+%AdditionalSortWindowCancelButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowCancelButtonMsg DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonTip DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonFlat LONG  (1)
+%AdditionalSortWindowCancelButtonSkip LONG  (0)
+%AdditionalSortWindowCancelButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowUpButtonText DEFAULT  ('')
+%AdditionalSortWindowUpButtonIcon DEFAULT  ('SUP.ICO')
+%AdditionalSortWindowUpButtonCursor DEFAULT  ('')
+%AdditionalSortWindowUpButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowUpButtonMsg DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonTip DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonFlat LONG  (1)
+%AdditionalSortWindowUpButtonSkip LONG  (0)
+%AdditionalSortWindowUpButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowDownButtonText DEFAULT  ('')
+%AdditionalSortWindowDownButtonIcon DEFAULT  ('SDOWN.ICO')
+%AdditionalSortWindowDownButtonCursor DEFAULT  ('')
+%AdditionalSortWindowDownButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowDownButtonMsg DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonTip DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonFlat LONG  (1)
+%AdditionalSortWindowDownButtonSkip LONG  (0)
+%AdditionalSortWindowDownButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowChOrdButtonText DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonIcon DEFAULT  ('SCH-ORD.ICO')
+%AdditionalSortWindowChOrdButtonCursor DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonMsg DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonTip DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonFlat LONG  (1)
+%AdditionalSortWindowChOrdButtonSkip LONG  (0)
+%AdditionalSortWindowChOrdButtonJustification DEFAULT  ('Left')
+%ApproxRecordCount DEFAULT  ('')
+%ManuallySetProgressLimits LONG  (0)
+%LowLimit DEFAULT  ('')
+%HighLimit DEFAULT  ('')
+%ReportDataSourceQueueName DEFAULT  ('')
+%UseMRP LONG  (1)
+%ReportTargetOutput DEFAULT  ('Printer')
+%ReportTargetAskWithPrint LONG  (1)
+%ReportTargetOtherOutput DEFAULT  ('')
+%RangeField COMPONENT  (Pla:PlanningID)
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  (LOC:PlanningID)
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%RuntimeSkipPreview DEFAULT  ('False')
+%InitialZoom DEFAULT  ('No Zoom')
+%AllowUserZooms LONG  (1)
+%InitWindowPosition LONG  (0)
+%WinXPos DEFAULT  ('')
+%WinYPos DEFAULT  ('')
+%WinWidth DEFAULT  ('315')
+%WinHeight DEFAULT  ('200')
+%MaximizePreviewWindow LONG  (0)
+%MDIPreviewer LONG  (0)
+%ProcessBreaks MULTI LONG  ()
+%BreakName DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakLevelCero DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevelBreakNumber DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevel DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakFields DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakField DEPEND %BreakFields FIELD TIMES 0
+
+%BreakTotals DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakTotalTarget DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalType DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalField DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalFieldWeight DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalBasedOn DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalCondition DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalReset DEPEND %BreakTotals LONG TIMES 0
+
+%BreakReportHeaderYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportHeader DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakReportFooterYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportFooter DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%HotFields MULTI LONG  (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+%HotField DEPEND %HotFields FIELD TIMES 15
+WHEN  (1) (Mut:UitslagKG)
+WHEN  (2) (Mut:UitslagPallet)
+WHEN  (3) (AREL:FirmaNaam)
+WHEN  (4) (AREL:Adres1)
+WHEN  (5) (AREL:Postcode)
+WHEN  (6) (AREL:Plaats)
+WHEN  (7) (Rel:FirmaNaam)
+WHEN  (8) (Rel:FirmaNaam)
+WHEN  (9) (Rel:Adres1)
+WHEN  (10) (Rel:Postcode)
+WHEN  (11) (Rel:Plaats)
+WHEN  (12) (Ver2:Instructie)
+WHEN  (13) (Par:InslagQATemperatuur1)
+WHEN  (14) (Par:ExternPartijnr)
+WHEN  (15) (Par:PartijID)
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 15
+WHEN  (1) (1)
+WHEN  (2) (1)
+WHEN  (3) (1)
+WHEN  (4) (1)
+WHEN  (5) (1)
+WHEN  (6) (1)
+WHEN  (7) (1)
+WHEN  (8) (1)
+WHEN  (9) (1)
+WHEN  (10) (1)
+WHEN  (11) (1)
+WHEN  (12) (1)
+WHEN  (13) (1)
+WHEN  (14) (1)
+WHEN  (15) (1)
+
+%HotFieldRestoreOnBreak DEPEND %HotFields LONG TIMES 15
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+WHEN  (5) (0)
+WHEN  (6) (0)
+WHEN  (7) (0)
+WHEN  (8) (0)
+WHEN  (9) (0)
+WHEN  (10) (0)
+WHEN  (11) (0)
+WHEN  (12) (0)
+WHEN  (13) (0)
+WHEN  (14) (0)
+WHEN  (15) (0)
+
+%DetailFilter DEPEND %ReportControl DEFAULT TIMES 0
+
+%DetailFilterExclusive DEPEND %ReportControl LONG TIMES 0
+
+%DetailFilterExternal DEPEND %ReportControl DEFAULT TIMES 40
+WHEN  ('') ('')
+WHEN  ('?BOX1') ('')
+WHEN  ('?BOX2') ('')
+WHEN  ('?BOX3') ('')
+WHEN  ('?BOX4') ('')
+WHEN  ('?BREAK1') ('')
+WHEN  ('?DETAIL1') ('')
+WHEN  ('?GROUPFOOTER1') ('')
+WHEN  ('?GROUPHEADER1') ('')
+WHEN  ('?LOC:ArtikelWide') ('')
+WHEN  ('?LOC:ExtraDocumenten') ('')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('')
+WHEN  ('?LOC:Instructie') ('')
+WHEN  ('?LOC:Kenteken') ('')
+WHEN  ('?LOC:OpgemaaktTe') ('')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('')
+WHEN  ('?LOC:PalletSoort1') ('')
+WHEN  ('?LOC:PalletSoort1_IN') ('')
+WHEN  ('?LOC:PalletSoort1_OUT') ('')
+WHEN  ('?LOC:PalletSoort2_IN') ('')
+WHEN  ('?LOC:PalletSoort2_OUT') ('')
+WHEN  ('?LOC:PalletSoort3') ('')
+WHEN  ('?LOC:PalletSoort3_IN') ('')
+WHEN  ('?LOC:PalletSoort3_OUT') ('')
+WHEN  ('?LOC:PalletSoort4_IN') ('')
+WHEN  ('?LOC:PalletSoort4_OUT') ('')
+WHEN  ('?LOC:PalletSoort5') ('')
+WHEN  ('?LOC:PalletSoort6') ('')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('')
+WHEN  ('?LOC:Transporteur') ('')
+WHEN  ('?LOC:TransporteurExtra') ('')
+WHEN  ('?Loc:AfkomstAdres') ('')
+WHEN  ('?Loc:AfleveringAdres') ('')
+WHEN  ('?Loc:Artikel:2') ('')
+WHEN  ('?Loc:CMRnr') ('')
+WHEN  ('?Loc:Expediteur') ('')
+WHEN  ('?Loc:Geadresseerde') ('')
+WHEN  ('?STRING1') ('')
+WHEN  ('?STRING2') ('')
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 15
+WHEN  ('') ('Default')
+WHEN  ('?BtnLeeg') ('Default')
+WHEN  ('?LOC:PalletSoort2_IN') ('Default')
+WHEN  ('?LOC:PalletSoort4_OUT') ('Default')
+WHEN  ('?LOC:Waarschuwing') ('Default')
+WHEN  ('?Loc:Artikel') ('Default')
+WHEN  ('?Loc:EC_LabelsOnTheGoods') ('Default')
+WHEN  ('?Loc:Geadresseerde') ('Default')
+WHEN  ('?Loc:IsTruckClear') ('Default')
+WHEN  ('?Pause') ('Default')
+WHEN  ('?Progress:Cancel') ('Default')
+WHEN  ('?STRING15') ('Default')
+WHEN  ('?STRING16') ('Default')
+WHEN  ('?VTRA:FirmaNaam') ('Default')
+WHEN  ('?VulArtikelOpnieuw') ('Default')
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 15
+WHEN  ('') ('No Special Action')
+WHEN  ('?BtnLeeg') ('No Special Action')
+WHEN  ('?LOC:PalletSoort2_IN') ('No Special Action')
+WHEN  ('?LOC:PalletSoort4_OUT') ('No Special Action')
+WHEN  ('?LOC:Waarschuwing') ('No Special Action')
+WHEN  ('?Loc:Artikel') ('No Special Action')
+WHEN  ('?Loc:EC_LabelsOnTheGoods') ('No Special Action')
+WHEN  ('?Loc:Geadresseerde') ('No Special Action')
+WHEN  ('?Loc:IsTruckClear') ('No Special Action')
+WHEN  ('?Pause') ('No Special Action')
+WHEN  ('?Progress:Cancel') ('No Special Action')
+WHEN  ('?STRING15') ('No Special Action')
+WHEN  ('?STRING16') ('No Special Action')
+WHEN  ('?VTRA:FirmaNaam') ('No Special Action')
+WHEN  ('?VulArtikelOpnieuw') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 1
+WHEN  ('?Pause') ()
+
+%ButtonThread DEPEND %Control LONG TIMES 1
+WHEN  ('?Pause') (0)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 15
+WHEN  ('') ('25000')
+WHEN  ('?BtnLeeg') ('25000')
+WHEN  ('?LOC:PalletSoort2_IN') ('25000')
+WHEN  ('?LOC:PalletSoort4_OUT') ('25000')
+WHEN  ('?LOC:Waarschuwing') ('25000')
+WHEN  ('?Loc:Artikel') ('25000')
+WHEN  ('?Loc:EC_LabelsOnTheGoods') ('25000')
+WHEN  ('?Loc:Geadresseerde') ('25000')
+WHEN  ('?Loc:IsTruckClear') ('25000')
+WHEN  ('?Pause') ('25000')
+WHEN  ('?Progress:Cancel') ('25000')
+WHEN  ('?STRING15') ('25000')
+WHEN  ('?STRING16') ('25000')
+WHEN  ('?VTRA:FirmaNaam') ('25000')
+WHEN  ('?VulArtikelOpnieuw') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?Pause') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 1
+WHEN  ('?Pause') (0)
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 15
+WHEN  ('') ('None')
+WHEN  ('?BtnLeeg') ('None')
+WHEN  ('?LOC:PalletSoort2_IN') ('None')
+WHEN  ('?LOC:PalletSoort4_OUT') ('None')
+WHEN  ('?LOC:Waarschuwing') ('None')
+WHEN  ('?Loc:Artikel') ('None')
+WHEN  ('?Loc:EC_LabelsOnTheGoods') ('None')
+WHEN  ('?Loc:Geadresseerde') ('None')
+WHEN  ('?Loc:IsTruckClear') ('None')
+WHEN  ('?Pause') ('None')
+WHEN  ('?Progress:Cancel') ('None')
+WHEN  ('?STRING15') ('None')
+WHEN  ('?STRING16') ('None')
+WHEN  ('?VTRA:FirmaNaam') ('None')
+WHEN  ('?VulArtikelOpnieuw') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?Pause') ()
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 21
+WHEN  ('') (1)
+WHEN  ('?BtnLeeg') (1)
+WHEN  ('?LOC:PalletSoort1_IN') (1)
+WHEN  ('?LOC:PalletSoort1_OUT:2') (1)
+WHEN  ('?LOC:PalletSoort2_IN') (1)
+WHEN  ('?LOC:PalletSoort2_OUT') (1)
+WHEN  ('?LOC:PalletSoort3_IN') (1)
+WHEN  ('?LOC:PalletSoort3_OUT') (1)
+WHEN  ('?LOC:PalletSoort4_IN') (1)
+WHEN  ('?LOC:PalletSoort4_OUT') (1)
+WHEN  ('?LOC:Waarschuwing') (1)
+WHEN  ('?Loc:Artikel') (1)
+WHEN  ('?Loc:EC_LabelsOnTheGoods') (1)
+WHEN  ('?Loc:Geadresseerde') (1)
+WHEN  ('?Loc:IsTruckClear') (1)
+WHEN  ('?Pause') (1)
+WHEN  ('?Progress:Cancel') (1)
+WHEN  ('?STRING15') (1)
+WHEN  ('?STRING16') (1)
+WHEN  ('?VTRA:FirmaNaam') (1)
+WHEN  ('?VulArtikelOpnieuw') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 15
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:PalletSoort2_IN')TIMES 0
+WHEN  ('?LOC:PalletSoort4_OUT')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:Artikel')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Loc:Geadresseerde')TIMES 0
+WHEN  ('?Loc:IsTruckClear')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?STRING15')TIMES 0
+WHEN  ('?STRING16')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+WHEN  ('?VulArtikelOpnieuw')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 15
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:PalletSoort2_IN')TIMES 0
+WHEN  ('?LOC:PalletSoort4_OUT')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:Artikel')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Loc:Geadresseerde')TIMES 0
+WHEN  ('?Loc:IsTruckClear')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?STRING15')TIMES 0
+WHEN  ('?STRING16')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+WHEN  ('?VulArtikelOpnieuw')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 15
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:PalletSoort2_IN')TIMES 0
+WHEN  ('?LOC:PalletSoort4_OUT')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:Artikel')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Loc:Geadresseerde')TIMES 0
+WHEN  ('?Loc:IsTruckClear')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?STRING15')TIMES 0
+WHEN  ('?STRING16')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+WHEN  ('?VulArtikelOpnieuw')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 15
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:PalletSoort2_IN')TIMES 0
+WHEN  ('?LOC:PalletSoort4_OUT')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:Artikel')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Loc:Geadresseerde')TIMES 0
+WHEN  ('?Loc:IsTruckClear')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?STRING15')TIMES 0
+WHEN  ('?STRING16')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+WHEN  ('?VulArtikelOpnieuw')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 15
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:PalletSoort2_IN')TIMES 0
+WHEN  ('?LOC:PalletSoort4_OUT')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:Artikel')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Loc:Geadresseerde')TIMES 0
+WHEN  ('?Loc:IsTruckClear')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?STRING15')TIMES 0
+WHEN  ('?STRING16')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+WHEN  ('?VulArtikelOpnieuw')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 15
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:PalletSoort2_IN')TIMES 0
+WHEN  ('?LOC:PalletSoort4_OUT')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:Artikel')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Loc:Geadresseerde')TIMES 0
+WHEN  ('?Loc:IsTruckClear')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?STRING15')TIMES 0
+WHEN  ('?STRING16')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+WHEN  ('?VulArtikelOpnieuw')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FirstPage DEFAULT  ('')
+%ReportTargetOpen LONG  (0)
+%HideOutputProgress LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Progress:Thermometer')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+	Loc:IsTruckClear = TRUE
+	Loc:IsPackingGoodsOK = TRUE
+	Loc:ISDriverDressedCorrectly = TRUE
+	Loc:EC_LabelsOnTheGoods = TRUE
+	Loc:Printer='Kies Printer'
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+	CLEAR(VTRA:Record)	
+	LOC:TransporteurID = 0
+	LOC:PlanningID = PRM:PlanningID
+
+	Clear(Pla:Record)
+	Pla:PlanningID = LOC:PlanningID
+	IF Access:Planning.Fetch(Pla:PK_Planning) <> Level:Benign
+		RETURN ReturnValue
+	.
+
+	LOC:VerkoopID=Pla:VerkoopID
+	Ver2:VerkoopID=Pla:VerkoopID
+	Access:Verkoop.Fetch(Ver2:PK_Verkoop)
+
+    ! O.a. nodig voor bepalen van alternative artikelnaam
+	AREL:RelatieID=Ver2:Klant
+	Access:ARelatie.Fetch(AREL:Relatie_PK)
+
+	db.DebugOut('PrintCMR(' & LOC:PlanningID & '=' & Pla:PlanningID & ',' & Pla:VerkoopID & '=' & Ver2:VerkoopID & ',' & Ver2:Klant & '=' & AREL:RelatieID & ')')
+
+	CLEAR(CMR:Record)
+	CMR:VerkoopID = LOC:VerkoopID
+	SET(CMR:CMR_FK1,CMR:CMR_FK1)
+	found# = false
+	IF (Access:CMR.TryNext() = Level:Benign)
+		db.DebugOut('Ophalen CMR ' & CMR:VerkoopID & ' gelukt')
+		IF (CMR:VerkoopID = LOC:VerkoopID)
+			found# = TRUE
+			db.DebugOut('Ophalen CMR ' & CMR:VerkoopID & ' gelukt klopt')
+		END
+	ELSE
+		db.DebugOut('Ophalen CMR ' & LOC:VerkoopID & ' failed')
+	END
+
+	IF(NOT(found#))
+		Loc:Expediteur='Ven Poultry B.V.<13><10>Postbus 467 <13><10>5700 AL Helmond Holland<13><10>BTWnr: NL802389521B01'
+
+		LOC:Country = ARel:Country
+		IF LOC:Country = '' THEN
+			LOC:Country = 'Holland'
+		.
+
+		db.DebugOut('RelatieID:' & AREL:RelatieID)
+		
+		RAD:ID=Ver2:KlantAlternatiefAdres
+		Access:RelatieAdres.Fetch(RAD:PK_RelatieAdres)
+		IF ERROR() OR RAD:RelatieID <> Ver2:Klant THEN
+			Loc:Geadresseerde=CLIP(AREL:FirmaNaam)&'<13><10>'&CLIP(AREL:Adres1)&'<13><10>'&CLIP(AREL:Postcode)&' '&CLIP(AREL:Plaats) & ', ' & CLIP(LOC:Country)
+			Loc:AfleveringAdres=CLIP(AREL:FirmaNaam)&'<13><10>'&CLIP(AREL:Adres1)&'<13><10>'&CLIP(AREL:Postcode)&' '&CLIP(AREL:Plaats) & ', ' & CLIP(LOC:Country)
+			Loc:AfleveringsPlaats=CLIP(AREL:Plaats) & ', ' & CLIP(LOC:Country)
+			db.DebugOut('Geen alternatief adres:' & AREL:RelatieID)
+		ELSE
+			Loc:Geadresseerde=CLIP(AREL:FirmaNaam)&'<13><10>'&CLIP(AREL:Adres1)&'<13><10>'&CLIP(AREL:Postcode)&' '&CLIP(AREL:Plaats) & ', ' & CLIP(LOC:Country)
+			Loc:AfleveringAdres=CLIP(RAD:Adres1)&'<13><10>'&CLIP(RAD:Adres2)
+			IF RAD:Postcode<>'' THEN
+				Loc:AfleveringAdres=CLIP(Loc:AfleveringAdres)&'<13><10>'&CLIP(RAD:Postcode)&' '&CLIP(RAD:Plaats)
+			ELSE
+				Loc:AfleveringAdres=CLIP(Loc:AfleveringAdres)&'<13><10>'&CLIP(RAD:Plaats)
+			.
+			IF RAD:LAND<>'' THEN
+				Loc:AfleveringAdres=CLIP(Loc:AfleveringAdres)&', '&CLIP(RAD:LAND)
+				Loc:AfleveringsPlaats=CLIP(RAD:Plaats)&', '&CLIP(RAD:LAND)
+			ELSE
+				Loc:AfleveringsPlaats=CLIP(RAD:Plaats)
+			.
+
+			db.DebugOut('Alternatief adres:' & RAD:ID)
+		.
+
+		Loc:AfkomstAdres='Lierop, Holland     ' & CLIP(FORMAT(TODAY(),'@d17'))
+		LOC:ExtraDocumenten=''
+		LOC:Transporteur='Transport:<13><10>Truck:<13><10>Container:'
+		LOC:TransporteurExtra=''
+		LOC:OpmerkingenVervoerder=''
+
+		DO VulArtikelQueue
+        DO VulLocArtikel
+        Loc:Artikel = LOC:ArtikelBepaald
+		
+		!IF CLIP(Par:InslagQATemperatuur1) <> ''
+		!	LOC:Instructie = 'Temperatuur: ' & CLIP(LEFT(FORMAT(Par:InslagQATemperatuur1, '@n-5.0'))) & '° Celsius'
+		!ELSE	
+			LOC:Instructie = 'Temperatuur: -18° Celsius'
+		!END
+		
+		LOC:SpecialeOvereenkomst = 'Officiële dierenarts<13><10>AEM vd Pluijm NL0859'
+		LOC:Frankeringsvoorschrift = 'Franco '& CLIP(LOC:AfleveringsPlaats)
+		LOC:OpgemaaktTe = 'Lierop, Holland     ' & CLIP(FORMAT(TODAY(),'@d17'))
+		LOC:HandtekeningStempelAfzender = 'Ven Poultry B.V.<13><10>P.O. Box 467<13><10>NL-5700 AL Helmond<13><10>Tel:+31 (0)492-537066<13><10>www.venpoultry.nl'
+		LOC:Kenteken = 'Transport:<13><10>Truck:<13><10>Container:'
+	ELSE
+		Loc:Expediteur=CMR:Expediteur
+		Loc:Geadresseerde=CMR:Geadresseerde
+		LOC:Transporteur=CMR:Transporteur
+		Loc:AfleveringAdres=CMR:AfleverAdres
+		LOC:TransporteurExtra=CMR:TransporteurExtra
+		Loc:AfkomstAdres=CMR:AfkomstAdres
+		LOC:OpmerkingenVervoerder=CMR:OpmerkingenVervoerder
+		LOC:ExtraDocumenten=CMR:ExtraDocumenten
+        Loc:Artikel=CMR:Artikel
+
+		DO VulArtikelQueue
+        DO VulLocArtikel
+        IF CLIP(Loc:Artikel) <> CLIP(LOC:ArtikelBepaald) THEN
+            LOC:Waarschuwing = 'Let op: Huidige CMR-artikeltekst is niet dezelfde als deze opnieuw gevuld wordt.'
+         END
+		LOC:Instructie=CMR:Instructie
+		LOC:SpecialeOvereenkomst=CMR:SpecialeOvereenkomst
+		LOC:Frankeringsvoorschrift=CMR:Frankeringsvoorschrift
+		Loc:IsTruckClear=CMR:IsTruckClean
+		Loc:IsPackingGoodsOK=CMR:IsPackingGoodsOK
+		Loc:ISDriverDressedCorrectly=CMR:ISDriverDressedCorrectly
+		Loc:EC_LabelsOnTheGoods=CMR:EC_LabelsOnTheGoods
+		LOC:OpgemaaktTe=CMR:OpgemaaktTe
+		LOC:HandtekeningStempelAfzender=CMR:HandtekeningStempelAfzender
+		LOC:Kenteken=CMR:Kenteken
+	.
+
+	! PalletSoort
+	LOC:PalletSoort1 = 'H1'
+	LOC:PalletSoort5 = 'BLOK'
+	LOC:PalletSoort3 = 'Euro'
+	LOC:PalletSoort6 = 'CHEP'
+		
+	DO LoadPalletAdministratie
+[END]
+[END]
+WHEN 'OpenReport'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+    SAV:Printer=PRINTER{PROPPRINT:Device}
+	Case Loc:Printer
+	of 'Receptie'
+		Loc:CMRPrinter=GETINI('Printer','CMR',,'.\Voorraad.ini')
+	of 'Vrieshuis'
+        Loc:CMRPrinter=GETINI('Printer','CMR-Vrieshuis',,'.\Voorraad.ini')
+        !SAV:PaperBin = PRINTER{PROPPRINT:PaperBin} ! Niet meer via deze prop regelen (vaak problemen), maar door deze printer in te stellen op de server met standaard deze paperbin
+		!PRINTER{PROPPRINT:PaperBin}=GETINI('Printer','CMR-Vrieshuis Lade',,'.\Voorraad.ini')
+        !PRINTER{PROPPRINT:Copies}=GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini') ! werkt niet meer goed in de C8-versie?
+	END
+	IF Loc:CMRPrinter<>''
+		PRINTER{PROPPRINT:Device}=Loc:CMRPrinter
+	End
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+    If CLIP(LOC:Printer) = 'Vrieshuis' THEN
+        REPORT{PROPPRINT:Copies} = GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini')
+    END
+    If CLIP(LOC:Printer) = 'Receptie' THEN
+        REPORT{PROPPRINT:Copies} = GETINI('Printer','CMR Kopie',1,'.\Voorraad.ini')
+    END
+
+    If Not RETURNValue				! Instructie memo vullen
+		if Loc:IsTruckClear
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Is Truck Clean: Yes'
+		ELSE
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Is Truck Clean: No'
+		END
+		if Loc:IsPackingGoodsOK
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Is Packing goods OK: Yes'
+		ELSE
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Is Packing goods OK: No'
+		END
+		if Loc:ISDriverDressedCorrectly
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Is Driver Dressed Correctly: Yes'
+		ELSE
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Is Driver Dressed Correctly: No'
+		END
+		if Loc:EC_LabelsOnTheGoods
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> EC Labels on the goods: Yes'
+		ELSE
+			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> EC Labels on the goods: No'
+		END
+
+		if LOC:AantalRegels > 7
+			LOC:ArtikelWide = Loc:Artikel
+			LOC:Artikel = ''
+		END
+		IF Loc:Printer= 'Vrieshuis'
+			Loc:CMRnr=GETINI('Printer','CMRnr',0,'.\Voorraad.ini')
+			PUTINI('Printer','CMRnr',Loc:CMRnr+1,'.\Voorraad.ini')
+			! in de layout van de laserprinter moet alles 5 MM naar rechts = 0,200 Inch
+			Report$?Loc:Expediteur{PROP:Xpos}=Report$?Loc:Expediteur{PROP:Xpos}+200
+			Report$?Loc:Geadresseerde{Prop:Xpos}=Report$?Loc:Geadresseerde{Prop:Xpos}+200
+			Report$?LOC:Transporteur{Prop:Xpos}=Report$?LOC:Transporteur{Prop:Xpos}+200
+			Report$?LOC:TransporteurExtra{Prop:Xpos}=Report$?LOC:TransporteurExtra{Prop:Xpos}+200
+			Report$?Loc:AfleveringAdres{PROP:Xpos}=Report$?Loc:AfleveringAdres{PROP:Xpos}+200
+			Report$?Loc:AfkomstAdres{PROP:Xpos}=Report$?Loc:AfkomstAdres{PROP:Xpos}+200
+			Report$?LOC:ExtraDocumenten{PROP:Xpos}=Report$?LOC:ExtraDocumenten{PROP:Xpos}+200
+			Report$?LOC:OpmerkingenVervoerder{PROP:Xpos}=Report$?LOC:OpmerkingenVervoerder{PROP:Xpos}+200
+			Report$?Loc:Artikel:2{PROP:Xpos}=Report$?Loc:Artikel:2{PROP:Xpos}+200
+			Report$?LOC:Instructie{PROP:Xpos}=Report$?LOC:Instructie{PROP:Xpos}+200
+			Report$?LOC:SpecialeOvereenkomst{PROP:Xpos}=Report$?LOC:SpecialeOvereenkomst{PROP:Xpos}+200
+			Report$?LOC:Frankeringsvoorschrift{PROP:Xpos}=Report$?LOC:Frankeringsvoorschrift{PROP:Xpos}+200
+			Report$?LOC:Frankeringsvoorschrift{PROP:Ypos}=Report$?LOC:Frankeringsvoorschrift{PROP:Ypos}-200
+			Report$?LOC:OpgemaaktTe{PROP:ypos}=Report$?LOC:OpgemaaktTe{PROP:ypos}-200
+			Report$?LOC:HandtekeningStempelAfzender{PROP:Xpos}=Report$?LOC:HandtekeningStempelAfzender{PROP:Xpos}+200
+			Report$?LOC:Kenteken{PROP:Xpos}=Report$?LOC:Kenteken{PROP:Xpos}+200
+		END	
+
+
+	END
+[END]
+[END]
+[END]
+EMBED %ProcessManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Close'
+[INSTANCES]
+WHEN '()'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+    if SAV:Printer<>''
+        PRINTER{PROPPRINT:Device}=SAV:Printer
+    END
+
+    if SAV:PaperBin<>''
+        !PRINTER{PROPPRINT:PaperBin}=SAV:PaperBin
+        PRINTER{PROPPRINT:Copies}=1
+    END
+
+
+[END]
+[END]
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Pause'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 1300
+PROPERTY:END
+IF Loc:Printer='Kies Printer'
+	Message('Vergeet niet een printer te kiezen','Printer', Icon:Hand)
+	Select(?Loc:Printer:2)
+	CYCLE
+END	
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	DO SavePalletAdministratie
+
+	CLEAR(CMR:Record)
+	CMR:VerkoopID = LOC:VerkoopID
+	SET(CMR:CMR_FK1,CMR:CMR_FK1)
+
+	found# = false
+	IF (Access:CMR.TryNext() = Level:Benign)
+		IF (CMR:VerkoopID = LOC:VerkoopID)
+			found# = TRUE
+		END
+	END
+
+	IF (NOT(found#))
+		CLEAR(CMR:Record)
+		db.Debugout('CMR ' & LOC:VerkoopID & ' primen')
+	.
+
+	CMR:VerkoopID = LOC:VerkoopID
+	CMR:Expediteur=Loc:Expediteur
+	CMR:Geadresseerde=Loc:Geadresseerde
+	CMR:Transporteur=LOC:Transporteur
+	CMR:AfleverAdres=Loc:AfleveringAdres
+	CMR:TransporteurExtra=LOC:TransporteurExtra
+	CMR:AfkomstAdres=Loc:AfkomstAdres
+	CMR:OpmerkingenVervoerder=LOC:OpmerkingenVervoerder
+	CMR:ExtraDocumenten=LOC:ExtraDocumenten
+	CMR:Artikel=Loc:Artikel
+	CMR:Instructie=LOC:Instructie
+	CMR:SpecialeOvereenkomst=LOC:SpecialeOvereenkomst
+	CMR:Frankeringsvoorschrift=LOC:Frankeringsvoorschrift
+	CMR:IsTruckClean=Loc:IsTruckClear
+	CMR:IsPackingGoodsOK=Loc:IsPackingGoodsOK
+	CMR:ISDriverDressedCorrectly=Loc:ISDriverDressedCorrectly
+	CMR:EC_LabelsOnTheGoods=Loc:EC_LabelsOnTheGoods
+	CMR:OpgemaaktTe=LOC:OpgemaaktTe
+	CMR:HandtekeningStempelAfzender=LOC:HandtekeningStempelAfzender
+	CMR:Kenteken=LOC:Kenteken
+
+	IF (NOT(found#))
+		db.Debugout('CMR ' & LOC:VerkoopID & ' inserten:' & found#)
+		Access:CMR.Insert()
+	ELSE
+		db.Debugout('CMR ' & LOC:VerkoopID & ' updaten')
+		Access:CMR.Update()
+	.
+[END]
+[END]
+WHEN '?BtnLeeg'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4999
+PROPERTY:END
+LOC:TransporteurID = 0
+CLEAR(VTRA:Record)
+FDCB2.ResetQueue(True)
+ThisWindow.Reset(True)
+[END]
+[END]
+WHEN '?Progress:Cancel'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+IF MESSAGE('Pallet-administratie en CMR-historie bijwerken?', 'Opslaan', ICON:Question, BUTTON:Yes+BUTTON:No, BUTTON:Yes,1) = BUTTON:Yes
+	DO SavePalletAdministratie
+
+	CLEAR(CMR:Record)
+	CMR:VerkoopID = LOC:VerkoopID
+	SET(CMR:CMR_FK1,CMR:CMR_FK1)
+
+	found# = false
+	IF (Access:CMR.TryNext() = Level:Benign)
+		IF (CMR:VerkoopID = LOC:VerkoopID)
+			found# = TRUE
+		END
+	END
+
+	IF (NOT(found#))
+		CLEAR(CMR:Record)
+		!Access:CMR.PrimeRecord(true)
+		db.Debugout('CMR ' & LOC:VerkoopID & ' primen')
+	.
+
+	CMR:VerkoopID=LOC:VerkoopID
+	CMR:Expediteur=Loc:Expediteur
+	CMR:Geadresseerde=Loc:Geadresseerde
+	CMR:Transporteur=LOC:Transporteur
+	CMR:AfleverAdres=Loc:AfleveringAdres
+	CMR:TransporteurExtra=LOC:TransporteurExtra
+	CMR:AfkomstAdres=Loc:AfkomstAdres
+	CMR:OpmerkingenVervoerder=LOC:OpmerkingenVervoerder
+	CMR:ExtraDocumenten=LOC:ExtraDocumenten
+	CMR:Artikel=Loc:Artikel
+	CMR:Instructie=LOC:Instructie
+	CMR:SpecialeOvereenkomst=LOC:SpecialeOvereenkomst
+	CMR:Frankeringsvoorschrift=LOC:Frankeringsvoorschrift
+	CMR:IsTruckClean=Loc:IsTruckClear
+	CMR:IsPackingGoodsOK=Loc:IsPackingGoodsOK
+	CMR:ISDriverDressedCorrectly=Loc:ISDriverDressedCorrectly
+	CMR:EC_LabelsOnTheGoods=Loc:EC_LabelsOnTheGoods
+	CMR:OpgemaaktTe=LOC:OpgemaaktTe
+	CMR:HandtekeningStempelAfzender=LOC:HandtekeningStempelAfzender
+	CMR:Kenteken=LOC:Kenteken
+
+	IF (NOT(found#))
+		db.Debugout('CMR ' & LOC:VerkoopID & ' inserten:' & found#)
+		Access:CMR.Insert()
+	ELSE
+		db.Debugout('CMR ' & LOC:VerkoopID & ' updaten')
+		Access:CMR.Update()
+	.
+.
+[END]
+[END]
+WHEN '?VulArtikelOpnieuw'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+DO VulArtikelQueue
+DO VulLocArtikel
+Loc:Artikel = LOC:ArtikelBepaald
+ThisWindow.Reset(True)
+[END]
+[END]
+[END]
+EMBED %ProcedureRoutines
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+VulLocArtikel       ROUTINE
+DATA
+
+st  StringTheory
+AantalLijenVak6     LONG(16)
+HoogteArtikelRegel  LONG(4)
+AantalCMRRegels     LONG(0)
+ArtikelLayout       LONG
+CODE
+    LOC:ArtikelBepaald=''
+    ! 2018-5-12 Als Rel:CMROpmerking is gevuld, dit elke regel printen
+    ! dus eerst kijken hoeveek regels de CMR Rel:CMROpmerking
+    st.SetValue(AREL:CMROpmerking)
+    st.Split('<13,10>')
+    AantalCMRRegels = st.Records()
+    ArtikelLayout = 4   ! grootste lay-out
+    LOOP
+        IF ((ArtikelLayout+AantalCMRRegels))*RECORDS(Loc:ArtikelQ)<=16
+            Break       ! gevonden deze past
+        END
+        ArtikelLayout-= 1
+        IF ArtikelLayout<=1 THEN BREAK.
+    END
+
+    !Message('AantalLijenVak6:'&AantalLijenVak6&'|AantalCMRRegels:'&AantalCMRRegels&'|HoogteArtikelRegel:'&HoogteArtikelRegel&'|ArtikelLayout:'&ArtikelLayout&'|RECORDS(Loc:ArtikelQ):'&RECORDS(Loc:ArtikelQ))
+    Loop i#=1 TO RECORDS(Loc:ArtikelQ)
+        GET(Loc:ArtikelQ,i#)
+        If CLIP(LOC:ArtikelBepaald) <> ''
+            LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald)&'<13,10>'
+        END
+        CASE ArtikelLayout
+        of  4
+            LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald)&'Lot: ' & CLIP(LAQ:Partijnr) & |
+                '<13><10>' & CLIP(LAQ:ArtikelOms) & |
+                '<13><10>' & 'BRUTO: ' & CLIP(LEFT(FORMAT(LAQ:BrutoKG,'@n10`2'))) & ' kg / NETTO: ' & CLIP(LEFT(FORMAT(LAQ:NettoKG,'@n10`2'))) & ' kg' & |
+                '<13><10>' & CLIP(LEFT(FORMAT(LAQ:Pallets,'@N10.'))) & ' pallets'&|
+                CHOOSE(AantalCMRRegels>0,'<13><10>','') &AREL:CMROpmerking
+        of 3
+            LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald)&'Lot: ' & CLIP(LAQ:Partijnr) & |
+                    '' & CLIP(LAQ:ArtikelOms) & |
+                    '<13><10>' & 'BRUTO: ' & CLIP(LEFT(FORMAT(LAQ:BrutoKG,'@n10`2'))) & ' kg / NETTO: ' & CLIP(LEFT(FORMAT(LAQ:NettoKG,'@n10`2'))) & ' kg' & |
+                    '<13><10>' & CLIP(LEFT(FORMAT(LAQ:Pallets,'@N10.'))) & ' pallets' & |
+                CHOOSE(AantalCMRRegels>0,'<13><10>','') &AREL:CMROpmerking
+        of 2
+                LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald)&'Lot: ' & CLIP(LAQ:Partijnr) & |
+                    '' & CLIP(LAQ:ArtikelOms) & |
+                    '<13><10>' & 'BRUTO: ' & CLIP(LEFT(FORMAT(LAQ:BrutoKG,'@n10`2'))) & ' kg / NETTO: ' & CLIP(LEFT(FORMAT(LAQ:NettoKG,'@n10`2'))) & ' kg' & |
+                    '' & CLIP(LEFT(FORMAT(LAQ:Pallets,'@N10.'))) & ' pallets' & |
+                CHOOSE(AantalCMRRegels>0,'<13><10>','') &AREL:CMROpmerking
+        ELSE
+                LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald)&'Lot: ' & CLIP(LAQ:Partijnr) & |
+                    '' & CLIP(LAQ:ArtikelOms) & |
+                    '' & 'BRUTO: ' & CLIP(LEFT(FORMAT(LAQ:BrutoKG,'@n10`2'))) & ' kg / NETTO: ' & CLIP(LEFT(FORMAT(LAQ:NettoKG,'@n10`2'))) & ' kg' & |
+                    '' & CLIP(LEFT(FORMAT(LAQ:Pallets,'@N10.'))) & ' pallets' & |
+                CHOOSE(AantalCMRRegels>0,'<13><10>','') &AREL:CMROpmerking
+        END
+    END
+
+
+    EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+VulArtikelQueue     ROUTINE
+	LOC:Waarschuwing = ''
+	
+	FREE(Loc:ArtikelQ)
+	! dit geldt voor alle regels van deze verkoop
+	! eerst even aantal regels tellen er zijn 15 regels beschikbaar
+	LOC:AantalRegels=0
+    WegingGevonden# = false
+
+    Clear(Pla:Record)
+    Pla:VerkoopID = Ver2:VerkoopID
+    Set(Pla:Planning_FK02,Pla:Planning_FK02)
+    Loop Until Access:Planning.Next()
+        if Pla:VerkoopID <> Ver2:VerkoopID then break.
+
+        MutatieGevonden# = false
+        CLEAR(Mut:Record)
+        Mut:PlanningID=Pla:PlanningID
+        SET(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+        LOOP UNTIL Access:Mutatie.Next()
+            IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+
+            MutatieGevonden# = true
+
+            CLEAR(Par:Record)
+            Par:PartijID=Mut:PartijID
+            Access:Partij.Fetch(Par:Partij_PK)
+
+            CLEAR(Art:Record)
+            Art:ArtikelID=Par:ArtikelID
+            Access:ViewArtikel.Fetch(Art:Artikel_PK)
+
+            CLEAR(Ver:Record)
+            Ver:VerpakkingID=Par:VerpakkingID
+            Access:Verpakking.Fetch(Ver:Verpakking_PK)
+
+            IF CLIP(Mut:AlternatieveArtikelOms) = '' THEN
+                LOC:ArtikelOms = GlobalClass.CMRArtikelOms(Ver2:Klant, Art:ArtikelID)
+            ELSE
+                LOC:ArtikelOms = Mut:AlternatieveArtikelOms
+            END
+
+
+            LOC:NettoKG = 0
+            LOC:BrutoKG = 0
+
+            WegingGevonden# = false
+
+            CLEAR(Weg:Record)
+            Weg:MutatieID = Mut:MutatieID
+            SET(Weg:FK_Weging, Weg:FK_Weging)
+            LOOP UNTIL Access:Weging.Next()
+                IF Weg:MutatieID <> Mut:MutatieID THEN BREAK.
+
+                WegingGevonden# = true
+
+                LAQ:ArtikelID=Art:ArtikelID
+                LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                GET(Loc:ArtikelQ,+LAQ:ArtikelID,+LAQ:VerpakkingOmschrijving)
+                IF ERROR()
+                    LAQ:ArtikelID=Art:ArtikelID
+                    LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                    LAQ:ArtikelOms=LOC:ArtikelOms
+                    LAQ:BrutoKG=Weg:BrutoGewicht
+                    LAQ:NettoKG=Weg:NettoGewicht
+                    LAQ:Pallets=1 ! Elke weging is 1 pallet
+                    LAQ:Gewogen=1
+                    LAQ:Partijnr=Mut:PartijID
+                    ADD(Loc:ArtikelQ)
+                ELSE
+                    IF NOT(LAQ:Gewogen) THEN
+                        LAQ:Gewogen=1
+                        LAQ:BrutoKG=Weg:BrutoGewicht
+                        LAQ:NettoKG=Weg:NettoGewicht
+                        LAQ:Pallets=1 ! Elke weging is 1 pallet
+                    ELSE
+                        LAQ:BrutoKG+=Weg:BrutoGewicht
+                        LAQ:NettoKG+=Weg:NettoGewicht
+                        LAQ:Pallets+=1 ! Elke weging is 1 pallet
+                    END
+                    PUT(Loc:ArtikelQ)
+                END	
+            END
+
+            IF NOT(WegingGevonden#) THEN
+               ! Geen weging, dan mutatie-kg overnemen indien het artikel/verpakking nog geen weging heeft.
+               LAQ:ArtikelID=Art:ArtikelID
+               LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+               GET(Loc:ArtikelQ,+LAQ:ArtikelID,+LAQ:VerpakkingOmschrijving)
+               IF ERROR()
+                  LAQ:ArtikelID=Art:ArtikelID
+                  LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                  LAQ:ArtikelOms=LOC:ArtikelOms
+                  LAQ:BrutoKG=Mut:UitslagKG
+                  LAQ:NettoKG=Mut:UitslagKG
+                  LAQ:Pallets=Mut:UitslagPallet
+                  LAQ:Gewogen=0
+                  LAQ:Partijnr=Mut:PartijID
+                  ADD(Loc:ArtikelQ)
+               ELSE
+                 ! IF NOT(LAQ:Gewogen)
+                     LAQ:BrutoKG+=Mut:UitslagKG
+                     LAQ:NettoKG+=Mut:UitslagKG
+                     LAQ:Pallets+=Mut:UitslagPallet
+                     PUT(Loc:ArtikelQ)
+                 ! END
+               END
+            END
+        END
+
+        IF NOT(MutatieGevonden#) ! Planning niet meer meenemen (Dimitri 18-2-2011)
+            LOC:Waarschuwing = 'Let op: planning-regel met partijnr. ' &  Pla:PartijID & ' en ' & Pla:KG & ' KG heeft geen mutatie/weging.'
+            ! Bijbehorende mutatie bestaat niet, gebruik planningsgegevens
+            Par:PartijID=Pla:PartijID
+            Access:Partij.Fetch(Par:Partij_PK)
+
+            Art:ArtikelID=Pla:ArtikelID
+            Access:ViewArtikel.Fetch(Art:Artikel_PK)
+
+            IF CLIP(Pla:AlternatieveArtikelOms) = '' THEN
+                LOC:ArtikelOms = GlobalClass.CMRArtikelOms(Ver2:Klant, Pla:ArtikelID)
+            ELSE
+                LOC:ArtikelOms = Pla:AlternatieveArtikelOms
+            END
+
+            Ver:VerpakkingID=Pla:VerpakkingID
+            Access:Verpakking.Fetch(Ver:Verpakking_PK)
+
+            Rel:RelatieID=Pla:Leverancier
+            Access:Relatie.Fetch(Rel:Relatie_PK)
+
+            LAQ:ArtikelID=Pla:ArtikelID
+            LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+            GET(Loc:ArtikelQ,+LAQ:ArtikelID,+LAQ:VerpakkingOmschrijving)
+            IF ERROR()
+                LAQ:ArtikelID=Art:ArtikelID
+                LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                LAQ:ArtikelOms=LOC:ArtikelOms
+                LAQ:BrutoKG=Pla:KG
+                LAQ:NettoKG=Pla:KG
+                LAQ:Pallets=Pla:Pallets
+                LAQ:Gewogen=0
+                LAQ:Partijnr=Pla:PartijID  !Mut:PartijID - MS(20180508): WR12540: verkeerd lotnummer wordt geprint
+                Add(Loc:ArtikelQ)
+            ELSE
+                IF NOT(LAQ:Gewogen)
+                    LAQ:BrutoKG+=Pla:KG
+                    LAQ:NettoKG+=Pla:KG
+                    LAQ:Pallets+=Pla:Pallets
+                    Put(Loc:ArtikelQ)
+                END
+            END	
+        END
+    END
+	
+	EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+VulArtikelQueue_BAK     ROUTINE
+	LOC:Waarschuwing = ''
+	
+	FREE(Loc:ArtikelQ)
+	! dit geldt voor alle regels van deze verkoop
+	! eerst even aantal regels tellen er zijn 15 regels beschikbaar
+	LOC:AantalRegels=0
+    WegingGevonden# = false
+
+    Clear(Pla:Record)
+	Pla:VerkoopID = Ver2:VerkoopID
+	Set(Pla:Planning_FK02,Pla:Planning_FK02)
+	Loop Until Access:Planning.Next()
+		if Not Pla:VerkoopID = Ver2:VerkoopID then break.
+		LOC:AantalRegels+=1
+
+		MutatieGevonden# = false
+		CLEAR(Mut:Record)
+		Mut:PlanningID=Pla:PlanningID
+		SET(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+		LOOP UNTIL Access:Mutatie.Next()
+            IF NOT Mut:PlanningID=Pla:PlanningID THEN BREAK.
+
+            CLEAR(Weg:Record)
+            Weg:MutatieID = Mut:MutatieID
+            SET(Weg:FK_Weging,Weg:FK_Weging)
+            IF Access:Weging.Next() = Level:Benign THEN
+                IF Weg:MutatieID = Mut:MutatieID THEN
+                    ! Mutaties heeft een weging
+                    WegingGevonden# = true
+                END
+            END
+
+			IF (NOT(MutatieGevonden#))
+				MutatieGevonden# = true
+			ELSE
+				LOC:AantalRegels+=1
+            END
+		END
+    END
+
+    IF WegingGevonden#
+        ! Alleen de gewogen KG komen op de CMR
+        Clear(Pla:Record)
+        Pla:VerkoopID = Ver2:VerkoopID
+        Set(Pla:Planning_FK02,Pla:Planning_FK02)
+        Loop Until Access:Planning.Next()
+            if Pla:VerkoopID <> Ver2:VerkoopID then break.
+
+            CLEAR(Mut:Record)
+            Mut:PlanningID=Pla:PlanningID
+            SET(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+            LOOP UNTIL Access:Mutatie.Next()
+                IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+
+                CLEAR(Par:Record)
+                Par:PartijID=Mut:PartijID
+                Access:Partij.Fetch(Par:Partij_PK)
+
+                CLEAR(Art:Record)
+                Art:ArtikelID=Par:ArtikelID
+                Access:ViewArtikel.Fetch(Art:Artikel_PK)
+
+                CLEAR(Ver:Record)
+                Ver:VerpakkingID=Par:VerpakkingID
+                Access:Verpakking.Fetch(Ver:Verpakking_PK)
+
+                LOC:ArtikelOms = CLIP(Art:ArtikelOms)
+                LOC:NettoKG = 0
+                LOC:BrutoKG = 0
+
+                CLEAR(Weg:Record)
+                Weg:MutatieID = Mut:MutatieID
+                SET(Weg:FK_Weging, Weg:FK_Weging)
+                LOOP UNTIL Access:Weging.Next()
+                    IF Weg:MutatieID <> Mut:MutatieID THEN BREAK.
+                    db.DebugOut('ReportCMR - WegingGevonden' & Mut:PlanningID)
+
+                    LAQ:ArtikelID=Art:ArtikelID
+                    LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                    GET(Loc:ArtikelQ,+LAQ:ArtikelID,+LAQ:VerpakkingOmschrijving)
+                    IF ERROR()
+                       LAQ:ArtikelID=Art:ArtikelID
+                       LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                       LAQ:ArtikelOms=LOC:ArtikelOms
+                       LAQ:BrutoKG=Weg:BrutoGewicht
+                       LAQ:NettoKG=Weg:NettoGewicht
+                       LAQ:Pallets=1 ! Elke weging is 1 pallet
+                       Add(Loc:ArtikelQ)
+                    ELSE
+                       LAQ:BrutoKG+=Weg:BrutoGewicht
+                       LAQ:NettoKG+=Weg:NettoGewicht
+                       LAQ:Pallets+=1 ! Elke weging is 1 pallet
+                       Put(Loc:ArtikelQ)
+                    END	
+                END
+            END
+        END
+    ELSE
+        ! Op de oude manier, waarbij alle planning/mutatie KG's op de CMR komen
+        Clear(Pla:Record)
+        Pla:VerkoopID = Ver2:VerkoopID
+        Set(Pla:Planning_FK02,Pla:Planning_FK02)
+        Loop Until Access:Planning.Next()
+            if Not Pla:VerkoopID = Ver2:VerkoopID then break.
+
+            found# = false
+
+            CLEAR(Mut:Record)
+            Mut:PlanningID=Pla:PlanningID
+            SET(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+            LOOP UNTIL Access:Mutatie.Next()
+                IF NOT Mut:PlanningID=Pla:PlanningID THEN BREAK.
+
+                found# = true
+
+                ! Bijbehorende mutatie bestaat
+                Par:PartijID=Mut:PartijID
+                Access:Partij.Fetch(Par:Partij_PK)
+
+                Art:ArtikelID=Par:ArtikelID
+                Access:ViewArtikel.Fetch(Art:Artikel_PK)
+
+                LOC:ArtikelOms = CLIP(Art:ArtikelOms)
+                LOC:NettoKG = 0
+                LOC:BrutoKG = 0
+
+                CLEAR(Weg:WegingID)
+                Weg:MutatieID = Mut:MutatieID
+                SET(Weg:FK_Weging, Weg:FK_Weging)
+                LOOP UNTIL Access:Weging.Next()
+                    IF NOT Weg:MutatieID = Mut:MutatieID THEN BREAK.
+
+                    LOC:NettoKG = LOC:NettoKG + Weg:NettoGewicht
+                    LOC:BrutoKG = LOC:BrutoKG + Weg:BrutoGewicht
+                .
+
+                IF LOC:NettoKG = 0
+                    LOC:NettoKG = Mut:UitslagKG
+                END
+
+                IF LOC:BrutoKG = 0
+                    LOC:BrutoKG = Mut:UitslagKG
+                END
+
+                IF (CLIP(AREL:ItemCode)<> '')
+                    CLEAR(Art2:Record)
+                    Art2:ex_artcode=AREL:ItemCode
+                    Art2:artcode=Art:ArtikelID
+                    IF (Access:ArtikelOmschrijvingExtra.TryFetch(Art2:PK_ArtikelOmschrijvingExtra) = Level:Benign)
+                        LOC:ArtikelOms = CLIP(Art2:tekst)
+                    END
+                .
+
+                Ver:VerpakkingID=Par:VerpakkingID
+                Access:Verpakking.Fetch(Ver:Verpakking_PK)
+
+                Rel:RelatieID=Par:Leverancier
+                Access:Relatie.Fetch(Rel:Relatie_PK)
+
+                LAQ:ArtikelID=Art:ArtikelID
+                LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                GET(Loc:ArtikelQ,+LAQ:ArtikelID,+LAQ:VerpakkingOmschrijving)
+                IF ERROR()
+                   LAQ:ArtikelID=Art:ArtikelID
+                   LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                   LAQ:ArtikelOms=LOC:ArtikelOms
+                   LAQ:BrutoKG=LOC:BrutoKG
+                   LAQ:NettoKG=LOC:NettoKG
+                   LAQ:Pallets=Mut:UitslagPallet
+                    Add(Loc:ArtikelQ)
+                ELSE
+                   LAQ:BrutoKG+=LOC:BrutoKG
+                   LAQ:NettoKG+=LOC:NettoKG
+                   LAQ:Pallets+=Mut:UitslagPallet
+                    Put(Loc:ArtikelQ)
+                END	
+            END
+
+            IF NOT(found#) ! Planning niet meer meenemen (Dimitri 18-2-2011)
+                LOC:Waarschuwing = 'Let op: planning-regel met partijnr. ' &  Pla:PartijID & ' en ' & Pla:KG & ' KG heeft geen mutatie/weging.'
+                ! Bijbehorende mutatie bestaat niet, gebruik planningsgegevens
+                Par:PartijID=Pla:PartijID
+                Access:Partij.Fetch(Par:Partij_PK)
+
+                Art:ArtikelID=Pla:ArtikelID
+                Access:ViewArtikel.Fetch(Art:Artikel_PK)
+
+                LOC:ArtikelOms = CLIP(Art:ArtikelOms)
+
+                IF (CLIP(AREL:ItemCode)<> '')
+                    CLEAR(Art2:Record)
+                    Art2:ex_artcode=AREL:ItemCode
+                    Art2:artcode=Art:ArtikelID
+                    IF (Access:ArtikelOmschrijvingExtra.TryFetch(Art2:PK_ArtikelOmschrijvingExtra) = Level:Benign)
+                        LOC:ArtikelOms = CLIP(Art2:tekst)
+                    END
+                END
+
+                Ver:VerpakkingID=Pla:VerpakkingID
+                Access:Verpakking.Fetch(Ver:Verpakking_PK)
+
+                Rel:RelatieID=Pla:Leverancier
+                Access:Relatie.Fetch(Rel:Relatie_PK)
+
+                LAQ:ArtikelID=Pla:ArtikelID
+                LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                GET(Loc:ArtikelQ,+LAQ:ArtikelID,+LAQ:VerpakkingOmschrijving)
+                IF ERROR()
+                    LAQ:ArtikelID=Art:ArtikelID
+                    LAQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                    LAQ:ArtikelOms=LOC:ArtikelOms
+                    LAQ:BrutoKG=Pla:KG
+                    LAQ:NettoKG=Pla:KG
+                    LAQ:Pallets=Pla:Pallets
+                    Add(Loc:ArtikelQ)
+                ELSE
+                    LAQ:BrutoKG+=Pla:KG
+                    LAQ:NettoKG+=Pla:KG
+                    LAQ:Pallets+=Pla:Pallets
+                    Put(Loc:ArtikelQ)
+                END	
+            END
+        END
+	END
+	
+	EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+SavePalletAdministratie     ROUTINE
+
+    LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,1, LOC:PalletSoort1_IN, LOC:PalletSoort1_OUT)
+    LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,5, LOC:PalletSoort2_IN, LOC:PalletSoort2_OUT)
+    LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,3, LOC:PalletSoort3_IN, LOC:PalletSoort3_OUT)
+    LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,6, LOC:PalletSoort4_IN, LOC:PalletSoort4_OUT)
+!	! Bijwerken Pallet administratie
+!    palletsoort# = 1
+!
+!    LOOP UNTIL palletsoort# > 4
+!        found# = 0
+!        CLEAR(Pal:Record)
+!        Pal:VerkoopID=LOC:VerkoopID
+!        CLEAR(Pal:PalletMutatieID,-1)
+!        SET(Pal:PalletMutatie_FK4, Pal:PalletMutatie_FK4)
+!        LOOP UNTIL Access:PalletMutatie.Next()
+!            IF Pal:VerkoopID<>LOC:VerkoopID THEN BREAK.
+!			
+!            IF Pal:PalletSoortID=palletsoort# THEN
+!                Access:PalletMutatie.DeleteRecord(0)
+!                CYCLE
+!				!found# = 1
+!				
+!				!CASE palletsoort#
+!				!OF 1
+!			    !  Pal:Uitgaand = LOC:PalletSoort1_OUT
+!				!	Pal:Inkomend = LOC:PalletSoort1_IN
+!				!	Access:PalletMutatie.TryUpdate()
+!				!	BREAK
+!			    !OF 2
+!			    !  Pal:Uitgaand = LOC:PalletSoort2_OUT
+!				!	Pal:Inkomend = LOC:PalletSoort2_IN
+!				!	Access:PalletMutatie.TryUpdate()
+!				!	BREAK
+!			    !OF 3
+!			    !  Pal:Uitgaand = LOC:PalletSoort3_OUT
+!				!	Pal:Inkomend = LOC:PalletSoort3_IN
+!				!	Access:PalletMutatie.TryUpdate()
+!				!	BREAK
+!			    !OF 4
+!			    !  Pal:Uitgaand = LOC:PalletSoort4_OUT
+!				!	Pal:Inkomend = LOC:PalletSoort4_IN
+!				!	Access:PalletMutatie.TryUpdate()
+!				!	BREAK
+!				!.
+!            .
+!        .
+!		
+!        if NOT(found#)
+!            CLEAR(Pal:Record)
+!            Pal:PalletSoortID = palletsoort#
+!            Pal:VerkoopID = LOC:VerkoopID
+!			
+!            Pla:PlanningID=LOC:PlanningID
+!            Access:Planning.TryFetch(Pla:PK_Planning)
+!            Ver2:VerkoopID=Pla:VerkoopID
+!            Access:Verkoop.TryFetch(Ver2:PK_Verkoop)
+!			
+!            Pal:RelatieID = Ver2:Klant
+!            Pal:DatumTijd = Ver2:Planning			
+!			
+!            CASE palletsoort#
+!            OF 1
+!                Pal:Uitgaand = LOC:PalletSoort1_OUT
+!                Pal:Inkomend = LOC:PalletSoort1_IN
+!            OF 5
+!                Pal:Uitgaand = LOC:PalletSoort2_OUT
+!                Pal:Inkomend = LOC:PalletSoort2_IN
+!            OF 3
+!                Pal:Uitgaand = LOC:PalletSoort3_OUT
+!                Pal:Inkomend = LOC:PalletSoort3_IN
+!            OF 6
+!                Pal:Uitgaand = LOC:PalletSoort4_OUT
+!                Pal:Inkomend = LOC:PalletSoort4_IN
+!            .
+!            Access:PalletMutatie.Insert()
+!            if(LOC:TransporteurID > 0)
+!				!CLEAR(Tra:Record)
+!				!Tra:TransporteurID=LOC:TransporteurID
+!				!message(Tra:TransporteurID)
+!				!Access:Transporteur.TryFetch(Tra:PK_Transporteur)
+!				!message(Tra:RelatieID)
+!                db.DebugOut('PalletMutatie wegschrijven voor Transporteur ' & LOC:TransporteurID)
+!                Pal:RelatieID = LOC:TransporteurID
+!                Pal:Transporteur = 1
+!                Access:PalletMutatie.Insert()
+!            .
+!        .
+!        palletsoort# += 1
+!    .
+!	
+    NOTIFY(2, GLO:PalletAdministratie_ThreadID)	
+    EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LoadPalletAdministratie     ROUTINE
+	db.DebugOut('LoadPalletAdministratie1:'&LOC:TransporteurID)
+	
+	! Bijwerken Pallet administratie
+	CLEAR(Pal:Record)
+	Pal:VerkoopID=LOC:VerkoopID
+	CLEAR(Pal:PalletMutatieID,-1)
+	SET(Pal:PalletMutatie_FK4, Pal:PalletMutatie_FK4)
+	LOOP UNTIL Access:PalletMutatie.Next()
+        IF Pal:VerkoopID<>LOC:VerkoopID THEN BREAK.
+        ! ALLEEN DE KLANT PALLETMUTATIES
+        if Pal:Transporteur=true then cycle.
+
+	   CASE Pal:PalletSoortID
+	   OF 1
+		 LOC:PalletSoort1_OUT = Pal:Uitgaand
+		 LOC:PalletSoort1_IN = Pal:Inkomend
+	   OF 5
+		 LOC:PalletSoort2_OUT = Pal:Uitgaand
+		 LOC:PalletSoort2_IN = Pal:Inkomend
+	   OF 3
+		 LOC:PalletSoort3_OUT = Pal:Uitgaand
+		 LOC:PalletSoort3_IN = Pal:Inkomend
+	   OF 6
+		 LOC:PalletSoort4_OUT = Pal:Uitgaand
+		 LOC:PalletSoort4_IN = Pal:Inkomend
+		.
+		
+		IF Pal:Transporteur = 1 THEN
+			LOC:TransporteurID = Pal:RelatieID
+		.
+	.
+	
+	db.DebugOut('LoadPalletAdministratie2:'&LOC:TransporteurID)
+
+	EXIT
+[END]
+EMBED %LocalProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3500
+PROPERTY:END
+LocalClass.SchrijfPalletMutatie     Procedure(LONG pVerkoopID, pPlanningID, LONG pPalletSoort, LONG pInkomend, LONG pUitgaand)
+
+CODE
+    Pla:PlanningID=pPlanningID
+    Access:Planning.TryFetch(Pla:PK_Planning)
+    Ver2:VerkoopID=pVerkoopID
+    Access:Verkoop.TryFetch(Ver2:PK_Verkoop)
+
+    CLEAR(Pal:Record)
+    Pal:VerkoopID=pVerkoopID
+    Pal:PalletSoortID=pPalletSoort
+    Pal:Transporteur=0
+    IF Access:PalletMutatie.Fetch(Pal:PalletMutatie_FK5)= Level:Benign
+        Pal:Uitgaand = pUitgaand
+        Pal:Inkomend = pInkomend
+        Access:PalletMutatie.Update()
+    ELSIF pUitgaand<>0 OR pInkomend<>0
+        CLEAR(Pal:Record)
+        Pal:PalletSoortID = pPalletSoort
+        Pal:VerkoopID = LOC:VerkoopID
+			
+        Pla:PlanningID=pPlanningID
+        Access:Planning.TryFetch(Pla:PK_Planning)
+        Ver2:VerkoopID=pVerkoopID
+        Access:Verkoop.TryFetch(Ver2:PK_Verkoop)
+			
+        Pal:RelatieID = Ver2:Klant
+        Pal:DatumTijd = Ver2:Planning			
+			
+        Pal:Uitgaand = pUitgaand
+        Pal:Inkomend = pInkomend
+        Access:PalletMutatie.Insert()
+    END
+
+    !~niet meer naar de transporteur
+!    if(LOC:TransporteurID > 0)
+!				!CLEAR(Tra:Record)
+!				!Tra:TransporteurID=LOC:TransporteurID
+!				!message(Tra:TransporteurID)
+!				!Access:Transporteur.TryFetch(Tra:PK_Transporteur)
+!				!message(Tra:RelatieID)
+!        db.DebugOut('PalletMutatie wegschrijven voor Transporteur ' & LOC:TransporteurID)
+!        Pal:RelatieID = LOC:TransporteurID
+!        Pal:Transporteur = 1
+!        Access:PalletMutatie.Insert()
+!    .
+    RETURN
+
+
+[END]
+EMBED %LocalDataAfterClasses
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass          CLASS
+SchrijfPalletMutatie    Procedure(LONG, LONG, LONG, LONG, LONG)
+                    END
+[END]
+[END]
+[ADDITION]
+NAME SVReportToPDFSupport SVReportToPDF
+[INSTANCE]
+INSTANCE 5
+OWNER 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('PDFReporter')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReportGenerator')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
+
+%Populate DEFAULT  ('Always')
+%PopulateCondition DEFAULT  ('')
+%OutputNameType DEFAULT  ('Runtime')
+%OutputNameFixed DEFAULT  ('')
+%OutputNameVariable DEFAULT  ('')
+%DocumentTitle DEFAULT  ('CW Report')
+%ApplicationName DEFAULT  ('VoorrRpt')
+%ProgramName DEFAULT  ('ReportCMR')
+%PDFSubject DEFAULT  ('ReportCMR')
+%PDFAuthor DEFAULT  ('')
+%PDFKeywords DEFAULT  ('')
+%PagesAsParentBookmark LONG  (0)
+%UseScanCopyMode LONG  (0)
+%ScanCopyModeRes DEFAULT  ('Original')
+%CompressText LONG  (1)
+%CompressImages LONG  (1)
+%Encryptdoc DEFAULT  ('Never')
+%EncryptDocCondition DEFAULT  ('')
+%PDFPassword DEFAULT  ('')
+%PDFUseVariableAccess LONG  (0)
+%PDFVariableAccess DEFAULT  ('')
+%PDFAccessPrint LONG  (1)
+%PDFAccessModifyContent LONG  (1)
+%PDFAccessCopy LONG  (1)
+%PDFAccessModifyAnnotations LONG  (1)
+%PDFTempControlInstance DEFAULT  ('39')
+%PDFTempReportControl DEFAULT  ('?LOC:Frankeringsvoorschrift')
+%PDFHideControl DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFSkipControl DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFHideControlOnPDF DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFPossibleTextOrigin DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BOX2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BOX3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BOX4') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BREAK1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?GROUPFOOTER1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?GROUPHEADER1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ArtikelWide') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ExtraDocumenten') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Instructie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Kenteken') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:OpgemaaktTe') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort1_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort1_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort2_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort2_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort3_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort3_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort4_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort4_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Transporteur') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:TransporteurExtra') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:AfkomstAdres') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:AfleveringAdres') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:Artikel:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:CMRnr') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:Expediteur') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:Geadresseerde') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFPossibleBookmarkTextOrigin DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BOX2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BOX3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BOX4') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?BREAK1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?GROUPFOOTER1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?GROUPHEADER1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ArtikelWide') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ExtraDocumenten') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Instructie') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Kenteken') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:OpgemaaktTe') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort1_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort1_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort2_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort2_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort3_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort3_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort4_IN') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort4_OUT') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:PalletSoort6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Transporteur') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:TransporteurExtra') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:AfkomstAdres') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:AfleveringAdres') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:Artikel:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:CMRnr') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:Expediteur') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:Geadresseerde') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFFieldAction DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFFieldActionType DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('Hyperlink')
+WHEN  ('?BOX2') ('Hyperlink')
+WHEN  ('?BOX3') ('Hyperlink')
+WHEN  ('?BOX4') ('Hyperlink')
+WHEN  ('?BREAK1') ('Hyperlink')
+WHEN  ('?DETAIL1') ('Hyperlink')
+WHEN  ('?GROUPFOOTER1') ('Hyperlink')
+WHEN  ('?GROUPHEADER1') ('Hyperlink')
+WHEN  ('?LOC:ArtikelWide') ('Hyperlink')
+WHEN  ('?LOC:ExtraDocumenten') ('Hyperlink')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('Hyperlink')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('Hyperlink')
+WHEN  ('?LOC:Instructie') ('Hyperlink')
+WHEN  ('?LOC:Kenteken') ('Hyperlink')
+WHEN  ('?LOC:OpgemaaktTe') ('Hyperlink')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort1') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort1_IN') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort1_OUT') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort2_IN') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort2_OUT') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort3') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort3_IN') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort3_OUT') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort4_IN') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort4_OUT') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort5') ('Hyperlink')
+WHEN  ('?LOC:PalletSoort6') ('Hyperlink')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('Hyperlink')
+WHEN  ('?LOC:Transporteur') ('Hyperlink')
+WHEN  ('?LOC:TransporteurExtra') ('Hyperlink')
+WHEN  ('?Loc:AfkomstAdres') ('Hyperlink')
+WHEN  ('?Loc:AfleveringAdres') ('Hyperlink')
+WHEN  ('?Loc:Artikel:2') ('Hyperlink')
+WHEN  ('?Loc:CMRnr') ('Hyperlink')
+WHEN  ('?Loc:Expediteur') ('Hyperlink')
+WHEN  ('?Loc:Geadresseerde') ('Hyperlink')
+WHEN  ('?STRING1') ('Hyperlink')
+WHEN  ('?STRING2') ('Hyperlink')
+
+%PDFAnnotationOrigin DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('HardCoded')
+WHEN  ('?BOX2') ('HardCoded')
+WHEN  ('?BOX3') ('HardCoded')
+WHEN  ('?BOX4') ('HardCoded')
+WHEN  ('?BREAK1') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?GROUPFOOTER1') ('Text')
+WHEN  ('?GROUPHEADER1') ('Text')
+WHEN  ('?LOC:ArtikelWide') ('Text')
+WHEN  ('?LOC:ExtraDocumenten') ('Text')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('Text')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('Text')
+WHEN  ('?LOC:Instructie') ('Text')
+WHEN  ('?LOC:Kenteken') ('Text')
+WHEN  ('?LOC:OpgemaaktTe') ('Text')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('Text')
+WHEN  ('?LOC:PalletSoort1') ('Text')
+WHEN  ('?LOC:PalletSoort1_IN') ('Text')
+WHEN  ('?LOC:PalletSoort1_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort2_IN') ('Text')
+WHEN  ('?LOC:PalletSoort2_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort3') ('Text')
+WHEN  ('?LOC:PalletSoort3_IN') ('Text')
+WHEN  ('?LOC:PalletSoort3_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort4_IN') ('Text')
+WHEN  ('?LOC:PalletSoort4_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort5') ('Text')
+WHEN  ('?LOC:PalletSoort6') ('Text')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('Text')
+WHEN  ('?LOC:Transporteur') ('Text')
+WHEN  ('?LOC:TransporteurExtra') ('Text')
+WHEN  ('?Loc:AfkomstAdres') ('Text')
+WHEN  ('?Loc:AfleveringAdres') ('Text')
+WHEN  ('?Loc:Artikel:2') ('Text')
+WHEN  ('?Loc:CMRnr') ('Text')
+WHEN  ('?Loc:Expediteur') ('Text')
+WHEN  ('?Loc:Geadresseerde') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING2') ('Text')
+
+%PDFAnnotationHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFAnnotationDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFPageAction DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('NEXT')
+WHEN  ('?BOX2') ('NEXT')
+WHEN  ('?BOX3') ('NEXT')
+WHEN  ('?BOX4') ('NEXT')
+WHEN  ('?BREAK1') ('NEXT')
+WHEN  ('?DETAIL1') ('NEXT')
+WHEN  ('?GROUPFOOTER1') ('NEXT')
+WHEN  ('?GROUPHEADER1') ('NEXT')
+WHEN  ('?LOC:ArtikelWide') ('NEXT')
+WHEN  ('?LOC:ExtraDocumenten') ('NEXT')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('NEXT')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('NEXT')
+WHEN  ('?LOC:Instructie') ('NEXT')
+WHEN  ('?LOC:Kenteken') ('NEXT')
+WHEN  ('?LOC:OpgemaaktTe') ('NEXT')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('NEXT')
+WHEN  ('?LOC:PalletSoort1') ('NEXT')
+WHEN  ('?LOC:PalletSoort1_IN') ('NEXT')
+WHEN  ('?LOC:PalletSoort1_OUT') ('NEXT')
+WHEN  ('?LOC:PalletSoort2_IN') ('NEXT')
+WHEN  ('?LOC:PalletSoort2_OUT') ('NEXT')
+WHEN  ('?LOC:PalletSoort3') ('NEXT')
+WHEN  ('?LOC:PalletSoort3_IN') ('NEXT')
+WHEN  ('?LOC:PalletSoort3_OUT') ('NEXT')
+WHEN  ('?LOC:PalletSoort4_IN') ('NEXT')
+WHEN  ('?LOC:PalletSoort4_OUT') ('NEXT')
+WHEN  ('?LOC:PalletSoort5') ('NEXT')
+WHEN  ('?LOC:PalletSoort6') ('NEXT')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('NEXT')
+WHEN  ('?LOC:Transporteur') ('NEXT')
+WHEN  ('?LOC:TransporteurExtra') ('NEXT')
+WHEN  ('?Loc:AfkomstAdres') ('NEXT')
+WHEN  ('?Loc:AfleveringAdres') ('NEXT')
+WHEN  ('?Loc:Artikel:2') ('NEXT')
+WHEN  ('?Loc:CMRnr') ('NEXT')
+WHEN  ('?Loc:Expediteur') ('NEXT')
+WHEN  ('?Loc:Geadresseerde') ('NEXT')
+WHEN  ('?STRING1') ('NEXT')
+WHEN  ('?STRING2') ('NEXT')
+
+%PDFTargetCommand DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('notepad.exe')
+WHEN  ('?BOX2') ('notepad.exe')
+WHEN  ('?BOX3') ('notepad.exe')
+WHEN  ('?BOX4') ('notepad.exe')
+WHEN  ('?BREAK1') ('notepad.exe')
+WHEN  ('?DETAIL1') ('notepad.exe')
+WHEN  ('?GROUPFOOTER1') ('notepad.exe')
+WHEN  ('?GROUPHEADER1') ('notepad.exe')
+WHEN  ('?LOC:ArtikelWide') ('notepad.exe')
+WHEN  ('?LOC:ExtraDocumenten') ('notepad.exe')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('notepad.exe')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('notepad.exe')
+WHEN  ('?LOC:Instructie') ('notepad.exe')
+WHEN  ('?LOC:Kenteken') ('notepad.exe')
+WHEN  ('?LOC:OpgemaaktTe') ('notepad.exe')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort1') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort1_IN') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort1_OUT') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort2_IN') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort2_OUT') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort3') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort3_IN') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort3_OUT') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort4_IN') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort4_OUT') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort5') ('notepad.exe')
+WHEN  ('?LOC:PalletSoort6') ('notepad.exe')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('notepad.exe')
+WHEN  ('?LOC:Transporteur') ('notepad.exe')
+WHEN  ('?LOC:TransporteurExtra') ('notepad.exe')
+WHEN  ('?Loc:AfkomstAdres') ('notepad.exe')
+WHEN  ('?Loc:AfleveringAdres') ('notepad.exe')
+WHEN  ('?Loc:Artikel:2') ('notepad.exe')
+WHEN  ('?Loc:CMRnr') ('notepad.exe')
+WHEN  ('?Loc:Expediteur') ('notepad.exe')
+WHEN  ('?Loc:Geadresseerde') ('notepad.exe')
+WHEN  ('?STRING1') ('notepad.exe')
+WHEN  ('?STRING2') ('notepad.exe')
+
+%PDFTargetParameters DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('note.txt')
+WHEN  ('?BOX2') ('note.txt')
+WHEN  ('?BOX3') ('note.txt')
+WHEN  ('?BOX4') ('note.txt')
+WHEN  ('?BREAK1') ('note.txt')
+WHEN  ('?DETAIL1') ('note.txt')
+WHEN  ('?GROUPFOOTER1') ('note.txt')
+WHEN  ('?GROUPHEADER1') ('note.txt')
+WHEN  ('?LOC:ArtikelWide') ('note.txt')
+WHEN  ('?LOC:ExtraDocumenten') ('note.txt')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('note.txt')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('note.txt')
+WHEN  ('?LOC:Instructie') ('note.txt')
+WHEN  ('?LOC:Kenteken') ('note.txt')
+WHEN  ('?LOC:OpgemaaktTe') ('note.txt')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('note.txt')
+WHEN  ('?LOC:PalletSoort1') ('note.txt')
+WHEN  ('?LOC:PalletSoort1_IN') ('note.txt')
+WHEN  ('?LOC:PalletSoort1_OUT') ('note.txt')
+WHEN  ('?LOC:PalletSoort2_IN') ('note.txt')
+WHEN  ('?LOC:PalletSoort2_OUT') ('note.txt')
+WHEN  ('?LOC:PalletSoort3') ('note.txt')
+WHEN  ('?LOC:PalletSoort3_IN') ('note.txt')
+WHEN  ('?LOC:PalletSoort3_OUT') ('note.txt')
+WHEN  ('?LOC:PalletSoort4_IN') ('note.txt')
+WHEN  ('?LOC:PalletSoort4_OUT') ('note.txt')
+WHEN  ('?LOC:PalletSoort5') ('note.txt')
+WHEN  ('?LOC:PalletSoort6') ('note.txt')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('note.txt')
+WHEN  ('?LOC:Transporteur') ('note.txt')
+WHEN  ('?LOC:TransporteurExtra') ('note.txt')
+WHEN  ('?Loc:AfkomstAdres') ('note.txt')
+WHEN  ('?Loc:AfleveringAdres') ('note.txt')
+WHEN  ('?Loc:Artikel:2') ('note.txt')
+WHEN  ('?Loc:CMRnr') ('note.txt')
+WHEN  ('?Loc:Expediteur') ('note.txt')
+WHEN  ('?Loc:Geadresseerde') ('note.txt')
+WHEN  ('?STRING1') ('note.txt')
+WHEN  ('?STRING2') ('note.txt')
+
+%PDFTargetOrigin DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('HardCoded')
+WHEN  ('?BOX2') ('HardCoded')
+WHEN  ('?BOX3') ('HardCoded')
+WHEN  ('?BOX4') ('HardCoded')
+WHEN  ('?BREAK1') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?GROUPFOOTER1') ('Text')
+WHEN  ('?GROUPHEADER1') ('Text')
+WHEN  ('?LOC:ArtikelWide') ('Text')
+WHEN  ('?LOC:ExtraDocumenten') ('Text')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('Text')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('Text')
+WHEN  ('?LOC:Instructie') ('Text')
+WHEN  ('?LOC:Kenteken') ('Text')
+WHEN  ('?LOC:OpgemaaktTe') ('Text')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('Text')
+WHEN  ('?LOC:PalletSoort1') ('Text')
+WHEN  ('?LOC:PalletSoort1_IN') ('Text')
+WHEN  ('?LOC:PalletSoort1_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort2_IN') ('Text')
+WHEN  ('?LOC:PalletSoort2_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort3') ('Text')
+WHEN  ('?LOC:PalletSoort3_IN') ('Text')
+WHEN  ('?LOC:PalletSoort3_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort4_IN') ('Text')
+WHEN  ('?LOC:PalletSoort4_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort5') ('Text')
+WHEN  ('?LOC:PalletSoort6') ('Text')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('Text')
+WHEN  ('?LOC:Transporteur') ('Text')
+WHEN  ('?LOC:TransporteurExtra') ('Text')
+WHEN  ('?Loc:AfkomstAdres') ('Text')
+WHEN  ('?Loc:AfleveringAdres') ('Text')
+WHEN  ('?Loc:Artikel:2') ('Text')
+WHEN  ('?Loc:CMRnr') ('Text')
+WHEN  ('?Loc:Expediteur') ('Text')
+WHEN  ('?Loc:Geadresseerde') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING2') ('Text')
+
+%PDFTargetHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFTargetDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkType DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('None')
+WHEN  ('?BOX2') ('None')
+WHEN  ('?BOX3') ('None')
+WHEN  ('?BOX4') ('None')
+WHEN  ('?BREAK1') ('None')
+WHEN  ('?DETAIL1') ('None')
+WHEN  ('?GROUPFOOTER1') ('None')
+WHEN  ('?GROUPHEADER1') ('None')
+WHEN  ('?LOC:ArtikelWide') ('None')
+WHEN  ('?LOC:ExtraDocumenten') ('None')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('None')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('None')
+WHEN  ('?LOC:Instructie') ('None')
+WHEN  ('?LOC:Kenteken') ('None')
+WHEN  ('?LOC:OpgemaaktTe') ('None')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('None')
+WHEN  ('?LOC:PalletSoort1') ('None')
+WHEN  ('?LOC:PalletSoort1_IN') ('None')
+WHEN  ('?LOC:PalletSoort1_OUT') ('None')
+WHEN  ('?LOC:PalletSoort2_IN') ('None')
+WHEN  ('?LOC:PalletSoort2_OUT') ('None')
+WHEN  ('?LOC:PalletSoort3') ('None')
+WHEN  ('?LOC:PalletSoort3_IN') ('None')
+WHEN  ('?LOC:PalletSoort3_OUT') ('None')
+WHEN  ('?LOC:PalletSoort4_IN') ('None')
+WHEN  ('?LOC:PalletSoort4_OUT') ('None')
+WHEN  ('?LOC:PalletSoort5') ('None')
+WHEN  ('?LOC:PalletSoort6') ('None')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('None')
+WHEN  ('?LOC:Transporteur') ('None')
+WHEN  ('?LOC:TransporteurExtra') ('None')
+WHEN  ('?Loc:AfkomstAdres') ('None')
+WHEN  ('?Loc:AfleveringAdres') ('None')
+WHEN  ('?Loc:Artikel:2') ('None')
+WHEN  ('?Loc:CMRnr') ('None')
+WHEN  ('?Loc:Expediteur') ('None')
+WHEN  ('?Loc:Geadresseerde') ('None')
+WHEN  ('?STRING1') ('None')
+WHEN  ('?STRING2') ('None')
+
+%PDFHyperlinkTypeOther DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkTypeOtherDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperLinkBoxed DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFHyperLinkBoxColor DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (255)
+WHEN  ('?BOX2') (255)
+WHEN  ('?BOX3') (255)
+WHEN  ('?BOX4') (255)
+WHEN  ('?BREAK1') (255)
+WHEN  ('?DETAIL1') (255)
+WHEN  ('?GROUPFOOTER1') (255)
+WHEN  ('?GROUPHEADER1') (255)
+WHEN  ('?LOC:ArtikelWide') (255)
+WHEN  ('?LOC:ExtraDocumenten') (255)
+WHEN  ('?LOC:Frankeringsvoorschrift') (255)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (255)
+WHEN  ('?LOC:Instructie') (255)
+WHEN  ('?LOC:Kenteken') (255)
+WHEN  ('?LOC:OpgemaaktTe') (255)
+WHEN  ('?LOC:OpmerkingenVervoerder') (255)
+WHEN  ('?LOC:PalletSoort1') (255)
+WHEN  ('?LOC:PalletSoort1_IN') (255)
+WHEN  ('?LOC:PalletSoort1_OUT') (255)
+WHEN  ('?LOC:PalletSoort2_IN') (255)
+WHEN  ('?LOC:PalletSoort2_OUT') (255)
+WHEN  ('?LOC:PalletSoort3') (255)
+WHEN  ('?LOC:PalletSoort3_IN') (255)
+WHEN  ('?LOC:PalletSoort3_OUT') (255)
+WHEN  ('?LOC:PalletSoort4_IN') (255)
+WHEN  ('?LOC:PalletSoort4_OUT') (255)
+WHEN  ('?LOC:PalletSoort5') (255)
+WHEN  ('?LOC:PalletSoort6') (255)
+WHEN  ('?LOC:SpecialeOvereenkomst') (255)
+WHEN  ('?LOC:Transporteur') (255)
+WHEN  ('?LOC:TransporteurExtra') (255)
+WHEN  ('?Loc:AfkomstAdres') (255)
+WHEN  ('?Loc:AfleveringAdres') (255)
+WHEN  ('?Loc:Artikel:2') (255)
+WHEN  ('?Loc:CMRnr') (255)
+WHEN  ('?Loc:Expediteur') (255)
+WHEN  ('?Loc:Geadresseerde') (255)
+WHEN  ('?STRING1') (255)
+WHEN  ('?STRING2') (255)
+
+%PDFBookmark DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFBookmarkOrigin DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('HardCoded')
+WHEN  ('?BOX2') ('HardCoded')
+WHEN  ('?BOX3') ('HardCoded')
+WHEN  ('?BOX4') ('HardCoded')
+WHEN  ('?BREAK1') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?GROUPFOOTER1') ('Text')
+WHEN  ('?GROUPHEADER1') ('Text')
+WHEN  ('?LOC:ArtikelWide') ('HardCoded')
+WHEN  ('?LOC:ExtraDocumenten') ('HardCoded')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('HardCoded')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('HardCoded')
+WHEN  ('?LOC:Instructie') ('HardCoded')
+WHEN  ('?LOC:Kenteken') ('HardCoded')
+WHEN  ('?LOC:OpgemaaktTe') ('HardCoded')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('HardCoded')
+WHEN  ('?LOC:PalletSoort1') ('Text')
+WHEN  ('?LOC:PalletSoort1_IN') ('Text')
+WHEN  ('?LOC:PalletSoort1_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort2_IN') ('Text')
+WHEN  ('?LOC:PalletSoort2_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort3') ('Text')
+WHEN  ('?LOC:PalletSoort3_IN') ('Text')
+WHEN  ('?LOC:PalletSoort3_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort4_IN') ('Text')
+WHEN  ('?LOC:PalletSoort4_OUT') ('Text')
+WHEN  ('?LOC:PalletSoort5') ('Text')
+WHEN  ('?LOC:PalletSoort6') ('Text')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('HardCoded')
+WHEN  ('?LOC:Transporteur') ('HardCoded')
+WHEN  ('?LOC:TransporteurExtra') ('HardCoded')
+WHEN  ('?Loc:AfkomstAdres') ('HardCoded')
+WHEN  ('?Loc:AfleveringAdres') ('HardCoded')
+WHEN  ('?Loc:Artikel:2') ('HardCoded')
+WHEN  ('?Loc:CMRnr') ('Text')
+WHEN  ('?Loc:Expediteur') ('HardCoded')
+WHEN  ('?Loc:Geadresseerde') ('HardCoded')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING2') ('Text')
+
+%PDFBookmarkHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkParent DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFParentBookmark DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('?BREAK1')
+WHEN  ('?BOX2') ('?BREAK1')
+WHEN  ('?BOX3') ('?BREAK1')
+WHEN  ('?BOX4') ('?BREAK1')
+WHEN  ('?BREAK1') ('?BREAK1')
+WHEN  ('?DETAIL1') ('?BREAK1')
+WHEN  ('?GROUPFOOTER1') ('?BREAK1')
+WHEN  ('?GROUPHEADER1') ('?BREAK1')
+WHEN  ('?LOC:ArtikelWide') ('?BREAK1')
+WHEN  ('?LOC:ExtraDocumenten') ('?BREAK1')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('?BREAK1')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('?BREAK1')
+WHEN  ('?LOC:Instructie') ('?BREAK1')
+WHEN  ('?LOC:Kenteken') ('?BREAK1')
+WHEN  ('?LOC:OpgemaaktTe') ('?BREAK1')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort1') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort1_IN') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort1_OUT') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort2_IN') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort2_OUT') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort3') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort3_IN') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort3_OUT') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort4_IN') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort4_OUT') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort5') ('?BREAK1')
+WHEN  ('?LOC:PalletSoort6') ('?BREAK1')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('?BREAK1')
+WHEN  ('?LOC:Transporteur') ('?BREAK1')
+WHEN  ('?LOC:TransporteurExtra') ('?BREAK1')
+WHEN  ('?Loc:AfkomstAdres') ('?BREAK1')
+WHEN  ('?Loc:AfleveringAdres') ('?BREAK1')
+WHEN  ('?Loc:Artikel:2') ('?BREAK1')
+WHEN  ('?Loc:CMRnr') ('?BREAK1')
+WHEN  ('?Loc:Expediteur') ('?BREAK1')
+WHEN  ('?Loc:Geadresseerde') ('?BREAK1')
+WHEN  ('?STRING1') ('?BREAK1')
+WHEN  ('?STRING2') ('?BREAK1')
+
+%PDFUsePDFFont DEPEND %ReportControl LONG TIMES 39
+WHEN  ('?BOX1') (0)
+WHEN  ('?BOX2') (0)
+WHEN  ('?BOX3') (0)
+WHEN  ('?BOX4') (0)
+WHEN  ('?BREAK1') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?GROUPFOOTER1') (0)
+WHEN  ('?GROUPHEADER1') (0)
+WHEN  ('?LOC:ArtikelWide') (0)
+WHEN  ('?LOC:ExtraDocumenten') (0)
+WHEN  ('?LOC:Frankeringsvoorschrift') (0)
+WHEN  ('?LOC:HandtekeningStempelAfzender') (0)
+WHEN  ('?LOC:Instructie') (0)
+WHEN  ('?LOC:Kenteken') (0)
+WHEN  ('?LOC:OpgemaaktTe') (0)
+WHEN  ('?LOC:OpmerkingenVervoerder') (0)
+WHEN  ('?LOC:PalletSoort1') (0)
+WHEN  ('?LOC:PalletSoort1_IN') (0)
+WHEN  ('?LOC:PalletSoort1_OUT') (0)
+WHEN  ('?LOC:PalletSoort2_IN') (0)
+WHEN  ('?LOC:PalletSoort2_OUT') (0)
+WHEN  ('?LOC:PalletSoort3') (0)
+WHEN  ('?LOC:PalletSoort3_IN') (0)
+WHEN  ('?LOC:PalletSoort3_OUT') (0)
+WHEN  ('?LOC:PalletSoort4_IN') (0)
+WHEN  ('?LOC:PalletSoort4_OUT') (0)
+WHEN  ('?LOC:PalletSoort5') (0)
+WHEN  ('?LOC:PalletSoort6') (0)
+WHEN  ('?LOC:SpecialeOvereenkomst') (0)
+WHEN  ('?LOC:Transporteur') (0)
+WHEN  ('?LOC:TransporteurExtra') (0)
+WHEN  ('?Loc:AfkomstAdres') (0)
+WHEN  ('?Loc:AfleveringAdres') (0)
+WHEN  ('?Loc:Artikel:2') (0)
+WHEN  ('?Loc:CMRnr') (0)
+WHEN  ('?Loc:Expediteur') (0)
+WHEN  ('?Loc:Geadresseerde') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING2') (0)
+
+%PDFOriginalFont DEPEND %ReportControl DEFAULT TIMES 39
+WHEN  ('?BOX1') ('HELVETICA')
+WHEN  ('?BOX2') ('HELVETICA')
+WHEN  ('?BOX3') ('HELVETICA')
+WHEN  ('?BOX4') ('HELVETICA')
+WHEN  ('?BREAK1') ('HELVETICA')
+WHEN  ('?DETAIL1') ('HELVETICA')
+WHEN  ('?GROUPFOOTER1') ('HELVETICA')
+WHEN  ('?GROUPHEADER1') ('HELVETICA')
+WHEN  ('?LOC:ArtikelWide') ('HELVETICA')
+WHEN  ('?LOC:ExtraDocumenten') ('HELVETICA')
+WHEN  ('?LOC:Frankeringsvoorschrift') ('HELVETICA')
+WHEN  ('?LOC:HandtekeningStempelAfzender') ('HELVETICA')
+WHEN  ('?LOC:Instructie') ('HELVETICA')
+WHEN  ('?LOC:Kenteken') ('HELVETICA')
+WHEN  ('?LOC:OpgemaaktTe') ('HELVETICA')
+WHEN  ('?LOC:OpmerkingenVervoerder') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort1') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort1_IN') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort1_OUT') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort2_IN') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort2_OUT') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort3') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort3_IN') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort3_OUT') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort4_IN') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort4_OUT') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort5') ('HELVETICA')
+WHEN  ('?LOC:PalletSoort6') ('HELVETICA')
+WHEN  ('?LOC:SpecialeOvereenkomst') ('HELVETICA')
+WHEN  ('?LOC:Transporteur') ('HELVETICA')
+WHEN  ('?LOC:TransporteurExtra') ('HELVETICA')
+WHEN  ('?Loc:AfkomstAdres') ('HELVETICA')
+WHEN  ('?Loc:AfleveringAdres') ('HELVETICA')
+WHEN  ('?Loc:Artikel:2') ('HELVETICA')
+WHEN  ('?Loc:CMRnr') ('HELVETICA')
+WHEN  ('?Loc:Expediteur') ('HELVETICA')
+WHEN  ('?Loc:Geadresseerde') ('HELVETICA')
+WHEN  ('?STRING1') ('HELVETICA')
+WHEN  ('?STRING2') ('HELVETICA')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReporter')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 7
+OWNER 5
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 6
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC PauseButton
+[INSTANCE]
+INSTANCE 1
+[PROMPTS]
+%PauseText DEFAULT  ('Pause')
+%RestartText DEFAULT  ('Restart')
+%DeferOpen LONG  (1)
+%StartText DEFAULT  ('Start')
+%MultiStart LONG  (0)
+[ADDITION]
+NAME ABC WindowResize
+[FIELDPROMPT]
+%ResizeAnchorTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorBottom DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowBottom DEPEND %Control LONG TIMES 0
+
+[INSTANCE]
+INSTANCE 3
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('WindowResizeClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)')
+
+%AppStrategy DEFAULT  ('Surface')
+%RestrictMinSize LONG  (0)
+%WindowMinWidth DEFAULT  ('')
+%WindowMinHeight DEFAULT  ('')
+%RestrictMaxSize LONG  (0)
+%WindowMaxWidth DEFAULT  ('')
+%WindowMaxHeight DEFAULT  ('')
+%AutoFindParents DEFAULT  ('Default')
+%DeferMoves DEFAULT  ('Default')
+%OverrideControls MULTI LONG  (1, 2, 3, 4)
+%OverrideControl DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('?Loc:IsTruckClear')
+WHEN  (2) ('?Loc:IsPackingGoodsOK')
+WHEN  (3) ('?Loc:ISDriverDressedCorrectly')
+WHEN  (4) ('?Loc:EC_LabelsOnTheGoods')
+
+%DisableResize DEPEND %OverrideControls LONG TIMES 4
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+
+%HorizResize DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Lock Width')
+WHEN  (2) ('Lock Width')
+WHEN  (3) ('Lock Width')
+WHEN  (4) ('Lock Width')
+
+%VertResize DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Lock Height')
+WHEN  (2) ('Lock Height')
+WHEN  (3) ('Lock Height')
+WHEN  (4) ('Lock Height')
+
+%HorizPositional DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Move')
+WHEN  (2) ('Move')
+WHEN  (3) ('Move')
+WHEN  (4) ('Move')
+
+%VertPositional DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Move')
+WHEN  (2) ('Move')
+WHEN  (3) ('Move')
+WHEN  (4) ('Move')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Resizer')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME ABC FileDropCombo
+[INSTANCE]
+INSTANCE 2
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo {11}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (VTRA:RelatieID)
+%TargetField FIELD  (LOC:TransporteurID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (1)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (0)
+WHEN  ('VTRA:Plaats') (0)
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (-1)
+WHEN  ('VTRA:Plaats') (-1)
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') (0)
+WHEN  ('VTRA:Plaats') (0)
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') ('Local List')
+WHEN  ('VTRA:Plaats') ('Local List')
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') ('')
+WHEN  ('VTRA:Plaats') ('')
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') ('Local List')
+WHEN  ('VTRA:Plaats') ('Local List')
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') ('')
+WHEN  ('VTRA:Plaats') ('')
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') ('Local List')
+WHEN  ('VTRA:Plaats') ('Local List')
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 2
+WHEN  ('VTRA:FirmaNaam') ('')
+WHEN  ('VTRA:Plaats') ('')
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 6
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?BtnLeeg')TIMES 0
+WHEN  ('?LOC:Waarschuwing')TIMES 0
+WHEN  ('?Loc:EC_LabelsOnTheGoods')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+WHEN  ('?VTRA:FirmaNaam')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB2')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[ADDITION]
+NAME JMDTemplates JMDMAIL
+[INSTANCE]
+INSTANCE 4
+[PROMPTS]
+%RAPPORTNAAM DEFAULT  ('CMR')
+[WINDOW]
+ProgressWindow WINDOW('Progress....'),AT(,,393,389),FONT('Microsoft Sans Serif',10,,,CHARSET:DEFAULT), |
+          DOUBLE,CENTER,GRAY,TIMER(1)
+          PROGRESS,AT(274,350,111,16),USE(Progress:Thermometer),RANGE(0,100),#ORIG(Progress:Thermometer), |
+            #ORDINAL(1)
+          STRING(''),AT(274,313,111,19),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString), |
+            #ORDINAL(2)
+          STRING(''),AT(274,291,111,19),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText), |
+            #ORDINAL(3)
+          PROMPT('Printer:'),AT(214,7),USE(?Loc:Printer:Prompt),#ORDINAL(4)
+          LIST,AT(243,6,141,10),USE(Loc:Printer,,?Loc:Printer:2),DROP(3),FROM('Kies Print' & |
+            'er|Receptie|Vrieshuis'),#ORDINAL(5)
+          TEXT,AT(14,6,178,38),USE(Loc:Expediteur),#ORDINAL(6)
+          TEXT,AT(14,48,178,26),USE(Loc:Geadresseerde),#ORDINAL(7)
+          TEXT,AT(14,78,178,26),USE(Loc:AfleveringAdres),#ORDINAL(8)
+          TEXT,AT(14,108,178,23),USE(Loc:AfkomstAdres),#ORDINAL(9)
+          TEXT,AT(14,136,178,26),USE(LOC:ExtraDocumenten),#ORDINAL(10)
+          TEXT,AT(14,167,224,60),USE(Loc:Artikel),VSCROLL,#ORDINAL(11)
+          ENTRY(@n13.),AT(287,178,46,10),USE(LOC:PalletSoort1_OUT,,?LOC:PalletSoort1_OUT:2), |
+            RIGHT,#ORDINAL(12)
+          ENTRY(@n14.),AT(339,178,46,10),USE(LOC:PalletSoort1_IN),RIGHT,#ORDINAL(13)
+          ENTRY(@n14.),AT(287,194,46,10),USE(LOC:PalletSoort2_OUT),RIGHT,#ORDINAL(14)
+          ENTRY(@n14.),AT(339,194,46,10),USE(LOC:PalletSoort2_IN),RIGHT,#ORDINAL(15)
+          ENTRY(@n14.),AT(287,209,46,10),USE(LOC:PalletSoort3_OUT),RIGHT,#ORDINAL(16)
+          ENTRY(@n14.),AT(338,209,47,10),USE(LOC:PalletSoort3_IN),RIGHT,#ORDINAL(17)
+          ENTRY(@n14.),AT(287,224,46,8),USE(LOC:PalletSoort4_OUT),RIGHT,#ORDINAL(18)
+          ENTRY(@n14.),AT(339,224,46,8),USE(LOC:PalletSoort4_IN),RIGHT,#ORDINAL(19)
+          TEXT,AT(15,249,178,44),USE(LOC:Instructie),#ORDINAL(20)
+          CHECK('Is Truck Clean ?'),AT(195,287),USE(Loc:IsTruckClear),#ORDINAL(21)
+          CHECK('Is Packing Goods OK?'),AT(195,297),USE(Loc:IsPackingGoodsOK),#ORDINAL(22)
+          CHECK('Is Driver Dressed Correctly?'),AT(195,307),USE(Loc:ISDriverDressedCorrectly), |
+            #ORDINAL(23)
+          CHECK('EC Labels On The Goods?'),AT(195,319),USE(Loc:EC_LabelsOnTheGoods),#ORDINAL(24)
+          TEXT,AT(15,297,178,18),USE(LOC:Frankeringsvoorschrift),#ORDINAL(25)
+          TEXT,AT(213,48,171,26),USE(LOC:Transporteur),#ORDINAL(26)
+          TEXT,AT(213,78,171,26),USE(LOC:TransporteurExtra),#ORDINAL(27)
+          TEXT,AT(213,108,171,54),USE(LOC:OpmerkingenVervoerder),#ORDINAL(28)
+          TEXT,AT(214,249,171,34),USE(LOC:SpecialeOvereenkomst),#ORDINAL(29)
+          TEXT,AT(15,319,178,20),USE(LOC:OpgemaaktTe),#ORDINAL(30)
+          TEXT,AT(15,343,98,28),USE(LOC:HandtekeningStempelAfzender),#ORDINAL(31)
+          TEXT,AT(127,343,108,28),USE(LOC:Kenteken),#ORDINAL(32)
+          STRING('23'),AT(117,343),USE(?STRING1),#ORDINAL(33)
+          STRING('22'),AT(3,343),USE(?STRING2),#ORDINAL(34)
+          STRING('1'),AT(6,6),USE(?STRING3),#ORDINAL(35)
+          STRING('2'),AT(6,48,,10),USE(?STRING4),#ORDINAL(36)
+          STRING('3'),AT(6,78,4,10),USE(?STRING5),#ORDINAL(37)
+          STRING('4'),AT(6,106),USE(?STRING6),#ORDINAL(38)
+          STRING('5'),AT(6,138),USE(?STRING7),#ORDINAL(39)
+          STRING('16'),AT(202,48),USE(?STRING8),#ORDINAL(40)
+          STRING('17'),AT(202,78),USE(?STRING9),#ORDINAL(41)
+          STRING('18'),AT(202,108),USE(?STRING10),#ORDINAL(42)
+          STRING('6'),AT(6,169),USE(?STRING11),#ORDINAL(43)
+          STRING('13'),AT(3,249),USE(?STRING12),#ORDINAL(44)
+          STRING('14'),AT(3,297),USE(?STRING13),#ORDINAL(45)
+          STRING('21'),AT(4,319),USE(?STRING14),#ORDINAL(46)
+          STRING('19'),AT(203,249),USE(?STRING15),#ORDINAL(47)
+          STRING('OUT'),AT(302,165),USE(?STRING16),#ORDINAL(48)
+          PROMPT('IN'),AT(358,165),USE(?PROMPT4),#ORDINAL(49)
+          STRING(@s10),AT(242,179,40),USE(LOC:PalletSoort1),#ORDINAL(50)
+          STRING(@s10),AT(242,194,40),USE(LOC:PalletSoort5),#ORDINAL(51)
+          STRING(@s10),AT(242,208,40),USE(LOC:PalletSoort3),#ORDINAL(52)
+          STRING(@s10),AT(242,223,40),USE(LOC:PalletSoort6),#ORDINAL(53)
+          PROMPT('Transporteur:'),AT(81,376),USE(?PROMPT1),#ORDINAL(54)
+          COMBO(@s50),AT(127,376,108,8),USE(VTRA:FirmaNaam),DROP(5),FORMAT('100L(2)|M~F' & |
+            'irmanaam~C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo),IMM, |
+            #FIELDS(VTRA:FirmaNaam,VTRA:Plaats),#ORIG(VTRA:RelatieID),#SEQ(2),#ORDINAL(55)
+          BUTTON('Leeg'),AT(239,373,24),USE(?BtnLeeg),#ORDINAL(56)
+          BUTTON('Pause'),AT(274,368,58,19),USE(?Pause),#ORIG(?Pause),#SEQ(1),#ORDINAL(57)
+          BUTTON('Cancel'),AT(336,368,50,19),USE(?Progress:Cancel),#ORIG(?Progress:Cancel), |
+            #ORDINAL(58)
+          BUTTON('Vul artikelen opnieuw'),AT(13,231),USE(?VulArtikelOpnieuw),#ORDINAL(59)
+          STRING(@S100),AT(98,234,287),USE(LOC:Waarschuwing),FONT(,,,FONT:bold),#ORDINAL(60)
+        END
+
+[REPORT]
+Report  REPORT,AT(800,800,7160,10960),PRE(RPT),PAPER(PAPER:A4),FONT('Arial',10,,,CHARSET:ANSI), |
+          THOUS
+BreakOnPlanning BREAK(Pla:PlanningID),USE(?BREAK1),#ORDINAL(1)
+            HEADER,AT(0,0,7115,4000),USE(?GROUPHEADER1),#ORDINAL(2)
+              TEXT,AT(80,0,3400,920),USE(Loc:Expediteur),#ORDINAL(3)
+              TEXT,AT(80,960,3400,800),USE(Loc:Geadresseerde),#ORDINAL(4)
+              TEXT,AT(80,1760,3400,640),USE(Loc:AfleveringAdres),#ORDINAL(5)
+              TEXT,AT(80,2640,3400,680),USE(Loc:AfkomstAdres),#ORDINAL(6)
+              TEXT,AT(80,3320,3400,640),USE(LOC:ExtraDocumenten),#ORDINAL(7)
+              TEXT,AT(3560,960,3400),USE(LOC:Transporteur),#ORDINAL(8)
+              TEXT,AT(3560,1960,3400,640),USE(LOC:TransporteurExtra),#ORDINAL(9)
+              TEXT,AT(3560,2640,3400,1320),USE(LOC:OpmerkingenVervoerder),#ORDINAL(10)
+              STRING(@n_6B),AT(5320,-119),USE(Loc:CMRnr),FONT(,16),RIGHT(40),#ORDINAL(11)
+            END
+PlanningDetail DETAIL,AT(0,0,7115,2854),USE(?DETAIL1),#ORDINAL(12)
+              BOX,AT(4604,1417,2440,1280),USE(?BOX1),COLOR(COLOR:Black),LINEWIDTH(1),#ORDINAL(13)
+              BOX,AT(4604,1740,2440,240),USE(?BOX3),COLOR(COLOR:Black),LINEWIDTH(1),#ORDINAL(14)
+              BOX,AT(4604,2219,2440,240),USE(?BOX4),COLOR(COLOR:Black),LINEWIDTH(1),#ORDINAL(15)
+              BOX,AT(5635,1417,760,1280),USE(?BOX2),COLOR(COLOR:Black),LINEWIDTH(1),#ORDINAL(16)
+              TEXT,AT(80,0,6958,2781),USE(LOC:ArtikelWide),TRN,#ORDINAL(17)
+              TEXT,AT(80,0,4440,2781),USE(Loc:Artikel,,?Loc:Artikel:2),TRN,#ORDINAL(18)
+              STRING('OUT'),AT(5917,1562),USE(?STRING1),#ORDINAL(19)
+              STRING('IN'),AT(6635,1562),USE(?STRING2),#ORDINAL(20)
+              STRING(@n14.B),AT(5844,2010),USE(LOC:PalletSoort2_IN),RIGHT(40),#ORDINAL(21)
+              STRING(@n14.B),AT(5844,1771),USE(LOC:PalletSoort1_IN),RIGHT(40),#ORDINAL(22)
+              STRING(@n14.B),AT(5844,2250),USE(LOC:PalletSoort3_IN),RIGHT(40),#ORDINAL(23)
+              STRING(@n14.B),AT(5844,2490),USE(LOC:PalletSoort4_IN),RIGHT(40),#ORDINAL(24)
+              STRING(@N14.B),AT(5156,1771),USE(LOC:PalletSoort1_OUT),RIGHT(40),#ORDINAL(25)
+              STRING(@n14.B),AT(5156,2010),USE(LOC:PalletSoort2_OUT),RIGHT(40),#ORDINAL(26)
+              STRING(@n14.B),AT(5156,2250),USE(LOC:PalletSoort3_OUT),RIGHT(40),#ORDINAL(27)
+              STRING(@n14.B),AT(5156,2490),USE(LOC:PalletSoort4_OUT),RIGHT(40),#ORDINAL(28)
+              STRING(@s10),AT(4719,1771),USE(LOC:PalletSoort1),#ORDINAL(29)
+              STRING(@s10),AT(4719,2010),USE(LOC:PalletSoort5),#ORDINAL(30)
+              STRING(@s10),AT(4719,2250),USE(LOC:PalletSoort3),#ORDINAL(31)
+              STRING(@s10),AT(4719,2490),USE(LOC:PalletSoort6),#ORDINAL(32)
+            END
+            FOOTER,AT(0,0,7120,3800),USE(?GROUPFOOTER1),#ORDINAL(33)
+              TEXT,AT(80,0,3440,1719),USE(LOC:Instructie),#ORDINAL(34)
+              TEXT,AT(562,2375,3440,240),USE(LOC:OpgemaaktTe),#ORDINAL(35)
+              TEXT,AT(80,2600,2280,960),USE(LOC:HandtekeningStempelAfzender),#ORDINAL(36)
+              TEXT,AT(2360,2600,2320,960),USE(LOC:Kenteken),#ORDINAL(37)
+              TEXT,AT(3560,40,3520),USE(LOC:SpecialeOvereenkomst),#ORDINAL(38)
+              TEXT,AT(562,1896,3440,520),USE(LOC:Frankeringsvoorschrift),#ORDINAL(39)
+            END
+          END
+        END
+
+[END]

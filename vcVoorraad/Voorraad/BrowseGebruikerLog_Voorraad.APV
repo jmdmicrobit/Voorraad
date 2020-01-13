@@ -1,0 +1,3214 @@
+[MODULE]
+NAME 'BrowseGebruikerLog_Voorraad.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME BrowseGebruikerLog
+[COMMON]
+DESCRIPTION 'Browse the GebruikerLog file'
+FROM ABC Window
+CATEGORY 'Browse'
+[DATA]
+CurrentTab               STRING(80)
+!!> GUID('14f68847-7139-492b-a193-0455409841bd')
+[SCREENCONTROLS]
+! PROMPT('LOC : Gebruiker ID:'),USE(?LOC:GebruikerID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:GebruikerID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:GebruikerID),RIGHT(1)
+LOC:GebruikerID          LONG
+!!> GUID('fed7cd9c-3226-4fdc-91ad-b79c8108aa54'),PROMPT('LOC : Gebruiker ID:'),HEADER('LOC : Gebruiker ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Windows Inlog:'),USE(?LOC:WindowsInlog:Prompt)
+! ENTRY(@s50),USE(LOC:WindowsInlog)
+[REPORTCONTROLS]
+! STRING(@s50),USE(LOC:WindowsInlog)
+LOC:WindowsInlog         CSTRING(51)
+!!> GUID('3808fe9a-d42c-459d-b1ba-848c4ba972fa'),PROMPT('Windows Inlog:'),HEADER('Windows Inlog'),PICTURE(@s50),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Datum:'),USE(?LOC:Datum:Prompt)
+! SPIN(@d17),USE(LOC:Datum)
+[REPORTCONTROLS]
+! STRING(@d17),USE(LOC:Datum)
+LOC:Datum                DATE
+!!> GUID('51e7f3ba-5943-4663-8e7e-f17650670782'),PROMPT('LOC : Datum:'),HEADER('LOC : Datum'),PICTURE(@d17),TYPEMODE(INS)
+[FILES]
+[PRIMARY]
+Gebruiker
+[INSTANCE]
+3
+[KEY]
+Geb:FK1_Gebruiker
+[PRIMARY]
+GebruikerLog
+[INSTANCE]
+1
+[KEY]
+Log:FK1_GebruikerLog
+[OTHERS]
+Planning
+Verkoop
+Partij
+Verpakking
+[PROMPTS]
+%ButtonAction DEPEND %Control DEFAULT TIMES 13
+WHEN  ('') ('No Special Action')
+WHEN  ('?Browse:1') ('No Special Action')
+WHEN  ('?BtnLoadQuery:2') ('No Special Action')
+WHEN  ('?BtnSaveAs:2') ('No Special Action')
+WHEN  ('?BtnSaveQuery:2') ('No Special Action')
+WHEN  ('?Close') ('No Special Action')
+WHEN  ('?Geb:WindowsInlog') ('No Special Action')
+WHEN  ('?Group1:2') ('No Special Action')
+WHEN  ('?Insert') ('No Special Action')
+WHEN  ('?Terugzetten') ('No Special Action')
+WHEN  ('?View') ('No Special Action')
+WHEN  ('?btnApply:2') ('No Special Action')
+WHEN  ('?btnReset:2') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 13
+WHEN  ('') ('25000')
+WHEN  ('?Browse:1') ('25000')
+WHEN  ('?BtnLoadQuery:2') ('25000')
+WHEN  ('?BtnSaveAs:2') ('25000')
+WHEN  ('?BtnSaveQuery:2') ('25000')
+WHEN  ('?Close') ('25000')
+WHEN  ('?Geb:WindowsInlog') ('25000')
+WHEN  ('?Group1:2') ('25000')
+WHEN  ('?Insert') ('25000')
+WHEN  ('?Terugzetten') ('25000')
+WHEN  ('?View') ('25000')
+WHEN  ('?btnApply:2') ('25000')
+WHEN  ('?btnReset:2') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 13
+WHEN  ('') ('None')
+WHEN  ('?Browse:1') ('None')
+WHEN  ('?BtnLoadQuery:2') ('None')
+WHEN  ('?BtnSaveAs:2') ('None')
+WHEN  ('?BtnSaveQuery:2') ('None')
+WHEN  ('?Close') ('None')
+WHEN  ('?Geb:WindowsInlog') ('None')
+WHEN  ('?Group1:2') ('None')
+WHEN  ('?Insert') ('None')
+WHEN  ('?Terugzetten') ('None')
+WHEN  ('?View') ('None')
+WHEN  ('?btnApply:2') ('None')
+WHEN  ('?btnReset:2') ('None')
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Reset {18}PROCEDURE(BYTE Force=0),DERIVED', 'Run {20}PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED', |
+  'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeFieldEvent {9}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  (1, 2)
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 2
+WHEN  (1) ('Log:Uitgevoerd_DATE')
+WHEN  (2) ('LOC:Datum')
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 2
+WHEN  (1) ('BrowseBox(ABC)')
+WHEN  (2) ('BrowseBox(ABC)')
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('Default')
+WHEN  ('?Browse:1') ('Default')
+WHEN  ('?CurrentTab') ('Default')
+WHEN  ('?Geb:WindowsInlog') ('Default')
+WHEN  ('?Group1:2') ('Default')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 5
+WHEN  ('') (1)
+WHEN  ('?Browse:1') (1)
+WHEN  ('?Geb:WindowsInlog') (1)
+WHEN  ('?Group1:2') (1)
+WHEN  ('?LOC:Datum:2') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+WHEN  ('?Group1:2')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+WHEN  ('?Group1:2')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+WHEN  ('?Group1:2')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+WHEN  ('?Group1:2')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+WHEN  ('?Group1:2')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+WHEN  ('?Group1:2')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Off')
+WHEN  ('?Browse:1') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('')
+WHEN  ('?Browse:1') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Browse:1') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 2
+WHEN  ('') (-1)
+WHEN  ('?Browse:1') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Browse:1') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 2
+WHEN  ('') (-1)
+WHEN  ('?Browse:1') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Browse:1') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Browse:1')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Terugzetten'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+        ! restore
+
+IF Access:GebruikerLog.Fetch(Log:PK_GebruikerLog)=Level:Benign
+    Case Log:Tabel
+    OF 'Verpakking'
+        LocalClass.RestoreVerpakking(Log:Record)
+    OF 'Planning'
+        LocalClass.RestorePlanning(Log:Record)
+    OF 'Verkoop'
+        LocalClass.RestoreVerkoop(Log:Record)
+    OF 'Partij'
+        LocalClass.RestorePartij(Log:Record)
+    END
+END
+[END]
+[END]
+[END]
+EMBED %LocalDataAfterClasses
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass          CLASS
+RestorePartij           PROCEDURE(Log:Record)
+RestorePlanning         PROCEDURE(Log:Record)
+RestoreVerkoop          PROCEDURE(Log:Record)
+RestoreVerpakking          PROCEDURE(Log:Record)
+                    END
+st              StringTheory
+str                 StringTheory
+StVeld              StringTheory
+Loc:SQLCommando     CString(4000)
+[END]
+EMBED %LocalProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.RestorePartij    PROCEDURE(Log:Record Log:Record)
+Code
+  ! kan ik hier identity insert uitzetten
+    Partij{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Partij ON'
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+    Clear(Par:Record)
+
+    St.SetValue(Log:RecordInhoudPre)
+    st.split('<13,10>')
+    loop i# = 1 to st.Records()
+        Str.SetValue(St.GetLine(i#))      ! PAR:PARTIJID=30292            ,  5-12-1883            ,  0:05            , 3
+        Str.Split(',')
+        stVeld.SetValue(Str.GetLine(1))    ! PAR:PARTIJID=30292
+        stVeld.After('=')
+    !SETCLIPBOARD(stVeld.Before('=')&'|'&stVeld.After('='))             !PAR:PARTIJID|30292
+        Case stVeld.Before('=')
+        OF 'PAR:PARTIJID'
+            Par:PartijID=stVeld.After('=')
+        OF 'PAR:ARTIKELID'
+            Par:ArtikelID=stVeld.After('=')
+        OF 'PAR:AANMAAKDATUM_DATE'
+            Par:AanmaakDatum_DATE=stVeld.After('=')
+        OF 'PAR:AANMAAKDATUM_TIME'
+            Par:AanmaakDatum_TIME=0
+        OF 'PAR:KG'
+            Par:KG=stVeld.After('=')
+        OF  'PAR:PALLETS'
+            Par:Pallets=stVeld.After('=')
+        OF 'PAR:VERPAKKINGID'
+            Par:VerpakkingID=stVeld.After('=')
+        OF 'PAR:LEVERANCIER'
+            Par:Leverancier=stVeld.After('=')
+        of 'PAR:VERWERKT'
+            Par:Verwerkt=stVeld.After('=')
+        of 'PAR:CELID'
+            Par:CELID=stVeld.After('=')
+        of 'PAR:PALLETSGEPRINT'
+            Par:PalletsGeprint=stVeld.After('=')
+        of 'PAR:REFERENTIE'
+            Par:Referentie=stVeld.After('=')
+        of 'PAR:INSLAGQATEMPERATUUR1'
+            PAR:INSLAGQATEMPERATUUR1=stVeld.After('=')
+        of 'PAR:EXTERNPARTIJNR'
+            PAR:EXTERNPARTIJNR=stVeld.After('=')
+        of 'PAR:BEREKENDEINKOOPKGPRIJS'
+            PAR:BEREKENDEINKOOPKGPRIJS=stVeld.After('=')
+        of 'PAR:INKOOPID'
+            PAR:INKOOPID=stVeld.After('=')
+        of 'PAR:INKOOPPLANNINGID'
+            PAR:INKOOPPLANNINGID=stVeld.After('=')
+        of 'PAR:INKOOPKGPRIJS'
+            PAR:INKOOPKGPRIJS=stVeld.After('=')
+        of 'PAR:INSLAGQATRANSPORTMIDDELSCHOON'
+            PAR:INSLAGQATRANSPORTMIDDELSCHOON=stVeld.After('=')
+        of 'PAR:INSLAGQAVERPAKKINGSCHOONGESLOTEN'
+            PAR:INSLAGQAVERPAKKINGSCHOONGESLOTEN=stVeld.After('=')
+        of 'PAR:INSLAGQAIDENTIFICATIEMERKENVERPAKKING'
+            PAR:INSLAGQAIDENTIFICATIEMERKENVERPAKKING=stVeld.After('=')
+        of 'PAR:INSLAGQAUITGEVOERDDOOR'
+            PAR:INSLAGQAUITGEVOERDDOOR=stVeld.After('=')
+        of 'PAR:INSLAGQATEMPERATUUR2'
+            PAR:INSLAGQATEMPERATUUR2=stVeld.After('=')
+        of 'PAR:INSLAGQATEMPERATUUR3'
+            PAR:INSLAGQATEMPERATUUR3=stVeld.After('=')
+        of 'PAR:INSLAGQAACTIEAFWIJKINGEN'
+            PAR:INSLAGQAACTIEAFWIJKINGEN=stVeld.After('=')
+        of 'PAR:VERPAKKINGKLASSEID'
+            PAR:VERPAKKINGKLASSEID=stVeld.After('=')
+        of 'PAR:CORRIGERENDEMAATREGEL'
+            PAR:CORRIGERENDEMAATREGEL=stVeld.After('=')
+        of 'PAR:AFGEHANDELD'
+            PAR:AFGEHANDELD=stVeld.After('=')
+        of 'PAR:INSLAGQAISGEURKLEURPRODUCTEIGEN'
+            PAR:INSLAGQAISGEURKLEURPRODUCTEIGEN=stVeld.After('=')
+        of 'PAR:INSLAGQAGEENGLASBREUK'
+            PAR:INSLAGQAGEENGLASBREUK=stVeld.After('=')
+        of 'PAR:INSLAGQATEMPERATUURVERVOERMIDDEL'
+            PAR:INSLAGQATEMPERATUURVERVOERMIDDEL=stVeld.After('=')
+        of 'PAR:CORRECTIEVEMAATREGEL'
+            PAR:CORRECTIEVEMAATREGEL=stVeld.After('=')
+        END
+    End
+    Loc:SQLCommando='INSERT INTO dbo.Partij(PartijID, ArtikelID, Aanmaakdatum, KG, Pallets'&|
+        ', VerpakkingID,Leverancier, Verwerkt, CELID, PalletsGeprint, Referentie,Planinstructie'&|
+        ', InslagQATemperatuur1, ExternPartijnr, BerekendeInkoopKGPrijs, InkoopID, InkoopPlanningID'&|
+        ', InkoopKGPrijs, InslagQATransportmiddelSchoon, InslagQAVerpakkingSchoonGesloten'&|
+        ', InslagQAIdentificatieMerkenVerpakking, InslagQAUitgevoerdDoor, InslagQATemperatuur2 '&|
+        ', InslagQATemperatuur3, InslagQAActieAfwijkingen, VerpakkingKlasseID, CorrigerendeMaatregel '&|
+        ', Afgehandeld, InslagQAIsGeurKleurProductEigen, InslagQAGeenGlasbreuk, InslagQATemperatuurVervoermiddel, CorrectieveMaatregel) VALUES('& |
+        Par:PartijID&',<39>'&Par:ArtikelID&'<39>,<39>'&Format(Par:AanmaakDatum_DATE,@D10-)&' 00:00<39>,'&Par:KG&','&Par:Pallets&|
+        ', '&Par:VerpakkingID &|
+        ', '&Par:Leverancier&|
+        ', '&Par:Verwerkt&|
+        ', '&Par:CELID&|
+        ', '&Par:PalletsGeprint&|
+        ', <39>'&Par:Referentie&'<39>'&|
+        ', <39>'&Par:Planinstructie&'<39>'&|
+        ', <39>'&Par:InslagQATemperatuur1&'<39>'&|
+        ', <39>'&Par:ExternPartijnr&'<39>'&|
+        ', '&Par:BerekendeInkoopKGPrijs&|
+        ', '&Par:InkoopID&|
+        ', '&Par:InkoopPlanningID&|
+        ', '&Par:InkoopKGPrijs&|
+        ', '&Par:InslagQATransportmiddelSchoon&|
+        ', '&Par:InslagQAVerpakkingSchoonGesloten&|
+        ', '&Par:InslagQAIdentificatieMerkenVerpakking&|
+        ', <39>'&Par:InslagQAUitgevoerdDoor&'<39>'&|
+        ', <39>'&Par:InslagQATemperatuur2&'<39>'&|
+        ', <39>'&Par:InslagQATemperatuur3&'<39>'&|
+        ', <39>'&Par:InslagQAActieAfwijkingen&'<39>'&|
+        ', '&Par:VerpakkingKlasseID&|
+        ', <39>'&Par:CorrigerendeMaatregel&'<39>'&|
+        ', <39>'&Par:Afgehandeld&'<39>'&|
+        ', '&Par:InslagQAIsGeurKleurProductEigen&|
+        ', '&Par:InslagQAGeenGlasbreuk&|
+        ', <39>'&Par:InslagQATemperatuurVervoermiddel&'<39>'&|
+        ', <39>'&Par:CorrectieveMaatregel&'<39>'&|
+        ')'
+    SetClipBoard(Loc:SQLCommando)
+    Partij{Prop:SQL}=Loc:SQLCommando
+   !Access:Partij.Insert()
+!Add(Partij)
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+
+! kan ik hier identity insert uitzetten
+    Partij{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Partij OFF'
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+
+    RETURN
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.RestoreVerkoop    PROCEDURE(Log:Record Log:Record)
+Code
+    Verkoop{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Verkoop ON'
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+    Clear(Ver2:Record)
+
+    St.SetValue(Log:RecordInhoudPre)
+    st.split('<13,10>')
+    loop i# = 1 to st.Records()
+        Str.SetValue(St.GetLine(i#))      ! VerkoopID | READONLY=37226            , 30-11-1902            ,  0:06            , 3
+        Str.Split(',')
+        stVeld.SetValue(Str.GetLine(1))    ! VerkoopID | READONLY=37226
+        stVeld.After('=')
+        Case stVeld.Before('=')
+        OF 'VerkoopID | READONLY'
+            Ver2:VerkoopID=stVeld.After('=')
+        OF 'VER2:KLANT'
+            VER2:KLANT=stVeld.After('=')
+        OF 'VER2:VERWERKT'
+            VER2:VERWERKT=stVeld.After('=')
+        OF 'VER2:PLANNING_DATE'
+            VER2:PLANNING_DATE=stVeld.After('=')
+        OF 'VER2:PLANNING_TIME'
+            VER2:PLANNING_TIME=0
+        OF 'VER2:INSTRUCTIE'
+            VER2:INSTRUCTIE=stVeld.After('=')
+        OF  'VER2:TRANSPORT'
+            VER2:TRANSPORT=stVeld.After('=')
+        OF 'VER2:KLANTALTERNATIEFADRES'
+            VER2:KLANTALTERNATIEFADRES=stVeld.After('=')
+        OF 'VER2:EXTRAKOSTEN'
+            VER2:EXTRAKOSTEN=stVeld.After('=')
+        of 'VER2:EXTRAKOSTENTEKST'
+            VER2:EXTRAKOSTENTEKST=stVeld.After('=')
+        of 'VER2:EXTERNVERKOOPID'
+            VER2:EXTERNVERKOOPID=stVeld.After('=')
+        of 'VER2:NEGATIEVEORDER'
+            VER2:NEGATIEVEORDER=stVeld.After('=')
+        of 'VER2:REDENRETOUR'
+            VER2:REDENRETOUR=stVeld.After('=')
+        of 'VER2:CONFIRMATIONDATE_DATE'
+            VER2:CONFIRMATIONDATE_DATE=stVeld.After('=')
+        of 'VER2:CONFIRMATIONDATE_TIME'
+            VER2:CONFIRMATIONDATE_TIME=0
+        of 'VER2:GEBRUIKERID'
+            VER2:GEBRUIKERID=stVeld.After('=')
+        of 'VER2:BEVESTIGINGGEPRINT_DATE'
+            VER2:BEVESTIGINGGEPRINT_DATE=stVeld.After('=')
+        of 'VER2:BEVESTIGINGGEPRINT_TIME'
+            VER2:BEVESTIGINGGEPRINT_TIME=stVeld.After('=')
+        of 'VER2:DELIVERYTERMSID'
+            VER2:DELIVERYTERMSID=stVeld.After('=')
+        of 'VER2:RETOURDATUM_DATE'
+            VER2:RETOURDATUM_DATE=stVeld.After('=')
+        of 'VER2:RETOURDATUM_TIME'
+            VER2:RETOURDATUM_TIME=stVeld.After('=')
+        of 'VER2:EXPORTED'
+            VER2:EXPORTED=stVeld.After('=')
+        of 'VER2:VALUTA'
+            VER2:VALUTA=stVeld.After('=')
+        of 'VER2:KOERSVERSCHIL'
+            VER2:KOERSVERSCHIL=stVeld.After('=')
+        of 'VER2:CONTAINERNR'
+            VER2:CONTAINERNR=stVeld.After('=')
+        of 'VER2:SEALNR'
+            VER2:SEALNR=stVeld.After('=')
+        of 'VER2:VESSEL'
+            VER2:VESSEL=stVeld.After('=')
+        of 'VER2:PROFORMAMEMO'
+            VER2:PROFORMAMEMO=stVeld.After('=')
+        of 'VER2:TARRACONTAINER'
+            VER2:TARRACONTAINER=stVeld.After('=')
+        of 'VER2:LAADHAVEN'
+            VER2:LAADHAVEN=stVeld.After('=')
+        of 'VER2:LOSHAVEN'
+            VER2:LOSHAVEN=stVeld.After('=')
+        of 'VER2:BOEKINGSNR'
+            VER2:BOEKINGSNR=stVeld.After('=')
+        of 'VER2:BESCWAIVER'
+            VER2:BESCWAIVER=stVeld.After('=')
+        of 'VER2:EXPRESSERELEASE'
+            VER2:EXPRESSERELEASE=stVeld.After('=')
+        of 'VER2:AAN'
+            VER2:AAN=stVeld.After('=')
+        of 'VER2:OMSCHRIJVINGGOEDEREN'
+            VER2:OMSCHRIJVINGGOEDEREN=stVeld.After('=')
+        END
+    End
+    Loc:SQLCommando='INSERT INTO [dbo].[Verkoop] ' & |
+'           ([VerkoopID] ' & |
+'           ,[Klant] ' & |
+'           ,[Verwerkt] ' & |
+'           ,[Planning] ' & |
+'           ,[Instructie] ' & |
+'           ,[Transport] ' & |
+'           ,[KlantAlternatiefAdres] ' & |
+'           ,[ExtraKosten] ' & |
+'           ,[ExtraKostenTekst] ' & |
+'           ,[ExternVerkoopID] ' & |
+'           ,[NegatieveOrder] ' & |
+'           ,[RedenRetour] ' & |
+'           ,[ConfirmationDate] ' & |
+'           ,[GebruikerID] ' & |
+'           ,[BevestigingGeprint] ' & |
+'           ,[DeliveryTermsID] ' & |
+'           ,[RetourDatum] ' & |
+'           ,[Exported] ' & |
+'           ,[Valuta] ' & |
+'           ,[Koersverschil] ' & |
+'           ,[Containernr] ' & |
+'           ,[Sealnr] ' & |
+'           ,[Vessel] ' & |
+'           ,[ProFormaMemo] ' & |
+'           ,[TarraContainer] ' & |
+'           ,[Laadhaven] ' & |
+'           ,[Loshaven] ' & |
+'           ,[Boekingsnr] ' & |
+'           ,[BESCWaiver] ' & |
+'           ,[ExpresseRelease] ' & |
+'           ,[Aan] ' & |
+'           ,[OmschrijvingGoederen]) ' & |
+        '            VALUES('& |
+        Ver2:VerkoopID&|
+        ','&Ver2:Klant&|
+        ','&Ver2:Verwerkt&|
+        ',<39>'&Format(Ver2:Planning_DATE,@D10-)&' 00:00<39>'&|
+        ',<39>'&Ver2:Instructie&'<39>'&|
+        ',<39>'&Ver2:Transport&'<39>'&|
+        ', '&Ver2:KlantAlternatiefAdres &|
+        ', '&Ver2:ExtraKosten&|
+        ', <39>'&Ver2:ExtraKostenTekst&'<39>'&|
+        ', <39>'&Ver2:ExternVerkoopID&'<39>'&|
+        ', <39>'&Ver2:NegatieveOrder&'<39>'&|
+        ', <39>'&Ver2:RedenRetour&'<39>'&|
+        ', <39>'&Format(Ver2:ConfirmationDate_DATE,@D10-)&' '&Format(Ver2:ConfirmationDate_TIME,@T01)&'<39>'&|
+        ', '&Ver2:GebruikerID&|
+        ', <39>'&CHOOSE(Ver2:BevestigingGeprint_DATE=0,'1900-01-01',Format(Ver2:BevestigingGeprint_DATE,@D010-))&' '&Format(Ver2:BevestigingGeprint_TIME,@T01)&'<39>'&|
+        ', '&Ver2:DeliveryTermsID&|
+        ', <39>'&CHOOSE(Ver2:RetourDatum_DATE=0,'1900-01-01',Format(Ver2:RetourDatum_DATE,@D010-))&' '&Format(Ver2:RetourDatum_TIME,@T01)&'<39>'&|
+        ', '&Ver2:Exported&|
+        ', <39>'&Ver2:Valuta&'<39>'&|
+        ', '&Ver2:Koersverschil&|
+        ', <39>'&Ver2:Containernr&'<39>'&|
+        ', <39>'&Ver2:Sealnr&'<39>'&|
+        ', <39>'&Ver2:Vessel&'<39>'&|
+        ', <39>'&Ver2:ProFormaMemo&'<39>'&|
+        ', <39>'&Ver2:TarraContainer&'<39>'&|
+        ', <39>'&Ver2:Laadhaven&'<39>'&|
+        ', <39>'&Ver2:Loshaven&'<39>'&|
+        ', <39>'&Ver2:Boekingsnr&'<39>'&|
+        ', <39>'&Ver2:BESCWaiver&'<39>'&|
+        ', '&Ver2:ExpresseRelease&|
+        ', <39>'&Ver2:Aan&'<39>'&|
+        ', <39>'&Ver2:OmschrijvingGoederen&'<39>'&|
+        ')'
+    SetClipBoard(Loc:SQLCommando)
+    Verkoop{Prop:SQL}=Loc:SQLCommando
+   !Access:Partij.Insert()
+!Add(Partij)
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+
+    Verkoop{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Verkoop OFF'
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+
+    RETURN
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.RestorePlanning    PROCEDURE(Log:Record Log:Record)
+Code
+    Planning{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Planning ON'
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+    Clear(Par:Record)
+
+    St.SetValue(Log:RecordInhoudPre)
+    st.split('<13,10>')
+    loop i# = 1 to st.Records()
+        Str.SetValue(St.GetLine(i#))      ! PAR:PARTIJID=30292            ,  5-12-1883            ,  0:05            , 3
+        Str.Split(',')
+        stVeld.SetValue(Str.GetLine(1))    ! PAR:PARTIJID=30292
+        stVeld.After('=')
+    !SETCLIPBOARD(stVeld.Before('=')&'|'&stVeld.After('='))             !PAR:PARTIJID|30292
+        Case stVeld.Before('=')
+        OF 'PlanningID | READONLY'
+            Pla:PlanningID=stVeld.After('=')
+        OF 'PLA:VERKOOPID'
+            PLA:VERKOOPID=stVeld.After('=')
+        OF 'PLA:INKOOPID'
+            PLA:INKOOPID=stVeld.After('=')
+        OF 'PLA:ARTIKELID'
+            PLA:ARTIKELID=stVeld.After('=')
+        OF 'PLA:KG'
+            PLA:KG=stVeld.After('=')
+        OF  'PLA:PALLETS'
+            PLA:PALLETS=stVeld.After('=')
+        OF 'PLA:PLANNING_DATE'
+            PLA:PLANNING_DATE=stVeld.After('=')
+        OF 'PLA:PLANNING_TIME'
+            PLA:PLANNING_TIME=stVeld.After('=')
+        of 'PLA:VERPAKKINGID'
+            PLA:VERPAKKINGID=stVeld.After('=')
+        of 'PLA:CELID'
+            PLA:CELID=stVeld.After('=')
+        of 'PLA:PARTIJID'
+            PLA:PARTIJID=stVeld.After('=')
+        of 'PLA:MEMO'
+            PLA:MEMO=stVeld.After('=')
+        of 'PLA:MUTATIEGEMAAKT'
+            PLA:MUTATIEGEMAAKT=stVeld.After('=')
+        of 'PLA:GEPRINT'
+            PLA:GEPRINT=stVeld.After('=')
+        of 'PLA:VERWERKT'
+            PLA:VERWERKT=stVeld.After('=')
+        of 'PLA:LEVERANCIER'
+            PLA:LEVERANCIER=stVeld.After('=')
+        of 'PLA:OVERBOEKINGCELID'
+            PLA:OVERBOEKINGCELID=stVeld.After('=')
+        of 'PLA:INSTRUCTIE'
+            PLA:INSTRUCTIE=stVeld.After('=')
+        of 'PLA:TRANSPORT'
+            PLA:TRANSPORT=stVeld.After('=')
+        of 'PLA:GEWOGEN'
+            PLA:GEWOGEN=stVeld.After('=')
+        of 'PLA:CELLOCATIEID'
+            PLA:CELLOCATIEID=stVeld.After('=')
+        of 'PLA:MUTATIEKG'
+            PLA:MUTATIEKG=stVeld.After('=')
+        of 'PLA:MUTATIEPALLETS'
+            PLA:MUTATIEPALLETS=stVeld.After('=')
+        of 'PLA:OVERBOEKINGPLANNINGID'
+            PLA:OVERBOEKINGPLANNINGID=stVeld.After('=')
+        of 'PLA:INKOOPKGPRIJS'
+            PLA:INKOOPKGPRIJS=stVeld.After('=')
+        of 'PLA:VERKOOPKGPRIJS'
+            PLA:VERKOOPKGPRIJS=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADDUEDATE12'
+            PLA:UITSLAGPALLETBLADDUEDATE12=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADDUEDATE12_DATE'
+            PLA:UITSLAGPALLETBLADDUEDATE12_DATE=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADDUEDATE12_TIME'
+            PLA:UITSLAGPALLETBLADDUEDATE12_TIME=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADPRODUCTIONDATE11_DATE'
+            PLA:UITSLAGPALLETBLADPRODUCTIONDATE11_DATE=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADPRODUCTIONDATE11_TIME'
+            PLA:UITSLAGPALLETBLADPRODUCTIONDATE11_TIME=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADSELLBYDATE15_DATE'
+            PLA:UITSLAGPALLETBLADSELLBYDATE15_DATE=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADSELLBYDATE15_TIME'
+            PLA:UITSLAGPALLETBLADSELLBYDATE15_TIME=stVeld.After('=')
+        of 'PLA:ALTERNATIEVEARTIKELOMS'
+            PLA:ALTERNATIEVEARTIKELOMS=stVeld.After('=')
+        of 'PLA:VERPAKKINGKLASSEID'
+            PLA:VERPAKKINGKLASSEID=stVeld.After('=')
+        of 'PLA:AANTALVERPAKKINGEN'
+            PLA:AANTALVERPAKKINGEN=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADORIGINLIVEBIRD'
+            PLA:UITSLAGPALLETBLADORIGINLIVEBIRD=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADORIGINSLAUTHERHOUSE'
+            PLA:UITSLAGPALLETBLADORIGINSLAUTHERHOUSE=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADORIGINPROCESSING'
+            PLA:UITSLAGPALLETBLADORIGINPROCESSING=stVeld.After('=')
+        of 'PLA:UITSLAGPALLETBLADORIGINPACKING'
+            PLA:UITSLAGPALLETBLADORIGINPACKING=stVeld.After('=')
+        of 'PLA:VALUTA'
+            PLA:VALUTA=stVeld.After('=')
+        of 'PLA:KOERSVERSCHIL'
+            PLA:KOERSVERSCHIL=stVeld.After('=')
+        of 'PLA:EXTRAKOSTEN'
+            PLA:EXTRAKOSTEN=stVeld.After('=')
+        of 'PLA:LOTID'
+            PLA:LOTID=stVeld.After('=')
+        of 'PLA:PLANTNUMBER'
+            PLA:PLANTNUMBER=stVeld.After('=')
+        of 'PLA:DELIVERYDATE_DATE'
+            PLA:DELIVERYDATE_DATE=stVeld.After('=')
+        of 'PLA:DELIVERYDATE_TIME'
+            PLA:DELIVERYDATE_TIME=stVeld.After('=')
+        of 'PLA:PLANNINGIDRETOUR'
+            PLA:PLANNINGIDRETOUR=stVeld.After('=')
+        of 'PLA:PLANNINGIDPARENT'
+            PLA:PLANNINGIDPARENT=stVeld.After('=')
+        of 'PLA:AANVULLING'
+            PLA:AANVULLING=stVeld.After('=')
+        of 'PLA:DOZEN'
+            PLA:DOZEN=stVeld.After('=')
+        of 'PLA:GROSSWEIGHT'
+            PLA:GROSSWEIGHT=stVeld.After('=')
+        of 'PLA:OVERBOEKSOORT'
+            PLA:OVERBOEKSOORT=stVeld.After('=')
+        of 'PLA:OverboekCelLocatieID'
+            PLA:OverboekCelLocatieID=stVeld.After('=')
+        of 'PLA:NieuwKg'
+            PLA:NieuwKg=stVeld.After('=')
+        of 'PLA:NieuwPallets'
+            PLA:NieuwPallets=stVeld.After('=')
+        END
+    End
+    Loc:SQLCommando= |
+        'INSERT INTO [dbo].[Planning] ' & |
+'           ([PlanningID] ' & |
+'           ,[VerkoopID] ' & |
+'           ,[InkoopID] ' & |
+'           ,[ArtikelID] ' & |
+'           ,[KG] ' & |
+'           ,[Pallets] ' & |
+'           ,[Planning] ' & |
+'           ,[VerpakkingID] ' & |
+'           ,[CelID] ' & |
+'           ,[PartijID] ' & |
+'           ,[Memo] ' & |
+'           ,[MutatieGemaakt] ' & |
+'           ,[Geprint] ' & |
+'           ,[Verwerkt] ' & |
+'           ,[Leverancier] ' & |
+'           ,[OverboekingCelID] ' & |
+'           ,[Instructie] ' & |
+'           ,[Transport] ' & |
+'           ,[Gewogen] ' & |
+'           ,[CelLocatieID] ' & |
+'           ,[MutatieKG] ' & |
+'           ,[MutatiePallets] ' & |
+'           ,[OverboekingPlanningID] ' & |
+'           ,[InkoopKGPrijs] ' & |
+'           ,[VerkoopKGPrijs] ' & |
+'           ,[UitslagPalletbladDueDate12] ' & |
+'           ,[UitslagPalletbladProductionDate11] ' & |
+'           ,[UitslagPalletbladSellByDate15] ' & |
+'           ,[AlternatieveArtikelOms] ' & |
+'           ,[VerpakkingKlasseID] ' & |
+'           ,[AantalVerpakkingen] ' & |
+'           ,[UitslagPalletbladOriginLiveBird] ' & |
+'           ,[UitslagPalletbladOriginSlautherHouse] ' & |
+'           ,[UitslagPalletbladOriginProcessing] ' & |
+'           ,[UitslagPalletbladOriginPacking] ' & |
+'           ,[Valuta] ' & |
+'           ,[Koersverschil] ' & |
+'           ,[ExtraKosten] ' & |
+'           ,[LotID] ' & |
+'           ,[PlantNumber] ' & |
+'           ,[DeliveryDate] ' & |
+'           ,[PlanningIDRetour] ' & |
+'           ,[PlanningIDParent] ' & |
+'           ,[Aanvulling] ' & |
+'           ,[Dozen] ' & |
+'           ,[GrossWeight] ' & |
+'           ,[OverboekSoort] ' & |
+'           ,[OverboekCelLocatieID] ' & |
+'           ,[NieuwKg] ' & |
+'           ,[NieuwPallets]) ' & |
+'     VALUES (' & |
+        Pla:PlanningID&|
+        ', '&Pla:VerkoopID &|
+        ', '&Pla:InkoopID&|
+        ', '&Pla:ArtikelID&|
+        ', '&Pla:KG&|
+        ', '&Pla:Pallets&|
+        ', <39>'&CHOOSE(Pla:Planning_DATE=0,'1900-01-01',Format(Pla:Planning_DATE,@D010-))&' '&Format(Pla:Planning_TIME,@T01)&'<39>'&|
+        ', '&Pla:VerpakkingID &|
+        ', '&Pla:CelID&|
+        ', '&Pla:PartijID&|
+        ', <39>'&Pla:Memo&'<39>'&|
+        ', '&Pla:MutatieGemaakt&|
+        ', '&Pla:Geprint&|
+        ', '&Pla:Verwerkt&|
+        ', '&Pla:Leverancier&|
+        ', '&Pla:OverboekingCelID&|
+        ', <39>'&Pla:Instructie&'<39>'&|
+        ', <39>'&Pla:Transport&'<39>'&|
+        ', '&Pla:Gewogen&|
+        ', '&Pla:CelLocatieID&|
+        ', '&Pla:MutatieKG&|
+        ', '&Pla:MutatiePallets&|
+        ', '&Pla:OverboekingPlanningID&|
+        ', '&Pla:InkoopKGPrijs&|
+        ', '&Pla:VerkoopKGPrijs&|
+        ', <39>'&CHOOSE(Pla:UitslagPalletbladDueDate12_DATE=0,'1900-01-01',Format(Pla:UitslagPalletbladDueDate12_DATE,@D010-))&' '&Format(Pla:UitslagPalletbladDueDate12_TIME,@T01)&'<39>'&|
+        ', <39>'&CHOOSE(Pla:UitslagPalletbladProductionDate11_DATE=0,'1900-01-01',Format(Pla:UitslagPalletbladProductionDate11_DATE,@D010-))&' '&Format(Pla:UitslagPalletbladProductionDate11_TIME,@T01)&'<39>'&|
+        ', <39>'&CHOOSE(Pla:UitslagPalletbladSellByDate15_DATE=0,'1900-01-01',Format(Pla:UitslagPalletbladSellByDate15_DATE,@D010-))&' '&Format(Pla:UitslagPalletbladSellByDate15_TIME,@T01)&'<39>'&|
+        ', <39>'&Pla:AlternatieveArtikelOms&'<39>'&|
+        ', '&Pla:VerpakkingKlasseID&|
+        ', '&Pla:AantalVerpakkingen&|
+        ', <39>'&Pla:UitslagPalletbladOriginLiveBird&'<39>'&|
+        ', <39>'&Pla:UitslagPalletbladOriginSlautherHouse&'<39>'&|
+        ', <39>'&Pla:UitslagPalletbladOriginProcessing&'<39>'&|
+        ', <39>'&Pla:UitslagPalletbladOriginPacking&'<39>'&|
+        ', <39>'&Pla:Valuta&'<39>'&|
+        ', '&Pla:Koersverschil&|
+        ', '&Pla:ExtraKosten&|
+        ', '&Pla:LotID&|
+        ', <39>'&Pla:PlantNumber&'<39>'&|
+        ', <39>'&CHOOSE(Pla:DeliveryDate_DATE=0,'1900-01-01',Format(Pla:DeliveryDate_DATE,@D010-))&' '&Format(Pla:DeliveryDate_TIME,@T01)&'<39>'&|
+        ', '&Pla:PlanningIDRetour&|
+        ', '&Pla:PlanningIDParent&|
+        ', <39>'&Pla:Aanvulling&'<39>'&|
+        ', '&Pla:Dozen&|
+        ', '&Pla:GrossWeight&|
+        ', <39>'&Pla:OverboekSoort&'<39>'&|
+        ', '&Pla:OverboekCelLocatieID&|
+        ', '&Pla:NieuwKG&|
+        ', '&Pla:NieuwPallets&|
+        ')'
+    SetClipBoard(Loc:SQLCommando)
+    Planning{Prop:SQL}=Loc:SQLCommando
+   !Access:Partij.Insert()
+!Add(Partij)
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+
+    Planning{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Planning OFF'
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+    Return
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.RestoreVerpakking        PROCEDURE(Log:Record Log:Record)
+Code
+    Verpakking{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Verpakking ON'
+    IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+    Clear(VER:Record)
+    St.SetValue(Log:RecordInhoudPre)
+    st.split('<13,10>')
+    loop i# = 1 to st.Records()
+        Str.SetValue(St.GetLine(i#))      ! VER:VERPAKKINGID=208            , 24-07-1801            ,  0:00            , 2
+        Str.Split(',')
+        stVeld.SetValue(Str.GetLine(1))    ! VER:VERPAKKINGID=208
+        stVeld.After('=')
+        Case stVeld.Before('=')
+        OF 'VER:VERPAKKINGID'
+            Ver:VerpakkingID=stVeld.After('=')
+        OF 'VER:VERPAKKINGOMSCHRIJVING'
+            Ver:VerpakkingOmschrijving=stVeld.After('=')
+        OF 'VER:DESCRIPTION'
+            Ver:Description=stVeld.After('=')
+        OF 'VER:INHOUDKG=10'
+            Ver:InhoudKG=stVeld.After('=')
+        End
+    END
+        Loc:SQLCommando= |
+            'INSERT INTO [dbo].[Verpakking] ' & |
+            '           ([VerpakkingID] ' & |
+            '           ,[VERPAKKINGOMSCHRIJVING] ' & |
+            '           ,[DESCRIPTION] ' & |
+            '           ,[INHOUDKG] ' & |
+            '   )  VALUES (' & |
+            Ver:VerpakkingID&|
+            ', <39>'&Ver:VerpakkingOmschrijving&'<39>'&|
+            ', <39>'&Ver:Description&'<39>'&|
+            ', '&Ver:InhoudKG&|
+            ')'
+?        SETCLIPBOARD(Loc:SQLCommando)
+        Verpakking{Prop:SQL}=Loc:SQLCommando
+        IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+
+        Verpakking{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Verpakking OFF'
+        IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
+        Return
+
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 10
+OWNER 4
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 9
+OWNER 2
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC BrowseBox
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%AcceptToolBarControl LONG  (0)
+%EnableQuickScan LONG  (1)
+%LocatorType DEFAULT  ('Step')
+%OverrideDefaultLocator LONG  (0)
+%OverrideLocator DEFAULT  ('')
+%RecordFilter DEFAULT  ('Log:Uitgevoerd_DATE = LOC:Datum')
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('')
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%ScrollBehavior DEFAULT  ('Movable Thumb')
+%ScrollKeyDistribution DEFAULT  ('Runtime')
+%CustomKeyDistribution MULTI LONG  ()
+%KeyDistributionValue DEPEND %CustomKeyDistribution DEFAULT TIMES 0
+
+%ScrollAlpha LONG  (1)
+%ScrollNumeric LONG  (0)
+%ScrollAlt LONG  (0)
+%SortOrder MULTI LONG  (1, 2)
+%SortCondition DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('CHOICE(?CurrentTab) = 2')
+WHEN  (2) ('CHOICE(?CurrentTab) = 3')
+
+%SortKey DEPEND %SortOrder KEY TIMES 2
+WHEN  (1) (Log:FK2_GebruikerLog)
+WHEN  (2) (Log:PK_GebruikerLog)
+
+%SortLocatorType DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('Step')
+WHEN  (2) ('Step')
+
+%SortOverrideDefaultLocator DEPEND %SortOrder LONG TIMES 2
+WHEN  (1) (0)
+WHEN  (2) (0)
+
+%SortOverrideLocator DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('')
+WHEN  (2) ('')
+
+%SortRecordFilter DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('')
+WHEN  (2) ('')
+
+%SortRangeField DEPEND %SortOrder COMPONENT TIMES 1
+WHEN  (1) (Log:WindowsInlog)
+
+%SortRangeLimit DEPEND %SortOrder FIELD TIMES 2
+WHEN  (1) (LOC:WindowsInlog)
+WHEN  (2) ()
+
+%SortRangeLow DEPEND %SortOrder FIELD TIMES 2
+WHEN  (1) ()
+WHEN  (2) ()
+
+%SortRangeHigh DEPEND %SortOrder FIELD TIMES 2
+WHEN  (1) ()
+WHEN  (2) ()
+
+%SortRangeFile DEPEND %SortOrder FILE TIMES 2
+WHEN  (1) ()
+WHEN  (2) ()
+
+%SortRangeLimitType DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('Single Value')
+WHEN  (2) ('')
+
+%SortScrollBehavior DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('Movable Thumb')
+WHEN  (2) ('Movable Thumb')
+
+%SortScrollKeyDistribution DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('Runtime')
+WHEN  (2) ('Runtime')
+
+%SortCustomKeyDistribution DEPEND %SortOrder MULTI LONG TIMES 0
+
+%SortKeyDistributionValue DEPEND %SortCustomKeyDistribution DEFAULT TIMES 2
+WHEN  (1)TIMES 0
+WHEN  (2)TIMES 0
+
+%SortScrollAlpha DEPEND %SortOrder LONG TIMES 2
+WHEN  (1) (1)
+WHEN  (2) (1)
+
+%SortScrollNumeric DEPEND %SortOrder LONG TIMES 2
+WHEN  (1) (0)
+WHEN  (2) (0)
+
+%SortScrollAlt DEPEND %SortOrder LONG TIMES 2
+WHEN  (1) (0)
+WHEN  (2) (0)
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'Locator', 'Locator0', 'Locator1', 'Locator2', |
+  'Step', 'Step0', 'Step1', 'Step2')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('Default') ('BrowseClass')
+WHEN  ('Locator0') ('StepLocatorClass')
+WHEN  ('Locator1') ('StepLocatorClass')
+WHEN  ('Locator2') ('StepLocatorClass')
+WHEN  ('Step0') ('StepClass')
+WHEN  ('Step1') ('StepClass')
+WHEN  ('Step2') ('StepClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('Default') ('')
+WHEN  ('Locator0') ('')
+WHEN  ('Locator1') ('')
+WHEN  ('Locator2') ('')
+WHEN  ('Step0') ('StepStringClass')
+WHEN  ('Step1') ('StepStringClass')
+WHEN  ('Step2') ('StepLongClass')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:Browse:1 {16}!Reference to browse queue', 'Init {19}PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)', |
+  'ResetSort {14}PROCEDURE(BYTE Force),BYTE,PROC,DERIVED', 'SetAlerts {14}PROCEDURE(),DERIVED')
+
+%SQLViewFields MULTI DEFAULT  ('Log:WindowsInlog', 'Log:Uitgevoerd_DATE', 'Log:Uitgevoerd_TIME', |
+  'Log:Handeling', 'Log:HandelingOpmerking', 'Log:Tabel', 'Log:RecordInhoudPre', |
+  'LOC:Datum', 'Log:ID')
+%TableSchematicsDescription DEFAULT  ('')
+%LoadMethod DEFAULT  ('Page')
+%InterLine DEFAULT  ('0')
+%FindDefaultAnywhere LONG  (0)
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('Default') ('NO')
+WHEN  ('Locator0') ('NO')
+WHEN  ('Locator1') ('NO')
+WHEN  ('Locator2') ('NO')
+WHEN  ('Step0') ('NO')
+WHEN  ('Step1') ('NO')
+WHEN  ('Step2') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('Default') ('BRW1')
+WHEN  ('Locator0') ('BRW1::Sort0:Locator')
+WHEN  ('Locator1') ('BRW1::Sort1:Locator')
+WHEN  ('Locator2') ('BRW1::Sort2:Locator')
+WHEN  ('Step0') ('BRW1::Sort0:StepClass')
+WHEN  ('Step1') ('BRW1::Sort1:StepClass')
+WHEN  ('Step2') ('BRW1::Sort2:StepClass')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('Default') (1)
+WHEN  ('Locator0') (1)
+WHEN  ('Locator1') (1)
+WHEN  ('Locator2') (1)
+WHEN  ('Step0') (1)
+WHEN  ('Step1') (1)
+WHEN  ('Step2') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('Default') (1)
+WHEN  ('Locator0') (1)
+WHEN  ('Locator1') (1)
+WHEN  ('Locator2') (1)
+WHEN  ('Step0') (1)
+WHEN  ('Step1') (1)
+WHEN  ('Step2') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('Default') ('')
+WHEN  ('Locator0') ('ADOBlob')
+WHEN  ('Locator1') ('ADOBlob')
+WHEN  ('Locator2') ('ADOBlob')
+WHEN  ('Step0') ('ADOBlob')
+WHEN  ('Step1') ('ADOBlob')
+WHEN  ('Step2') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('Default') (0)
+WHEN  ('Locator0') (0)
+WHEN  ('Locator1') (0)
+WHEN  ('Locator2') (0)
+WHEN  ('Step0') (0)
+WHEN  ('Step1') (0)
+WHEN  ('Step2') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 2
+WHEN  ('Default')TIMES 0
+WHEN  ('Step2')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 2
+WHEN  ('Default')TIMES 0
+WHEN  ('Step2')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%ResetFields MULTI LONG  (1)
+%ResetField DEPEND %ResetFields FIELD TIMES 1
+WHEN  (1) (LOC:Datum)
+
+%SortFindAnywhere DEPEND %SortOrder LONG TIMES 0
+
+%SortHigherKeys DEPEND %SortOrder MULTI LONG TIMES 0
+
+%SortHigherKey DEPEND %SortHigherKeys COMPONENT TIMES 0
+
+%SortHigherKeyField DEPEND %SortOrder DEPEND %SortHigherKeys FIELD TIMES 2
+WHEN  (1)TIMES 0
+WHEN  (2)TIMES 0
+
+%SortHigherKeyValueType DEPEND %SortOrder DEPEND %SortHigherKeys DEFAULT TIMES 2
+WHEN  (1)TIMES 0
+WHEN  (2)TIMES 0
+
+%SortHigherKeyValueVariable DEPEND %SortOrder DEPEND %SortHigherKeys FIELD TIMES 0
+
+%SortHigherKeyValueFixed DEPEND %SortOrder DEPEND %SortHigherKeys DEFAULT TIMES 0
+
+%SortAdditionalSortType DEPEND %SortOrder DEFAULT TIMES 2
+WHEN  (1) ('Manual')
+WHEN  (2) ('Manual')
+
+%SortAddSortFields DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortAddSortFieldsAssisted DEPEND %SortOrder MULTI LONG TIMES 0
+
+%SortAddSortFieldAssisted DEPEND %SortAddSortFieldsAssisted FIELD TIMES 0
+
+%SortAddSortFieldAssistedOrder DEPEND %SortAddSortFieldsAssisted DEFAULT TIMES 2
+WHEN  (1)TIMES 0
+WHEN  (2)TIMES 0
+
+%SortResetFields DEPEND %SortOrder MULTI LONG TIMES 1
+WHEN  (1) (1)
+
+%SortResetField DEPEND %SortResetFields FIELD TIMES 1
+WHEN  (1)TIMES 1
+WHEN  (1) (LOC:WindowsInlog)
+
+%HotFields MULTI LONG  (1)
+%HotField DEPEND %HotFields FIELD TIMES 1
+WHEN  (1) (LOC:Datum)
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 1
+WHEN  (1) (1)
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Local List')
+WHEN  ('Log:HandelingOpmerking') ('Local List')
+WHEN  ('Log:RecordInhoudPre') ('Local List')
+WHEN  ('Log:Tabel') ('Local List')
+WHEN  ('Log:Uitgevoerd_DATE') ('Local List')
+WHEN  ('Log:Uitgevoerd_TIME') ('Local List')
+WHEN  ('Log:WindowsInlog') ('Local List')
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('')
+WHEN  ('Log:HandelingOpmerking') ('')
+WHEN  ('Log:RecordInhoudPre') ('')
+WHEN  ('Log:Tabel') ('')
+WHEN  ('Log:Uitgevoerd_DATE') ('')
+WHEN  ('Log:Uitgevoerd_TIME') ('')
+WHEN  ('Log:WindowsInlog') ('')
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Local List')
+WHEN  ('Log:HandelingOpmerking') ('Local List')
+WHEN  ('Log:RecordInhoudPre') ('Local List')
+WHEN  ('Log:Tabel') ('Local List')
+WHEN  ('Log:Uitgevoerd_DATE') ('Local List')
+WHEN  ('Log:Uitgevoerd_TIME') ('Local List')
+WHEN  ('Log:WindowsInlog') ('Local List')
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('')
+WHEN  ('Log:HandelingOpmerking') ('')
+WHEN  ('Log:RecordInhoudPre') ('')
+WHEN  ('Log:Tabel') ('')
+WHEN  ('Log:Uitgevoerd_DATE') ('')
+WHEN  ('Log:Uitgevoerd_TIME') ('')
+WHEN  ('Log:WindowsInlog') ('')
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Local List')
+WHEN  ('Log:HandelingOpmerking') ('Local List')
+WHEN  ('Log:RecordInhoudPre') ('Local List')
+WHEN  ('Log:Tabel') ('Local List')
+WHEN  ('Log:Uitgevoerd_DATE') ('Local List')
+WHEN  ('Log:Uitgevoerd_TIME') ('Local List')
+WHEN  ('Log:WindowsInlog') ('Local List')
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('')
+WHEN  ('Log:HandelingOpmerking') ('')
+WHEN  ('Log:RecordInhoudPre') ('')
+WHEN  ('Log:Tabel') ('')
+WHEN  ('Log:Uitgevoerd_DATE') ('')
+WHEN  ('Log:Uitgevoerd_TIME') ('')
+WHEN  ('Log:WindowsInlog') ('')
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%BrowseAllTotalOnOff LONG  (1)
+%BrowseAllTotalOnOffCondition DEFAULT  ('')
+%BrowseTotals MULTI LONG  ()
+%BrowseTotalTarget DEPEND %BrowseTotals FIELD TIMES 0
+
+%BrowseTotalType DEPEND %BrowseTotals DEFAULT TIMES 0
+
+%BrowseTotalField DEPEND %BrowseTotals DEFAULT TIMES 0
+
+%BrowseTotalBasedOn DEPEND %BrowseTotals DEFAULT TIMES 0
+
+%BrowseTotalCondition DEPEND %BrowseTotals DEFAULT TIMES 0
+
+%BrowseBoxDoNotIncludePrimaryKey LONG  (0)
+%DisableUsePopup LONG  (0)
+%EnableSortHeader LONG  (0)
+%ControlFieldSortHeaderSave LONG  (0)
+%ControlFieldSortHeaderMulti LONG  (1)
+%ControlFieldSortHeaderOnlyAsc DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldSortHeaderOverride DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldSortHeaderDisableColumn DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldSortHeaderFields DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ControlFieldSortHeaderField DEPEND %ControlFieldSortHeaderFields FIELD TIMES 0
+
+%ControlFieldSortHeaderFieldOrder DEPEND %ControlFieldSortHeaderFields DEFAULT TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ControlFieldSortHeaderFieldCase DEPEND %ControlFieldSortHeaderFields LONG TIMES 3
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%DisableAutoSizeColumn LONG  (0)
+%DisableListFormatManager LONG  (0)
+%ListFormatManagerAllowPopupInEmptyList DEFAULT  ('Enable')
+%ListFormatManagerCheckType DEFAULT  ('Icon')
+%ListFormatManagerItemsSortBy DEFAULT  ('Alpha')
+%ListFormatManagerUseIdentificationTip DEFAULT  ('Enable')
+%ListFormatManagerSaveWindowPosition DEFAULT  ('Enable')
+%ListFormatManagerSortOrder LONG  (1)
+%ListFormatManagerMenuAppendSortOrder LONG  (1)
+%ListFormatManagerSave LONG  (1)
+%UseMRP LONG  (1)
+%AddPopUp MULTI LONG  ()
+%AddPopUpChoice DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpControl DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpAction DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpProcedure DEPEND %AddPopUp PROCEDURE TIMES 0
+
+%AddPopUpThreadProcedure DEPEND %AddPopUp LONG TIMES 0
+
+%AddPopUpThreadStack DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpText DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpIcon DEPEND %AddPopUp DEFAULT TIMES 0
+
+%TypeAddPopupIcon DEPEND %AddPopUp DEFAULT TIMES 0
+
+%OtherPopupIcon DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpDisable DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpSeparate DEPEND %AddPopUp LONG TIMES 0
+
+%SQLAssignments MULTI LONG  ()
+%SQLViewField DEPEND %SQLAssignments DEFAULT TIMES 0
+
+%SQLViewFieldAssignment DEPEND %SQLAssignments DEFAULT TIMES 0
+
+%SQLHasGroupBy LONG  (0)
+%SQLGrouping DEFAULT  ('')
+%SQLHasHaving LONG  (0)
+%SQLHas DEFAULT  ('')
+%SortHeaderColumnsUseColor LONG  (0)
+%SortHeaderColorBkHdrAsc LONG  (10526303)
+%SortHeaderColorBkColAsc LONG  (15128749)
+%SortHeaderColorBkHdrDec LONG  (10526303)
+%SortHeaderColorBkColDec LONG  (15128749)
+%DefaultEnableOnEmpty LONG  (0)
+%SortEnableOnEmpty DEPEND %SortOrder LONG TIMES 0
+
+[ADDITION]
+NAME ABC BrowseQBEList
+[INSTANCE]
+INSTANCE 7
+PARENT 1
+[PROMPTS]
+%svFilterClass DEFAULT  ('cFilterList')
+%svFilterObject DEFAULT  ('FilterObj')
+%svFilterToCB LONG  (0)
+%svQCSearchSensitive LONG  (0)
+%svCaseSetAtRuntime LONG  (1)
+%svCaseSetAtRuntimeDefault LONG  (1)
+[ADDITION]
+NAME ABC BrowseViewButton
+[INSTANCE]
+INSTANCE 13
+PARENT 1
+[ADDITION]
+NAME ABC BrowseUpdateButtons
+[INSTANCE]
+INSTANCE 12
+PARENT 1
+[PROMPTS]
+%EditInPlace LONG  (0)
+%ClassItem UNIQUE DEFAULT  ('BrowseEIPManager', 'EIP_Log:HandelingOpmerking', 'EIP_Log:Tabel', |
+  'EIP_Log:Uitgevoerd_TIME')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('BrowseEIPManager') ('BrowseEIPManager')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('BrowseEIPManager') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 4
+WHEN  ('BrowseEIPManager') ('NO')
+WHEN  ('EIP_Log:HandelingOpmerking') ('NO')
+WHEN  ('EIP_Log:Tabel') ('NO')
+WHEN  ('EIP_Log:Uitgevoerd_TIME') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('BrowseEIPManager') ('BRW1::EIPManager')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('BrowseEIPManager') (1)
+WHEN  ('EIP_Log:HandelingOpmerking') (1)
+WHEN  ('EIP_Log:Tabel') (1)
+WHEN  ('EIP_Log:Uitgevoerd_TIME') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('BrowseEIPManager') (1)
+WHEN  ('EIP_Log:HandelingOpmerking') (1)
+WHEN  ('EIP_Log:Tabel') (1)
+WHEN  ('EIP_Log:Uitgevoerd_TIME') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 4
+WHEN  ('BrowseEIPManager') ('ADOBlob')
+WHEN  ('EIP_Log:HandelingOpmerking') ('ADOBlob')
+WHEN  ('EIP_Log:Tabel') ('ADOBlob')
+WHEN  ('EIP_Log:Uitgevoerd_TIME') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('BrowseEIPManager') (0)
+WHEN  ('EIP_Log:HandelingOpmerking') (0)
+WHEN  ('EIP_Log:Tabel') (0)
+WHEN  ('EIP_Log:Uitgevoerd_TIME') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('BrowseEIPManager')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('BrowseEIPManager')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%EIPTabAction DEFAULT  ('Default')
+%EIPTabRemain LONG  (0)
+%EIPEnterAction DEFAULT  ('Default')
+%EIPEnterRemain LONG  (0)
+%EIPArrowAction DEFAULT  ('Default')
+%EIPArrowRemain LONG  (1)
+%EIPArrowRetain LONG  (1)
+%EIPFocusAction DEFAULT  ('Default')
+%EIPInsertionPoint DEFAULT  ('After')
+%EIPAskOnDelete DEFAULT  ('Always')
+%PrimingFields MULTI LONG  ()
+%PrimedField DEPEND %PrimingFields FIELD TIMES 0
+
+%PrimedValue DEPEND %PrimingFields DEFAULT TIMES 0
+
+%AllowEIPExt DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (1)
+WHEN  ('Log:HandelingOpmerking') (1)
+WHEN  ('Log:RecordInhoudPre') (1)
+WHEN  ('Log:Tabel') (1)
+WHEN  ('Log:Uitgevoerd_DATE') (1)
+WHEN  ('Log:Uitgevoerd_TIME') (1)
+WHEN  ('Log:WindowsInlog') (1)
+
+%EditInPlaceTypeExt DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Entry')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Entry')
+WHEN  ('Log:HandelingOpmerking') ('Entry')
+WHEN  ('Log:RecordInhoudPre') ('Entry')
+WHEN  ('Log:Tabel') ('Entry')
+WHEN  ('Log:Uitgevoerd_DATE') ('Entry')
+WHEN  ('Log:Uitgevoerd_TIME') ('Entry')
+WHEN  ('Log:WindowsInlog') ('Entry')
+
+%EditInPlaceFEQTitle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Default')
+WHEN  ('Log:HandelingOpmerking') ('Default')
+WHEN  ('Log:RecordInhoudPre') ('Default')
+WHEN  ('Log:Tabel') ('Default')
+WHEN  ('Log:Uitgevoerd_DATE') ('Default')
+WHEN  ('Log:Uitgevoerd_TIME') ('Default')
+WHEN  ('Log:WindowsInlog') ('Default')
+
+%EditInPlaceFEQOffset DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('0')
+WHEN  ('Log:HandelingOpmerking') ('0')
+WHEN  ('Log:RecordInhoudPre') ('0')
+WHEN  ('Log:Tabel') ('0')
+WHEN  ('Log:Uitgevoerd_DATE') ('0')
+WHEN  ('Log:Uitgevoerd_TIME') ('0')
+WHEN  ('Log:WindowsInlog') ('0')
+
+%EditInPlaceFEQTransparent DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQReadOnly DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQRequired DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQDataSource DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Fixed')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Fixed')
+WHEN  ('Log:HandelingOpmerking') ('Fixed')
+WHEN  ('Log:RecordInhoudPre') ('Fixed')
+WHEN  ('Log:Tabel') ('Fixed')
+WHEN  ('Log:Uitgevoerd_DATE') ('Fixed')
+WHEN  ('Log:Uitgevoerd_TIME') ('Fixed')
+WHEN  ('Log:WindowsInlog') ('Fixed')
+
+%EditInPlaceFEQFixedDataSource DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%EditInPlaceFEQFixedDataSourceValue DEPEND %EditInPlaceFEQFixedDataSource DEFAULT TIMES 0
+
+%EditInPlaceFEQFixedDataSourceSelected DEPEND %EditInPlaceFEQFixedDataSource LONG TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+
+%EditInPlaceFEQQueueDataSourceQN DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%EditInPlaceFEQQueueDataSourceV DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%EditInPlaceFEQQueueDataSourceS DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%EditInPlaceFEQAutoSerializeField DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQAutoSerializeFieldDelimiter DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ReturnToOriginalDir DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%AllowLongFilenames DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (1)
+WHEN  ('Log:HandelingOpmerking') (1)
+WHEN  ('Log:RecordInhoudPre') (1)
+WHEN  ('Log:Tabel') (1)
+WHEN  ('Log:Uitgevoerd_DATE') (1)
+WHEN  ('Log:Uitgevoerd_TIME') (1)
+WHEN  ('Log:WindowsInlog') (1)
+
+%DOSFileDialogType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Open')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Open')
+WHEN  ('Log:HandelingOpmerking') ('Open')
+WHEN  ('Log:RecordInhoudPre') ('Open')
+WHEN  ('Log:Tabel') ('Open')
+WHEN  ('Log:Uitgevoerd_DATE') ('Open')
+WHEN  ('Log:Uitgevoerd_TIME') ('Open')
+WHEN  ('Log:WindowsInlog') ('Open')
+
+%AllowNoError DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%AllowMultiSelect DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%DOSMaskDesc DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('All Files')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('All Files')
+WHEN  ('Log:HandelingOpmerking') ('All Files')
+WHEN  ('Log:RecordInhoudPre') ('All Files')
+WHEN  ('Log:Tabel') ('All Files')
+WHEN  ('Log:Uitgevoerd_DATE') ('All Files')
+WHEN  ('Log:Uitgevoerd_TIME') ('All Files')
+WHEN  ('Log:WindowsInlog') ('All Files')
+
+%DOSMask DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('*.*')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('*.*')
+WHEN  ('Log:HandelingOpmerking') ('*.*')
+WHEN  ('Log:RecordInhoudPre') ('*.*')
+WHEN  ('Log:Tabel') ('*.*')
+WHEN  ('Log:Uitgevoerd_DATE') ('*.*')
+WHEN  ('Log:Uitgevoerd_TIME') ('*.*')
+WHEN  ('Log:WindowsInlog') ('*.*')
+
+%DOSMoreMasks DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%DOSMoreMaskDesc DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%DOSMoreMask DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%EditInPlaceFEQForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+
+%EditInPlaceFEQBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+
+%EditInPlaceFEQForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+
+%EditInPlaceFEQBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (-1)
+WHEN  ('Log:HandelingOpmerking') (-1)
+WHEN  ('Log:RecordInhoudPre') (-1)
+WHEN  ('Log:Tabel') (-1)
+WHEN  ('Log:Uitgevoerd_DATE') (-1)
+WHEN  ('Log:Uitgevoerd_TIME') (-1)
+WHEN  ('Log:WindowsInlog') (-1)
+
+%EditInPlaceFEQFrom DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQColumnFrom DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQPicture DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQListFormat DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQDrop DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('0')
+WHEN  ('Log:HandelingOpmerking') ('0')
+WHEN  ('Log:RecordInhoudPre') ('0')
+WHEN  ('Log:Tabel') ('0')
+WHEN  ('Log:Uitgevoerd_DATE') ('0')
+WHEN  ('Log:Uitgevoerd_TIME') ('0')
+WHEN  ('Log:WindowsInlog') ('0')
+
+%EditInPlaceFEQWidth DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('0')
+WHEN  ('Log:HandelingOpmerking') ('0')
+WHEN  ('Log:RecordInhoudPre') ('0')
+WHEN  ('Log:Tabel') ('0')
+WHEN  ('Log:Uitgevoerd_DATE') ('0')
+WHEN  ('Log:Uitgevoerd_TIME') ('0')
+WHEN  ('Log:WindowsInlog') ('0')
+
+%EditInPlaceFEQCase DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Default')
+WHEN  ('Log:HandelingOpmerking') ('Default')
+WHEN  ('Log:RecordInhoudPre') ('Default')
+WHEN  ('Log:Tabel') ('Default')
+WHEN  ('Log:Uitgevoerd_DATE') ('Default')
+WHEN  ('Log:Uitgevoerd_TIME') ('Default')
+WHEN  ('Log:WindowsInlog') ('Default')
+
+%EditInPlaceFEQFlat DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQHorizontal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQVertical DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQImmediate DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%EditInPlaceFEQEntryCompletion DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%LookupAssign DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%EditInPlaceFEQFixedDataSourceText DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQCheckJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Default')
+WHEN  ('Log:HandelingOpmerking') ('Default')
+WHEN  ('Log:RecordInhoudPre') ('Default')
+WHEN  ('Log:Tabel') ('Default')
+WHEN  ('Log:Uitgevoerd_DATE') ('Default')
+WHEN  ('Log:Uitgevoerd_TIME') ('Default')
+WHEN  ('Log:WindowsInlog') ('Default')
+
+%EditInPlaceFEQTrue DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQFalse DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQTrueLabel DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQFalseLabel DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceFEQEntryMode DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Default')
+WHEN  ('Log:HandelingOpmerking') ('Default')
+WHEN  ('Log:RecordInhoudPre') ('Default')
+WHEN  ('Log:Tabel') ('Default')
+WHEN  ('Log:Uitgevoerd_DATE') ('Default')
+WHEN  ('Log:Uitgevoerd_TIME') ('Default')
+WHEN  ('Log:WindowsInlog') ('Default')
+
+%EditInPlaceFEQLower DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('0')
+WHEN  ('Log:HandelingOpmerking') ('0')
+WHEN  ('Log:RecordInhoudPre') ('0')
+WHEN  ('Log:Tabel') ('0')
+WHEN  ('Log:Uitgevoerd_DATE') ('0')
+WHEN  ('Log:Uitgevoerd_TIME') ('0')
+WHEN  ('Log:WindowsInlog') ('0')
+
+%EditInPlaceFEQUpper DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('0')
+WHEN  ('Log:HandelingOpmerking') ('0')
+WHEN  ('Log:RecordInhoudPre') ('0')
+WHEN  ('Log:Tabel') ('0')
+WHEN  ('Log:Uitgevoerd_DATE') ('0')
+WHEN  ('Log:Uitgevoerd_TIME') ('0')
+WHEN  ('Log:WindowsInlog') ('0')
+
+%EditInPlaceFEQStep DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('0')
+WHEN  ('Log:HandelingOpmerking') ('0')
+WHEN  ('Log:RecordInhoudPre') ('0')
+WHEN  ('Log:Tabel') ('0')
+WHEN  ('Log:Uitgevoerd_DATE') ('0')
+WHEN  ('Log:Uitgevoerd_TIME') ('0')
+WHEN  ('Log:WindowsInlog') ('0')
+
+%EditInPlaceFEQPassword DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') (0)
+WHEN  ('Log:HandelingOpmerking') (0)
+WHEN  ('Log:RecordInhoudPre') (0)
+WHEN  ('Log:Tabel') (0)
+WHEN  ('Log:Uitgevoerd_DATE') (0)
+WHEN  ('Log:Uitgevoerd_TIME') (0)
+WHEN  ('Log:WindowsInlog') (0)
+
+%LookupType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Related Field')
+WHEN  ('?Browse:1')TIMES 7
+WHEN  ('Log:Handeling') ('Related Field')
+WHEN  ('Log:HandelingOpmerking') ('Related Field')
+WHEN  ('Log:RecordInhoudPre') ('Related Field')
+WHEN  ('Log:Tabel') ('Related Field')
+WHEN  ('Log:Uitgevoerd_DATE') ('Related Field')
+WHEN  ('Log:Uitgevoerd_TIME') ('Related Field')
+WHEN  ('Log:WindowsInlog') ('Related Field')
+
+%PostLookupKey DEPEND %Control DEPEND %ControlField KEY TIMES 0
+
+%PostLookupField DEPEND %Control DEPEND %ControlField COMPONENT TIMES 0
+
+%PostLookupFieldNoRelated DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%PostLookupProcedure DEPEND %Control DEPEND %ControlField PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%PostLookupProcedureReturnValue DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EIPThisObjectName DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%EditInPlaceList MULTI LONG  ()
+%EditInPlaceField DEPEND %EditInPlaceList FIELD TIMES 0
+
+%AllowEIP DEPEND %EditInPlaceList LONG TIMES 0
+
+%UpdateProcedure PROCEDURE  (UpdateGebruikerLog)
+%UpdateProcedureParameters DEFAULT  ('')
+%EditViaPopup LONG  (0)
+%ConditionalEditInPlace LONG  (0)
+%ConditionalEditInPlaceCondition DEFAULT  ('')
+[ADDITION]
+NAME ABC CloseButton
+[INSTANCE]
+INSTANCE 4
+[ADDITION]
+NAME ABC WindowResize
+[FIELDPROMPT]
+%ResizeAnchorTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorBottom DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowBottom DEPEND %Control LONG TIMES 0
+
+[INSTANCE]
+INSTANCE 6
+[PROMPTS]
+%UseAppStrategy DEFAULT  ('1')
+%AppStrategy DEFAULT  ('Surface')
+%RestrictMinSize LONG  (1)
+%WindowMinWidth DEFAULT  ('0')
+%WindowMaxWidth DEFAULT  ('0')
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('WindowResizeClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)')
+
+%WindowMinHeight DEFAULT  ('')
+%RestrictMaxSize LONG  (0)
+%WindowMaxHeight DEFAULT  ('')
+%AutoFindParents DEFAULT  ('Default')
+%DeferMoves DEFAULT  ('Default')
+%OverrideControls MULTI LONG  (1, 2, 3, 4, 5)
+%OverrideControl DEPEND %OverrideControls DEFAULT TIMES 5
+WHEN  (1) ('?Geb:WindowsInlog')
+WHEN  (2) ('?GebruikerPrompt')
+WHEN  (3) ('?Group1:2')
+WHEN  (4) ('?Close')
+WHEN  (5) ('?CurrentTab')
+
+%DisableResize DEPEND %OverrideControls LONG TIMES 5
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+WHEN  (5) (0)
+
+%HorizResize DEPEND %OverrideControls DEFAULT TIMES 5
+WHEN  (1) ('Lock Width')
+WHEN  (2) ('Lock Width')
+WHEN  (3) ('Lock Width')
+WHEN  (4) ('Lock Width')
+WHEN  (5) ('Constant Right Border')
+
+%VertResize DEPEND %OverrideControls DEFAULT TIMES 5
+WHEN  (1) ('Lock Height')
+WHEN  (2) ('Lock Height')
+WHEN  (3) ('Lock Height')
+WHEN  (4) ('Lock Height')
+WHEN  (5) ('Constant Bottom Border')
+
+%HorizPositional DEPEND %OverrideControls DEFAULT TIMES 5
+WHEN  (1) ('Fix Left')
+WHEN  (2) ('Fix Left')
+WHEN  (3) ('Fix Left')
+WHEN  (4) ('Fix Right')
+WHEN  (5) ('Fix Left')
+
+%VertPositional DEPEND %OverrideControls DEFAULT TIMES 5
+WHEN  (1) ('Fix Bottom')
+WHEN  (2) ('Fix Bottom')
+WHEN  (3) ('Fix Bottom')
+WHEN  (4) ('Fix Bottom')
+WHEN  (5) ('Fix Top')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Resizer')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME ABC FileDropCombo
+[INSTANCE]
+INSTANCE 3
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo {11}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (Geb:WindowsInlog)
+%TargetField FIELD  (LOC:WindowsInlog)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (1)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (0)
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (-1)
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') (0)
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') ('Local List')
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') ('')
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') ('Local List')
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') ('')
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') ('Local List')
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Geb:WindowsInlog')TIMES 1
+WHEN  ('Geb:WindowsInlog') ('')
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Geb:WindowsInlog')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB3')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[WINDOW]
+QuickWindow WINDOW('Log'),AT(,,401,303),FONT('MS Sans Serif',8,,FONT:regular,CHARSET:DEFAULT), |
+          RESIZE,CENTER,GRAY,IMM,MAX,MDI,HLP('BrowseGebruikerLog'),SYSTEM
+          LIST,AT(12,23,379,128),USE(?Browse:1),HVSCROLL,FORMAT('50L(2)|M~Gebruiker~C(2' & |
+            ')@s50@[50R(2)|M@d6-@80R(2)|M@T1@](75)|~Uitgevoerd~50L(2)|M~Handeling~C(2)@' & |
+            's20@100L(2)|M~Handeling Opmerking~C(2)@s100@50L(2)|M~Tabel~C(2)@s30@1020L(' & |
+            '2)|M~Record-Inhoud~@s255@'),FROM(Queue:Browse:1),IMM,MSG('Browsing the Geb' & |
+            'ruikerLog file'),#FIELDS(Log:WindowsInlog,Log:Uitgevoerd_DATE,Log:Uitgevoerd_TIME, |
+            Log:Handeling,Log:HandelingOpmerking,Log:Tabel,Log:RecordInhoudPre),#ORIG(?List), |
+            #SEQ(1),#ORDINAL(1)
+          SHEET,AT(5,4,393,172),USE(?CurrentTab),#ORIG(CurrentTab),#ORDINAL(2)
+            TAB('&1) Op Uitvoerdatum'),USE(?Tab:2),#ORDINAL(3)
+              PROMPT('Uitvoerdatum:'),AT(15,156),USE(?LOC:Datum:Prompt:2),#ORDINAL(4)
+              SPIN(@d17),AT(65,157,60,10),USE(LOC:Datum,,?LOC:Datum:2),#ORDINAL(5)
+            END
+            TAB('&2) Per Gebruiker / Op Uitvoerdatum'),USE(?Tab:3),#ORDINAL(7)
+              COMBO(@s50),AT(52,158,,13),USE(Geb:WindowsInlog),DROP(5),FORMAT('200L(2)|M~' & |
+                'Windows Inlog~L(0)@s50@'),FROM(Queue:FileDropCombo),IMM,#FIELDS(Geb:WindowsInlog), |
+                #ORIG(Geb:WindowsInlog),#SEQ(3),#ORDINAL(8)
+              PROMPT('Gebruiker:'),AT(11,160,40,10),USE(?GebruikerPrompt),#ORDINAL(9)
+            END
+            TAB('3) Op Invoegvolgorde'),USE(?TAB1),#ORDINAL(10)
+            END
+          END
+          BUTTON('&Sluiten'),AT(323,281,71,18),USE(?Close),LEFT,ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'), |
+            TIP('Close Window'),#ORIG(?Close),#SEQ(4),#ORDINAL(11)
+          BUTTON('&Bekijken'),AT(323,154,71,18),USE(?View),LEFT,ICON('WAView.ico'),DEFAULT, |
+            FLAT,#ORIG(?View),#SEQ(13),#ORDINAL(12)
+          BUTTON('&Insert'),AT(312,4,42,12),USE(?Insert),DISABLE,HIDE,#ORIG(?Insert),#SEQ(12), |
+            #ORDINAL(13)
+          GROUP('Data Filter Center'),AT(7,179,390,98),USE(?Group1:2),BOXED,#ORIG(?Group1), |
+            #SEQ(7),#ORDINAL(14)
+            LIST,AT(13,192,377,60),USE(?FilterList:2),VSCROLL,ALRT(ShiftMouseLeft),ALRT(MouseLeft2), |
+              ALRT(InsertKey),ALRT(DeleteKey),FORMAT('60L(2)|M~Column~@s25@80L(2)|M~Ope' & |
+              'rator~@s20@120L(2)|M~Value/Expression~@s40@20L(2)|M~Connecting Operator~@s25@'), |
+              #ORIG(?FilterList),#SEQ(7),#ORDINAL(15)
+            CHECK('Case sensitive search for string'),AT(13,256,125,14),USE(?checkCase:2), |
+              #ORIG(?checkCase),#SEQ(7),#ORDINAL(16)
+            BUTTON('Reset'),AT(147,256,45,14),USE(?btnReset:2),#ORIG(?btnReset),#SEQ(7),#ORDINAL(17)
+            BUTTON('Save Query'),AT(196,256,45,14),USE(?BtnSaveQuery:2),#ORIG(?BtnSaveQuery), |
+              #SEQ(7),#ORDINAL(18)
+            BUTTON('Save As'),AT(247,256,45,14),USE(?BtnSaveAs:2),#ORIG(?BtnSaveAs),#SEQ(7), |
+              #ORDINAL(19)
+            BUTTON('Load Query'),AT(296,256,45,14),USE(?BtnLoadQuery:2),#ORIG(?BtnLoadQuery), |
+              #SEQ(7),#ORDINAL(20)
+            BUTTON('Apply'),AT(347,256,45,14),USE(?btnApply:2),#ORIG(?btnApply),#SEQ(7),#ORDINAL(21)
+          END
+          BUTTON('Terugzetten '),AT(258,156),USE(?Terugzetten),#ORDINAL(6)
+        END
+
+[END]

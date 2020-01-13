@@ -1,0 +1,3 @@
+#system win
+#model clarion dll
+#pragma debug(vid=>full)

@@ -1,0 +1,49 @@
+LIBRARY 'VOORRPLN' GUI
+EXPORTS
+;Start of initialisation function
+  VOORRPLN:INIT@F10ERRORCLASS8INICLASS                    @?
+  VOORRPLN:KILL@F                                         @?
+;End of initialisation functions
+
+;Start of Exported Procedures
+  UPDATEPLANNINGVERKOOP@F                                 @?
+  UPDATEOVERBOEKMUTATIEENKEL@F                            @?
+  UPDATEACTIVITEIT@Fl                                     @?
+  WINDOWINSLAG@F                                          @?
+  WINDOWREDENRETOUR@FsblRscRbd                            @?
+  UPDATEOVERBOEKMUTATIE@F                                 @?
+  UPDATEVERKOOP@Fl                                        @?
+  WINDOWCELLOCATIES@F                                     @?
+  BROWSETRANSFERS@FObd                                    @?
+  UPDATEPLANNINGINKOOP@F                                  @?
+  BROWSEOVERBOEKING@F                                     @?
+  UPDATEEXTRAKOSTEN@F                                     @?
+  UPDATEOVERBOEKINGMUTATIEQUEUE@F                         @?
+  UPDATEUITSLAGMUTATIE@F                                  @?
+  WINDOWBOEKRETOURREGEL@FlReRlRlRl                        @?
+  BROWSEINKOOP@F                                          @?
+  UPDATEAOVERBOEKING@FUcOsbOsbOlOlOd                      @?
+  BROWSESSOPREGISTRATIE@F                                 @?
+  WINDOWINSLAGWEGING@F                                    @?
+  UPDATEOVERBOEKING@FOsbOsbOlOlOd                         @?
+  CHECKISOCOUNTRIES@Fsb                                   @?
+  BROWSEVERKOOP@F                                         @?
+  UPDATEUITSLAGMUTATIEQUEUE@Fsb                           @?
+  UPDATEUITSLAGMUTATIEWEGINGQUEUE@F                       @?
+  UPDATEEUITSLAGMUTATIE@F                                 @?
+  UPDATEUITSLAGMUTATIEQUEUEWEGING@Fsbl                    @?
+  UPDATEEINSLAGMUTATIE@F                                  @?
+  WEEGWINDOW@F                                            @?
+  BULKOVERBOEKMUTATIEMAKEN@F                              @?
+  UPDATETRANSFERS@FObd                                    @?
+  BULKOVERBOEKMUTATIEWIJZIGEN@F                           @?
+  UPDATEUITSLAGMUTATIEWEGING@F                            @?
+  BROWSEPLANNING@F                                        @?
+  UPDATEOVERBOEKPLANNINGVANUITVV@F                        @?
+  UPDATEVERKOOPEXPORT@F                                   @?
+  UPDATEINKOOP@Fl                                         @?
+  BROWSEACTIVITEIT@F                                      @?
+;End of Exported Procedures
+
+
+

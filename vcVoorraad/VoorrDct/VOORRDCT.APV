@@ -1,0 +1,2213 @@
+[PROGRAM]
+[COMMON]
+FROM ABC ABC
+[EMBED]
+EMBED %ProgramSetup
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+Glo:Owner=GETINI('SQL','OWNER','172.16.0.7\MS$DPM2007$,Voorraad,jmd,superjmd','.\vooraad.ini')&';APP=JMDVoorraad v'&Glo:Versie&';WSID='&GETUSERNAME()
+[END]
+EMBED %GlobalMap
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 101
+PROPERTY:END
+MODULE('win32')
+	OMIT('***',_WIDTH32_)
+	FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW
+	***
+	COMPILE('***',_WIDTH32_)
+	FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW, NAME('FindWindowA')
+	***
+
+	SetForegroundWindow(UNSIGNED), SIGNED, PROC, PASCAL
+END
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 101
+PROPERTY:END
+NetRefreshPlanningViews()
+NetRefreshVoorraadViews()
+[END]
+EMBED %ProgramProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+NetRefreshPlanningViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Planning|APlanning|AAPlanning|ViewPlanningPartij|ViewVoorraadPlanning|PlanningInkoop|PlanningVerkoop|PlanningOverboeking|APlanningInkoop|APlanningVerkoop|APlanningOverboeking|Inkoop|AInkoop|Verkoop|AVerkoop|OverboekingRit|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+NetRefreshVoorraadViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Partij|APartij|Mutatie|AMutatie|ViewVoorraadCelTotaal|AViewVoorraadCelTotaal|ViewVoorraadPartij|AViewVoorraadPartij|AAViewVoorraadPartij|AAAViewVoorraadPartij|AAAAViewVoorraadPartij|ViewVoorraadPlanning|VoorraadVerloop|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+INCLUDE('GebruikerLogClassSrc.inc')
+[END]
+EMBED %FileManagerCodeSection
+[INSTANCES]
+WHEN 'Inkoop'
+[INSTANCES]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Inkoop', GebruikerLogClass.BepaalRecordContent(Ink:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Inkoop', GebruikerLogClass.BepaalRecordContent(Ink:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Inkoop', GebruikerLogClass.BepaalRecordContent(Ink:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Inkoop', GebruikerLogClass.BepaalRecordContent(Ink:Record))
+[END]
+[END]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Inkoop', GebruikerLogClass.BepaalRecordContent(Ink:Record))
+[END]
+[END]
+[END]
+WHEN 'AInkoop'
+[INSTANCES]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Inkoop', GebruikerLogClass.BepaalRecordContent(AInk:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Inkoop', GebruikerLogClass.BepaalRecordContent(AInk:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Inkoop', GebruikerLogClass.BepaalRecordContent(AInk:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Inkoop', GebruikerLogClass.BepaalRecordContent(AInk:Record))
+[END]
+[END]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Inkoop', GebruikerLogClass.BepaalRecordContent(AInk:Record))
+[END]
+[END]
+[END]
+WHEN 'Verkoop'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Verkoop', GebruikerLogClass.BepaalRecordContent(Ver2:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verkoop', GebruikerLogClass.BepaalRecordContent(Ver2:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verkoop', GebruikerLogClass.BepaalRecordContent(Ver2:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verkoop', GebruikerLogClass.BepaalRecordContent(Ver2:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verkoop', GebruikerLogClass.BepaalRecordContent(Ver2:Record))
+[END]
+[END]
+[END]
+WHEN 'AVerkoop'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Verkoop', GebruikerLogClass.BepaalRecordContent(AVe:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verkoop', GebruikerLogClass.BepaalRecordContent(AVe:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verkoop', GebruikerLogClass.BepaalRecordContent(AVe:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verkoop', GebruikerLogClass.BepaalRecordContent(AVe:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verkoop', GebruikerLogClass.BepaalRecordContent(AVe:Record))
+[END]
+[END]
+[END]
+WHEN 'CMR'
+[INSTANCES]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CMR', GebruikerLogClass.BepaalRecordContent(CMR:Record))
+[END]
+[END]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'CMR', GebruikerLogClass.BepaalRecordContent(CMR:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CMR', GebruikerLogClass.BepaalRecordContent(CMR:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CMR', GebruikerLogClass.BepaalRecordContent(CMR:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CMR', GebruikerLogClass.BepaalRecordContent(CMR:Record))
+[END]
+[END]
+[END]
+WHEN 'Mutatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Mutatie', GebruikerLogClass.BepaalRecordContent(Mut:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Mutatie', GebruikerLogClass.BepaalRecordContent(Mut:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Mutatie', GebruikerLogClass.BepaalRecordContent(Mut:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Mutatie', GebruikerLogClass.BepaalRecordContent(Mut:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Mutatie', GebruikerLogClass.BepaalRecordContent(Mut:Record))
+[END]
+[END]
+[END]
+WHEN 'Partij'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Partij', GebruikerLogClass.BepaalRecordContent(Par:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Partij', GebruikerLogClass.BepaalRecordContent(Par:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Partij', GebruikerLogClass.BepaalRecordContent(Par:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Partij', GebruikerLogClass.BepaalRecordContent(Par:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Partij', GebruikerLogClass.BepaalRecordContent(Par:Record))
+[END]
+[END]
+[END]
+WHEN 'Planning'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Planning', GebruikerLogClass.BepaalRecordContent(Pla:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Planning', GebruikerLogClass.BepaalRecordContent(Pla:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Planning', GebruikerLogClass.BepaalRecordContent(Pla:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Planning', GebruikerLogClass.BepaalRecordContent(Pla:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Planning', GebruikerLogClass.BepaalRecordContent(Pla:Record))
+[END]
+[END]
+[END]
+WHEN 'PalletMutatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(Pal:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(Pal:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(Pal:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(Pal:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(Pal:Record))
+[END]
+[END]
+[END]
+WHEN 'Weging'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Weging', GebruikerLogClass.BepaalRecordContent(Weg:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Weging', GebruikerLogClass.BepaalRecordContent(Weg:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Weging', GebruikerLogClass.BepaalRecordContent(Weg:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Weging', GebruikerLogClass.BepaalRecordContent(Weg:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Weging', GebruikerLogClass.BepaalRecordContent(Weg:Record))
+[END]
+[END]
+[END]
+WHEN 'Verpakking'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Verpakking', GebruikerLogClass.BepaalRecordContent(Ver:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verpakking', GebruikerLogClass.BepaalRecordContent(Ver:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verpakking', GebruikerLogClass.BepaalRecordContent(Ver:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verpakking', GebruikerLogClass.BepaalRecordContent(Ver:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verpakking', GebruikerLogClass.BepaalRecordContent(Ver:Record))
+[END]
+[END]
+[END]
+WHEN 'Transporteur'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Transporteur', GebruikerLogClass.BepaalRecordContent(Tra:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Transporteur', GebruikerLogClass.BepaalRecordContent(Tra:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Transporteur', GebruikerLogClass.BepaalRecordContent(Tra:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Transporteur', GebruikerLogClass.BepaalRecordContent(Tra:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Transporteur', GebruikerLogClass.BepaalRecordContent(Tra:Record))
+[END]
+[END]
+[END]
+WHEN 'RelatieAdres'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'RelatieAdres', GebruikerLogClass.BepaalRecordContent(RAD:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'RelatieAdres', GebruikerLogClass.BepaalRecordContent(RAD:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'RelatieAdres', GebruikerLogClass.BepaalRecordContent(RAD:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'RelatieAdres', GebruikerLogClass.BepaalRecordContent(RAD:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'RelatieAdres', GebruikerLogClass.BepaalRecordContent(RAD:Record))
+[END]
+[END]
+[END]
+WHEN 'PalletSoort'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(PalSrt:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(PalSrt:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(PalSrt:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(PalSrt:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(PalSrt:Record))
+[END]
+[END]
+[END]
+WHEN 'OverboekingRit'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(PalSrt:Record))
+[END]
+[END]
+[END]
+WHEN 'CelLocatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(CL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(CL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(CL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(CL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(CL:Record))
+[END]
+[END]
+[END]
+WHEN 'Cel'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Cel', GebruikerLogClass.BepaalRecordContent(CEL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(CEL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(CEL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(CEL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(CEL:Record))
+[END]
+[END]
+[END]
+WHEN 'BulkOverboeking'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'BulkOverboeking', GebruikerLogClass.BepaalRecordContent(BOV:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'BulkOverboeking', GebruikerLogClass.BepaalRecordContent(BOV:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'BulkOverboeking', GebruikerLogClass.BepaalRecordContent(BOV:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'BulkOverboeking', GebruikerLogClass.BepaalRecordContent(BOV:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'BulkOverboeking', GebruikerLogClass.BepaalRecordContent(BOV:Record))
+[END]
+[END]
+[END]
+WHEN 'AVerpakking'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AVP:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AVP:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AVP:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AVP:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AVP:Record))
+[END]
+[END]
+[END]
+WHEN 'APartij'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Partij', GebruikerLogClass.BepaalRecordContent(APar:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Partij', GebruikerLogClass.BepaalRecordContent(APar:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Partij', GebruikerLogClass.BepaalRecordContent(APar:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Partij', GebruikerLogClass.BepaalRecordContent(APar:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Partij', GebruikerLogClass.BepaalRecordContent(APar:Record))
+[END]
+[END]
+[END]
+WHEN 'APalletSoort'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(APalSrt:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(APalSrt:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(APalSrt:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(APalSrt:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletSoort', GebruikerLogClass.BepaalRecordContent(APalSrt:Record))
+[END]
+[END]
+[END]
+WHEN 'APalletMutatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(APM:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(APM:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(APM:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(APM:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'PalletMutatie', GebruikerLogClass.BepaalRecordContent(APM:Record))
+[END]
+[END]
+[END]
+WHEN 'AMutatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Mutatie', GebruikerLogClass.BepaalRecordContent(AMut:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Mutatie', GebruikerLogClass.BepaalRecordContent(AMut:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Mutatie', GebruikerLogClass.BepaalRecordContent(AMut:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Mutatie', GebruikerLogClass.BepaalRecordContent(AMut:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Mutatie', GebruikerLogClass.BepaalRecordContent(AMut:Record))
+[END]
+[END]
+[END]
+WHEN 'AOverboekingRit'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'OverboekingRit', GebruikerLogClass.BepaalRecordContent(AOR:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'OverboekingRit', GebruikerLogClass.BepaalRecordContent(AOR:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'OverboekingRit', GebruikerLogClass.BepaalRecordContent(AOR:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'OverboekingRit', GebruikerLogClass.BepaalRecordContent(AOR:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'OverboekingRit', GebruikerLogClass.BepaalRecordContent(AOR:Record))
+[END]
+[END]
+[END]
+WHEN 'AOverboekingRitRegel'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'OverboekingRitRegel', GebruikerLogClass.BepaalRecordContent(AORR:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'OverboekingRitRegel', GebruikerLogClass.BepaalRecordContent(AORR:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'OverboekingRitRegel', GebruikerLogClass.BepaalRecordContent(AORR:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'OverboekingRitRegel', GebruikerLogClass.BepaalRecordContent(AORR:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'OverboekingRitRegel', GebruikerLogClass.BepaalRecordContent(AORR:Record))
+[END]
+[END]
+[END]
+WHEN 'APlanning'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Planning', GebruikerLogClass.BepaalRecordContent(APla:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Planning', GebruikerLogClass.BepaalRecordContent(APla:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Planning', GebruikerLogClass.BepaalRecordContent(APla:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Planning', GebruikerLogClass.BepaalRecordContent(APla:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Planning', GebruikerLogClass.BepaalRecordContent(APla:Record))
+[END]
+[END]
+[END]
+WHEN 'ACel'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Cel', GebruikerLogClass.BepaalRecordContent(ACel:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(ACel:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(ACel:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('TryUpdate', 'Cel', GebruikerLogClass.BepaalRecordContent(ACel:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(ACel:Record))
+[END]
+[END]
+[END]
+WHEN 'ACelLocatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(ACL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(ACL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(ACL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(ACL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(ACL:Record))
+[END]
+[END]
+[END]
+WHEN 'AAVerpakking'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AAVer:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AAVer:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AAVer:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AAVer:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Verpakking', GebruikerLogClass.BepaalRecordContent(AAVer:Record))
+[END]
+[END]
+[END]
+WHEN 'AAPlanning'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Planning', GebruikerLogClass.BepaalRecordContent(AAPla:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Planning', GebruikerLogClass.BepaalRecordContent(AAPla:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Planning', GebruikerLogClass.BepaalRecordContent(AAPla:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Planning', GebruikerLogClass.BepaalRecordContent(AAPla:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Planning', GebruikerLogClass.BepaalRecordContent(AAPla:Record))
+[END]
+[END]
+[END]
+WHEN 'AAPartij'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Partij', GebruikerLogClass.BepaalRecordContent(AAPar:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Partij', GebruikerLogClass.BepaalRecordContent(AAPar:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Partij', GebruikerLogClass.BepaalRecordContent(AAPar:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Partij', GebruikerLogClass.BepaalRecordContent(AAPar:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Partij', GebruikerLogClass.BepaalRecordContent(AAPar:Record))
+[END]
+[END]
+[END]
+WHEN 'AACelLocatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AACL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AACL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AACL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AACL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AACL:Record))
+[END]
+[END]
+[END]
+WHEN 'AACel'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Cel', GebruikerLogClass.BepaalRecordContent(AACEL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(AACEL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(AACEL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(AACEL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(AACEL:Record))
+[END]
+[END]
+[END]
+WHEN 'AAACel'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Cel', GebruikerLogClass.BepaalRecordContent(AAACEL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(AAACEL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(AAACEL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(AAACEL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(AAACEL:Record))
+[END]
+[END]
+[END]
+WHEN 'AAAACel'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'Cel', GebruikerLogClass.BepaalRecordContent(AAAACEL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(AAAACEL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'Cel', GebruikerLogClass.BepaalRecordContent(AAAACEL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(AAAACEL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'Cel', GebruikerLogClass.BepaalRecordContent(AAAACEL:Record))
+[END]
+[END]
+[END]
+WHEN 'AAAACelLocatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAAACL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAAACL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAAACL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAAACL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAAACL:Record))
+[END]
+[END]
+[END]
+WHEN 'AAACelLocatie'
+[INSTANCES]
+WHEN 'DeleteRecord'
+[INSTANCES]
+WHEN '(BYTE Query=1),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Delete', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAACL:Record))
+[END]
+[END]
+WHEN 'Insert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAACL:Record))
+[END]
+[END]
+WHEN 'TryInsert'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Insert', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAACL:Record))
+[END]
+[END]
+WHEN 'TryUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAACL:Record))
+[END]
+[END]
+WHEN 'Update'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+GebruikerLogClass.Log('Update', 'CelLocatie', GebruikerLogClass.BepaalRecordContent(AAACL:Record))
+[END]
+[END]
+[END]
+[END]
+EMBED %GlobalData
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+INCLUDE('GebruikerLogClassDef.inc')
+[END]
+EMBED %FM2Init
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2001
+PROPERTY:END
+!    ! hier de controle op AUTO NET
+!    ! AutoNet
+!    ! eerst kijken of in JMDSILO de AutoNet bestaat
+!Loc:LocalPath='C:\MAATWERK\C10\LIMPENS\JMDSILO\AUTONET'
+!Loc:NetPath='H:\MAATWERK\C10\LIMPENS\JMDSILO\AUTONET'
+!
+!IF GETINI('AutoNet','LocalPath',,'.\JMDSilo.INI')=''
+!    IF NOT EXISTS(loc:LocalPath)
+!        IF ds_CreateDirectory(Loc:LocalPath)=FALSE
+!            MESSAGE('LocalPath '&loc:LocalPath&' bestaat niet ')
+!        END
+!    END
+!    PUTINI('AutoNet','LocalPath',loc:LocalPath,'.\JMDSilo.INI')
+!END
+!IF GETINI('AutoNet','NetPath',,'.\JMDSilo.INI')=''
+!    IF NOT EXISTS(loc:NetPath)
+!        IF ds_CreateDirectory(Loc:NetPath)=FALSE
+!            MESSAGE('NetPath '&loc:NetPath&' bestaat niet ')
+!        END
+!
+!    END
+!    PUTINI('AutoNet','NetPath',loc:NetPath,'.\JMDSilo.INI')
+!END
+!Message('Hier in de jmdsilo|'&GETINI('AutoNet','LocalPath',,'.\JMDSilo.INI')&'|'&GETINI('AutoNet','NetPath',,'.\JMDSilo.INI'))
+
+!db.Debugout('Command :'&Command(''))
+!db.Debugout('Restart :'&Command('/Restart'))
+IF Command('/Restart')
+    return
+END
+
+[END]
+[END]
+[END]

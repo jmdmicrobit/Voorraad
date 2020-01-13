@@ -1,0 +1,52 @@
+LIBRARY 'VOORRSTM' GUI
+EXPORTS
+;Start of initialisation function
+  VOORRSTM:INIT@F10ERRORCLASS8INICLASS                    @?
+  VOORRSTM:KILL@F                                         @?
+;End of initialisation functions
+
+;Start of Exported Procedures
+  BROWSEARTIKEL@F                                         @?
+  UPDATERAPPORTEN@F                                       @?
+  UPDATERELATIEARTIKELOMSCHRIJVING@F                      @?
+  BROWSERAPPORTEN@F                                       @?
+  UPDATEPALLETSOORT@F                                     @?
+  BROWSEVERPAKKING@F                                      @?
+  BROWSEPALLETBLADSJABLOON@F                              @?
+  UPDATEHAVENS@F                                          @?
+  UPDATEPALLETBLADSJABLOON@F                              @?
+  UPDATEPALLETBLADSJABLOONCOUNTRY@F                       @?
+  UPDATEVERPAKKING@F                                      @?
+  BROWSEKOSTENSTAM@F                                      @?
+  UPDATECELLOCATIE@F                                      @?
+  BROWSEPALLETSOORT@F                                     @?
+  UPDATERELATIE@F                                         @?
+  UPDATEARTIKEL@F                                         @?
+  VIEWRELATIE@F                                           @?
+  BROWSECEL@F                                             @?
+  BROWSEISOCOUNTRIES@F                                    @?
+  BROWSESSOPCATEGORIE@F                                   @?
+  SELECTAAARELATIE@Fsb                                    @?
+  BROWSEGNCODE@F                                          @?
+  BROWSERELATIEADRES@F                                    @?
+  UPDATEGNCODEARTIKEL@F                                   @?
+  UPDATECEL@F                                             @?
+  UPDATEKOSTENSTAMGEG@F                                   @?
+  UPDATETRANSPORTEUR@F                                    @?
+  BROWSERELATIE@F                                         @?
+  UPDATERELATIEADRES@F                                    @?
+  WINDOWVERPAKKINGSAMENVOEGEN@F                           @?
+  BROWSEHAVENS@F                                          @?
+  BROWSEDELIVERYTERMS@F                                   @?
+  SELECTARELATIEALL@F                                     @?
+  UPDATEGNCODE@F                                          @?
+  UPDATEDELIVERYTERMS@F                                   @?
+  BROWSETRANSPORTEURS@F                                   @?
+  UPDATESSOPOBJECT@F                                      @?
+  SELECTARELATIE@Fsb                                      @?
+  UPDATEISOCOUNTRIES@F                                    @?
+  UPDATESSOPCATEGORIE@F                                   @?
+;End of Exported Procedures
+
+
+

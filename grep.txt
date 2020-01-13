@@ -1,0 +1,669 @@
+voorraad.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorraad.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorraad002.clw:  Comma#=Instring(',',GLO:Owner,1,1)
+voorraad002.clw:  TweedeComma#=Instring(',',GLO:Owner,1,Comma#+1)
+voorraad002.clw:  GLO:HidePlanningInstructie = GETINI('Voorraad','HidePlanningInstructie',0,'.\Voorraad.ini')
+voorraad004.clw:!            '('&|
+voorraad004.clw:!            '('&|
+voorraad004.clw:!            '('&|
+voorraad004.clw:			'('&|
+voorraad004.clw:			'('&|
+voorraad004.clw:			'('&|
+voorraad004.clw:			'('&|
+voorraad004.clw:			'('&|
+voorraad004.clw:			'('&|
+voorraad004.clw:			'('&|
+voorraad004.clw:                	'+ ''.'' + CAST(dbo.Mutatie.CelID AS VARCHAR(12)) AS PartijCelID, 0 AS CelLocatieID, '''' AS Locatienaam '&|
+voorraad004.clw:				!'('&|
+voorraad004.clw:				!'('&|
+voorraad004.clw:				!'('&|
+voorraad004.clw:				!'('&|
+voorraad005.clw:                       STRING('bv. ''Com1:9600,n,8,1'''),AT(88,292),USE(?STRING6)
+voorraad005.clw:  VALUE('1','0')
+voorraad005.clw:                       CHECK('Toon geen instructies'),AT(383,117),USE(GLO:HidePlanningInstructie),VALUE('1','0')
+voorraad005.clw:  Loc:PalletEtiketPrinter=GETINI('Printer','PalletEtiket',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:CMRPrinter=GETINI('Printer','CMR',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:CMRVriesPrinter=GETINI('Printer','CMR-Vrieshuis',,'.\Voorraad.ini')
+voorraad005.clw:  Loc:CRMVriesLade=GETINI('Printer','CMR-Vrieshuis Lade',,'.\Voorraad.ini')
+voorraad005.clw:  Loc:CRMVriesKopie=GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini')
+voorraad005.clw:  LOC:DymoPrinter=GETINI('Printer','DymoPrinter',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:MagazijnPrinter=GETINI('Printer','Magazijn',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:WeeglijstPrinter=GETINI('Printer','Weeglijst',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:PalletbladPrinter=GETINI('Printer','Palletblad',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:LabelLength=GETINI('Printer','LabelLength',104, '.\Voorraad.ini')
+voorraad005.clw:  LOC:LabelPositieZPL=GETINI('Printer','LabelPositieZPL','^FO100,120^AFR,560,200^FD','.\Voorraad.ini')
+voorraad005.clw:  LOC:PortKoord=GETINI('Weeg','PortKoord',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:PortWeeg=GETINI('Weeg','PortWeeg',,'.\Voorraad.ini')
+voorraad005.clw:  LOC:NieuweWeegschaal=GETINI('Weeg','NieuweWeegschaal',0,'.\Voorraad.ini')
+voorraad005.clw:  LOC:PartijRoodkleurenNaDagen = GETINI('Voorraad','PartijRoodkleurenNaDagen',180,'.\Voorraad.ini')
+voorraad005.clw:  LOC:StandaardPalletverloopPeriode=GETINI('Voorraad','StandaardPalletverloopPeriode',60,'.\Voorraad.ini')
+voorraad005.clw:  LOC:StandaardVoorraadverloopPeriode=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,'.\Voorraad.ini')
+voorraad005.clw:  LOC:DefaultPalletbladLogo = GETINI('Palletblad','StandaardLogo','','.\Voorraad.ini')
+voorraad005.clw:  LOC:CountryCompanySSCCNVE = GETINI('Palletblad','CountryCompanyPrefix','870123456','.\Voorraad.ini')
+voorraad005.clw:  GLO:HidePlanningInstructie = GETINI('Voorraad','HidePlanningInstructie',0,'.\Voorraad.ini')
+voorraad005.clw:  FileLookup5.SetMask('All Files','*.*')                   ! Set the file mask
+voorraad005.clw:      PUTINI('Printer','PalletEtiket',Loc:PalletEtiketPrinter,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','CMR',Loc:CMRPrinter,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','CMR-Vrieshuis',LOC:CMRVriesPrinter,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','CMR-Vrieshuis Lade',Loc:CRMVriesLade,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','CMR-Vrieshuis Kopie',Loc:CRMVriesKopie,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','DymoPrinter',LOC:DymoPrinter,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','Magazijn',Loc:MagazijnPrinter,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','Weeglijst',Loc:WeeglijstPrinter,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','Palletblad',LOC:PalletbladPrinter,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','LabelLength', LOC:LabelLength, '.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Printer','LabelPositieZPL',LOC:LabelPositieZPL,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Weeg','PortKoord', LOC:PortKoord,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Weeg','PortWeeg',LOC:PortWeeg,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Weeg','NieuweWeegschaal',LOC:NieuweWeegschaal,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Voorraad','PartijRoodkleurenNaDagen',LOC:PartijRoodkleurenNaDagen,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Voorraad','StandaardPalletverloopPeriode',LOC:StandaardPalletverloopPeriode,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Voorraad','StandaardVoorraadverloopPeriode',LOC:StandaardVoorraadverloopPeriode,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Palletblad','StandaardLogo',LOC:DefaultPalletbladLogo,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Palletblad','CountryCompanyPrefix',LOC:CountryCompanySSCCNVE,'.\Voorraad.ini')
+voorraad005.clw:      PUTINI('Voorraad','HidePlanningInstructie',GLO:HidePlanningInstructie,'.\Voorraad.ini')
+voorraad017.clw:  !        _sqlFilter='Datum_DATETIME >= <39>'&Year(Loc:Datum)&'-'&Month(Loc:Datum)&'-'&Day(Loc:Datum)&' 00:00:00.000<39>'
+voorraad018.clw:  IF ((CLIP(Par:ExternPartijnr)  = '') OR (CLIP(Par:ExternPartijnr) = '0')) THEN
+voorraad019.clw:  'n everyone<0DH,0AH>''''s machine.')
+voorraad019.clw:      if message (' Are you sure you want to close down| these selected applications?','Close Down Applications',|
+voorraad019.clw:      if message (' Are you sure you want to close down| these applications on ALL the machines?','Close Down Applications',|
+voorraad023.clw:  !	Message('Er is een nieuwe versie geïnstalleerd.||Via Help, Versie informatie kan men de wijzigingen raadplegen?','Nieuwe versie gevonden',ICON:Question)
+voorraad023.clw:  	Case Message('Er is een nieuwe versie geïnstalleerd.||Wilt u de wijzigingen raadplegen?','Nieuwe versie gevonden',ICON:Question,Button:Yes+BUTTON:NO,BUTTON:YES)
+voorraad023.clw:    PUTINI('Voorraad','Versie',GLO:Versie,'Voorraad.ini')
+voorraad023.clw:  Loc:Versie=GETINI('Voorraad','Versie',0,'Voorraad.ini')
+voorraad023.clw:  ?String2{Prop:Text}='Voorraad versie '&GLO:Versie&' (laatste gebruikte versie '&Loc:Versie&')'
+voorraad025.clw:      setdropid(clip(?Browse:1{PROPLIST:Header, ?Browse:1{proplist:MouseDownField}}) & ';' & clip(QueueField))
+voorraad026.clw:                         CHECK('Prijzen Bekijken'),AT(71,28,80,8),USE(Geb:BekijkenPrijzen),VALUE('1','0')
+voorraad026.clw:                         CHECK('Uitslagen doen'),AT(71,39,100,8),USE(Geb:MakenVerkoopMutatie),VALUE('1','0')
+voorraad026.clw:                         CHECK('Administrator'),AT(71,54),USE(Geb:Administrator,,?Geb:Administrator:2),VALUE('1','0')
+voorraad026.clw:                         CHECK('Verwerken'),AT(155,28),USE(Geb:Verwerken),VALUE('1','0')
+voorrdct.clw:ViewArtikel          FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Artikel_SyncExact'),PRE(Art),BINDABLE,THREAD !                    
+voorrdct.clw:Partij               FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.Partij'),PRE(Par),BINDABLE,THREAD !                    
+voorrdct.clw:Relatie              FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Relatie_SyncExact'),PRE(Rel),BINDABLE,THREAD !                    
+voorrdct.clw:Verpakking           FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.Verpakking'),PRE(Ver),BINDABLE,THREAD !                    
+voorrdct.clw:ViewVoorraadPlanning FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:owner),NAME('dbo.ViewVoorraadPlanning'),PRE(VVP),BINDABLE,THREAD !                    
+voorrdct.clw:Cel                  FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Cel'),PRE(CEL),BINDABLE,THREAD !                    
+voorrdct.clw:Mutatie              FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:OWNER),NAME('dbo.Mutatie'),PRE(Mut),BINDABLE,THREAD !                    
+voorrdct.clw:Inkoop               FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Inkoop'),PRE(Ink),BINDABLE,THREAD !                    
+voorrdct.clw:Planning             FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Planning'),PRE(Pla),BINDABLE,THREAD !                    
+voorrdct.clw:Verkoop              FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Verkoop'),PRE(Ver2),BINDABLE,THREAD !                    
+voorrdct.clw:Sjabloon             FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Sjabloon'),PRE(Sja),BINDABLE,THREAD !Word sjablonen      
+voorrdct.clw:ViewVoorraadCelTotaal FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:OWNER),NAME('dbo.ViewVoorraadCelTotaal'),PRE(VVCT),BINDABLE,THREAD !                    
+voorrdct.clw:PlanningInkoop       FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.PlanningInkoop'),PRE(Pla2),BINDABLE,THREAD !                    
+voorrdct.clw:PlanningVerkoop      FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.PlanningVerkoop'),PRE(Pla3),BINDABLE,THREAD !                    
+voorrdct.clw:VoorraadVerloop      FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:owner),NAME('dbo.VoorraadVerloop'),PRE(VVL),BINDABLE,THREAD !                    
+voorrdct.clw:RelatieAdres         FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.RelatieAdres'),PRE(RAD),BINDABLE,THREAD !                    
+voorrdct.clw:PalletMutatie        FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.PalletMutatie'),PRE(Pal),BINDABLE,THREAD !                    
+voorrdct.clw:PalletVerloop        FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.PalletVerloop'),PRE(Pal3),BINDABLE,THREAD !                    
+voorrdct.clw:Transporteur         FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.Transporteur'),PRE(Tra),BINDABLE,THREAD !                    
+voorrdct.clw:ViewTransporteur     FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.ViewTransporteur'),PRE(VTRA),BINDABLE,THREAD !                    
+voorrdct.clw:ViewVoorraadPartij   FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij'),PRE(VVPar),BINDABLE,THREAD !                    
+voorrdct.clw:CMR                  FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.CMR'),PRE(CMR),BINDABLE,THREAD !                    
+voorrdct.clw:ViewPlanningPartij   FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewPlanningPartij'),PRE(VPPar),BINDABLE,THREAD !                    
+voorrdct.clw:OverboekingRit       FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.OverboekingRit'),PRE(OR),BINDABLE,THREAD !                    
+voorrdct.clw:OverboekingRitRegel  FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.OverboekingRitRegel'),PRE(ORR),BINDABLE,THREAD !                    
+voorrdct.clw:BulkOverboeking      FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:OWNER),NAME('dbo.BulkOverboeking'),PRE(BOV),BINDABLE,THREAD !BulkOverboeking     
+voorrdct.clw:PlanningOverboeking  FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.PlanningOverboeking'),PRE(Pla4),BINDABLE,THREAD !                    
+voorrdct.clw:DubbeleInslagMutaties FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.DubbeleInslagMutaties'),PRE(Dub),BINDABLE,THREAD !                    
+voorrdct.clw:ArtikelOmschrijvingExtra FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.ArtikelOmschrijvingExtra'),PRE(Art2),BINDABLE,THREAD !                    
+voorrdct.clw:ArtikelOmschrijvingExtraGroep FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.ArtikelOmschrijvingExtraGroep'),PRE(Art3),BINDABLE,THREAD !                    
+voorrdct.clw:PalletSoort          FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.PalletSoort'),PRE(PalSrt),BINDABLE,THREAD !                    
+voorrdct.clw:Weging               FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Weging'),PRE(Weg),BINDABLE,THREAD !                    
+voorrdct.clw:CelLocatie           FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.CelLocatie'),PRE(CL),BINDABLE,THREAD !                    
+voorrdct.clw:Versie               FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:OWNER),NAME('dbo.Versie'),PRE(VRS),CREATE,BINDABLE,THREAD !                    
+voorrdct.clw:ViewPartijCelLocaties FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewPartijCelLocaties'),PRE(VPCL),BINDABLE,THREAD !                    
+voorrdct.clw:ViewVoorraadPartij_INDEXED FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij_INDEXED'),PRE(VVParI),BINDABLE,THREAD !                    
+voorrdct.clw:ViewArtikel_Exact    FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.ViewArtikel'),PRE(ARTE),BINDABLE,THREAD !                    
+voorrdct.clw:Relatie_Exact        FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.ViewRelatie'),PRE(RelE),BINDABLE,THREAD !                    
+voorrdct.clw:ViewPalletTegoeden   FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.ViewPalletTegoeden'),PRE(PTG),BINDABLE,THREAD !                    
+voorrdct.clw:Gebruiker            FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Gebruiker'),PRE(Geb),BINDABLE,THREAD !                    
+voorrdct.clw:GebruikerLog         FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.GebruikerLog'),PRE(Log),BINDABLE,THREAD !                    
+voorrdct.clw:SnelheidLogging      FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.SnelheidLogging'),PRE(Sne),BINDABLE,THREAD !                    
+voorrdct.clw:Activiteit           FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Activiteit'),PRE(ACT),BINDABLE,THREAD !                    
+voorrdct.clw:PalletBladSjabloon   FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.PalletBladSjabloon'),PRE(PBS),BINDABLE,THREAD !                    
+voorrdct.clw:PalletBladSjabloonCountry FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.PalletBladSjabloonCountry'),PRE(PBSC),BINDABLE,THREAD !                    
+voorrdct.clw:RelatieArtikelOmschrijving FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.RelatieArtikelOmschrijving'),PRE(RAO),BINDABLE,THREAD !                    
+voorrdct.clw:Pallet               FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Pallet'),PRE(PLL),BINDABLE,THREAD !                    
+voorrdct.clw:ARelatie             FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Relatie_SyncExact'),PRE(AREL),BINDABLE,THREAD !                    
+voorrdct.clw:APlanning            FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Planning'),PRE(APla),BINDABLE,THREAD !                    
+voorrdct.clw:AInkoop              FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Inkoop'),PRE(AInk),BINDABLE,THREAD !                    
+voorrdct.clw:AVerkoop             FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Verkoop'),PRE(AVE),BINDABLE,THREAD !                    
+voorrdct.clw:AViewArtikel         FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Artikel_SyncExact'),PRE(AArt),BINDABLE,THREAD !                    
+voorrdct.clw:AARelatie            FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Relatie_SyncExact'),PRE(AARel),BINDABLE,THREAD !                    
+voorrdct.clw:ACel                 FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Cel'),PRE(ACel),BINDABLE,THREAD !                    
+voorrdct.clw:AACel                FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Cel'),PRE(AACel),BINDABLE,THREAD !                    
+voorrdct.clw:AViewVoorraadCelTotaal FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:OWNER),NAME('dbo.ViewVoorraadCelTotaal'),PRE(AVVCT),BINDABLE,THREAD !                    
+voorrdct.clw:AVerpakking          FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.Verpakking'),PRE(AVP),BINDABLE,THREAD !                    
+voorrdct.clw:AAARelatie           FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Relatie_SyncExact'),PRE(AAARel),BINDABLE,THREAD !                    
+voorrdct.clw:AAAARelatie          FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Relatie_SyncExact'),PRE(AAAARelatie),BINDABLE,THREAD !                    
+voorrdct.clw:AViewTransporteur    FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.ViewTransporteur'),PRE(AVTRA),BINDABLE,THREAD !                    
+voorrdct.clw:APalletMutatie       FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.PalletMutatie'),PRE(APM),BINDABLE,THREAD !                    
+voorrdct.clw:AAACel               FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Cel'),PRE(AAACel),BINDABLE,THREAD !                    
+voorrdct.clw:APalletVerloop       FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.PalletVerloop'),PRE(APal3),BINDABLE,THREAD !                    
+voorrdct.clw:AViewVoorraadPartij  FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij'),PRE(AVVPar),BINDABLE,THREAD !                    
+voorrdct.clw:AMutatie             FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:OWNER),NAME('dbo.Mutatie'),PRE(AMut),BINDABLE,THREAD !                    
+voorrdct.clw:AAViewVoorraadPartij FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij'),PRE(AAVVPar),BINDABLE,THREAD !                    
+voorrdct.clw:AAAViewVoorraadPartij FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij'),PRE(AAAVVPar),BINDABLE,THREAD !                    
+voorrdct.clw:APartij              FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.Partij'),PRE(APar),BINDABLE,THREAD !                    
+voorrdct.clw:AAViewArtikel        FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Artikel_SyncExact'),PRE(AAArt),BINDABLE,THREAD !                    
+voorrdct.clw:AAVerpakking         FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.Verpakking'),PRE(AAVer),BINDABLE,THREAD !                    
+voorrdct.clw:AAAAViewVoorraadPartij FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij'),PRE(AAAAVVPar),BINDABLE,THREAD !                    
+voorrdct.clw:AOverboekingRitRegel FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.OverboekingRitRegel'),PRE(AORR),BINDABLE,THREAD !                    
+voorrdct.clw:AAPlanning           FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Planning'),PRE(AAPla),BINDABLE,THREAD !                    
+voorrdct.clw:AAPartij             FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.Partij'),PRE(AAPar),BINDABLE,THREAD !                    
+voorrdct.clw:AAAACel              FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.Cel'),PRE(AAAACEL),BINDABLE,THREAD !                    
+voorrdct.clw:AOverboekingRit      FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.OverboekingRit'),PRE(AOR),BINDABLE,THREAD !                    
+voorrdct.clw:APlanningInkoop      FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.PlanningInkoop'),PRE(APla2),BINDABLE,THREAD !                    
+voorrdct.clw:APlanningOverboeking FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.PlanningOverboeking'),PRE(APla4),BINDABLE,THREAD !                    
+voorrdct.clw:APlanningVerkoop     FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.PlanningVerkoop'),PRE(APla3),BINDABLE,THREAD !                    
+voorrdct.clw:APalletSoort         FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.PalletSoort'),PRE(APalSrt),BINDABLE,THREAD !                    
+voorrdct.clw:ACelLocatie          FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.CelLocatie'),PRE(ACL),BINDABLE,THREAD !                    
+voorrdct.clw:AACelLocatie         FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.CelLocatie'),PRE(AACL),BINDABLE,THREAD !                    
+voorrdct.clw:AAACelLocatie        FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.CelLocatie'),PRE(AAACL),BINDABLE,THREAD !                    
+voorrdct.clw:AAAACelLocatie       FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.CelLocatie'),PRE(AAAACL),BINDABLE,THREAD !                    
+voorrdct.clw:AViewVoorraadPartij_INDEXED FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij_INDEXED'),PRE(AVVParI),BINDABLE,THREAD !                    
+voorrdct.clw:AAAViewVoorraadPartij_INDEXED FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij_INDEXED'),PRE(AAAVVPar_INDEX),BINDABLE,THREAD !                    
+voorrdct.clw:AAAAViewVoorraadPartij_INDEXED FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij_INDEXED'),PRE(AAAAVVParI),BINDABLE,THREAD !                    
+voorrdct.clw:AAViewVoorraadPartij_INDEXED FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:Owner),NAME('dbo.ViewVoorraadPartij_INDEXED'),PRE(AAVVParI),BINDABLE,THREAD !                    
+voorrdct.clw:AVoorraadVerloop     FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:owner),NAME('dbo.VoorraadVerloop'),PRE(AVVL),BINDABLE,THREAD !                    
+voorrdct.clw:AAPlanningVerkoop    FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.PlanningVerkoop'),PRE(AAPla3),BINDABLE,THREAD !                    
+voorrdct.clw:APalletBladSjabloon  FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(Glo:OWNER),NAME('dbo.PalletBladSjabloon'),PRE(APBS),BINDABLE,THREAD !                    
+voorrdct.clw:ARelatieArtikelOmschrijving FILE,DRIVER('MSSQL','/BUSYHANDLING=2'),OWNER(GLO:Owner),NAME('dbo.RelatieArtikelOmschrijving'),PRE(ARAO),BINDABLE,THREAD !                    
+voorrdct.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrdct.clw:  Glo:Owner=GETINI('SQL','OWNER','172.16.0.7\MS$DPM2007$,Voorraad,jmd,superjmd','.\vooraad.ini')&';APP=JMDVoorraad v'&Glo:Versie&';WSID='&GETUSERNAME()
+voorrdct.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrdct_bc0.clw:    IF INSTRING(']' & CLIP(Sja:SoortSjabloon) & '[', ']W[]E[', 1, 1) = 0
+voorrdct_bc0.clw:        ReturnValue = GlobalErrors.ThrowMessage(Msg:FieldNotInList,'''Word'',''Excel''')
+voorrpln.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrpln.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrpln002.clw:  'ransport~C(0)@s100@60R(2)|M*P~Planning ID~C(0)@n_10@'),FROM(Queue:Browse:1),IMM,TIP('?')
+voorrpln002.clw:			Message('Verkoop kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:				MESSAGE('Verkoop-record kon niet worden bijgewerkt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln002.clw:				MESSAGE('Verkoop-record kon niet worden bijgewerkt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln002.clw:			Message('Inkoop kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:			  	MESSAGE('Inkoop-record kon niet worden bijgewerkt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln002.clw:			  	MESSAGE('Inkoop-record kon niet worden bijgewerkt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln002.clw:	LOC:ExcelPageBreak = GETINI('Excel', 'PageBreak', '60','.\Voorraad.ini')
+voorrpln002.clw:				Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}=CLIP(BRW8.Q.Pla4:PartijID) & '/' & CLIP(BRW8.Q.Pla4:ExternPartijnr)
+voorrpln002.clw:			Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=CLIP(BRW8.Q.Pla4:NaarCelOms) & '.' & CLIP(BRW8.Q.Pla4:Locatienaam)
+voorrpln002.clw:				Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}=CLIP(BRW1.Q.Pla3:PartijID) & '/' & CLIP(BRW1.Q.Pla3:ExternPartijnr)
+voorrpln002.clw:				Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:				Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}='X'.
+voorrpln002.clw:	!Loc:Ole{'Application.Workbooks.Open('&CLIP(LOC:ExcelMacroFile)&')'}
+voorrpln002.clw:	!pos# = INSTRING('\', CLIP(LOC:ExcelMacroFile), -1, LEN(CLIP(LOC:ExcelMacroFile)))
+voorrpln002.clw:  !0{Prop:Text}=CLIP(0{Prop:Text}) & ' (' & CLIP(LEFT(FORMAT(GLO:Planning_ThreadID,@N_10))) & ')'
+voorrpln002.clw:        Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel is verwerkt','Waarschuwing',Icon:Hand)
+voorrpln002.clw:      			Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      				Message('Deze partij is nog niet ingeslagen','Fout',Icon:Hand)
+voorrpln002.clw:      				Message('Partij '&Pla:PartijID&' kan niet gevonden worden ','Fout',Icon:Hand)
+voorrpln002.clw:      				Message('Partij '&Pla:PartijID&' kan niet gevonden worden ','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel is verwerkt','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planningregel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-uitslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel is verwerkt','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrpln002.clw:      			Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      				Message('Deze partij is nog niet ingeslagen','Fout',Icon:Hand)
+voorrpln002.clw:      				Message('Partij '&Pla:PartijID&' kan niet gevonden worden ','Fout',Icon:Hand)
+voorrpln002.clw:      				Message('Partij '&Pla:PartijID&' kan niet gevonden worden ','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-uitslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-uitslag regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-uitslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planningregel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      			Message('Planning-uitslag regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-uitslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:      	!	Message('Bij deze planning-uitslag regel is geen geldige cel geselecteerd.','Fout',Icon:Hand)
+voorrpln002.clw:      		MESSAGE('Bij deze planning-uitslag regel is geen geldig artikel geselecteerd.','Fout',Icon:Hand)
+voorrpln002.clw:      !			MESSAGE('Voor deze planning-uitslag regel is niet voldoende voorraad (' & VVCT:kg & ' kg) gevonden.','Fout',Icon:Hand)
+voorrpln002.clw:      !		MESSAGE('Voor deze planning-uitslag regel is niet voldoende voorraad (0 kg / 0 pallets) gevonden.','Fout',Icon:Hand)
+voorrpln002.clw:      				MESSAGE('Mutatie-record kon niet worden aangemaakt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln002.clw:      				MESSAGE('Mutatie-record kon niet worden aangemaakt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln002.clw:      !		Message('Planning-uitslag regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      !		Message('Planning-uitslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-inslag regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-inslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:      	!	Message('Bij deze planning-inslag regel is geen geldige cel geselecteerd.','Fout',Icon:Hand)
+voorrpln002.clw:      		MESSAGE('Bij deze planning-inslag regel is geen geldig artikel geselecteerd.','Fout',Icon:Hand)
+voorrpln002.clw:      			MESSAGE('Mutatie-record kon niet worden aangemaakt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln002.clw:      			MESSAGE('Mutatie-record kon niet worden aangemaakt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln002.clw:      	Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Planning-uitslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Planning regel kan niet ingelezen worden.','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Planning-uitslag regel is reeds verwerkt.','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Van de planning-uitslag is al een gewone overboeking gemaakt.','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel is verwerkt','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel is verwerkt','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-inslag regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Planning-inslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:      	!	Message('Bij deze planning-inslag regel is geen geldige cel geselecteerd.','Fout',Icon:Hand)
+voorrpln002.clw:      		MESSAGE('Bij deze planning-inslag regel is geen geldig artikel geselecteerd.','Fout',Icon:Hand)
+voorrpln002.clw:      			MESSAGE('Mutatie-record kon niet worden aangemaakt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln002.clw:      			MESSAGE('Mutatie-record kon niet worden aangemaakt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln002.clw:        Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:        Message('Planning regel is verwerkt','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Planning regel kan niet ingelezen worden.','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Planning-uitslag regel is reeds verwerkt.','Fout',Icon:Hand)
+voorrpln002.clw:      		Message('Van de planning-uitslag is al een gewone overboeking gemaakt.','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Planning regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:      	Message('Planning-uitslag regel is reeds verwerkt ','Fout',Icon:Hand)
+voorrpln002.clw:    		Message('Planning-uitslag regel kan niet ingelezen worden','Fout',Icon:Hand)
+voorrpln002.clw:  				Message('Planning regel is nog niet uitgeslagen','Fout',Icon:Hand)
+voorrpln002.clw:  						MESSAGE('Mutatie-record kon niet worden aangemaakt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln002.clw:  						MESSAGE('Mutatie-record kon niet worden aangemaakt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln002.clw:  				Message('Er is al een mutatie regel gemaakt  ','Fout',Icon:Hand)
+voorrpln002.clw:                      Message('Planning-uitslag regel is reeds verwerkt ','Let Op',Icon:Hand)
+voorrpln002.clw:  		Message('Planning-regel kan niet ingelezen worden.','Fout',Icon:Hand)
+voorrpln002.clw:  				db.DebugOut('ReportInslag(' & Par:PartijID & ')')
+voorrpln002.clw:  				Message('Partij ' & APla:PartijID & ' kan niet ingelezen worden.','Fout',Icon:Hand)
+voorrpln002.clw:  			Message('Planning-regel is nog niet verwerkt.','Fout',Icon:Hand)
+voorrpln002.clw:  			Message('Planning-regel is nog niet verwerkt.','Fout',Icon:Hand)
+voorrpln002.clw:  		Message('Planning-regel kan niet ingelezen worden.','Fout',Icon:Hand)
+voorrpln003.clw:  		LOC:PartijCelID = CLIP(FORMAT(Mut:PartijID, @N05)) & '.' & CLIP(Mut:CelID)
+voorrpln003.clw:  		LOC:OrigineelNaarPartijCelID=CLIP(FORMAT(Mut:PartijID, @N05)) & '.' & CLIP(Mut:NaarCELID)
+voorrpln003.clw:  		LOC:PartijCelID = CLIP(FORMAT(Pla:PartijID, @N05)) & '.' & CLIP(Pla:CelID)
+voorrpln003.clw:  db.DebugOut('OIN-mutatie1('&Mut:PlanningID&','&Mut:SoortMutatie&')')
+voorrpln003.clw:  db.DebugOut('OIN-mutatie2('&found#&','&AMut:PlanningID&','&AMut:MutatieID&')')
+voorrpln003.clw:  		VVPar:PartijCelID = CLIP(FORMAT(AMut:PartijID, @N05)) & '.' & CLIP(AMut:CelID)
+voorrpln003.clw:  		VVPar:PartijCelID = CLIP(FORMAT(AMut:PartijID,@N05)) & '.' & CLIP(AMut:CelID)
+voorrpln003.clw:  			db.DebugOut('OIN-mutatie3(VVPar found:'&VVPar:PartijCelID&','&VVPar:VoorraadKG&','&VVPar:VoorraadPallets&')')
+voorrpln005.clw:                         CHECK('Is transportmiddel schoon?'),AT(313,19),USE(Par:InslagQATransportmiddelSchoon),VALUE('1', |
+voorrpln005.clw:  '0')
+voorrpln005.clw:  VALUE('1','0')
+voorrpln005.clw:  VALUE('1','0')
+voorrpln005.clw:				db.DebugOut('Ongelijk artikel:'&Par:ArtikelID & ',' & Mut:ArtikelID)
+voorrpln005.clw:				db.DebugOut('Zelfde artikel:'&LOC:KGTeller&','&LOC:PalletsTeller)
+voorrpln005.clw:		CLIP(Format(VVPar:VoorraadKG, @n-14`2)) & '+' & | 
+voorrpln005.clw:		CLIP(Format(LOC:KGTeller, @n-14`2)) & '-' & | 
+voorrpln005.clw:		CLIP(Format(Mut:InslagKG, @n-14`2)) & '=' & | 
+voorrpln005.clw:    db.debugout('InslagTemp:' & Par:InslagQATemperatuur1 & ',' & Par:InslagQATemperatuur2& ',' & Par:InslagQATemperatuur3 & Par:InkoopID)
+voorrpln005.clw:  FDCB1.SetFilter('Rel:Type=''S''')
+voorrpln005.clw:  	MESSAGE('Cel ' & CLIP(LOC:CelID1) & ' is meer dan 1 keer ingevoerd','Cel 1',Icon:Hand)
+voorrpln005.clw:  	MESSAGE('Cel ' & CLIP(LOC:CelID2) & ' is meer dan 1 keer ingevoerd','Cel 2',Icon:Hand)
+voorrpln005.clw:  	MESSAGE('Cel ' & CLIP(LOC:CelID3) & ' is meer dan 1 keer ingevoerd','Cel 3',Icon:Hand)
+voorrpln006.clw:    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Zondag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+voorrpln006.clw:    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Maandag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+voorrpln006.clw:    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Dinsdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+voorrpln006.clw:    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Woensdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+voorrpln006.clw:    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Donderdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+voorrpln006.clw:    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Vrijdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+voorrpln006.clw:    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Zaterdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+voorrpln006.clw:		db.DebugOut('ORR: (' & Pla:PlanningID & ',' & Pla2:PlanningID & ',' & CLIP(Pla2:FirmaNaam) & ',' & CLIP(Rel:FirmaNaam) & ')')
+voorrpln006.clw:			!	Loc:Ole{'Application.Range(M'&Loc:Rij&').Value'}='X'.
+voorrpln006.clw:	!Loc:Ole{'Application.Workbooks.Open('&CLIP(LOC:ExcelMacroFile)&')'}
+voorrpln006.clw:	!pos# = INSTRING('\', CLIP(LOC:ExcelMacroFile), -1, LEN(CLIP(LOC:ExcelMacroFile)))
+voorrpln007.clw:                         CHECK('Is transportmiddel schoon?'),AT(506,17),USE(Mut:UitslagQATransportmiddelSchoon),VALUE('1', |
+voorrpln007.clw:  '0')
+voorrpln007.clw:  VALUE('1','0')
+voorrpln007.clw:  VALUE('1','0')
+voorrpln007.clw:  	!db.DebugOut('VulMutatie1:'& Mut:MutatieID& ','& Mut:PlanningID)
+voorrpln007.clw:  		LOC:PartijCelID = CLIP(FORMAT(Mut:PartijID, @N05)) & '.' & CLIP(Mut:CelID)
+voorrpln007.clw:  			   LOC:OrigineelPartijCelID[i#]=CLIP(FORMAT(AMut:PartijID, @N05)) & '.' & CLIP(AMut:CelID)
+voorrpln007.clw:  			   db.DebugOut('VulMutatie2:'&LOC:OrigineelPartijCelID[i#]&','&LOC:OrigineelKG[i#]&','&LOC:OrigineelPallets[i#])
+voorrpln007.clw:  		LOC:PartijCelID = CLIP(FORMAT(Pla:PartijID,@N05)) & '.' & CLIP(Pla:CelID)
+voorrpln007.clw:      db.DebugOut('OK:Accepted '& Mut:MutatieID& ','& Mut:PlanningID)
+voorrpln007.clw:  db.DebugOut('Opslaan '& LOC:PartijCelID2 & ',' & LOC:UitslagPallet2 & ',' & LOC:UitslagKG2)
+voorrpln007.clw:  db.DebugOut('Opslaan '& LOC:PartijCelID3 & ',' & LOC:UitslagPallet3 & ',' & LOC:UitslagKG3)
+voorrpln007.clw:  db.DebugOut('Opslaan '& LOC:PartijCelID4 & ',' & LOC:UitslagPallet4 & ',' & LOC:UitslagKG4)
+voorrpln007.clw:  	db.DebugOut('Opslaan '& CLIP(UMQ:PArtijCelID) & ',' & UMQ:Pallet & ',' & UMQ:KG)
+voorrpln008.clw:                         CHECK('Is transportmiddel schoon?'),AT(12,129),USE(Par:InslagQATransportmiddelSchoon),VALUE('1', |
+voorrpln008.clw:  '0')
+voorrpln008.clw:  VALUE('1','0')
+voorrpln008.clw:  VALUE('1','0')
+voorrpln008.clw:				db.DebugOut('Ongelijk artikel:'&Par:ArtikelID & ',' & Mut:ArtikelID)
+voorrpln008.clw:				db.DebugOut('Zelfde artikel:'&LOC:KGTeller&','&LOC:PalletsTeller)
+voorrpln008.clw:		CLIP(Format(VVPar:VoorraadKG, @n-14`2)) & '+' & | 
+voorrpln008.clw:		CLIP(Format(LOC:KGTeller, @n-14`2)) & '-' & | 
+voorrpln008.clw:		CLIP(Format(Mut:InslagKG, @n-14`2)) & '=' & | 
+voorrpln008.clw:    db.debugout('InslagTemp:' & Par:InslagQATemperatuur1 & ',' & Par:InslagQATemperatuur2& ',' & Par:InslagQATemperatuur3 & Par:InkoopID)
+voorrpln008.clw:  FDCB1.SetFilter('Rel:Type=''S''')
+voorrpln010.clw:		VVPar:PartijCelID = CLIP(FORMAT(Mut:PartijID, @N05)) & '.' & CLIP(Mut:CelID)
+voorrpln011.clw:                         CHECK('Is transportmiddel schoon?'),AT(613,61),USE(Mut:UitslagQATransportmiddelSchoon),VALUE('1', |
+voorrpln011.clw:  '0')
+voorrpln011.clw:  VALUE('1','0')
+voorrpln011.clw:  VALUE('1','0')
+voorrpln011.clw:      !db.DebugOut('VulMutatie1:'& Mut:MutatieID& ','& Mut:PlanningID)
+voorrpln011.clw:  		LOC:PartijCelID = CLIP(FORMAT(Mut:PartijID,@N05)) & '.' & CLIP(Mut:CelID)
+voorrpln011.clw:  			   LOC:OrigineelPartijCelID[i#]=CLIP(FORMAT(AMut:PartijID, @N05)) & '.' & CLIP(AMut:CelID)
+voorrpln011.clw:  			   db.DebugOut('VulMutatie2:'&LOC:OrigineelPartijCelID[i#]&','&LOC:OrigineelKG[i#]&','&LOC:OrigineelPallets[i#])
+voorrpln011.clw:  		LOC:PartijCelID = CLIP(FORMAT(Pla:PartijID, @N05)) & '.' & CLIP(Pla:CelID)
+voorrpln011.clw:      db.DebugOut('OK:Accepted '& Mut:MutatieID& ','& Mut:PlanningID)
+voorrpln011.clw:      db.DebugOut('ReportPalletBlad(' & Pla:PlanningID & ')')
+voorrpln011.clw:  db.DebugOut('Opslaan '& LOC:PartijCelID2 & ',' & LOC:UitslagPallet2 & ',' & LOC:UitslagKG2)
+voorrpln011.clw:  db.DebugOut('Opslaan '& LOC:PartijCelID3 & ',' & LOC:UitslagPallet3 & ',' & LOC:UitslagKG3)
+voorrpln011.clw:  db.DebugOut('Opslaan '& LOC:PartijCelID4 & ',' & LOC:UitslagPallet4 & ',' & LOC:UitslagKG4)
+voorrpln011.clw:  	db.DebugOut('Opslaan '& CLIP(UMQ:PArtijCelID) & ',' & UMQ:Pallet & ',' & UMQ:KG)
+voorrpln013.clw:  			MESSAGE('Overboeking record kon niet worden aangemaakt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln013.clw:  			MESSAGE('Overboeking record kon niet worden aangemaakt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln016.clw:  			LOC:PartijCelID = CLIP(FORMAT(Pla:PartijID, @N05)) & '.' & CLIP(Pla:CelID)
+voorrpln016.clw:  			IF MESSAGE('Deze overboeking is al verwerkt, zeker dat deze overboeking en bijbehorende mutaties verwijderd moeten worden?','Verwerkte overboeking',ICON:Exclamation,BUTTON:Yes+BUTTON:No,BUTTON:No,1) <> BUTTON:Yes
+voorrpln016.clw:      	db.DebugOut('PartijAccepted:'&Pla:VErpakkingID&','&Pla:CelID)
+voorrpln016.clw:  		IF NOT(MESSAGE('Deze overboeking is al verwerkt, zeker dat deze overboeking en bijbehorende mutaties gewijzigd moet worden?','Verwerkte overboeking',ICON:Exclamation,BUTTON:Yes+BUTTON:No,BUTTON:No,1) = BUTTON:Yes)
+voorrpln017.clw:    db.DebugOut('VulCurrentKlant' & CHOICE(?CurrentTab) & ',' & LOC:CurrentKlant & ', ' & Loc:Leverancier & ',' & Loc:Leverancier2)
+voorrpln017.clw:  !0{Prop:Text}=CLIP(0{Prop:Text}) !& ' (' & CLIP(LEFT(FORMAT(GLO:Verkoop_ThreadID,@N_10))) & ')'
+voorrpln017.clw:  FDCB5.SetFilter('Rel:Type=''C''')
+voorrpln017.clw:  FDCB2.SetFilter('AAREL:Type=''C''')
+voorrpln017.clw:      SelectArelatie('C')
+voorrpln017.clw:      SelectArelatie('C')
+voorrpln018.clw:		IF LOC:PartijCelID = CLIP(FORMAT(LOC:BAK_PartijID,@N05)) &  '.' & CLIP(LOC:BAK_CelID) THEN
+voorrpln018.clw:  		LOC:PartijCelID = CLIP(FORMAT(Pla:PartijID, @N05)) & '.' & CLIP(Pla:CelID)
+voorrpln018.clw:      	db.DebugOut('PartijAccepted:'&Pla:VerpakkingID&','&Pla:CelID)
+voorrpln018.clw:      UpdateAOverboeking(Action#, AAPla:ArtikelID, CLIP(FORMAT(AAPla:PartijID, @N05)) & '.' & CLIP(AAPla:CelID), AAPla:CelLocatieID, AAPla:PlanningID, AAPla:KG)
+voorrpln018.clw:      	db.DebugOut('RequestCompleted2:' & Pla:PlanningID & ',' & APla:PlanningID)
+voorrpln018.clw:  			MESSAGE('Er is een overboeking gekoppeld aan deze verkoopregel. Wijziging annuleren kan daarom niet.','Annuleren niet mogelijk', ICON:Exclamation)
+voorrpln019.clw:				  MESSAGE('Verkoop-record kon niet worden bijgewerkt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln019.clw:				  MESSAGE('Verkoop-record kon niet worden bijgewerkt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln019.clw:  FDCB4.SetFilter('arel:type=''C''')
+voorrpln019.clw:      SelectArelatie('C')
+voorrpln020.clw:                           CHECK('Dymo-etiket printen:'),AT(2,334),USE(LOC:DymoEtiketPrinten),RIGHT,VALUE('1','0')
+voorrpln020.clw:                           CHECK('Gebruik koord'),AT(365,83),USE(LOC:GebruikKoord),VALUE('1','0')
+voorrpln020.clw:                           CHECK('Palletblad printen:'),AT(3,410,71),USE(LOC:PalletBladPrinten),VALUE('1','0')
+voorrpln020.clw:                           CHECK('Loggen'),AT(465,277),USE(LOC:Loggen),VALUE('1','0')
+voorrpln020.clw:  LOC:GebruikKoord=GETINI('Weeg','GebruikKoord',0,'.\Voorraad.ini')
+voorrpln020.clw:  LOC:PortString_Koord=GETINI('Weeg','PortKoord',,'.\Voorraad.ini')
+voorrpln020.clw:  LOC:PortString_Weeg=GETINI('Weeg','PortWeeg',,'.\Voorraad.ini')
+voorrpln020.clw:  LOC:NieuweWeegschaal=GETINI('Weeg','NieuweWeegschaal',0,'.\Voorraad.ini')
+voorrpln020.clw:  LOC:Loggen=GETINI('Weeg','Loggen',0,'.\Voorraad.ini')
+voorrpln020.clw:  LOC:DymoEtiketPrinten = GETINI('Weeg','DymoEtiketPrinten', 1, '.\Voorraad.ini')
+voorrpln020.clw:      PUTINI('Weeg','GebruikKoord',LOC:GebruikKoord,'.\Voorraad.ini')
+voorrpln020.clw:      PUTINI('Weeg','DymoEtiketPrinten', LOC:DymoEtiketPrinten, '.\Voorraad.ini')
+voorrpln020.clw:      PUTINI('Weeg','DymoEtiketPrinten', LOC:DymoEtiketPrinten, '.\Voorraad.ini')
+voorrpln020.clw:      PUTINI('Weeg','DymoEtiketPrinten', LOC:DymoEtiketPrinten, '.\Voorraad.ini')
+voorrpln020.clw:      PUTINI('Weeg','Loggen',LOC:Loggen,'.\Voorraad.ini')
+voorrpln020.clw:      				LGQ:ReceiveString2 = CLIP(CLIP(LGQ:Receivestring2) & ',' & VAL(LOC:TempChar))
+voorrpln020.clw:      						IF SUB(CLIP(LGQ:Receivestring1),-1,1)='0'
+voorrpln020.clw:      						IF SUB(LGQ:Receivestring1,3,1) = '+' ! Derde karakter is een +
+voorrpln024.clw:  0{Prop:Text}=CLIP(0{Prop:Text}) !& ' (' & CLIP(LEFT(FORMAT(GLO:Overboeking_ThreadID,@N_10))) & ')'
+voorrpln025.clw:  0{Prop:Text}=CLIP(0{Prop:Text}) !& ' (' & CLIP(LEFT(FORMAT(GLO:Inkoop_ThreadID,@N_10))) & ')'
+voorrpln025.clw:  FDCB5.SetFilter('AREL:Type=''S''')
+voorrpln025.clw:  FDCB2.SetFilter('AARel:Type=''S''')
+voorrpln025.clw:      SelectArelatie('S')
+voorrpln025.clw:      SelectArelatie('S')
+voorrpln027.clw:				  MESSAGE('Inkoop-record kon niet worden bijgewerkt | SQL Error('&FILEERRORCODE()&'):'&FILEERROR()&')')
+voorrpln027.clw:				  MESSAGE('Inkoop-record kon niet worden bijgewerkt | Error('&ERRORCODE()&'):'&ERROR()&')')
+voorrpln027.clw:  FDCB4.SetFilter('Rel:Type=''S''')
+voorrpln027.clw:      SelectArelatie('S')
+voorrpln029.clw:  			LOC:PartijCelID = CLIP(FORMAT(APla:PartijID, @N05)) & '.' & CLIP(APla:CelID)
+voorrpln029.clw:  			IF MESSAGE('Deze overboeking is al verwerkt, zeker dat deze overboeking en bijbehorende mutaties verwijderd moeten worden?','Verwerkte overboeking',ICON:Exclamation,BUTTON:Yes+BUTTON:No,BUTTON:No,1) <> BUTTON:Yes
+voorrpln029.clw:      	db.DebugOut('PartijAccepted:'&APla:VerpakkingID&','&APla:CelID)
+voorrpln029.clw:  		IF NOT(MESSAGE('Deze overboeking is al verwerkt, zeker dat deze overboeking en bijbehorende mutaties gewijzigd moet worden?','Verwerkte overboeking',ICON:Exclamation,BUTTON:Yes+BUTTON:No,BUTTON:No,1) = BUTTON:Yes)
+voorrpln030.clw:      LOC:PartijCelID = CLIP(FORMAT(Mut:PartijID, @N05)) & '.' & CLIP(Mut:CelID)
+voorrpln030.clw:      LOC:OrigineelNaarPartijCelID[1] = CLIP(FORMAT(Mut:PartijID, @N05)) & '.' & CLIP(Mut:NaarCELID)
+voorrpln030.clw:             LOC:OrigineelNaarPartijCelID[i#]=CLIP(FORMAT(AMut:PartijID, @N05)) & '.' & CLIP(AMut:NaarCelID)
+voorrpln030.clw:             db.DebugOut('VulMutatie2:'&LOC:OrigineelNaarPartijCelID[i#]&','&LOC:OrigineelKG[i#]&','&LOC:OrigineelPallets[i#])
+voorrpln030.clw:      LOC:PartijCelID = CLIP(FORMAT(Pla:PartijID, @N05)) & '.' & CLIP(Pla:CelID)
+voorrpln032.clw:                       CHECK('Uitgevoerd'),AT(283,9),USE(ACT:Uitgevoerd),VALUE('1','0')
+voorrrpt.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrrpt.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrrpt001.clw:      		of 'W'
+voorrrpt001.clw:      			'"'&GlobalClass.DataSource(Clip(Sja:SoortData))&'" )'}  ! 1= wdOpenFormatDocument
+voorrrpt001.clw:      				db.DebugOut('ExportClass.Overboeking('&PRM:RelatieID&')')
+voorrrpt001.clw:      		of 'E'
+voorrrpt001.clw:				Loc:Product = LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt001.clw:				Loc:Product = Clip(Loc:Product)&'<13><10>'&LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt001.clw:				Loc:Product = LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt001.clw:				Loc:Product = Clip(Loc:Product)&'<13><10>'&LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt001.clw:					Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&')'
+voorrrpt001.clw:					Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&'/Extern partij:'&Par:ExternPartijnr&')'
+voorrrpt001.clw:			Loc:Product = LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt001.clw:			Loc:Product = Clip(Loc:Product)&'<13><10>'&LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt001.clw:			Loc:Ole{'Application.Selection.TypeText("'&CLIP(RAD:Postcode)&' '&CLIP(RAD:Plaats)&'")'} !
+voorrrpt001.clw:			Loc:Ole{'Application.Selection.TypeText("'&CLIP(Rel:Postcode)&' '&CLIP(Rel:Plaats)&'")'} !
+voorrrpt001.clw:					Loc:Product = Clip(Loc:Product)&'<13><9>'&' Partij:'&Pla:PartijID
+voorrrpt001.clw:					Loc:Product = Clip(Loc:Product)&'<13><9>'&' Partij:'&Pla:PartijID&' / Extern partij:'&Par:ExternPartijnr
+voorrrpt003.clw:		Loc:Ole{'Application.Range(F4).Value'}=Rel:Postcode&' '&Rel:Plaats
+voorrrpt003.clw:			Loc:Ole{'Application.Range(F4).Value'}=RAD:Postcode&' '&RAD:Plaats		
+voorrrpt003.clw:		Loc:Ole{'Application.Range(F4).Value'}=Rel:Postcode&' '&Rel:Plaats
+voorrrpt003.clw:	!Loc:Ole{'Application.Workbooks.Open('&CLIP(LOC:ExcelMacroFile)&')'}
+voorrrpt003.clw:	!pos# = INSTRING('\', CLIP(LOC:ExcelMacroFile), -1, LEN(CLIP(LOC:ExcelMacroFile)))
+voorrrpt003.clw:  	db.DebugOut('Planning-Excel:' & Pla:PlanningID & '-' & Mut:MutatieID)
+voorrrpt003.clw:  		db.DebugOut('Planning-Excel:' & Pla:PlanningID & '-' & Mut:MutatieID & '-' & Weg:WegingID)
+voorrrpt004.clw:  LOC:WeeglijstPrinter=GETINI('Printer','Weeglijst',,'.\Voorraad.ini')
+voorrrpt006.clw:  	Loc:MagazijnPrinter=GETINI('Printer','Magazijn',,'.\Voorraad.ini')
+voorrrpt007.clw:  Loc:PalletEtiketPrinter=GETINI('Printer','PalletEtiket',,'.\Voorraad.ini')
+voorrrpt007.clw:  LOC:LabelLength=GETINI('Printer','LabelLength',104, '.\Voorraad.ini')
+voorrrpt007.clw:  LOC:LabelPositieZPL=GETINI('Printer','LabelPositieZPL','^FO100,120^AFR,560,200^FD','.\Voorraad.ini')
+voorrrpt007.clw:  db.DebugOut('Printen pallets ' & Par:Pallets & ',' & Par:PalletsGeprint)
+voorrrpt007.clw:  Loc:AansturingsString = CLIP(LOC:LabelPositieZPL)&'.'&CLIP(Par:PartijID)&'^FS'
+voorrrpt008.clw:      db.DebugOut('ReportInslag:' & Mut:PartijID & '-' & Mut:SoortMutatie)
+voorrrpt009.clw:  LOC:DymoPrinter=GETINI('Printer','DymoPrinter',,'.\Voorraad.ini')
+voorrrpt010.clw:                       STRING('1'),AT(6,6),USE(?STRING3)
+voorrrpt010.clw:                       STRING('2'),AT(6,48,,10),USE(?STRING4)
+voorrrpt010.clw:                       STRING('3'),AT(6,78,4,10),USE(?STRING5)
+voorrrpt010.clw:                       STRING('4'),AT(6,106),USE(?STRING6)
+voorrrpt010.clw:                       STRING('5'),AT(6,138),USE(?STRING7)
+voorrrpt010.clw:                       STRING('6'),AT(6,169),USE(?STRING11)
+voorrrpt010.clw:			LOC:ArtikelBepaald = CLIP(LAQ:ArtikelID) & ' / ' & CLIP(LAQ:VerpakkingOmschrijving) & ' ' & CLIP(LAQ:ArtikelOms) & |
+voorrrpt010.clw:			LOC:ArtikelBepaald = CLIP(LAQ:ArtikelID) & ' / ' & CLIP(LAQ:VerpakkingOmschrijving) & ' ' & CLIP(LAQ:ArtikelOms) & |
+voorrrpt010.clw:			LOC:ArtikelBepaald = CLIP(LAQ:ArtikelID) & ' / ' & CLIP(LAQ:VerpakkingOmschrijving) & ' ' & CLIP(LAQ:ArtikelOms) & |
+voorrrpt010.clw:			LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald) & '<13><10><13><10>'& CLIP(LAQ:ArtikelID) & ' / ' & CLIP(LAQ:VerpakkingOmschrijving) & ' ' & CLIP(LAQ:ArtikelOms) & |
+voorrrpt010.clw:			LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald) & '<13><10>'& CLIP(LAQ:ArtikelID) & ' / ' & CLIP(LAQ:VerpakkingOmschrijving) & ' ' & CLIP(LAQ:ArtikelOms) & |
+voorrrpt010.clw:			LOC:ArtikelBepaald = CLIP(LOC:ArtikelBepaald) & '<13><10>'& CLIP(LAQ:ArtikelID) & ' / ' & CLIP(LAQ:VerpakkingOmschrijving) & ' ' & CLIP(LAQ:ArtikelOms) & |
+voorrrpt010.clw:  	db.DebugOut('PrintCMR(' & LOC:PlanningID & '=' & Pla:PlanningID & ',' & Pla:VerkoopID & '=' & Ver2:VerkoopID & ',' & Ver2:Klant & '=' & AREL:RelatieID & ')')
+voorrrpt010.clw:  			Loc:Geadresseerde=CLIP(AREL:FirmaNaam)&'<13><10>'&CLIP(AREL:Adres1)&'<13><10>'&CLIP(AREL:Postcode)&' '&CLIP(AREL:Plaats) & ', ' & CLIP(LOC:Country)
+voorrrpt010.clw:  			Loc:AfleveringAdres=CLIP(AREL:FirmaNaam)&'<13><10>'&CLIP(AREL:Adres1)&'<13><10>'&CLIP(AREL:Postcode)&' '&CLIP(AREL:Plaats) & ', ' & CLIP(LOC:Country)
+voorrrpt010.clw:  			Loc:Geadresseerde=CLIP(AREL:FirmaNaam)&'<13><10>'&CLIP(AREL:Adres1)&'<13><10>'&CLIP(AREL:Postcode)&' '&CLIP(AREL:Plaats) & ', ' & CLIP(LOC:Country)
+voorrrpt010.clw:  				Loc:AfleveringAdres=CLIP(Loc:AfleveringAdres)&'<13><10>'&CLIP(RAD:Postcode)&' '&CLIP(RAD:Plaats)
+voorrrpt010.clw:  		Loc:CMRPrinter=GETINI('Printer','CMR',,'.\Voorraad.ini')
+voorrrpt010.clw:          Loc:CMRPrinter=GETINI('Printer','CMR-Vrieshuis',,'.\Voorraad.ini')
+voorrrpt010.clw:  		!PRINTER{PROPPRINT:PaperBin}=GETINI('Printer','CMR-Vrieshuis Lade',,'.\Voorraad.ini')
+voorrrpt010.clw:          !PRINTER{PROPPRINT:Copies}=GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini') ! werkt niet meer goed in de C8-versie?
+voorrrpt010.clw:          REPORT{PROPPRINT:Copies} = GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini')    
+voorrrpt010.clw:  			Loc:CMRnr=GETINI('Printer','CMRnr',0,'.\Voorraad.ini')
+voorrrpt010.clw:  			PUTINI('Printer','CMRnr',Loc:CMRnr+1,'.\Voorraad.ini')
+voorrrpt010.clw:      	Message('Vergeet niet een printer te kiezen','Printer', Icon:Hand)
+voorrrpt012.clw:  FileLookup8.SetMask('All Files','*.*')                   ! Set the file mask
+voorrrpt015.clw:      		of 'W'
+voorrrpt015.clw:      			'"'&GlobalClass.DataSource(Clip(Sja:SoortData))&'" )'}  ! 1= wdOpenFormatDocument
+voorrrpt015.clw:      				db.DebugOut('ExportClass.Overboeking('&PRM:RelatieID&')')
+voorrrpt015.clw:      		of 'E'
+voorrrpt015.clw:				Loc:Product = LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt015.clw:				Loc:Product = Clip(Loc:Product)&'<13><10>'&LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt015.clw:				Loc:Product = LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt015.clw:				Loc:Product = Clip(Loc:Product)&'<13><10>'&LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt015.clw:					Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&')'
+voorrrpt015.clw:					Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&'/Extern partij:'&Par:ExternPartijnr&')'
+voorrrpt015.clw:			Loc:Product = LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt015.clw:			Loc:Product = Clip(Loc:Product)&'<13><10>'&LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt015.clw:			Loc:Ole{'Application.Selection.TypeText("'&CLIP(RAD:Postcode)&' '&CLIP(RAD:Plaats)&'")'} !
+voorrrpt015.clw:			Loc:Ole{'Application.Selection.TypeText("'&CLIP(Rel:Postcode)&' '&CLIP(Rel:Plaats)&'")'} !
+voorrrpt015.clw:					Loc:Product = Clip(Loc:Product)&'<13><9>'&' Partij:'&Pla:PartijID&')'
+voorrrpt015.clw:					Loc:Product = Clip(Loc:Product)&'<13><9>'&' Partij:'&Pla:PartijID&' / Extern partij:'&Par:ExternPartijnr
+voorrrpt016.clw:  		Loc:Planning = 'Zondag ' &Format(Ver2:Planning_DATE,@d6-) & ' ' &Format(Ver2:Planning_TIME,@t1B)
+voorrrpt016.clw:  		Loc:Planning = 'Maandag ' &Format(Ver2:Planning_DATE,@d6-) & ' ' &Format(Ver2:Planning_TIME,@t1B)
+voorrrpt016.clw:  		Loc:Planning = 'Dinsdag ' &Format(Ver2:Planning_DATE,@d6-) & ' ' &Format(Ver2:Planning_TIME,@t1B)
+voorrrpt016.clw:  		Loc:Planning = 'Woensdag ' &Format(Ver2:Planning_DATE,@d6-) & ' ' &Format(Ver2:Planning_TIME,@t1B)
+voorrrpt016.clw:  		Loc:Planning = 'Donderdag ' &Format(Ver2:Planning_DATE,@d6-) & ' ' &Format(Ver2:Planning_TIME,@t1B)
+voorrrpt016.clw:  		Loc:Planning = 'Vrijdag ' &Format(Ver2:Planning_DATE,@d6-) & ' ' &Format(Ver2:Planning_TIME,@t1B)
+voorrrpt016.clw:  		Loc:Planning = 'Zaterdag ' &Format(Ver2:Planning_DATE,@d6-) & ' ' &Format(Ver2:Planning_TIME,@t1B)
+voorrrpt016.clw:  		Loc:Product = CLIP(LEFT(Format(Pla:KG,@n-13`2)))&' KG '&CLIP(Art:ArtikelOms)&' ('&CLIP(Ver:VerpakkingOmschrijving) &')'
+voorrrpt016.clw:  		Loc:Product = Clip(Loc:Product)&CHR(13)&CHR(10)&CLIP(LEFT(Format(Pla:KG,@n-13`2)))&' KG '&CLIP(Art:ArtikelOms)&' ('&CLIP(Ver:VerpakkingOmschrijving)&')'
+voorrrpt016.clw:  			Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&')'
+voorrrpt016.clw:  			Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&'/Extern partij:'&Par:ExternPartijnr&')'
+voorrrpt016.clw:  			LOC:InkoopPrijs = CLIP(LEFT(Format(Pla:KG,@n-13`2)))&' KG ' & CLIP(Art:ArtikelOms) & ' à ('&CLIP(LEFT(FORMAT(Par:InkoopKGPrijs, @n13`3))) & ' + ' &CLIP(LEFT(FORMAT(Par:BerekendeInkoopKGPrijs - Par:InkoopKGPrijs, @n13`3))) & ')'
+voorrrpt016.clw:  			LOC:InkoopPrijs = CLIP(LOC:InkoopPrijs)&CHR(13)&CHR(10)&CLIP(LEFT(Format(Pla:KG,@n-13`2)))&' KG ' & CLIP(Art:ArtikelOms) & ' à ('&CLIP(LEFT(FORMAT(Par:InkoopKGPrijs, @n13`3))) & ' + ' & CLIP(LEFT(FORMAT(Par:BerekendeInkoopKGPrijs - Par:InkoopKGPrijs, @n13`3))) & ')'
+voorrrpt017.clw:  		Loc:Planning = 'Zondag ' &Format(Ink:Planning_DATE,@d6-) & ' ' &Format(Ink:Planning_TIME,@t1B)
+voorrrpt017.clw:  		Loc:Planning = 'Maandag ' &Format(Ink:Planning_DATE,@d6-) & ' ' &Format(Ink:Planning_TIME,@t1B)
+voorrrpt017.clw:  		Loc:Planning = 'Dinsdag ' &Format(Ink:Planning_DATE,@d6-) & ' ' &Format(Ink:Planning_TIME,@t1B)
+voorrrpt017.clw:  		Loc:Planning = 'Woensdag ' &Format(Ink:Planning_DATE,@d6-) & ' ' &Format(Ink:Planning_TIME,@t1B)
+voorrrpt017.clw:  		Loc:Planning = 'Donderdag ' &Format(Ink:Planning_DATE,@d6-) & ' ' &Format(Ink:Planning_TIME,@t1B)
+voorrrpt017.clw:  		Loc:Planning = 'Vrijdag ' &Format(Ink:Planning_DATE,@d6-) & ' ' &Format(Ink:Planning_TIME,@t1B)
+voorrrpt017.clw:  		Loc:Planning = 'Zaterdag ' &Format(Ink:Planning_DATE,@d6-) & ' ' &Format(Ink:Planning_TIME,@t1B)
+voorrrpt017.clw:  		Loc:Product = CLIP(LEFT(Format(Pla:KG,@n-13`2)))&' KG '&CLIP(Art:ArtikelOms)&' ('&CLIP(Ver:VerpakkingOmschrijving)&')'
+voorrrpt017.clw:  		Loc:Product = Clip(Loc:Product)&CHR(13)&CHR(10)&CLIP(LEFT(Format(Pla:KG,@n-13`2)))&' KG '&CLIP(Art:ArtikelOms)&' ('&CLIP(Ver:VerpakkingOmschrijving)&')'
+voorrrpt017.clw:  			Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&')'
+voorrrpt017.clw:  			Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&'/Extern partij:'&Par:ExternPartijnr&')'
+voorrrpt018.clw:  	Loc:Product = LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt018.clw:  	Loc:Product = Clip(Loc:Product)&CHR(13)&CHR(10)&LEFT(Format(Pla:KG,@n-13`2)&' '&Art:ArtikelOms&' '&Ver:VerpakkingOmschrijving)
+voorrrpt018.clw:  		Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&')'
+voorrrpt018.clw:  		Loc:Product = Clip(Loc:Product)&' (Partij:'&Pla:PartijID&'/Extern partij:'&Par:ExternPartijnr&')'
+voorrrpt019.clw:  	LOC:Naam = CLIP(LOC:Naam) & CHR(13)&CHR(10)& CLIP(RAD:Postcode)&' '&CLIP(RAD:Plaats)
+voorrrpt019.clw:  	LOC:Naam = CLIP(LOC:Naam) & CHR(13)&CHR(10)& CLIP(Rel:Postcode)&' '&CLIP(Rel:Plaats)
+voorrrpt020.clw:                         STRING('1'),AT(3760,4750,1177,396),USE(?STRING2),FONT(,24,,FONT:bold),CENTER
+voorrrpt020.clw:  LOC:CountryCompanySSCCNVE = GETINI('Palletblad','CountryCompanyPrefix','870123456','.\Voorraad.ini')
+voorrrpt020.clw:  IF CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini')) <> '' THEN
+voorrrpt020.clw:      PRINTER{PROPPRINT:Device}=GETINI('Printer','Palletblad',,'.\Voorraad.ini')
+voorrrpt020.clw:          PBS:PalletBladSjabloonID = GETINI('Palletblad','StandaardVertaling',,'.\Voorraad.ini')
+voorrrpt020.clw:          ?HeaderImage{PROP:Text} = GETINI('Palletblad','StandaardLogo','','.\Voorraad.ini')
+voorrrpt020.clw:      LOC:SSCCNVE00 = '3' & FORMAT(LOC:CountryCompanySSCCNVE, @N09) & FORMAT(PRM:WegingID, @N07)
+voorrrpt020.clw:      LOC:KlantGegevens = CLIP(AARel:FirmaNaam) & CHR(13) & CHR(10) & CLIP(AARel:Adres1) & CHR(13) & CHR(10) & CLIP(AARel:Postcode) & ' ' & CLIP(AARel:Plaats) & CHR(13) & CHR(10) & CLIP(AARel:Country)
+voorrrpt020.clw:      artikelseparator# = INSTRING(' ', CLIP(LOC:ARTOMS), 1, 1)
+voorrrpt020.clw:                  LOC:ARTOMS=CLIP(LOC:ARTNUM241) & ' ' & CLIP(LOC:ARTOMS)
+voorrrpt021.clw:                         STRING('1'),AT(3760,4750,1177,396),USE(?STRING2),FONT(,24,,FONT:bold),CENTER
+voorrrpt022.clw:              artikelseparator# = INSTRING(' ', CLIP(LOC:ARTOMS), 1, 1)
+voorrrpt022.clw:AsciiFile FILE,DRIVER('ASCII','/FILEBUFFERS=8'),PRE(ASC),CREATE,THREAD
+voorrrpt022.clw:  LOC:ExportNaam = 'sale_' & CLIP(LEFT(FORMAT(Pla:VerkoopID, @n_10))) & '_' & CLIP(LEFT(FORMAT(Pla:PlanningID, @n_10))) & '.csv'
+voorrrpt022.clw:  LOC:CountryCompanySSCCNVE = GETINI('Palletblad','CountryCompanyPrefix','870123456','.\Voorraad.ini')
+voorrrpt022.clw:  FileLookup2.SetMask('All Files','*.*')                   ! Set the file mask
+voorrrpt022.clw:          artikelseparator# = INSTRING(' ', CLIP(LOC:ARTOMS), 1, 1)
+voorrrpt022.clw:                      LOC:ARTOMS=CLIP(LOC:ARTNUM241) & ' ' & CLIP(LOC:ARTOMS)
+voorrrpt022.clw:              IF SUB(LOC:ExportFolder, LEN(LOC:ExportFolder), 1) = '\' THEN
+voorrrpt022.clw:              AsciiFile{PROP:Name} = LOC:ExportFolder & '\' & LOC:ExportNaam
+voorrrpt022.clw:                  MESSAGE('Bestand ' & CLIP(LOC:ExportFolder & '\' & LOC:ExportNaam) & ' kon niet worden aangemaakt. ' & CLIP(ERROR()))
+voorrrpt022.clw:          LOC:SSCCNVE = '3' & FORMAT(LOC:CountryCompanySSCCNVE, @N09) & FORMAT(Weg:PalletID, @N07)
+voorrrpt022.clw:          ASC:Line = CLIP(LOC:SSCCNVE) & ';' & CLIP(LEFT(Ver2:ExternVerkoopID)) & ';' & CLIP(LEFT(FORMAT(Mut:PartijID,@N_10))) & ';' & |
+voorrrpt022.clw:              CLIP(LOC:ARTNUM241) & ';' & CLIP(LOC:ARTOMS) & ';' & |
+voorrrpt022.clw:              CLIP(LEFT(FORMAT(Mut:UitslagPalletbladProductionDate11_DATE, @d11))) & ';' & CLIP(LEFT(FORMAT(Mut:UitslagPalletbladDueDate12_DATE, @d11))) & ';' & |
+voorrrpt022.clw:      MESSAGE('CSV-bestand staat klaar.','Export voltooid', ICON:Hand)
+voorrstm.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrstm.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrstm002.clw:  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type)')
+voorrstm002.clw:  BRW1.SetFilter('FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type)>=1', 'FuzzyFilter')
+voorrstm005.clw:  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type&'' ''&Loc:Type)')
+voorrstm005.clw:  BRW1.SetFilter('FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type&'' ''&Loc:Type)>=1', 'FuzzyFilter')
+voorrstm009.clw:  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery5,Art:ArtikelID&'' ''&Art:ArtikelOms&'' ''&Art:ArtikelGroep)')
+voorrstm009.clw:  BRW1.SetFilter('FuzzyMatch(FuzzyQuery5,Art:ArtikelID&'' ''&Art:ArtikelOms&'' ''&Art:ArtikelGroep)>=1', 'FuzzyFilter')
+voorrstm012.clw:  BRW1.SetFilter('(Rel:Type=''S'')')                       ! Apply filter expression to browse
+voorrstm012.clw:  BRW1.SetFilter('(Rel:Type=''C'')')                       ! Apply filter expression to browse
+voorrstm018.clw:  FileLookup9.SetMask('All Files','*.*')                   ! Set the file mask
+voorrstm019.clw:  BRW1.SetFilter('(Rel:Type=''C'')')                       ! Apply filter expression to browse
+voorrstm019.clw:  BRW1.SetFilter('(Rel:Type=''S'')')                       ! Apply filter expression to browse
+voorrstm019.clw:  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery7,Rel:FirmaNaam&'' ''&Rel:Adres1&'' ''&Rel:Adres2&'' ''&Rel:Postcode&'' ''&Rel:Plaats&'' ''&Rel:Telefoon&'' ''&Rel:Mobiel&'' ''&Rel:Fax&'' ''&Rel:Country&'' ''&Rel:PalletBladRapportHeaderImage&'' ''&Rel:Type)')
+voorrstm019.clw:  BRW1.SetFilter('FuzzyMatch(FuzzyQuery7,Rel:FirmaNaam&'' ''&Rel:Adres1&'' ''&Rel:Adres2&'' ''&Rel:Postcode&'' ''&Rel:Plaats&'' ''&Rel:Telefoon&'' ''&Rel:Mobiel&'' ''&Rel:Fax&'' ''&Rel:Country&'' ''&Rel:PalletBladRapportHeaderImage&'' ''&Rel:Type)>=1', 'FuzzyFilter')
+voorrstm020.clw:    LOC:DefaultPalletBladSjabloonID = GETINI('Palletblad','StandaardVertaling',,'.\Voorraad.ini')
+voorrstm020.clw:          PUTINI('Palletblad','StandaardVertaling',BRW1.Q.PBS:PalletBladSjabloonID,'.\Voorraad.ini')
+voorrvrd.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrvrd.clw:      NetDebugTrace ('[Nettalk Template] NetTalk Template using Clarion ' & sub (8000,1,1) & '.' & sub (8000,2,1))
+voorrvrd002.clw:	!Loc:Ole{'Application.Workbooks.Open('&CLIP(LOC:ExcelMacroFile)&')'}
+voorrvrd002.clw:	!pos# = INSTRING('\', CLIP(LOC:ExcelMacroFile), -1, LEN(CLIP(LOC:ExcelMacroFile)))
+voorrvrd002.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd002.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd002.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND PCV:PartijVoorraadKG<<>0 AND PCV:PartijCelVoorraadKG<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd002.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND PCV:PartijVoorraadKG<<>0 AND PCV:PartijCelVoorraadKG<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd002.clw:  			Message('AUB een schermprint maken en naar JMD mailen','Request = ViewRecord',ICON:Hand)
+voorrvrd002.clw:      LOC:PartijCelID = CLIP(CLIP(LEFT(FORMAT(BRW2.Q.PCV:PartijID, @N_6))) & '.' & CLIP(LEFT(FORMAT(BRW2.Q.PCV:CelID, @N_6))))
+voorrvrd002.clw:      	!db.DebugOut('BrowseVoorraadVerloop('&CLIP(BRW9.Q.VVCT:ArtikelID)&')')
+voorrvrd002.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrvrd002.clw:  	'WHERE dbo.Mutatie.CelID = ' & FORMAT(PRM:CelID, @N_7) & ' AND dbo.Mutatie.DatumTijd <= ' & CHR(39) & CLIP(FORMAT(LOC:PeilDatum,@d2-)) & ' 23:59' & CHR(39) & ' ' & |
+voorrvrd003.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' AND PartijID = ' & CLIP(FORMAT(LOC:PartijID, @N_10)) & ' ORDER BY DatumTijd, MutatieID DESC'
+voorrvrd003.clw:          ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+voorrvrd003.clw:          ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+voorrvrd003.clw:      	!db.DebugOut('BrowseVoorraadVerloop.Notify('&NotifyCode#&')')
+voorrvrd003.clw:  	!db.DebugOut('VoorraadVerloop1:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+voorrvrd003.clw:  	!db.DebugOut('VoorraadVerloop2:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+voorrvrd003.clw:  		db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+voorrvrd003.clw:  		!db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+voorrvrd004.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' ORDER BY DatumTijd, MutatieID DESC'
+voorrvrd004.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' ORDER BY DatumTijd, MutatieID DESC'
+voorrvrd004.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' ORDER BY DatumTijd, MutatieID DESC'
+voorrvrd004.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' ORDER BY DatumTijd, MutatieID DESC'
+voorrvrd004.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' AND PartijID = ' & CLIP(FORMAT(LOC:PartijID, @N_10)) & ' ORDER BY DatumTijd, MutatieID DESC'
+voorrvrd004.clw:  StandaardVoorraadverloopPeriode#=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,'.\Voorraad.ini')
+voorrvrd004.clw:      db.DebugOut('INSTRING:' & startidx# & '-' & LEN(CLIP(?Browse:1{PROP:Format})))
+voorrvrd004.clw:          db.DebugOut('SUB:' & LEN(SUB(TempFormat, 1, startidx#)) & '-' & LEN(SearchString))
+voorrvrd004.clw:          ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+voorrvrd004.clw:          !C7 ?Browse:1{PROP:Format} = SUB(TempFormat, 1, (startidx# - LEN(CLIP(SearchString))) - 1) & '0' & SUB(TempFormat, (startidx# - LEN(CLIP(SearchString))) + 2, LEN(TempFormat) - (startidx# - LEN(CLIP(SearchString))) + 2)
+voorrvrd004.clw:          ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+voorrvrd004.clw:          !C7 ?Browse:1{PROP:Format} = SUB(TempFormat, 1, (startidx# - LEN(CLIP(SearchString))) - 1) & '0' & SUB(TempFormat, (startidx# - LEN(CLIP(SearchString))) + 2, LEN(TempFormat) - (startidx# - LEN(CLIP(SearchString))) + 2)
+voorrvrd004.clw:  FDCB6.SetFilter('AARel:Type=''S''')
+voorrvrd004.clw:  FDCB8.SetFilter('ARel:Type=''C''')
+voorrvrd004.clw:      SelectARelatie('S')
+voorrvrd004.clw:      	!db.DebugOut('BrowseVoorraadVerloop.Notify('&NotifyCode#&')')
+voorrvrd004.clw:      !db.DebugOut('VoorraadVerloop1:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+voorrvrd004.clw:  	!db.DebugOut('VoorraadVerloop2:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+voorrvrd004.clw:  		!db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+voorrvrd004.clw:  		!db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+voorrvrd004.clw:  db.DebugOut('ValidateRecord1:'&LOC:SoortMutatieFilter & ',' & VVL:SoortMutatie)
+voorrvrd004.clw:  db.DebugOut('ValidateRecord2:'&LOC:SoortMutatieFilter & ',' & VVL:SoortMutatie)
+voorrvrd006.clw:            'WHERE DatumTijd >= ''' & FORMAT(LOC:VanafDatum, @D1-) & ''' AND DatumTijd < ''' & FORMAT(LOC:TMDatum + 1, @D1-) & ''' ORDER BY '&|
+voorrvrd006.clw:  StandaardPalletverloopPeriode#=GETINI('Voorraad','StandaardPalletverloopPeriode',60,'.\Voorraad.ini')
+voorrvrd006.clw:  FDCB3.SetFilter('(REL:Type = ''C'')')
+voorrvrd006.clw:  FDCB6.SetFilter('(AAREL:Type = ''S'')')
+voorrvrd006.clw:      SelectARelatie('C')
+voorrvrd006.clw:      SelectARelatie('S')
+voorrvrd006.clw:  				omit('*')
+voorrvrd006.clw:  				'*'
+voorrvrd006.clw:          db.DebugOut('LayoutTab1 ' & palletsoort# & ',' & Loc:Rij)
+voorrvrd006.clw:  	! 'H1'|'1-way'|'Euro'|'CKW'
+voorrvrd009.clw:  			Message('AUB een schermprint maken en naar JMD mailen','Request = ViewRecord',ICON:Hand)
+voorrvrd009.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrvrd010.clw:  LOC:PartijRoodkleurenNaDagen = GETINI('Voorraad','PartijRoodkleurenNaDagen',180,'.\Voorraad.ini')
+voorrvrd010.clw:          ?List{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+voorrvrd010.clw:          !?List{PROP:Format} = SUB(TempFormat, 1, (startidx# - 10) - 1) & '0' & SUB(TempFormat, (startidx# - 10) + 2, LEN(TempFormat) - (startidx# - 10) + 2)
+voorrvrd010.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd010.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd010.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND PCV:PartijVoorraadKG<<>0 AND PCV:PartijCelVoorraadKG<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd010.clw:  BRW2.SetFilter('(PCV:PartijID<<>0 AND PCV:PartijVoorraadKG<<>0 AND PCV:PartijCelVoorraadKG<<>0 AND CLIP(PCV:ArtikelOms)<<>'''')') ! Apply filter expression to browse
+voorrvrd010.clw:  			Message('AUB een schermprint maken en naar JMD mailen','Request = ViewRecord',ICON:Hand)
+voorrvrd010.clw:      LOC:PartijCelID = (CLIP(BRW2.Q.PCV:PartijID) & '.' & CLIP(BRW2.Q.PCV:CelID))
+voorrvrd010.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrvrd011.clw:              LOC:Type='S'
+voorrvrd011.clw:              LOC:Type='C'
+voorrvrd011.clw:      db.DebugOut('ChangeRecord:' & Pal:PlanningID & ',' & FORMAT(Pal:DatumTijd_DATE, @d6-))
+voorrvrd011.clw:              IF AAARel:Type = 'S' THEN
+voorrvrd011.clw:                  LOC:Type='S'
+voorrvrd011.clw:                  LOC:Type='C'
+voorrvrd012.clw:	HLQ:LocatieNaam = 'Alle locatie''s'
+voorrvrd012.clw:		LOC:HuidigeCelLocatieNaam = 'Alle Locatie''s'
+voorrvrd012.clw:  LOC:HuidigeCelLocatieNaam = 'Alle locatie''s'
+voorrvrd013.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' ORDER BY DatumTijd, MutatieID'
+voorrvrd013.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' ORDER BY DatumTijd, MutatieID'
+voorrvrd013.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' ORDER BY DatumTijd, MutatieID'
+voorrvrd013.clw:        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' AND PartijID = ' & CLIP(FORMAT(LOC:PartijID, @N_10)) & ' ORDER BY DatumTijd, MutatieID'
+voorrvrd013.clw:  StandaardVoorraadverloopPeriode#=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,'.\Voorraad.ini')
+voorrvrd013.clw:          ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+voorrvrd013.clw:          !C7 ?Browse:1{PROP:Format} = SUB(TempFormat, 1, (startidx# - LEN(CLIP(SearchString))) - 1) & '0' & SUB(TempFormat, (startidx# - LEN(CLIP(SearchString))) + 2, LEN(TempFormat) - (startidx# - LEN(CLIP(SearchString))) + 2)
+voorrvrd013.clw:          ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))        
+voorrvrd013.clw:          !C7 ?Browse:1{PROP:Format} = SUB(TempFormat, 1, (startidx# - LEN(CLIP(SearchString))) - 1) & '0' & SUB(TempFormat, (startidx# - LEN(CLIP(SearchString))) + 2, LEN(TempFormat) - (startidx# - LEN(CLIP(SearchString))) + 2)
+voorrvrd013.clw:  FDCB6.SetFilter('AARel:Type=''S''')
+voorrvrd013.clw:  FDCB8.SetFilter('ARel:Type=''C''')
+voorrvrd013.clw:      SelectARelatie('S')
+voorrvrd013.clw:      SelectARelatie('C')
+voorrvrd013.clw:      	!db.DebugOut('BrowseVoorraadVerloop.Notify('&NotifyCode#&')')
+voorrvrd013.clw:  	db.DebugOut('VoorraadVerloop1:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+voorrvrd013.clw:  	db.DebugOut('VoorraadVerloop2:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+voorrvrd013.clw:  		db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+voorrvrd013.clw:  		db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+voorrvrd014.clw:                       CHECK('Nul-standen verbergen'),AT(2,10),USE(LOC:AlleenTegoedenTonen),VALUE('1','0')
+voorrvrd014.clw:  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery3,PTG:RelatieID&'' ''&Rel:FirmaNaam&'' ''&PTG:Transporteur&'' ''&LOC:PalletNaam&'' ''&PTG:Inkomend&'' ''&PTG:Uitgaand&'' ''&LOC:Totaal&'' ''&LOC:Dummy&'' ''&PTG:PalletSoortID&'' ''&Rel:RelatieID)')
+voorrvrd014.clw:  BRW1.SetFilter('FuzzyMatch(FuzzyQuery3,PTG:RelatieID&'' ''&Rel:FirmaNaam&'' ''&PTG:Transporteur&'' ''&LOC:PalletNaam&'' ''&PTG:Inkomend&'' ''&PTG:Uitgaand&'' ''&LOC:Totaal&'' ''&LOC:Dummy&'' ''&PTG:PalletSoortID&'' ''&Rel:RelatieID)>=1', 'FuzzyFilter')
+voorrvrd015.clw:  LOC:PartijRoodkleurenNaDagen = GETINI('Voorraad','PartijRoodkleurenNaDagen',180,'.\Voorraad.ini')
+voorrvrd015.clw:  !0{Prop:Text}=CLIP(0{Prop:Text}) & '(' & CLIP(LEFT(FORMAT(GLO:PartijVoorraad_ThreadID,@N_10))) & ')'
+voorrvrd015.clw:          ?List{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+voorrvrd015.clw:          !?List{PROP:Format} = SUB(TempFormat, 1, (startidx# - 10) - 1) & '0' & SUB(TempFormat, (startidx# - 10) + 2, LEN(TempFormat) - (startidx# - 10) + 2)
+voorrvrd015.clw:  			Message('AUB een schermprint maken en naar JMD mailen','Request = ViewRecord',ICON:Hand)
+voorrvrd015.clw:          LOC:PartijCelID = (CLIP(BRW2.Q.VVParI:PartijID) & '.' & CLIP(BRW2.Q.VVParI:CelID))
+voorrvrd015.clw:              Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrvrd016.clw:	!Loc:Ole{'Application.Workbooks.Open('&CLIP(LOC:ExcelMacroFile)&')'}
+voorrvrd016.clw:	!pos# = INSTRING('\', CLIP(LOC:ExcelMacroFile), -1, LEN(CLIP(LOC:ExcelMacroFile)))
+voorrvrd016.clw:  0{Prop:Text}=CLIP(0{Prop:Text}) !& ' (' & CLIP(LEFT(FORMAT(THREAD(),@N_10))) & ')'
+voorrvrd016.clw:  			Message('AUB een schermprint maken en naar JMD mailen','Request = ViewRecord',ICON:Hand)
+voorrvrd016.clw:      	Message('Partij kan niet gevonden worden','Fout',Icon:Hand)
+voorrvrd016.clw:  	'WHERE dbo.Mutatie.CelID = ' & FORMAT(PRM:CelID, @N_7) & ' AND dbo.Mutatie.DatumTijd <= ' & CHR(39) & CLIP(FORMAT(LOC:PeilDatum,@d2-)) & ' 23:59' & CHR(39) & ' ' & |

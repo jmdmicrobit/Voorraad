@@ -1,0 +1,42 @@
+LIBRARY 'VOORRRPT' GUI
+EXPORTS
+;Start of initialisation function
+  VOORRRPT:INIT@F10ERRORCLASS8INICLASS                    @?
+  VOORRRPT:KILL@F                                         @?
+;End of initialisation functions
+
+;Start of Exported Procedures
+  REPORTPALLETBLADMEERDERE_WERKTNIET@Fl                   @?
+  REPORTPALLETBLADENKEL@FldUcUc                           @?
+  REPORTWEEGLIJST@Fsbl                                    @?
+  REPORTPACKLIJST@Fl                                      @?
+  REPORTPALLETTEGOEDENEXCEL@FUc                           @?
+  REPORTVERKOOPMUTATIES@Fl                                @?
+  REPORTVERKOOP@FlUc                                      @?
+  UPDATESJABLOON@F                                        @?
+  REPORTOVERBOEKING@Fl                                    @?
+  REPORTWEEGLIJSTEXCEL@Fsbl                               @?
+  REPORTPALLETBLAD@Fl                                     @?
+  REPORTPALLETSTICKERS@F                                  @?
+  WINDOWCALLSJABLOON@Fsbsb                                @?
+  EXPORTVERKOOP@Fll                                       @?
+  REPORTDYMOSTICKERS@Fll                                  @?
+  REPORTMUTATIES@F                                        @?
+  BROWSESJABLONEN@F                                       @?
+  WINDOWCALLSJABLOONOUD@Fsbsb                             @?
+  REPORTVRDCELLOCATIE@FlBq                                @?
+  REPORTINSLAG@F                                          @?
+  REPORTUITSLAG@F                                         @?
+  REPORTCMR@Fl                                            @?
+  WINDOWPALLETBLADEXPORT@F                                @?
+  REPORTINKOOPBEVESTIGING@Fl                              @?
+  REPORTPLANNING@Fsb                                      @?
+  PROCESSEXCEL@F                                          @?
+  REPORTSSOPREGISTRATIES@F                                @?
+  REPORTINKOOP@FlUc                                       @?
+  REPORTVERKOOPBEVESTIGING@Fl                             @?
+  REPORTACTIEAFWIJKINGEN@F                                @?
+;End of Exported Procedures
+
+
+

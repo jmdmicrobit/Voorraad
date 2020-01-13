@@ -1,0 +1,278 @@
+[PROCEDURE]
+NAME BrowseRapporten
+CATEGORY 'Browse'
+[COMMON]
+DESCRIPTION 'Browse the Rapporten file'
+FROM ABC Window
+[DATA]
+CurrentTab                STRING(80)
+[FILES]
+[PRIMARY]
+Rapporten
+[INSTANCE]
+1
+[KEY]
+Rap:Rapporten_PK
+[PROMPTS]
+%ButtonAction DEPEND %Control STRING TIMES 0
+
+%ButtonRunName DEPEND %Control STRING TIMES 0
+
+%ButtonRunParameters DEPEND %Control STRING TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control @n7 TIMES 0
+
+%ButtonParameters DEPEND %Control STRING TIMES 0
+
+%ButtonRequest DEPEND %Control STRING TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+[ADDITION]
+NAME ABC BrowseBox
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%AcceptToolbarControl LONG (0)
+%EnableQuickScan LONG  (0)
+
+%LocatorType DEFAULT  ('Step')
+%OverrideDefaultLocator DEFAULT ('')
+%OverrideLocator DEFAULT ('')
+
+%RecordFilter @S255  ('')
+
+%RangeField COMPONENT  ()
+
+%RangeLimitType DEFAULT  ('')
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%ScrollBehavior DEFAULT  ('Fixed Thumb')
+%SortOrder MULTI LONG  ()
+%SortCondition DEPEND %SortOrder @S255 TIMES 0
+%SortKey DEPEND %SortOrder KEY TIMES 0
+%SortLocatorType DEPEND %SortOrder DEFAULT TIMES 0
+%SortOverrideDefaultLocator DEPEND %SortOrder DEFAULT TIMES 0
+%SortOverrideLocator DEPEND %SortOrder DEFAULT TIMES 0
+%SortRecordFilter DEPEND %SortOrder @S255 TIMES 0
+%SortRangeField DEPEND %SortOrder COMPONENT TIMES 0 !HOLA 0
+%SortRangeLimit DEPEND %SortOrder FIELD TIMES 0
+%SortRangeLow DEPEND %SortOrder FIELD TIMES 0
+%SortRangeHigh DEPEND %SortOrder FIELD TIMES 0
+%SortRangeFile DEPEND %SortOrder FILE TIMES 0
+%SortRangeLimitType DEPEND %SortOrder DEFAULT TIMES 0
+%SortScrollBehavior DEPEND %SortOrder DEFAULT TIMES 0
+%SortScrollKeyDistribution DEPEND %SortOrder STRING TIMES 0
+%SortCustomKeyDistribution DEPEND %SortOrder MULTI LONG TIMES 0
+%SortKeyDistributionValue DEPEND %SortCustomKeyDistribution @S10 TIMES 0
+%SortScrollAlpha DEPEND %SortOrder LONG TIMES 0
+%SortScrollNumeric DEPEND %SortOrder LONG TIMES 0
+%SortScrollAlt DEPEND %SortOrder LONG TIMES 0
+[ADDITION]
+NAME ABC BrowseSelectButton
+[INSTANCE]
+INSTANCE 2
+PARENT 1
+[PROMPTS]
+%HideIfDisabled LONG  (1)
+[ADDITION]
+NAME ABC BrowseViewButton
+[INSTANCE]
+INSTANCE 3
+PARENT 1
+[ADDITION]
+NAME ABC BrowseUpdateButtons
+[INSTANCE]
+INSTANCE 4
+PARENT 1
+PROCPROP
+[PROMPTS]
+%UpdateProcedure PROCEDURE  (UpdateRapporten)
+%EditViaPopup LONG  (1)
+[ADDITION]
+NAME ABC CloseButton
+[INSTANCE]
+INSTANCE 5
+[ADDITION]
+NAME ABC HelpButton
+[INSTANCE]
+INSTANCE 6
+[ADDITION]
+NAME ABC WindowResize
+[INSTANCE]
+INSTANCE 7
+[PROMPTS]
+%UseAppStrategy    DEFAULT (1)
+%AppStrategy       DEFAULT ('Surface')
+%RestrictMinSize   DEFAULT (1)
+%WindowMinWidth    DEFAULT (0)
+%WindowMaxWidth    DEFAULT (0)
+[WINDOW]
+QuickWindow WINDOW('Browse the Rapporten file'),AT(,,358,198),IMM,RESIZE,GRAY,MDI,HLP('BrowseRapporten'),FONT('Microsoft Sans Serif',8,,400,1),CENTER,SYSTEM
+    LIST,AT(8,30,342,124),USE(?Browse:1),MSG('Browsing the Rapporten file'),IMM,HVSCROLL,|
+      FORMAT('64R(2)|M~Rapport ID~C(0)@n-14@80L(2)|M~Onderwerp~L(2)@s50@80L(2)|M~Titel~L(2)@s50@80L(2)|M~Emails~L(2)@s255@32R(2)|M~Maandag~C(0)@n3@32R(2)|M~Dinsdag~C(0)@n3@36R(2)|M~Woensdag~C(0)@n3@40R(2)|M~Donderdag~C(0)@n3@32R(2)|M~Vrijdag~C(0)@n3@'),|
+      FROM(Queue:Browse:1),#SEQ(1),#ORIG(?List),#FIELDS(Rap:RapportID,Rap:Onderwerp,Rap:Titel,Rap:Emails,Rap:Maandag,Rap:Dinsdag,Rap:Woensdag,Rap:Donderdag,Rap:Vrijdag)
+    BUTTON('&Select'),AT(89,158,49,14),USE(?Select:2),ICON('WASELECT.ICO'),FLAT,MSG('Select the Record'),TIP('Select the Record'),LEFT,#SEQ(2),#ORIG(?Select)
+    BUTTON('&View'),AT(142,158,49,14),USE(?View:3),ICON('WAVIEW.ICO'),FLAT,MSG('View Record'),TIP('View Record'),LEFT,#SEQ(3),#ORIG(?View)
+    BUTTON('&Insert'),AT(195,158,49,14),USE(?Insert:4),ICON('WAINSERT.ICO'),FLAT,MSG('Insert a Record'),TIP('Insert a Record'),LEFT,#SEQ(4),#ORIG(?Insert),#LINK(?Change:4)
+    BUTTON('&Change'),AT(248,158,49,14),USE(?Change:4),ICON('WACHANGE.ICO'),FLAT,MSG('Change the Record'),TIP('Change the Record'),LEFT,DEFAULT,#SEQ(4),#ORIG(?Change),#LINK(?Delete:4)
+    BUTTON('&Delete'),AT(301,158,49,14),USE(?Delete:4),ICON('WADELETE.ICO'),FLAT,MSG('Delete the Record'),TIP('Delete the Record'),LEFT,#SEQ(4),#ORIG(?Delete),#LINK(?Insert:4)
+  SHEET,AT(4,4,350,172),USE(?CurrentTab),#ORIG(CurrentTab)
+    TAB('&1) Rapporten_PK'),USE(?Tab:2)
+    END
+  END
+  BUTTON('&Close'),AT(252,180,49,14),USE(?Close),ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'),TIP('Close Window'),LEFT,#SEQ(5),#ORIG(?Close)
+  BUTTON('&Help'),AT(305,180,49,14),USE(?Help),ICON('WAHELP.ICO'),FLAT,MSG('See Help Window'),TIP('See Help Window'),LEFT,STD(STD:Help),#SEQ(6),#ORIG(?Help)
+ END
+[PROCEDURE]
+NAME UpdateRapporten
+CATEGORY 'Form'
+[COMMON]
+DESCRIPTION 'Form Rapporten'
+FROM ABC Window
+[DATA]
+CurrentTab                STRING(80)
+[FILES]
+[PRIMARY]
+Rapporten
+[INSTANCE]
+2
+[PROMPTS]
+%ButtonAction DEPEND %Control STRING TIMES 0
+
+%ButtonRunName DEPEND %Control STRING TIMES 0
+
+%ButtonRunParameters DEPEND %Control STRING TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control @n7 TIMES 0
+
+%ButtonParameters DEPEND %Control STRING TIMES 0
+
+%ButtonRequest DEPEND %Control STRING TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+[ADDITION]
+NAME ABC RecordValidation
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%ValidateOnAccept LONG  (1)
+%ValidateOnNonStopSelect LONG  (1)
+%ControlsExcluded MULTI LONG  ()
+%ControlToExclude DEPEND %ControlsExcluded STRING TIMES 0
+[ADDITION]
+NAME ABC SaveButton
+[INSTANCE]
+INSTANCE 2
+PROCPROP
+[PROMPTS]
+%InsertAllowed LONG  (1)
+%InsertMessage @S40  ('Record Will Be Added')
+%ChangeAllowed LONG  (1)
+%ChangeMessage @S40  ('Record Will Be Changed')
+%DeleteAllowed LONG  (1)
+%DeleteMessage @S40  ('Record Will Be Deleted')
+%ViewMessage @S40  ('View Record')
+%MessageHeader LONG  (0)
+%ActionOnDelete STRING  ('Standard Warning')
+%PrimingFields MULTI LONG  ()
+%PrimedField DEPEND %PrimingFields FIELD TIMES 0
+
+%PrimedValue DEPEND %PrimingFields @S255 TIMES 0
+
+%ActionOnCancel STRING  ('Confirm cancel')
+%MessageLocation STRING  ('Title Bar')
+%MessageStatusSection @n1  (0)
+
+%HistoryKey        DEFAULT (CtrlH)
+
+%AppendToTitle LONG  ()
+%AppendToTitleID @S255  ('')
+[ADDITION]
+NAME ABC CancelButton
+[INSTANCE]
+INSTANCE 3
+[ADDITION]
+NAME ABC HelpButton
+[INSTANCE]
+INSTANCE 4
+[ADDITION]
+NAME ABC ViewFormActions
+[INSTANCE]
+INSTANCE 5
+[ADDITION]
+NAME ABC WindowResize
+[INSTANCE]
+INSTANCE 6
+[PROMPTS]
+%UseAppStrategy    DEFAULT (1)
+%AppStrategy       DEFAULT ('Surface')
+%RestrictMinSize   DEFAULT (1)
+%WindowMinWidth    DEFAULT (0)
+%WindowMaxWidth    DEFAULT (0)
+[WINDOW]
+QuickWindow WINDOW('Form Rapporten'),AT(,,358,176),RESIZE,IMM,GRAY,MDI,HLP('UpdateRapporten'),FONT('Microsoft Sans Serif',8,,400,1),CENTER,SYSTEM
+  SHEET,AT(4,4,350,150),USE(?CurrentTab),#ORIG(CurrentTab)
+    TAB('&1) General'),USE(?Tab:1)
+         PROMPT('Rapport ID:'),USE(?Rap:RapportID:Prompt),TRN,AT(8,20),#ORIG(?Rap:RapportID:Prompt),#LINK(Rap:RapportID)
+         ENTRY(@n-14),USE(Rap:RapportID),AT(88,20,64,10),#ORIG(Rap:RapportID),#LINK(?Rap:RapportID:Prompt)
+         PROMPT('Onderwerp:'),USE(?Rap:Onderwerp:Prompt),TRN,AT(8,34),#ORIG(?Rap:Onderwerp:Prompt),#LINK(Rap:Onderwerp)
+         ENTRY(@s50),USE(Rap:Onderwerp),AT(88,34,204,10),#ORIG(Rap:Onderwerp),#LINK(?Rap:Onderwerp:Prompt)
+         PROMPT('Titel:'),USE(?Rap:Titel:Prompt),TRN,AT(8,48),#ORIG(?Rap:Titel:Prompt),#LINK(Rap:Titel)
+         ENTRY(@s50),USE(Rap:Titel),AT(88,48,204,10),#ORIG(Rap:Titel),#LINK(?Rap:Titel:Prompt)
+         PROMPT('Emails:'),USE(?Rap:Emails:Prompt),TRN,AT(8,62),#ORIG(?Rap:Emails:Prompt),#LINK(Rap:Emails)
+         ENTRY(@s255),USE(Rap:Emails),AT(88,62,262,10),#ORIG(Rap:Emails),#LINK(?Rap:Emails:Prompt)
+         CHECK('Maandag:'),USE(Rap:Maandag),AT(88,76,70,8),#ORIG(Rap:Maandag)
+         CHECK('Dinsdag:'),USE(Rap:Dinsdag),AT(162,76,70,8),#ORIG(Rap:Dinsdag)
+         CHECK('Woensdag:'),USE(Rap:Woensdag),AT(236,76,70,8),#ORIG(Rap:Woensdag)
+         CHECK('Donderdag:'),USE(Rap:Donderdag),AT(88,88,70,8),#ORIG(Rap:Donderdag)
+         CHECK('Vrijdag:'),USE(Rap:Vrijdag),AT(162,88,70,8),#ORIG(Rap:Vrijdag)
+         CHECK('Zaterdag:'),USE(Rap:Zaterdag),AT(236,88,70,8),#ORIG(Rap:Zaterdag)
+         CHECK('Zondag:'),USE(Rap:Zondag),AT(88,100,70,8),#ORIG(Rap:Zondag)
+         PROMPT('Lst Execution DATE:'),USE(?Rap:LstExecution_DATE:Prompt),TRN,AT(8,112),#ORIG(?Rap:LstExecution_DATE:Prompt),#LINK(Rap:LstExecution_DATE)
+         ENTRY(@d17),USE(Rap:LstExecution_DATE),AT(88,112,104,10),#ORIG(Rap:LstExecution_DATE),#LINK(?Rap:LstExecution_DATE:Prompt)
+         PROMPT('Lst Execution TIME:'),USE(?Rap:LstExecution_TIME:Prompt),TRN,AT(8,126),#ORIG(?Rap:LstExecution_TIME:Prompt),#LINK(Rap:LstExecution_TIME)
+         ENTRY(@t7),USE(Rap:LstExecution_TIME),AT(88,126,104,10),#ORIG(Rap:LstExecution_TIME),#LINK(?Rap:LstExecution_TIME:Prompt)
+         PROMPT('Lst Response:'),USE(?Rap:LstResponse:Prompt),TRN,AT(8,140),#ORIG(?Rap:LstResponse:Prompt),#LINK(Rap:LstResponse)
+         ENTRY(@s255),USE(Rap:LstResponse),AT(88,140,262,10),#ORIG(Rap:LstResponse),#LINK(?Rap:LstResponse:Prompt)
+    END
+  END
+  BUTTON('&OK'),AT(199,158,49,14),USE(?OK),ICON('WAOK.ICO'),FLAT,MSG('Accept data and close the window'),TIP('Accept data and close the window'),LEFT,DEFAULT,#SEQ(2),#ORIG(?OK)
+  BUTTON('&Cancel'),AT(252,158,49,14),USE(?Cancel),ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'),TIP('Cancel operation'),LEFT,#SEQ(3),#ORIG(?Cancel)
+  BUTTON('&Help'),AT(305,158,49,14),USE(?Help),ICON('WAHELP.ICO'),FLAT,MSG('See Help Window'),TIP('See Help Window'),LEFT,STD(STD:Help),#SEQ(4),#ORIG(?Help)
+ END

@@ -1,0 +1,2818 @@
+[MODULE]
+NAME 'ReportPalletBladEnkel_VoorrRpt.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME ReportPalletBladEnkel
+PROTOTYPE '(LONG, REAL, BYTE, BYTE)'
+PARAMETERS '(LONG PRM:WegingID,REAL PRM:NettoGewicht,BYTE PRM:Preview, BYTE PRM:AantalPrints)'
+[COMMON]
+FROM ABC Report
+[DATA]
+Progress:Thermometer     BYTE
+!!> GUID('2d332955-d947-4b1d-99da-b4554043228d')
+[SCREENCONTROLS]
+! PROMPT('LOC : SSCCNVE 00:'),USE(?LOC:SSCCNVE00:Prompt)
+! ENTRY(@s30),USE(LOC:SSCCNVE00)
+[REPORTCONTROLS]
+! STRING(@s30),USE(LOC:SSCCNVE00)
+LOC:SSCCNVE00            STRING(30)
+!!> GUID('636f1835-b01d-4dca-8caa-d61a55d63aed'),PROMPT('LOC : SSCCNVE 00:'),HEADER('LOC : SSCCNVE 00'),PICTURE(@s30),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : DATE 12:'),USE(?LOC:DATE12:Prompt)
+! ENTRY(@s6),USE(LOC:DATE12),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@s6),USE(LOC:DATE12),RIGHT(1)
+LOC:DATE12               STRING(6)
+!!> GUID('b9801cd6-b839-42eb-a28c-fd0fe9aaa57c'),PROMPT('LOC : DATE 12:'),HEADER('LOC : DATE 12'),PICTURE(@s6),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : EBENR 400:'),USE(?LOC:EBENR400:Prompt)
+! ENTRY(@s20),USE(LOC:EBENR400)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:EBENR400)
+LOC:EBENR400             STRING(20)
+!!> GUID('0814fb0d-3326-4d62-96f5-b43bcbbf5a3c'),PROMPT('LOC : EBENR 400:'),HEADER('LOC : EBENR 400'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : ISOC ountries 423:'),USE(?LOC:ISOCountries423:Prompt)
+! ENTRY(@s15),USE(LOC:ISOCountries423)
+[REPORTCONTROLS]
+! STRING(@s15),USE(LOC:ISOCountries423)
+LOC:ISOCountries423      STRING(15)
+!!> GUID('622fd5f9-7e3c-4191-9ef7-ac1bce42c570'),PROMPT('LOC : ISOC ountries 423:'),HEADER('LOC : ISOC ountries 423'),PICTURE(@s15),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : GTIN 02:'),USE(?LOC:GTIN02:Prompt)
+! ENTRY(@s20),USE(LOC:GTIN02)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:GTIN02)
+LOC:GTIN02               CSTRING(21)
+!!> GUID('04a826b6-95ea-4385-895b-33f5c41687aa'),PROMPT('LOC : GTIN 02:'),HEADER('LOC : GTIN 02'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : DATE 11:'),USE(?LOC:DATE11:Prompt)
+! ENTRY(@s6),USE(LOC:DATE11)
+[REPORTCONTROLS]
+! STRING(@s6),USE(LOC:DATE11)
+LOC:DATE11               STRING(6)
+!!> GUID('ca93271f-f1a1-4cc3-960e-bfda04607620'),PROMPT('LOC : DATE 11:'),HEADER('LOC : DATE 11'),PICTURE(@s6),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : ARTOMS:'),USE(?LOC:ARTOMS:Prompt)
+! ENTRY(@s128),USE(LOC:ARTOMS)
+[REPORTCONTROLS]
+! STRING(@s128),USE(LOC:ARTOMS)
+LOC:ARTOMS               STRING(128)
+!!> GUID('146951f4-cf99-47e9-96b2-62cc0667539a'),PROMPT('LOC : ARTOMS:'),HEADER('LOC : ARTOMS'),PICTURE(@s128),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : ARTNUM 241:'),USE(?LOC:ARTNUM241:Prompt)
+! ENTRY(@s20),USE(LOC:ARTNUM241)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:ARTNUM241)
+LOC:ARTNUM241            STRING(20)
+!!> GUID('2b058479-7135-4c3a-98e4-af2e050046d7'),PROMPT('LOC : ARTNUM 241:'),HEADER('LOC : ARTNUM 241'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : CHARGELOS 10:'),USE(?LOC:CHARGELOS10:Prompt)
+! ENTRY(@s10),USE(LOC:CHARGELOS10)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:CHARGELOS10)
+LOC:CHARGELOS10          STRING(10)
+!!> GUID('97da44dc-75dd-4143-868e-8cb10be6bc88'),PROMPT('LOC : CHARGELOS 10:'),HEADER('LOC : CHARGELOS 10'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : DATE 15:'),USE(?LOC:DATE15:Prompt)
+! ENTRY(@s6),USE(LOC:DATE15)
+[REPORTCONTROLS]
+! STRING(@s6),USE(LOC:DATE15)
+LOC:DATE15               STRING(6)
+!!> GUID('744acb61-7a56-4677-8246-08649d4ee9e4'),PROMPT('LOC : DATE 15:'),HEADER('LOC : DATE 15'),PICTURE(@s6),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : NETTOGEWICHT 310:'),USE(?LOC:NETTOGEWICHT310:Prompt)
+! ENTRY(@s20),USE(LOC:NETTOGEWICHT310)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:NETTOGEWICHT310)
+LOC:NETTOGEWICHT310      STRING(20)
+!!> GUID('3213cc8d-69ba-436f-b839-2f9aa342ee57'),PROMPT('LOC : NETTOGEWICHT 310:'),HEADER('LOC : NETTOGEWICHT 310'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : BARCODE 1:'),USE(?LOC:BARCODE1:Prompt)
+! ENTRY(@s100),USE(LOC:BARCODE1)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:BARCODE1)
+LOC:BARCODE1             STRING(100)
+!!> GUID('2b8e8cfc-9662-4c33-a450-7152b0b389b8'),PROMPT('LOC : BARCODE 1:'),HEADER('LOC : BARCODE 1'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : BARCODE 2:'),USE(?LOC:BARCODE2:Prompt)
+! ENTRY(@s100),USE(LOC:BARCODE2)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:BARCODE2)
+LOC:BARCODE2             STRING(100)
+!!> GUID('6b0310e2-3819-484e-93f2-f6a839c75c94'),PROMPT('LOC : BARCODE 2:'),HEADER('LOC : BARCODE 2'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : BARCODE 3:'),USE(?LOC:BARCODE3:Prompt)
+! ENTRY(@s100),USE(LOC:BARCODE3)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:BARCODE3)
+LOC:BARCODE3             STRING(100)
+!!> GUID('51870b6c-5f6a-4a74-9209-6c863e1ae55a'),PROMPT('LOC : BARCODE 3:'),HEADER('LOC : BARCODE 3'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : TMPBARCODE:'),USE(?LOC:TMPBARCODE:Prompt)
+! ENTRY(@s100),USE(LOC:TMPBARCODE)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:TMPBARCODE)
+LOC:TMPBARCODE           STRING(100)
+!!> GUID('9e92bdc5-5505-4cfa-afd7-2928c4af8804'),PROMPT('LOC : TMPBARCODE:'),HEADER('LOC : TMPBARCODE'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : ENKEL:'),USE(?LOC:ENKEL:Prompt)
+! ENTRY(@n3),USE(LOC:ENKEL)
+[REPORTCONTROLS]
+! STRING(@n3),USE(LOC:ENKEL)
+LOC:ENKEL                BYTE
+!!> GUID('3af06361-2445-4c26-a906-baca6f6b22bc'),PROMPT('LOC : ENKEL:'),HEADER('LOC : ENKEL'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('SAV : Printer:'),USE(?SAV:Printer:Prompt)
+! ENTRY(@s255),USE(SAV:Printer)
+[REPORTCONTROLS]
+! STRING(@s255),USE(SAV:Printer)
+SAV:Printer              STRING(255)
+!!> GUID('945e9da3-a34e-4177-b2ac-ea94bf1e3481'),PROMPT('SAV : Printer:'),HEADER('SAV : Printer'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Klantgegevens:'),USE(?LOC:Klantgegevens:Prompt)
+! ENTRY(@s255),USE(LOC:Klantgegevens)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:Klantgegevens)
+LOC:Klantgegevens        STRING(512)
+!!> GUID('16ae1d87-df34-40e4-99af-9c4455546693'),PROMPT('LOC : Klantgegevens:'),HEADER('LOC : Klantgegevens'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Afzender Gegevens:'),USE(?LOC:AfzenderGegevens:Prompt)
+! ENTRY(@s255),USE(LOC:AfzenderGegevens)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:AfzenderGegevens)
+LOC:AfzenderGegevens     STRING(512)
+!!> GUID('98d7118f-369a-49fd-9d53-4933de515985'),PROMPT('LOC : Afzender Gegevens:'),HEADER('LOC : Afzender Gegevens'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Country Company SSCCNVE:'),USE(?LOC:CountryCompanySSCCNVE:Prompt)
+! ENTRY(@s9),USE(LOC:CountryCompanySSCCNVE)
+[REPORTCONTROLS]
+! STRING(@s9),USE(LOC:CountryCompanySSCCNVE)
+LOC:CountryCompanySSCCNVE STRING(9)
+!!> GUID('49be05a9-a3a2-4e95-986c-2a748ef912f5'),PROMPT('LOC : Country Company SSCCNVE:'),HEADER('LOC : Country Company SSCCNVE'),PICTURE(@s9),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('SAV : Copies:'),USE(?SAV:Copies:Prompt)
+! ENTRY(@n3),USE(SAV:Copies),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n3),USE(SAV:Copies),RIGHT(1)
+SAV:Copies               BYTE
+!!> GUID('913d005d-1ed7-417b-b441-fde1778d8972'),PROMPT('SAV : Copies:'),HEADER('SAV : Copies'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Origin Live Bird:'),USE(?Loc:OriginLiveBird:Prompt)
+! ENTRY(@s50),USE(Loc:OriginLiveBird)
+[REPORTCONTROLS]
+! STRING(@s50),USE(Loc:OriginLiveBird)
+Loc:OriginLiveBird       CSTRING(51)
+!!> GUID('67533bb9-1832-46ac-9315-4be3898d946a'),PROMPT('Loc : Origin Live Bird:'),HEADER('Loc : Origin Live Bird'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Origin Slauther House:'),USE(?Loc:OriginSlautherHouse:Prompt)
+! ENTRY(@s50),USE(Loc:OriginSlautherHouse)
+[REPORTCONTROLS]
+! STRING(@s50),USE(Loc:OriginSlautherHouse)
+Loc:OriginSlautherHouse  CSTRING(51)
+!!> GUID('995e2ee1-0c2b-40bb-97d8-8b68112400cd'),PROMPT('Loc : Origin Slauther House:'),HEADER('Loc : Origin Slauther House'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Origin Processing:'),USE(?Loc:OriginProcessing:Prompt)
+! ENTRY(@s50),USE(Loc:OriginProcessing)
+[REPORTCONTROLS]
+! STRING(@s50),USE(Loc:OriginProcessing)
+Loc:OriginProcessing     CSTRING(51)
+!!> GUID('2e55e7b9-6c7d-4745-a525-5a32494f3b5d'),PROMPT('Loc : Origin Processing:'),HEADER('Loc : Origin Processing'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Origin Packing:'),USE(?Loc:OriginPacking:Prompt)
+! ENTRY(@s50),USE(Loc:OriginPacking)
+[REPORTCONTROLS]
+! STRING(@s50),USE(Loc:OriginPacking)
+Loc:OriginPacking        CSTRING(51)
+!!> GUID('c81c6a39-5d6a-4bc7-ac9a-4d6d265b39dd'),PROMPT('Loc : Origin Packing:'),HEADER('Loc : Origin Packing'),PICTURE(@s50),TYPEMODE(INS)
+[FILES]
+[PRIMARY]
+Versie
+[INSTANCE]
+0
+[KEY]
+VRS:Versie_PK
+[OTHERS]
+ISOCountries
+PalletBladSjabloon
+AAViewArtikel
+ArtikelOmschrijvingExtra
+RelatieArtikelOmschrijving
+ARelatie
+AARelatie
+AViewArtikel
+AVerkoop
+AAPlanning
+PalletBladSjabloonCountry
+Weging
+[PROMPTS]
+%RangeLimitType DEFAULT  ('Current Value')
+%ClassItem UNIQUE DEFAULT  ('BreakMgr', 'Default', 'Previewer', 'Process', 'ProgressMgr', |
+  'TargetSelector', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakManagerClass')
+WHEN  ('Default') ('ReportManager')
+WHEN  ('Previewer') ('PrintPreviewClass')
+WHEN  ('Process') ('ProcessClass')
+WHEN  ('ProgressMgr') ('StepClass')
+WHEN  ('TargetSelector') ('ReportTargetSelectorClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('')
+WHEN  ('Default') ('')
+WHEN  ('Previewer') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('StepRealClass')
+WHEN  ('TargetSelector') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 5
+WHEN  ('Default') ('Ask {20}PROCEDURE(),DERIVED', 'ChangeAction {11}PROCEDURE(),BYTE,DERIVED', |
+  'Init {19}PROCEDURE(ProcessClass PC,<<REPORT R>,<<PrintPreviewClass PV>)', 'InsertAction {11}PROCEDURE(),BYTE,DERIVED', |
+  'OnCloseEventCancelled  PROCEDURE(),DERIVED', 'OpenReport {13}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'PrimeFields {12}PROCEDURE(),PROC,DERIVED', 'PrimeUpdate {12}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'PrintReport {12}PROCEDURE(),DERIVED', 'ProcessResultFiles     PROCEDURE(OutputFileQueue OutputFile),BYTE,PROC,DERIVED', |
+  'Reset {18}PROCEDURE(BYTE Force=0),DERIVED', 'Run {20}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'SetAlerts {14}PROCEDURE(),DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeDisableButton      PROCEDURE(SIGNED Control,BYTE MakeDisable),DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeNoRecords {10}PROCEDURE(),DERIVED', 'TakeNotify {13}PROCEDURE(UNSIGNED NotifyCode,SIGNED Thread,LONG Parameter),BYTE,PROC,DERIVED', |
+  'Update {17}PROCEDURE(),DERIVED')
+WHEN  ('Previewer') ('Ask {20}PROCEDURE(),DERIVED', 'AskPage {16}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'AskThumbnails {10}PROCEDURE(),DERIVED', 'ChangeAction {11}PROCEDURE(),BYTE,DERIVED', |
+  'Init {19}PROCEDURE(*PreviewQueue ImageQueue),DERIVED', 'InsertAction {11}PROCEDURE(),BYTE,DERIVED', |
+  'OnCloseEventCancelled  PROCEDURE(),DERIVED', 'OnProcessFiles {9}PROCEDURE(),BYTE,DERIVED', |
+  'Open {19}PROCEDURE(),DERIVED', 'PrimeUpdate {12}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Reset {18}PROCEDURE(BYTE Force=0),DERIVED', 'Run {20}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'SetAlerts {14}PROCEDURE(),DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeCurrentPage        PROCEDURE(),DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Update {17}PROCEDURE(),DERIVED')
+WHEN  ('Process') ('AppendOrder {12}PROCEDURE(STRING Order),DERIVED', 'ApplyRange {13}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'ChildProcessingEnd     PROCEDURE(USHORT ChildRead),DERIVED', 'GetFreeElementAscending PROCEDURE(),STRING,DERIVED', |
+  'Init {19}PROCEDURE(VIEW V,RelationManager RM,<<SortOrder SO>)', 'Next {19}PROCEDURE(),BYTE,DERIVED', |
+  'Open {19}PROCEDURE(),DERIVED', 'Previous {15}PROCEDURE(),BYTE,DERIVED', 'Reset {18}PROCEDURE(),DERIVED', |
+  'SetSort {16}PROCEDURE(BYTE OrderNumber),BYTE,PROC,DERIVED', 'TakeAccepted {11}PROCEDURE(),DERIVED', |
+  'TakeRecord {13}PROCEDURE(),BYTE,PROC,DERIVED', 'UpdateDisplay {10}PROCEDURE(),DERIVED', |
+  'ValidateRecord {9}PROCEDURE(),BYTE,DERIVED')
+WHEN  ('ProgressMgr') ('Init {19}PROCEDURE(BYTE Controls)', 'SetLimitNeeded {9}PROCEDURE(),BYTE,DERIVED')
+WHEN  ('TargetSelector') ('Ask {20}PROCEDURE(BYTE pWithPrinter=0,BYTE pFromPreview=0),BYTE,DERIVED', |
+  'CONSTRUCT {14}PROCEDURE()', 'GetOutputGenerator     PROCEDURE(STRING GeneratorName),*IOutputGeneratorTarget,DERIVED', |
+  'SetDefaultOutputGenerator PROCEDURE(STRING GeneratorNameOrIndex),DERIVED', 'SetSelectedOutputGenerator PROCEDURE(STRING GeneratorNameOrIndex),BYTE,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('NO')
+WHEN  ('Default') ('NO')
+WHEN  ('Previewer') ('NO')
+WHEN  ('Process') ('NO')
+WHEN  ('ProgressMgr') ('NO')
+WHEN  ('TargetSelector') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakMgr')
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('Previewer') ('Previewer')
+WHEN  ('Process') ('ThisReport')
+WHEN  ('ProgressMgr') ('ProgressMgr')
+WHEN  ('TargetSelector') ('TargetSelector')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('')
+WHEN  ('Default') ('')
+WHEN  ('Previewer') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('')
+WHEN  ('TargetSelector') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (0)
+WHEN  ('Default') (0)
+WHEN  ('Previewer') (0)
+WHEN  ('Process') (0)
+WHEN  ('ProgressMgr') (0)
+WHEN  ('TargetSelector') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 2
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 2
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%WindowMessage DEFAULT  ('')
+%ReportTargetList MULTI LONG  (1)
+%ReportTargetListName DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDF')
+
+%ReportTargetListClass DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDFReportGenerator')
+
+%ReportTargetListObject DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDFReporter')
+
+%ReportTargetListCondition DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('')
+
+%ReportTargetHiddenControls MULTI LONG  ()
+%ReportTargetHiddenControl DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%ReportTargetHiddenControlTemplate DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%EnablePrintPreview LONG  (1)
+%ReportDataSource DEFAULT  ('File')
+%MDIProgressWindow LONG  (0)
+%ProgressInterval DEFAULT  ('10')
+%EnableQuickScan LONG  (1)
+%RecordFilter DEFAULT  ('')
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%AddConditionalSort MULTI LONG  ()
+%AddConditionalSortCondition DEPEND %AddConditionalSort DEFAULT TIMES 0
+
+%AddConditionalSortFieldsAssisted DEPEND %AddConditionalSort MULTI LONG TIMES 0
+
+%AddConditionalSortFieldAssisted DEPEND %AddConditionalSortFieldsAssisted FIELD TIMES 0
+
+%AddConditionalSortFieldAssistedOrder DEPEND %AddConditionalSortFieldsAssisted DEFAULT TIMES 0
+
+%AddSortDynamicNamed MULTI LONG  ()
+%AddSortFieldDinNameDescription DEPEND %AddSortDynamicNamed DEFAULT TIMES 0
+
+%AddSortFieldsDinName DEPEND %AddSortDynamicNamed MULTI LONG TIMES 0
+
+%AddSortFieldDinName DEPEND %AddSortFieldsDinName FIELD TIMES 0
+
+%AddSortFieldDinNameOrder DEPEND %AddSortFieldsDinName DEFAULT TIMES 0
+
+%AddSortFieldsDinSort MULTI LONG  ()
+%AddSortFieldDinSortDescription DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AddSortFieldDinSort DEPEND %AddSortFieldsDinSort FIELD TIMES 0
+
+%AddSortFieldDinSortOrder DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AdditionalSortWindowTitle DEFAULT  ('Select the Order')
+%AdditionalSortWindowMessage DEFAULT  ('Select the order to process the data.')
+%AdditionalSortWindowOkButtonText DEFAULT  ('&OK')
+%AdditionalSortWindowOkButtonIcon DEFAULT  ('SOK.ICO')
+%AdditionalSortWindowOkButtonCursor DEFAULT  ('')
+%AdditionalSortWindowOkButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowOkButtonMsg DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonTip DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonFlat LONG  (1)
+%AdditionalSortWindowOkButtonSkip LONG  (0)
+%AdditionalSortWindowOkButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowCancelButtonText DEFAULT  ('&Cancel')
+%AdditionalSortWindowCancelButtonIcon DEFAULT  ('SCANCEL.ICO')
+%AdditionalSortWindowCancelButtonCursor DEFAULT  ('')
+%AdditionalSortWindowCancelButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowCancelButtonMsg DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonTip DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonFlat LONG  (1)
+%AdditionalSortWindowCancelButtonSkip LONG  (0)
+%AdditionalSortWindowCancelButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowUpButtonText DEFAULT  ('')
+%AdditionalSortWindowUpButtonIcon DEFAULT  ('SUP.ICO')
+%AdditionalSortWindowUpButtonCursor DEFAULT  ('')
+%AdditionalSortWindowUpButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowUpButtonMsg DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonTip DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonFlat LONG  (1)
+%AdditionalSortWindowUpButtonSkip LONG  (0)
+%AdditionalSortWindowUpButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowDownButtonText DEFAULT  ('')
+%AdditionalSortWindowDownButtonIcon DEFAULT  ('SDOWN.ICO')
+%AdditionalSortWindowDownButtonCursor DEFAULT  ('')
+%AdditionalSortWindowDownButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowDownButtonMsg DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonTip DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonFlat LONG  (1)
+%AdditionalSortWindowDownButtonSkip LONG  (0)
+%AdditionalSortWindowDownButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowChOrdButtonText DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonIcon DEFAULT  ('SCH-ORD.ICO')
+%AdditionalSortWindowChOrdButtonCursor DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonMsg DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonTip DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonFlat LONG  (1)
+%AdditionalSortWindowChOrdButtonSkip LONG  (0)
+%AdditionalSortWindowChOrdButtonJustification DEFAULT  ('Left')
+%ApproxRecordCount DEFAULT  ('')
+%ManuallySetProgressLimits LONG  (0)
+%LowLimit DEFAULT  ('')
+%HighLimit DEFAULT  ('')
+%ReportDataSourceQueueName DEFAULT  ('')
+%UseMRP LONG  (1)
+%ReportTargetOutput DEFAULT  ('Printer')
+%ReportTargetAskWithPrint LONG  (1)
+%ReportTargetOtherOutput DEFAULT  ('')
+%RangeField COMPONENT  ()
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%RuntimeSkipPreview DEFAULT  ('False')
+%InitialZoom DEFAULT  ('No Zoom')
+%AllowUserZooms LONG  (1)
+%InitWindowPosition LONG  (0)
+%WinXPos DEFAULT  ('')
+%WinYPos DEFAULT  ('')
+%WinWidth DEFAULT  ('315')
+%WinHeight DEFAULT  ('200')
+%MaximizePreviewWindow LONG  (0)
+%MDIPreviewer LONG  (0)
+%ProcessBreaks MULTI LONG  ()
+%BreakName DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakLevelCero DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevelBreakNumber DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevel DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakFields DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakField DEPEND %BreakFields FIELD TIMES 0
+
+%BreakTotals DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakTotalTarget DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalType DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalField DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalFieldWeight DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalBasedOn DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalCondition DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalReset DEPEND %BreakTotals LONG TIMES 0
+
+%BreakReportHeaderYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportHeader DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakReportFooterYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportFooter DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldRestoreOnBreak DEPEND %HotFields LONG TIMES 0
+
+%DetailFilter DEPEND %ReportControl DEFAULT TIMES 0
+
+%DetailFilterExclusive DEPEND %ReportControl LONG TIMES 0
+
+%DetailFilterExternal DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('')
+WHEN  ('?Detail') ('')
+WHEN  ('?Footer') ('')
+WHEN  ('?Header') ('')
+WHEN  ('?HeaderImage') ('')
+WHEN  ('?IMAGEOvaal') ('')
+WHEN  ('?LINE1') ('')
+WHEN  ('?LINE1:2') ('')
+WHEN  ('?LINE1:3') ('')
+WHEN  ('?LINE1:4') ('')
+WHEN  ('?LINE1:5') ('')
+WHEN  ('?LINE1:6') ('')
+WHEN  ('?LINE1:7') ('')
+WHEN  ('?LINE2') ('')
+WHEN  ('?LINE3') ('')
+WHEN  ('?LINE3:2') ('')
+WHEN  ('?LOC:ARTNUM241') ('')
+WHEN  ('?LOC:ARTOMS') ('')
+WHEN  ('?LOC:AfzenderGegevens') ('')
+WHEN  ('?LOC:BARCODE1') ('')
+WHEN  ('?LOC:BARCODE2') ('')
+WHEN  ('?LOC:BARCODE3') ('')
+WHEN  ('?LOC:CHARGELOS10') ('')
+WHEN  ('?LOC:DATE11') ('')
+WHEN  ('?LOC:DATE12') ('')
+WHEN  ('?LOC:DATE15') ('')
+WHEN  ('?LOC:EBENR400') ('')
+WHEN  ('?LOC:Klantgegevens') ('')
+WHEN  ('?LOC:NETTOGEWICHT310') ('')
+WHEN  ('?LOC:SSCCNVE00') ('')
+WHEN  ('?Loc:OriginLiveBird:2') ('')
+WHEN  ('?Loc:OriginPacking') ('')
+WHEN  ('?Loc:OriginProcessing') ('')
+WHEN  ('?Loc:OriginSlautherHouse') ('')
+WHEN  ('?PBS:ArtikelOms') ('')
+WHEN  ('?PBS:BatchNumber_10') ('')
+WHEN  ('?PBS:CustomerPartNumber_241') ('')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('')
+WHEN  ('?PBS:DueDate_12') ('')
+WHEN  ('?PBS:Klant') ('')
+WHEN  ('?PBS:Leverancier') ('')
+WHEN  ('?PBS:NaOntdooien') ('')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('')
+WHEN  ('?PBS:OriginLiveBird') ('')
+WHEN  ('?PBS:OriginPacking') ('')
+WHEN  ('?PBS:OriginProcessing') ('')
+WHEN  ('?PBS:OriginSlautherHouse') ('')
+WHEN  ('?PBS:ProductNetWeight_310') ('')
+WHEN  ('?PBS:ProductionDate_11') ('')
+WHEN  ('?PBS:SSCC_NVE_00') ('')
+WHEN  ('?PBS:SellByDate_15') ('')
+WHEN  ('?PBS:TransportEnOpslag') ('')
+WHEN  ('?STRING2') ('')
+WHEN  ('?STRING2:2') ('')
+WHEN  ('?TBarcode') ('')
+WHEN  ('?TBarcode:2') ('')
+WHEN  ('?TBarcode:3') ('')
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel') ('Default')
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 1
+WHEN  ('?Progress:Cancel') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 1
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FirstPage DEFAULT  ('')
+%ReportTargetOpen LONG  (0)
+%HideOutputProgress LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 0
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 0
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 0
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 0
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 0
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 0
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 0
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 0
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 0
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 0
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 0
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 0
+
+[EMBED]
+EMBED %ProcessManagerMethodCodeSection
+[INSTANCES]
+WHEN 'TakeRecord'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3000
+PROPERTY:END
+IF NOT(LOC:ENKEL) THEN
+    LOC:ENKEL = True
+
+    ! Benodigde gegevens ophalen
+    CLEAR(AAPla:Record)
+    AAPla:PlanningID = GLO:UitslagPalletbladPlanningID
+    IF Access:AAPlanning.TryFetch(AAPla:PK_Planning) <> Level:Benign THEN
+        MESSAGE('Planning ('&GLO:UitslagPalletbladPlanningID&') niet gevonden.', 'Ontbrekende gegevens', ICON:Exclamation)
+        RETURN Level:Benign
+    END
+
+    CLEAR(AVE:Record)
+    AVE:VerkoopID = AAPla:VerkoopID
+    IF Access:AVerkoop.TryFetch(AVE:PK_Verkoop) <> Level:Benign THEN
+        MESSAGE('Verkoop ('&AAPla:VerkoopID&') niet gevonden.', 'Ontbrekende gegevens', ICON:Exclamation)
+        RETURN Level:Benign
+    END
+
+    AARel:RelatieID = AVE:Klant
+    IF Access:AARelatie.TryFetch(AARel:Relatie_PK) <> Level:Benign THEN
+        MESSAGE('Klant ('&AVE:Klant&') niet gevonden.', 'Ontbrekende gegevens', ICON:Exclamation)
+        RETURN Level:Benign
+    END
+
+    CLEAR(AAArt:Record)
+    AAArt:ArtikelID = GLO:UitslagPalletbladArtikelID
+    IF Access:AAViewArtikel.TryFetch(AAArt:Artikel_PK) <> Level:Benign THEN
+        MESSAGE('Artikel ('&CLIP(GLO:UitslagPalletbladArtikelID)&') niet gevonden.', 'Ontbrekende gegevens', ICON:Exclamation)
+        RETURN Level:Benign
+    END
+    ! Extra ophalen GTIN
+    CLEAR(RAO:Record)
+    RAO:RelatieID=AVE:Klant
+    RAO:ArtikelID=GLO:UitslagPalletbladArtikelID
+    IF Access:RelatieArtikelOmschrijving.Fetch(RAO:FK1_RelatieArtikelOmschrijving)=Level:Benign
+        LOC:GTIN02=RAO:GTIN
+    ELSE
+        LOC:GTIN02=''
+    END
+
+    !Ophalen van de juiste vertaling
+    gevonden# = false
+
+    CLEAR(PBSC:Record)
+    PBSC:Country = AARel:Country
+    SET(PBSC:FK2_PalletBladSjabloonCountry, PBSC:FK2_PalletBladSjabloonCountry)
+    IF Access:PalletBladSjabloonCountry.Next() = Level:Benign THEN
+        IF PBSC:Country = AARel:Country THEN
+            gevonden# = true
+        END
+    END
+
+    IF NOT(gevonden#)
+        CLEAR(PBS:Record)
+        PBS:PalletBladSjabloonID = GETINI('Palletblad','StandaardVertaling',,'.\Voorraad.ini')
+        IF Access:PalletBladSjabloon.Fetch(PBS:PK_PalletBladSjabloon) <> Level:Benign THEN
+            MESSAGE('Standaard palletblad vertaling (ID: ' & CLIP(PBS:PalletBladSjabloonID) & ') kan niet worden opgehaald.' , 'Ontbrekende vertaling', ICON:Exclamation)
+            RETURN Level:Benign
+        END
+    ELSE
+        PBS:PalletBladSjabloonID =  PBSC:PalletBladSjabloonID
+        IF Access:PalletBladSjabloon.Fetch(PBS:PK_PalletBladSjabloon) <> Level:Benign THEN
+            MESSAGE('Palletblad vertaling (ID: ' & CLIP(PBS:PalletBladSjabloonID) & ' voor land (' & CLIP(PBSC:Country) & ') kan niet worden opgehaald.', 'Ontbrekende vertaling', ICON:Exclamation)
+            RETURN Level:Benign
+        END
+    END
+
+    !IF NOT(EXISTS(CLIP(AARel:PalletBladRapportHeaderImage))) THEN
+    !    MESSAGE('Voor relatie (' & AARel:RelatieID & ') is geen bestaande palletblad-rapport header opgegeven. Vul deze in bij de Stamgegevens->Relaties.', 'Ontbrekende gegevens', ICON:Exclamation)
+    !END
+
+    !IF CLIP(LEFT(GLO:UitslagPalletbladExternVerkoopID)) = '' OR GLO:UitslagPalletbladDueDate12 = 0 OR GLO:UitslagPalletbladProductionDate11 = 0 OR GLO:UitslagPalletbladSellByDate15 = 0 THEN
+    !    MESSAGE('Externe verkoop-ID of een van de drie datums is niet ingevuld.', 'Ontbrekende gegevens', ICON:Exclamation)
+    !END
+
+    ! Vullen van het palletblad-rapport
+    IF CLIP(AARel:PalletBladRapportHeaderImage) <> '' THEN
+        SetTarget(Report)
+        ?HeaderImage{PROP:Text} = CLIP(AARel:PalletBladRapportHeaderImage)
+        SetTarget()
+    ELSE
+        SetTarget(Report)
+        ?HeaderImage{PROP:Text} = GETINI('Palletblad','StandaardLogo','','.\Voorraad.ini')
+        SetTarget()
+    END
+!    SetTarget(Report)
+!    ?ImageOvaal{PROP:Text} = 'NL5664EG.png'
+!    SetTarget()
+
+    ! 3 + 870 + 123456 + 0000000 + 3
+    ! Undefinied packaging (3) + Country Netherlands (870 - 879) + Company ID (dummy) + SSSC (zeros) + checksum (mod 10) ... http://www.lagerwiki.de/index.php?title=Nummer_der_Versandeinheit
+    !LOC:SSCCNVE00 = '387012345600000003'
+    !LOC:SSCCNVE = '387012345600000003'
+    LOC:SSCCNVE00 = '3' & FORMAT(LOC:CountryCompanySSCCNVE, @N09) & FORMAT(PRM:WegingID, @N07)
+    ! Bepalen checksum (http://www.gs1sy.org/GS1System/id_keys/CheckDigit.htm)
+    CHECKSUMS# = 0
+    LOOP I# = 1 TO 17
+        IF I# % 2 = 1 THEN
+            CHECKSUMS# += 3 * (VAL(LOC:SSCCNVE00[I#]) - 48)
+        ELSE
+            CHECKSUMS# += (VAL(LOC:SSCCNVE00[I#]) - 48)
+        END
+        db.DebugOut('Checksum-telling (' & I# & '): ' & CHECKSUMS# & ' <= ' & LOC:SSCCNVE00[I#] & ' - ' & (VAL(LOC:SSCCNVE00[I#])))
+    END
+
+    CHECKSUM# = 10 - (CHECKSUMS# - (INT(CHECKSUMS# / 10) * 10))
+    IF CHECKSUM# = 10 THEN CHECKSUM# = 0.
+    db.DebugOut('Checksum-berekening: ' & CHECKSUMS# & ' => ' & CHECKSUM#)
+    LOC:SSCCNVE00 = CLIP(LOC:SSCCNVE00) & FORMAT(CHECKSUM#, @N01)
+
+    ! Bepalen artikel-omschrijving
+    LOC:ARTOMS = CLIP(GLO:UitslagPalletbladArtikelOms)
+
+    LOC:AfzenderGegevens = 'Ven Poultry B.V.' & CHR(13) & CHR(10) & 'Stipdonk 46A' & CHR(13) & CHR(10) & '5715 PD Lierop' & CHR(13) & CHR(10) & 'Holland'
+    LOC:KlantGegevens = CLIP(AARel:FirmaNaam) & CHR(13) & CHR(10) & CLIP(AARel:Adres1) & CHR(13) & CHR(10) & CLIP(AARel:Postcode) & ' ' & CLIP(AARel:Plaats) & CHR(13) & CHR(10) & CLIP(AARel:Country)
+
+    artikelseparator# = INSTRING(' ', CLIP(LOC:ARTOMS), 1, 1)
+    IF artikelseparator# <> 0 THEN
+        LOC:ARTNUM241 = CLIP(LEFT(SUB(LOC:ARTOMS, 1, artikelseparator#)))
+        LOC:ARTOMS = CLIP((SUB(LOC:ARTOMS, artikelseparator# + 1, LEN(LOC:ARTOMS) - (artikelseparator# - 1))))
+    ELSE
+        LOC:ARTNUM241 = ''
+    END
+
+    IF CLIP(LOC:ARTNUM241) = '' THEN
+        LOC:ARTNUM241=AAArt:ArtikelID
+        !MESSAGE('Artikelnummer kon niet worden bepaald op basis van de artikelomschrijving "' & CLIP(LOC:ARTOMS) & '" van het artikel "' & CLIP(AAArt:ArtikelOms) & '".', 'Artikelnummer', ICON:Exclamation)
+    ELSE
+        LOOP i# = 1 TO (LEN(CLIP(LOC:ARTNUM241)) - 1)
+            !MESSAGE('Controleren (' & LOC:ARTNUM241 & ') - ' & i# & ' /  ' & (LEN(LOC:ARTNUM241) - 1) & ' = ' & VAL(LOC:ARTNUM241[i#]))
+            IF (VAL(LOC:ARTNUM241[i#]) < 48) OR (VAL(LOC:ARTNUM241[i#]) > 57) THEN
+                !MESSAGE('Artikelnummer "' & CLIP(LOC:ARTNUM241) & '" bepaald op basis van de artikelomschrijving "' & CLIP(LOC:ARTOMS) & '" van het artikel "' & CLIP(AAArt:ArtikelOms) & '" bevat ook niet-cijfers. Controleer of dit klopt.', 'Artikelnummer', ICON:Exclamation)
+                LOC:ARTOMS=CLIP(LOC:ARTNUM241) & ' ' & CLIP(LOC:ARTOMS)
+                LOC:ARTNUM241=AAArt:ArtikelID
+                BREAK
+            END
+        END
+    END
+
+    LOC:DATE12 = CLIP(LEFT(FORMAT(GLO:UitslagPalletbladDueDate12, @d11)))
+    LOC:DATE11 = CLIP(LEFT(FORMAT(GLO:UitslagPalletbladProductionDate11, @d11)))
+    LOC:DATE15 = CLIP(LEFT(FORMAT(GLO:UitslagPalletbladSellByDate15, @d11)))
+    ! 16-10-2018 Voor Klant Mantons de 400 code weglaten
+    ! In plaats hiervan voegen we de 423 toe
+    LOC:EBENR400 = CLIP(LEFT(GLO:UitslagPalletbladExternVerkoopID)) !'EBE-1234567'
+    LOC:ISOCountries423=LocalClass.VertaalISCodes(GLO:UitslagPalletbladOriginLiveBird)
+    LOC:CHARGELOS10 = CLIP(LEFT(FORMAT(GLO:UitslagPalletbladPartijID,@N_10)))
+    LOC:NETTOGEWICHT310 = CLIP(LEFT(FORMAT(ROUND(PRM:NettoGewicht, 0.1), @n-_8`1)))
+
+    IF GLO:UitslagPalletbladOriginLiveBird=''
+        PBS:OriginLiveBird=''
+    END
+    IF GLO:UitslagPalletbladOriginPacking=''
+        PBS:OriginPacking = ''
+    END
+    IF GLO:UitslagPalletbladOriginProcessing=''
+        PBS:OriginProcessing=''
+    END
+    IF GLO:UitslagPalletbladOriginSlautherHouse=''
+        PBS:OriginSlautherHouse=''
+    END
+    Loc:OriginLiveBird = GLO:UitslagPalletbladOriginLiveBird
+    Loc:OriginPacking = GLO:UitslagPalletbladOriginPacking
+    Loc:OriginProcessing = GLO:UitslagPalletbladOriginProcessing
+    Loc:OriginSlautherHouse = GLO:UitslagPalletbladOriginSlautherHouse
+
+    ! 16-10-2018 Voor Klant Mantons de 400 code weglaten
+    !LOC:BARCODE1 = '(400)'&CLIP(LOC:EBENR400)&'(241)'&CLIP(LOC:ARTNUM241)&'(12)'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11)
+    ! 18-10-2018
+!    LOC:BARCODE1 = '(423)'&CLIP(LOC:ISOCountries423)&'(12)'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11)
+!    LOC:BARCODE2 = '(241)'&CLIP(LOC:ARTNUM241)&'(3101)'&CLIP(FORMAT(ROUND(PRM:NettoGewicht,0.1), @N06v1))&'(10)'&CLIP(LOC:CHARGELOS10)&'(15)'&FORMAT(GLO:UitslagPalletbladSellByDate15, @d11)
+    ! 2-11-2018
+    ! LOC:BARCODE1 = '(12)'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11)
+    ! 13-11-2018
+    !LOC:BARCODE1 = CHOOSE(LOC:GTIN02='','','(02)'&LOC:GTIN02)&'(12)'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11)
+    ! 19-11-2018
+    !LOC:BARCODE1 = '(12)'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11)
+    IF AARel:PalletBladLayout='Abbelen'
+        LOC:BARCODE1 = '(400)'&CLIP(LOC:EBENR400)&'(241)'&CLIP(LEFT(LOC:ARTNUM241))
+    ELSE
+        LOC:BARCODE1 = '(11)'&FORMAT(GLO:UitslagPalletbladProductionDate11, @d11)
+    END
+    LOC:BARCODE2 = CHOOSE(LOC:GTIN02='','(241)'&CLIP(LOC:ARTNUM241),'(02)'&LOC:GTIN02)&'(3101)'&CLIP(FORMAT(ROUND(PRM:NettoGewicht,0.1), @N06v1))&'(10)'&CLIP(LOC:CHARGELOS10)&'(15)'&FORMAT(GLO:UitslagPalletbladSellByDate15, @d11)
+    LOC:BARCODE3 = '(00)'&CLIP(LOC:SSCCNVE00)
+
+    !TBarcode.Draw('<201>400'&CLIP(LOC:EBENR400)&'<201>241'&CLIP(LOC:ARTNUM241)&'<201>12'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11),BARCODE:CODE128)
+!    TBarcode.Draw('<201>423'&CLIP(LOC:ISOCountries423)&'<201>12'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11),BARCODE:CODE128)
+!    TBarcode:2.Draw('<201>241'&CLIP(LOC:ARTNUM241)&'<201>3101'&CLIP(FORMAT(ROUND(PRM:NettoGewicht,0.1), @N06v1))&'10'&CLIP(LOC:CHARGELOS10)&'<201>15'&FORMAT(GLO:UitslagPalletbladSellByDate15, @d11),BARCODE:CODE128)
+    !TBarcode.Draw('<201>12'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11),BARCODE:CODE128)
+    !TBarcode.Draw(CHOOSE(LOC:GTIN02='','','<201>(02)'&LOC:GTIN02)&'<201>12'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11),BARCODE:CODE128)
+    !TBarcode.Draw('<201>12'&FORMAT(GLO:UitslagPalletbladDueDate12, @d11),BARCODE:CODE128)
+    IF AARel:PalletBladLayout='Abbelen'
+        TBarcode.Draw('<201>400'&CLIP(LOC:EBENR400)&'<201>241'&CLIP(LEFT(LOC:ARTNUM241)),BARCODE:CODE128)
+    ELSE
+        TBarcode.Draw('<201>11'&FORMAT(GLO:UitslagPalletbladProductionDate11, @d11),BARCODE:CODE128)
+    END
+    TBarcode:2.Draw(CHOOSE(LOC:GTIN02='','<201>241'&CLIP(LOC:ARTNUM241),'<201>02'&LOC:GTIN02)&'<201>3101'&CLIP(FORMAT(ROUND(PRM:NettoGewicht,0.1), @N06v1))&'10'&CLIP(LOC:CHARGELOS10)&'<201>15'&FORMAT(GLO:UitslagPalletbladSellByDate15, @d11),BARCODE:CODE128)
+    TBarcode:3.Draw('<201>00'&CLIP(LOC:SSCCNVE00),BARCODE:CODE128)
+
+    PRINT(RPT:Detail)
+END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5500
+PROPERTY:END
+IF FALSE
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8000
+PROPERTY:END
+END
+[END]
+[END]
+WHEN 'Close'
+[INSTANCES]
+WHEN '()'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+    if SAV:Printer<>''
+        PRINTER{PROPPRINT:Device}=SAV:Printer
+    END
+
+    PRINTER{PROPPRINT:Copies}=SAV:Copies
+[END]
+[END]
+[END]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'OpenReport'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+SAV:Printer=PRINTER{PROPPRINT:Device}
+IF CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini')) <> '' THEN
+      PRINTER{PROPPRINT:Device}=CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini'))
+      IF NOT PRINTER{PROPPRINT:Device}=CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini'))
+          Message('Let op palletprinter is niet gekozen.|Palletprinter='&CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini'))&'|Huidige printer='&PRINTER{PROPPRINT:Device},'Bel JMD',Icon:Cross)
+      END
+END
+SAV:Copies = PRINTER{PROPPRINT:Copies}
+PRINTER{PROPPRINT:Copies}=PRM:AantalPrints
+
+[END]
+[END]
+WHEN 'AskPreview'
+[INSTANCES]
+WHEN '()'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+IF PRM:Preview = 0 THEN
+    SELF.SkipPreview = 1
+END
+[END]
+[END]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+LOC:CountryCompanySSCCNVE = GETINI('Palletblad','CountryCompanyPrefix','870123456','.\Voorraad.ini')
+[END]
+[END]
+[END]
+EMBED %LocalProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.VertaalISCodes   Procedure(String pIsoCodes)
+
+st                              StringTheory
+returnSt                        StringTheory
+CODE
+            ! in pIsoCountries kunnen meerdere codekomen
+    Access:ISOCountries.Open()
+    Access:ISOCountries.UseFile()
+    returnSt.SetValue('')
+    st.SetValue(pIsoCodes)
+    st.Split(',')
+    loop x# = 1 to st.Records()
+        Clear(ISO:Record)
+        ISO:ISCode=St.GetLine(x#)
+        If NOT Access:ISOCountries.Fetch(ISO:PK_ISOCountries)=Level:Benign
+            Message('Let op de ISOCode '&St.GetLine(x#)&' kan niet gevonden worden','Error '&ERROR(),ICON:Cross)
+        ELSE
+            returnSt.Append(Format(ISO:ISNummer,@n03))
+        END
+    End
+    Access:ISOCountries.Close()
+
+    Return  returnSt.Str()
+[END]
+EMBED %LocalDataAfterClasses
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass          CLASS
+VertaalISCodes          Procedure(String), STRING
+                    END
+[END]
+[END]
+[ADDITION]
+NAME SVReportToPDFSupport SVReportToPDF
+[INSTANCE]
+INSTANCE 6
+OWNER 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('PDFReporter')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReportGenerator')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('SetUp {18}PROCEDURE(),DERIVED')
+
+%Populate DEFAULT  ('Always')
+%PopulateCondition DEFAULT  ('')
+%OutputNameType DEFAULT  ('Runtime')
+%OutputNameFixed DEFAULT  ('')
+%OutputNameVariable DEFAULT  ('')
+%DocumentTitle DEFAULT  ('CW Report')
+%ApplicationName DEFAULT  ('VoorrRpt')
+%ProgramName DEFAULT  ('ReportPalletBladEnkel')
+%PDFSubject DEFAULT  ('ReportPalletBladEnkel')
+%PDFAuthor DEFAULT  ('')
+%PDFKeywords DEFAULT  ('')
+%PagesAsParentBookmark LONG  (0)
+%UseScanCopyMode LONG  (0)
+%ScanCopyModeRes DEFAULT  ('Original')
+%CompressText LONG  (1)
+%CompressImages LONG  (1)
+%Encryptdoc DEFAULT  ('Never')
+%EncryptDocCondition DEFAULT  ('')
+%PDFPassword DEFAULT  ('')
+%PDFUseVariableAccess LONG  (0)
+%PDFVariableAccess DEFAULT  ('')
+%PDFAccessPrint LONG  (1)
+%PDFAccessModifyContent LONG  (1)
+%PDFAccessCopy LONG  (1)
+%PDFAccessModifyAnnotations LONG  (1)
+%PDFTempControlInstance DEFAULT  ('57')
+%PDFTempReportControl DEFAULT  ('?Footer')
+%PDFHideControl DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFSkipControl DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFHideControlOnPDF DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFPossibleTextOrigin DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Footer') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Header') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?HeaderImage') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?IMAGEOvaal') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:4') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:5') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:6') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:7') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE3:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ARTNUM241') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ARTOMS') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:AfzenderGegevens') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:BARCODE1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:BARCODE2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:BARCODE3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:CHARGELOS10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DATE11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DATE12') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DATE15') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:EBENR400') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Klantgegevens') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:NETTOGEWICHT310') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:SSCCNVE00') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginLiveBird:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginPacking') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginProcessing') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginSlautherHouse') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:ArtikelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:BatchNumber_10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:CustomerPartNumber_241') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:DueDate_12') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:Klant') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:Leverancier') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:NaOntdooien') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginLiveBird') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginPacking') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginProcessing') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginSlautherHouse') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:ProductNetWeight_310') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:ProductionDate_11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:SSCC_NVE_00') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:SellByDate_15') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:TransportEnOpslag') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?TBarcode') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?TBarcode:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?TBarcode:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFPossibleBookmarkTextOrigin DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Footer') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Header') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?HeaderImage') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?IMAGEOvaal') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:4') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:5') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:6') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:7') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE3:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ARTNUM241') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:ARTOMS') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:AfzenderGegevens') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:BARCODE1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:BARCODE2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:BARCODE3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:CHARGELOS10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DATE11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DATE12') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DATE15') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:EBENR400') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:Klantgegevens') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:NETTOGEWICHT310') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:SSCCNVE00') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginLiveBird:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginPacking') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginProcessing') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:OriginSlautherHouse') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:ArtikelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:BatchNumber_10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:CustomerPartNumber_241') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:DueDate_12') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:Klant') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:Leverancier') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:NaOntdooien') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginLiveBird') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginPacking') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginProcessing') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:OriginSlautherHouse') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:ProductNetWeight_310') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:ProductionDate_11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:SSCC_NVE_00') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:SellByDate_15') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?PBS:TransportEnOpslag') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?TBarcode') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?TBarcode:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?TBarcode:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFFieldAction DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFFieldActionType DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('Hyperlink')
+WHEN  ('?Detail') ('Hyperlink')
+WHEN  ('?Footer') ('Hyperlink')
+WHEN  ('?Header') ('Hyperlink')
+WHEN  ('?HeaderImage') ('Hyperlink')
+WHEN  ('?IMAGEOvaal') ('Hyperlink')
+WHEN  ('?LINE1') ('Hyperlink')
+WHEN  ('?LINE1:2') ('Hyperlink')
+WHEN  ('?LINE1:3') ('Hyperlink')
+WHEN  ('?LINE1:4') ('Hyperlink')
+WHEN  ('?LINE1:5') ('Hyperlink')
+WHEN  ('?LINE1:6') ('Hyperlink')
+WHEN  ('?LINE1:7') ('Hyperlink')
+WHEN  ('?LINE2') ('Hyperlink')
+WHEN  ('?LINE3') ('Hyperlink')
+WHEN  ('?LINE3:2') ('Hyperlink')
+WHEN  ('?LOC:ARTNUM241') ('Hyperlink')
+WHEN  ('?LOC:ARTOMS') ('Hyperlink')
+WHEN  ('?LOC:AfzenderGegevens') ('Hyperlink')
+WHEN  ('?LOC:BARCODE1') ('Hyperlink')
+WHEN  ('?LOC:BARCODE2') ('Hyperlink')
+WHEN  ('?LOC:BARCODE3') ('Hyperlink')
+WHEN  ('?LOC:CHARGELOS10') ('Hyperlink')
+WHEN  ('?LOC:DATE11') ('Hyperlink')
+WHEN  ('?LOC:DATE12') ('Hyperlink')
+WHEN  ('?LOC:DATE15') ('Hyperlink')
+WHEN  ('?LOC:EBENR400') ('Hyperlink')
+WHEN  ('?LOC:Klantgegevens') ('Hyperlink')
+WHEN  ('?LOC:NETTOGEWICHT310') ('Hyperlink')
+WHEN  ('?LOC:SSCCNVE00') ('Hyperlink')
+WHEN  ('?Loc:OriginLiveBird:2') ('Hyperlink')
+WHEN  ('?Loc:OriginPacking') ('Hyperlink')
+WHEN  ('?Loc:OriginProcessing') ('Hyperlink')
+WHEN  ('?Loc:OriginSlautherHouse') ('Hyperlink')
+WHEN  ('?PBS:ArtikelOms') ('Hyperlink')
+WHEN  ('?PBS:BatchNumber_10') ('Hyperlink')
+WHEN  ('?PBS:CustomerPartNumber_241') ('Hyperlink')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('Hyperlink')
+WHEN  ('?PBS:DueDate_12') ('Hyperlink')
+WHEN  ('?PBS:Klant') ('Hyperlink')
+WHEN  ('?PBS:Leverancier') ('Hyperlink')
+WHEN  ('?PBS:NaOntdooien') ('Hyperlink')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('Hyperlink')
+WHEN  ('?PBS:OriginLiveBird') ('Hyperlink')
+WHEN  ('?PBS:OriginPacking') ('Hyperlink')
+WHEN  ('?PBS:OriginProcessing') ('Hyperlink')
+WHEN  ('?PBS:OriginSlautherHouse') ('Hyperlink')
+WHEN  ('?PBS:ProductNetWeight_310') ('Hyperlink')
+WHEN  ('?PBS:ProductionDate_11') ('Hyperlink')
+WHEN  ('?PBS:SSCC_NVE_00') ('Hyperlink')
+WHEN  ('?PBS:SellByDate_15') ('Hyperlink')
+WHEN  ('?PBS:TransportEnOpslag') ('Hyperlink')
+WHEN  ('?STRING2') ('Hyperlink')
+WHEN  ('?STRING2:2') ('Hyperlink')
+WHEN  ('?TBarcode') ('Hyperlink')
+WHEN  ('?TBarcode:2') ('Hyperlink')
+WHEN  ('?TBarcode:3') ('Hyperlink')
+
+%PDFAnnotationOrigin DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('HardCoded')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?HeaderImage') ('HardCoded')
+WHEN  ('?IMAGEOvaal') ('HardCoded')
+WHEN  ('?LINE1') ('HardCoded')
+WHEN  ('?LINE1:2') ('HardCoded')
+WHEN  ('?LINE1:3') ('HardCoded')
+WHEN  ('?LINE1:4') ('HardCoded')
+WHEN  ('?LINE1:5') ('HardCoded')
+WHEN  ('?LINE1:6') ('HardCoded')
+WHEN  ('?LINE1:7') ('HardCoded')
+WHEN  ('?LINE2') ('HardCoded')
+WHEN  ('?LINE3') ('HardCoded')
+WHEN  ('?LINE3:2') ('HardCoded')
+WHEN  ('?LOC:ARTNUM241') ('Text')
+WHEN  ('?LOC:ARTOMS') ('Text')
+WHEN  ('?LOC:AfzenderGegevens') ('Text')
+WHEN  ('?LOC:BARCODE1') ('Text')
+WHEN  ('?LOC:BARCODE2') ('Text')
+WHEN  ('?LOC:BARCODE3') ('Text')
+WHEN  ('?LOC:CHARGELOS10') ('Text')
+WHEN  ('?LOC:DATE11') ('Text')
+WHEN  ('?LOC:DATE12') ('Text')
+WHEN  ('?LOC:DATE15') ('Text')
+WHEN  ('?LOC:EBENR400') ('Text')
+WHEN  ('?LOC:Klantgegevens') ('Text')
+WHEN  ('?LOC:NETTOGEWICHT310') ('Text')
+WHEN  ('?LOC:SSCCNVE00') ('Text')
+WHEN  ('?Loc:OriginLiveBird:2') ('Text')
+WHEN  ('?Loc:OriginPacking') ('Text')
+WHEN  ('?Loc:OriginProcessing') ('Text')
+WHEN  ('?Loc:OriginSlautherHouse') ('Text')
+WHEN  ('?PBS:ArtikelOms') ('Text')
+WHEN  ('?PBS:BatchNumber_10') ('Text')
+WHEN  ('?PBS:CustomerPartNumber_241') ('Text')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('Text')
+WHEN  ('?PBS:DueDate_12') ('Text')
+WHEN  ('?PBS:Klant') ('Text')
+WHEN  ('?PBS:Leverancier') ('Text')
+WHEN  ('?PBS:NaOntdooien') ('Text')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('Text')
+WHEN  ('?PBS:OriginLiveBird') ('Text')
+WHEN  ('?PBS:OriginPacking') ('Text')
+WHEN  ('?PBS:OriginProcessing') ('Text')
+WHEN  ('?PBS:OriginSlautherHouse') ('Text')
+WHEN  ('?PBS:ProductNetWeight_310') ('Text')
+WHEN  ('?PBS:ProductionDate_11') ('Text')
+WHEN  ('?PBS:SSCC_NVE_00') ('Text')
+WHEN  ('?PBS:SellByDate_15') ('Text')
+WHEN  ('?PBS:TransportEnOpslag') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING2:2') ('Text')
+WHEN  ('?TBarcode') ('Text')
+WHEN  ('?TBarcode:2') ('Text')
+WHEN  ('?TBarcode:3') ('Text')
+
+%PDFAnnotationHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFAnnotationDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFPageAction DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('NEXT')
+WHEN  ('?Detail') ('NEXT')
+WHEN  ('?Footer') ('NEXT')
+WHEN  ('?Header') ('NEXT')
+WHEN  ('?HeaderImage') ('NEXT')
+WHEN  ('?IMAGEOvaal') ('NEXT')
+WHEN  ('?LINE1') ('NEXT')
+WHEN  ('?LINE1:2') ('NEXT')
+WHEN  ('?LINE1:3') ('NEXT')
+WHEN  ('?LINE1:4') ('NEXT')
+WHEN  ('?LINE1:5') ('NEXT')
+WHEN  ('?LINE1:6') ('NEXT')
+WHEN  ('?LINE1:7') ('NEXT')
+WHEN  ('?LINE2') ('NEXT')
+WHEN  ('?LINE3') ('NEXT')
+WHEN  ('?LINE3:2') ('NEXT')
+WHEN  ('?LOC:ARTNUM241') ('NEXT')
+WHEN  ('?LOC:ARTOMS') ('NEXT')
+WHEN  ('?LOC:AfzenderGegevens') ('NEXT')
+WHEN  ('?LOC:BARCODE1') ('NEXT')
+WHEN  ('?LOC:BARCODE2') ('NEXT')
+WHEN  ('?LOC:BARCODE3') ('NEXT')
+WHEN  ('?LOC:CHARGELOS10') ('NEXT')
+WHEN  ('?LOC:DATE11') ('NEXT')
+WHEN  ('?LOC:DATE12') ('NEXT')
+WHEN  ('?LOC:DATE15') ('NEXT')
+WHEN  ('?LOC:EBENR400') ('NEXT')
+WHEN  ('?LOC:Klantgegevens') ('NEXT')
+WHEN  ('?LOC:NETTOGEWICHT310') ('NEXT')
+WHEN  ('?LOC:SSCCNVE00') ('NEXT')
+WHEN  ('?Loc:OriginLiveBird:2') ('NEXT')
+WHEN  ('?Loc:OriginPacking') ('NEXT')
+WHEN  ('?Loc:OriginProcessing') ('NEXT')
+WHEN  ('?Loc:OriginSlautherHouse') ('NEXT')
+WHEN  ('?PBS:ArtikelOms') ('NEXT')
+WHEN  ('?PBS:BatchNumber_10') ('NEXT')
+WHEN  ('?PBS:CustomerPartNumber_241') ('NEXT')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('NEXT')
+WHEN  ('?PBS:DueDate_12') ('NEXT')
+WHEN  ('?PBS:Klant') ('NEXT')
+WHEN  ('?PBS:Leverancier') ('NEXT')
+WHEN  ('?PBS:NaOntdooien') ('NEXT')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('NEXT')
+WHEN  ('?PBS:OriginLiveBird') ('NEXT')
+WHEN  ('?PBS:OriginPacking') ('NEXT')
+WHEN  ('?PBS:OriginProcessing') ('NEXT')
+WHEN  ('?PBS:OriginSlautherHouse') ('NEXT')
+WHEN  ('?PBS:ProductNetWeight_310') ('NEXT')
+WHEN  ('?PBS:ProductionDate_11') ('NEXT')
+WHEN  ('?PBS:SSCC_NVE_00') ('NEXT')
+WHEN  ('?PBS:SellByDate_15') ('NEXT')
+WHEN  ('?PBS:TransportEnOpslag') ('NEXT')
+WHEN  ('?STRING2') ('NEXT')
+WHEN  ('?STRING2:2') ('NEXT')
+WHEN  ('?TBarcode') ('NEXT')
+WHEN  ('?TBarcode:2') ('NEXT')
+WHEN  ('?TBarcode:3') ('NEXT')
+
+%PDFTargetCommand DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('notepad.exe')
+WHEN  ('?Detail') ('notepad.exe')
+WHEN  ('?Footer') ('notepad.exe')
+WHEN  ('?Header') ('notepad.exe')
+WHEN  ('?HeaderImage') ('notepad.exe')
+WHEN  ('?IMAGEOvaal') ('notepad.exe')
+WHEN  ('?LINE1') ('notepad.exe')
+WHEN  ('?LINE1:2') ('notepad.exe')
+WHEN  ('?LINE1:3') ('notepad.exe')
+WHEN  ('?LINE1:4') ('notepad.exe')
+WHEN  ('?LINE1:5') ('notepad.exe')
+WHEN  ('?LINE1:6') ('notepad.exe')
+WHEN  ('?LINE1:7') ('notepad.exe')
+WHEN  ('?LINE2') ('notepad.exe')
+WHEN  ('?LINE3') ('notepad.exe')
+WHEN  ('?LINE3:2') ('notepad.exe')
+WHEN  ('?LOC:ARTNUM241') ('notepad.exe')
+WHEN  ('?LOC:ARTOMS') ('notepad.exe')
+WHEN  ('?LOC:AfzenderGegevens') ('notepad.exe')
+WHEN  ('?LOC:BARCODE1') ('notepad.exe')
+WHEN  ('?LOC:BARCODE2') ('notepad.exe')
+WHEN  ('?LOC:BARCODE3') ('notepad.exe')
+WHEN  ('?LOC:CHARGELOS10') ('notepad.exe')
+WHEN  ('?LOC:DATE11') ('notepad.exe')
+WHEN  ('?LOC:DATE12') ('notepad.exe')
+WHEN  ('?LOC:DATE15') ('notepad.exe')
+WHEN  ('?LOC:EBENR400') ('notepad.exe')
+WHEN  ('?LOC:Klantgegevens') ('notepad.exe')
+WHEN  ('?LOC:NETTOGEWICHT310') ('notepad.exe')
+WHEN  ('?LOC:SSCCNVE00') ('notepad.exe')
+WHEN  ('?Loc:OriginLiveBird:2') ('notepad.exe')
+WHEN  ('?Loc:OriginPacking') ('notepad.exe')
+WHEN  ('?Loc:OriginProcessing') ('notepad.exe')
+WHEN  ('?Loc:OriginSlautherHouse') ('notepad.exe')
+WHEN  ('?PBS:ArtikelOms') ('notepad.exe')
+WHEN  ('?PBS:BatchNumber_10') ('notepad.exe')
+WHEN  ('?PBS:CustomerPartNumber_241') ('notepad.exe')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('notepad.exe')
+WHEN  ('?PBS:DueDate_12') ('notepad.exe')
+WHEN  ('?PBS:Klant') ('notepad.exe')
+WHEN  ('?PBS:Leverancier') ('notepad.exe')
+WHEN  ('?PBS:NaOntdooien') ('notepad.exe')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('notepad.exe')
+WHEN  ('?PBS:OriginLiveBird') ('notepad.exe')
+WHEN  ('?PBS:OriginPacking') ('notepad.exe')
+WHEN  ('?PBS:OriginProcessing') ('notepad.exe')
+WHEN  ('?PBS:OriginSlautherHouse') ('notepad.exe')
+WHEN  ('?PBS:ProductNetWeight_310') ('notepad.exe')
+WHEN  ('?PBS:ProductionDate_11') ('notepad.exe')
+WHEN  ('?PBS:SSCC_NVE_00') ('notepad.exe')
+WHEN  ('?PBS:SellByDate_15') ('notepad.exe')
+WHEN  ('?PBS:TransportEnOpslag') ('notepad.exe')
+WHEN  ('?STRING2') ('notepad.exe')
+WHEN  ('?STRING2:2') ('notepad.exe')
+WHEN  ('?TBarcode') ('notepad.exe')
+WHEN  ('?TBarcode:2') ('notepad.exe')
+WHEN  ('?TBarcode:3') ('notepad.exe')
+
+%PDFTargetParameters DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('note.txt')
+WHEN  ('?Detail') ('note.txt')
+WHEN  ('?Footer') ('note.txt')
+WHEN  ('?Header') ('note.txt')
+WHEN  ('?HeaderImage') ('note.txt')
+WHEN  ('?IMAGEOvaal') ('note.txt')
+WHEN  ('?LINE1') ('note.txt')
+WHEN  ('?LINE1:2') ('note.txt')
+WHEN  ('?LINE1:3') ('note.txt')
+WHEN  ('?LINE1:4') ('note.txt')
+WHEN  ('?LINE1:5') ('note.txt')
+WHEN  ('?LINE1:6') ('note.txt')
+WHEN  ('?LINE1:7') ('note.txt')
+WHEN  ('?LINE2') ('note.txt')
+WHEN  ('?LINE3') ('note.txt')
+WHEN  ('?LINE3:2') ('note.txt')
+WHEN  ('?LOC:ARTNUM241') ('note.txt')
+WHEN  ('?LOC:ARTOMS') ('note.txt')
+WHEN  ('?LOC:AfzenderGegevens') ('note.txt')
+WHEN  ('?LOC:BARCODE1') ('note.txt')
+WHEN  ('?LOC:BARCODE2') ('note.txt')
+WHEN  ('?LOC:BARCODE3') ('note.txt')
+WHEN  ('?LOC:CHARGELOS10') ('note.txt')
+WHEN  ('?LOC:DATE11') ('note.txt')
+WHEN  ('?LOC:DATE12') ('note.txt')
+WHEN  ('?LOC:DATE15') ('note.txt')
+WHEN  ('?LOC:EBENR400') ('note.txt')
+WHEN  ('?LOC:Klantgegevens') ('note.txt')
+WHEN  ('?LOC:NETTOGEWICHT310') ('note.txt')
+WHEN  ('?LOC:SSCCNVE00') ('note.txt')
+WHEN  ('?Loc:OriginLiveBird:2') ('note.txt')
+WHEN  ('?Loc:OriginPacking') ('note.txt')
+WHEN  ('?Loc:OriginProcessing') ('note.txt')
+WHEN  ('?Loc:OriginSlautherHouse') ('note.txt')
+WHEN  ('?PBS:ArtikelOms') ('note.txt')
+WHEN  ('?PBS:BatchNumber_10') ('note.txt')
+WHEN  ('?PBS:CustomerPartNumber_241') ('note.txt')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('note.txt')
+WHEN  ('?PBS:DueDate_12') ('note.txt')
+WHEN  ('?PBS:Klant') ('note.txt')
+WHEN  ('?PBS:Leverancier') ('note.txt')
+WHEN  ('?PBS:NaOntdooien') ('note.txt')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('note.txt')
+WHEN  ('?PBS:OriginLiveBird') ('note.txt')
+WHEN  ('?PBS:OriginPacking') ('note.txt')
+WHEN  ('?PBS:OriginProcessing') ('note.txt')
+WHEN  ('?PBS:OriginSlautherHouse') ('note.txt')
+WHEN  ('?PBS:ProductNetWeight_310') ('note.txt')
+WHEN  ('?PBS:ProductionDate_11') ('note.txt')
+WHEN  ('?PBS:SSCC_NVE_00') ('note.txt')
+WHEN  ('?PBS:SellByDate_15') ('note.txt')
+WHEN  ('?PBS:TransportEnOpslag') ('note.txt')
+WHEN  ('?STRING2') ('note.txt')
+WHEN  ('?STRING2:2') ('note.txt')
+WHEN  ('?TBarcode') ('note.txt')
+WHEN  ('?TBarcode:2') ('note.txt')
+WHEN  ('?TBarcode:3') ('note.txt')
+
+%PDFTargetOrigin DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('HardCoded')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?HeaderImage') ('HardCoded')
+WHEN  ('?IMAGEOvaal') ('HardCoded')
+WHEN  ('?LINE1') ('HardCoded')
+WHEN  ('?LINE1:2') ('HardCoded')
+WHEN  ('?LINE1:3') ('HardCoded')
+WHEN  ('?LINE1:4') ('HardCoded')
+WHEN  ('?LINE1:5') ('HardCoded')
+WHEN  ('?LINE1:6') ('HardCoded')
+WHEN  ('?LINE1:7') ('HardCoded')
+WHEN  ('?LINE2') ('HardCoded')
+WHEN  ('?LINE3') ('HardCoded')
+WHEN  ('?LINE3:2') ('HardCoded')
+WHEN  ('?LOC:ARTNUM241') ('Text')
+WHEN  ('?LOC:ARTOMS') ('Text')
+WHEN  ('?LOC:AfzenderGegevens') ('Text')
+WHEN  ('?LOC:BARCODE1') ('Text')
+WHEN  ('?LOC:BARCODE2') ('Text')
+WHEN  ('?LOC:BARCODE3') ('Text')
+WHEN  ('?LOC:CHARGELOS10') ('Text')
+WHEN  ('?LOC:DATE11') ('Text')
+WHEN  ('?LOC:DATE12') ('Text')
+WHEN  ('?LOC:DATE15') ('Text')
+WHEN  ('?LOC:EBENR400') ('Text')
+WHEN  ('?LOC:Klantgegevens') ('Text')
+WHEN  ('?LOC:NETTOGEWICHT310') ('Text')
+WHEN  ('?LOC:SSCCNVE00') ('Text')
+WHEN  ('?Loc:OriginLiveBird:2') ('Text')
+WHEN  ('?Loc:OriginPacking') ('Text')
+WHEN  ('?Loc:OriginProcessing') ('Text')
+WHEN  ('?Loc:OriginSlautherHouse') ('Text')
+WHEN  ('?PBS:ArtikelOms') ('Text')
+WHEN  ('?PBS:BatchNumber_10') ('Text')
+WHEN  ('?PBS:CustomerPartNumber_241') ('Text')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('Text')
+WHEN  ('?PBS:DueDate_12') ('Text')
+WHEN  ('?PBS:Klant') ('Text')
+WHEN  ('?PBS:Leverancier') ('Text')
+WHEN  ('?PBS:NaOntdooien') ('Text')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('Text')
+WHEN  ('?PBS:OriginLiveBird') ('Text')
+WHEN  ('?PBS:OriginPacking') ('Text')
+WHEN  ('?PBS:OriginProcessing') ('Text')
+WHEN  ('?PBS:OriginSlautherHouse') ('Text')
+WHEN  ('?PBS:ProductNetWeight_310') ('Text')
+WHEN  ('?PBS:ProductionDate_11') ('Text')
+WHEN  ('?PBS:SSCC_NVE_00') ('Text')
+WHEN  ('?PBS:SellByDate_15') ('Text')
+WHEN  ('?PBS:TransportEnOpslag') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING2:2') ('Text')
+WHEN  ('?TBarcode') ('Text')
+WHEN  ('?TBarcode:2') ('Text')
+WHEN  ('?TBarcode:3') ('Text')
+
+%PDFTargetHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFTargetDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkType DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('None')
+WHEN  ('?Detail') ('None')
+WHEN  ('?Footer') ('None')
+WHEN  ('?Header') ('None')
+WHEN  ('?HeaderImage') ('None')
+WHEN  ('?IMAGEOvaal') ('None')
+WHEN  ('?LINE1') ('None')
+WHEN  ('?LINE1:2') ('None')
+WHEN  ('?LINE1:3') ('None')
+WHEN  ('?LINE1:4') ('None')
+WHEN  ('?LINE1:5') ('None')
+WHEN  ('?LINE1:6') ('None')
+WHEN  ('?LINE1:7') ('None')
+WHEN  ('?LINE2') ('None')
+WHEN  ('?LINE3') ('None')
+WHEN  ('?LINE3:2') ('None')
+WHEN  ('?LOC:ARTNUM241') ('None')
+WHEN  ('?LOC:ARTOMS') ('None')
+WHEN  ('?LOC:AfzenderGegevens') ('None')
+WHEN  ('?LOC:BARCODE1') ('None')
+WHEN  ('?LOC:BARCODE2') ('None')
+WHEN  ('?LOC:BARCODE3') ('None')
+WHEN  ('?LOC:CHARGELOS10') ('None')
+WHEN  ('?LOC:DATE11') ('None')
+WHEN  ('?LOC:DATE12') ('None')
+WHEN  ('?LOC:DATE15') ('None')
+WHEN  ('?LOC:EBENR400') ('None')
+WHEN  ('?LOC:Klantgegevens') ('None')
+WHEN  ('?LOC:NETTOGEWICHT310') ('None')
+WHEN  ('?LOC:SSCCNVE00') ('None')
+WHEN  ('?Loc:OriginLiveBird:2') ('None')
+WHEN  ('?Loc:OriginPacking') ('None')
+WHEN  ('?Loc:OriginProcessing') ('None')
+WHEN  ('?Loc:OriginSlautherHouse') ('None')
+WHEN  ('?PBS:ArtikelOms') ('None')
+WHEN  ('?PBS:BatchNumber_10') ('None')
+WHEN  ('?PBS:CustomerPartNumber_241') ('None')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('None')
+WHEN  ('?PBS:DueDate_12') ('None')
+WHEN  ('?PBS:Klant') ('None')
+WHEN  ('?PBS:Leverancier') ('None')
+WHEN  ('?PBS:NaOntdooien') ('None')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('None')
+WHEN  ('?PBS:OriginLiveBird') ('None')
+WHEN  ('?PBS:OriginPacking') ('None')
+WHEN  ('?PBS:OriginProcessing') ('None')
+WHEN  ('?PBS:OriginSlautherHouse') ('None')
+WHEN  ('?PBS:ProductNetWeight_310') ('None')
+WHEN  ('?PBS:ProductionDate_11') ('None')
+WHEN  ('?PBS:SSCC_NVE_00') ('None')
+WHEN  ('?PBS:SellByDate_15') ('None')
+WHEN  ('?PBS:TransportEnOpslag') ('None')
+WHEN  ('?STRING2') ('None')
+WHEN  ('?STRING2:2') ('None')
+WHEN  ('?TBarcode') ('None')
+WHEN  ('?TBarcode:2') ('None')
+WHEN  ('?TBarcode:3') ('None')
+
+%PDFHyperlinkTypeOther DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkTypeOtherDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperLinkBoxed DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFHyperLinkBoxColor DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (255)
+WHEN  ('?Detail') (255)
+WHEN  ('?Footer') (255)
+WHEN  ('?Header') (255)
+WHEN  ('?HeaderImage') (255)
+WHEN  ('?IMAGEOvaal') (255)
+WHEN  ('?LINE1') (255)
+WHEN  ('?LINE1:2') (255)
+WHEN  ('?LINE1:3') (255)
+WHEN  ('?LINE1:4') (255)
+WHEN  ('?LINE1:5') (255)
+WHEN  ('?LINE1:6') (255)
+WHEN  ('?LINE1:7') (255)
+WHEN  ('?LINE2') (255)
+WHEN  ('?LINE3') (255)
+WHEN  ('?LINE3:2') (255)
+WHEN  ('?LOC:ARTNUM241') (255)
+WHEN  ('?LOC:ARTOMS') (255)
+WHEN  ('?LOC:AfzenderGegevens') (255)
+WHEN  ('?LOC:BARCODE1') (255)
+WHEN  ('?LOC:BARCODE2') (255)
+WHEN  ('?LOC:BARCODE3') (255)
+WHEN  ('?LOC:CHARGELOS10') (255)
+WHEN  ('?LOC:DATE11') (255)
+WHEN  ('?LOC:DATE12') (255)
+WHEN  ('?LOC:DATE15') (255)
+WHEN  ('?LOC:EBENR400') (255)
+WHEN  ('?LOC:Klantgegevens') (255)
+WHEN  ('?LOC:NETTOGEWICHT310') (255)
+WHEN  ('?LOC:SSCCNVE00') (255)
+WHEN  ('?Loc:OriginLiveBird:2') (255)
+WHEN  ('?Loc:OriginPacking') (255)
+WHEN  ('?Loc:OriginProcessing') (255)
+WHEN  ('?Loc:OriginSlautherHouse') (255)
+WHEN  ('?PBS:ArtikelOms') (255)
+WHEN  ('?PBS:BatchNumber_10') (255)
+WHEN  ('?PBS:CustomerPartNumber_241') (255)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (255)
+WHEN  ('?PBS:DueDate_12') (255)
+WHEN  ('?PBS:Klant') (255)
+WHEN  ('?PBS:Leverancier') (255)
+WHEN  ('?PBS:NaOntdooien') (255)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (255)
+WHEN  ('?PBS:OriginLiveBird') (255)
+WHEN  ('?PBS:OriginPacking') (255)
+WHEN  ('?PBS:OriginProcessing') (255)
+WHEN  ('?PBS:OriginSlautherHouse') (255)
+WHEN  ('?PBS:ProductNetWeight_310') (255)
+WHEN  ('?PBS:ProductionDate_11') (255)
+WHEN  ('?PBS:SSCC_NVE_00') (255)
+WHEN  ('?PBS:SellByDate_15') (255)
+WHEN  ('?PBS:TransportEnOpslag') (255)
+WHEN  ('?STRING2') (255)
+WHEN  ('?STRING2:2') (255)
+WHEN  ('?TBarcode') (255)
+WHEN  ('?TBarcode:2') (255)
+WHEN  ('?TBarcode:3') (255)
+
+%PDFBookmark DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFBookmarkOrigin DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('HardCoded')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?HeaderImage') ('HardCoded')
+WHEN  ('?IMAGEOvaal') ('HardCoded')
+WHEN  ('?LINE1') ('HardCoded')
+WHEN  ('?LINE1:2') ('HardCoded')
+WHEN  ('?LINE1:3') ('HardCoded')
+WHEN  ('?LINE1:4') ('HardCoded')
+WHEN  ('?LINE1:5') ('HardCoded')
+WHEN  ('?LINE1:6') ('HardCoded')
+WHEN  ('?LINE1:7') ('HardCoded')
+WHEN  ('?LINE2') ('HardCoded')
+WHEN  ('?LINE3') ('HardCoded')
+WHEN  ('?LINE3:2') ('HardCoded')
+WHEN  ('?LOC:ARTNUM241') ('Text')
+WHEN  ('?LOC:ARTOMS') ('HardCoded')
+WHEN  ('?LOC:AfzenderGegevens') ('HardCoded')
+WHEN  ('?LOC:BARCODE1') ('Text')
+WHEN  ('?LOC:BARCODE2') ('Text')
+WHEN  ('?LOC:BARCODE3') ('Text')
+WHEN  ('?LOC:CHARGELOS10') ('Text')
+WHEN  ('?LOC:DATE11') ('Text')
+WHEN  ('?LOC:DATE12') ('Text')
+WHEN  ('?LOC:DATE15') ('Text')
+WHEN  ('?LOC:EBENR400') ('Text')
+WHEN  ('?LOC:Klantgegevens') ('HardCoded')
+WHEN  ('?LOC:NETTOGEWICHT310') ('Text')
+WHEN  ('?LOC:SSCCNVE00') ('Text')
+WHEN  ('?Loc:OriginLiveBird:2') ('HardCoded')
+WHEN  ('?Loc:OriginPacking') ('HardCoded')
+WHEN  ('?Loc:OriginProcessing') ('HardCoded')
+WHEN  ('?Loc:OriginSlautherHouse') ('HardCoded')
+WHEN  ('?PBS:ArtikelOms') ('Text')
+WHEN  ('?PBS:BatchNumber_10') ('Text')
+WHEN  ('?PBS:CustomerPartNumber_241') ('Text')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('Text')
+WHEN  ('?PBS:DueDate_12') ('Text')
+WHEN  ('?PBS:Klant') ('Text')
+WHEN  ('?PBS:Leverancier') ('Text')
+WHEN  ('?PBS:NaOntdooien') ('Text')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('Text')
+WHEN  ('?PBS:OriginLiveBird') ('Text')
+WHEN  ('?PBS:OriginPacking') ('Text')
+WHEN  ('?PBS:OriginProcessing') ('Text')
+WHEN  ('?PBS:OriginSlautherHouse') ('Text')
+WHEN  ('?PBS:ProductNetWeight_310') ('Text')
+WHEN  ('?PBS:ProductionDate_11') ('Text')
+WHEN  ('?PBS:SSCC_NVE_00') ('Text')
+WHEN  ('?PBS:SellByDate_15') ('Text')
+WHEN  ('?PBS:TransportEnOpslag') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING2:2') ('Text')
+WHEN  ('?TBarcode') ('Text')
+WHEN  ('?TBarcode:2') ('Text')
+WHEN  ('?TBarcode:3') ('Text')
+
+%PDFBookmarkHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkParent DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFParentBookmark DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('?Header')
+WHEN  ('?Detail') ('?Header')
+WHEN  ('?Footer') ('?Header')
+WHEN  ('?Header') ('?Header')
+WHEN  ('?HeaderImage') ('?Header')
+WHEN  ('?IMAGEOvaal') ('?Header')
+WHEN  ('?LINE1') ('?Header')
+WHEN  ('?LINE1:2') ('?Header')
+WHEN  ('?LINE1:3') ('?Header')
+WHEN  ('?LINE1:4') ('?Header')
+WHEN  ('?LINE1:5') ('?Header')
+WHEN  ('?LINE1:6') ('?Header')
+WHEN  ('?LINE1:7') ('?Header')
+WHEN  ('?LINE2') ('?Header')
+WHEN  ('?LINE3') ('?Header')
+WHEN  ('?LINE3:2') ('?Header')
+WHEN  ('?LOC:ARTNUM241') ('?Header')
+WHEN  ('?LOC:ARTOMS') ('?Header')
+WHEN  ('?LOC:AfzenderGegevens') ('?Header')
+WHEN  ('?LOC:BARCODE1') ('?Header')
+WHEN  ('?LOC:BARCODE2') ('?Header')
+WHEN  ('?LOC:BARCODE3') ('?Header')
+WHEN  ('?LOC:CHARGELOS10') ('?Header')
+WHEN  ('?LOC:DATE11') ('?Header')
+WHEN  ('?LOC:DATE12') ('?Header')
+WHEN  ('?LOC:DATE15') ('?Header')
+WHEN  ('?LOC:EBENR400') ('?Header')
+WHEN  ('?LOC:Klantgegevens') ('?Header')
+WHEN  ('?LOC:NETTOGEWICHT310') ('?Header')
+WHEN  ('?LOC:SSCCNVE00') ('?Header')
+WHEN  ('?Loc:OriginLiveBird:2') ('?Header')
+WHEN  ('?Loc:OriginPacking') ('?Header')
+WHEN  ('?Loc:OriginProcessing') ('?Header')
+WHEN  ('?Loc:OriginSlautherHouse') ('?Header')
+WHEN  ('?PBS:ArtikelOms') ('?Header')
+WHEN  ('?PBS:BatchNumber_10') ('?Header')
+WHEN  ('?PBS:CustomerPartNumber_241') ('?Header')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('?Header')
+WHEN  ('?PBS:DueDate_12') ('?Header')
+WHEN  ('?PBS:Klant') ('?Header')
+WHEN  ('?PBS:Leverancier') ('?Header')
+WHEN  ('?PBS:NaOntdooien') ('?Header')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('?Header')
+WHEN  ('?PBS:OriginLiveBird') ('?Header')
+WHEN  ('?PBS:OriginPacking') ('?Header')
+WHEN  ('?PBS:OriginProcessing') ('?Header')
+WHEN  ('?PBS:OriginSlautherHouse') ('?Header')
+WHEN  ('?PBS:ProductNetWeight_310') ('?Header')
+WHEN  ('?PBS:ProductionDate_11') ('?Header')
+WHEN  ('?PBS:SSCC_NVE_00') ('?Header')
+WHEN  ('?PBS:SellByDate_15') ('?Header')
+WHEN  ('?PBS:TransportEnOpslag') ('?Header')
+WHEN  ('?STRING2') ('?Header')
+WHEN  ('?STRING2:2') ('?Header')
+WHEN  ('?TBarcode') ('?Header')
+WHEN  ('?TBarcode:2') ('?Header')
+WHEN  ('?TBarcode:3') ('?Header')
+
+%PDFUsePDFFont DEPEND %ReportControl LONG TIMES 57
+WHEN  ('?BOX1') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?HeaderImage') (0)
+WHEN  ('?IMAGEOvaal') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LINE1:4') (0)
+WHEN  ('?LINE1:5') (0)
+WHEN  ('?LINE1:6') (0)
+WHEN  ('?LINE1:7') (0)
+WHEN  ('?LINE2') (0)
+WHEN  ('?LINE3') (0)
+WHEN  ('?LINE3:2') (0)
+WHEN  ('?LOC:ARTNUM241') (0)
+WHEN  ('?LOC:ARTOMS') (0)
+WHEN  ('?LOC:AfzenderGegevens') (0)
+WHEN  ('?LOC:BARCODE1') (0)
+WHEN  ('?LOC:BARCODE2') (0)
+WHEN  ('?LOC:BARCODE3') (0)
+WHEN  ('?LOC:CHARGELOS10') (0)
+WHEN  ('?LOC:DATE11') (0)
+WHEN  ('?LOC:DATE12') (0)
+WHEN  ('?LOC:DATE15') (0)
+WHEN  ('?LOC:EBENR400') (0)
+WHEN  ('?LOC:Klantgegevens') (0)
+WHEN  ('?LOC:NETTOGEWICHT310') (0)
+WHEN  ('?LOC:SSCCNVE00') (0)
+WHEN  ('?Loc:OriginLiveBird:2') (0)
+WHEN  ('?Loc:OriginPacking') (0)
+WHEN  ('?Loc:OriginProcessing') (0)
+WHEN  ('?Loc:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ArtikelOms') (0)
+WHEN  ('?PBS:BatchNumber_10') (0)
+WHEN  ('?PBS:CustomerPartNumber_241') (0)
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') (0)
+WHEN  ('?PBS:DueDate_12') (0)
+WHEN  ('?PBS:Klant') (0)
+WHEN  ('?PBS:Leverancier') (0)
+WHEN  ('?PBS:NaOntdooien') (0)
+WHEN  ('?PBS:NumberOfUnitsContained_37') (0)
+WHEN  ('?PBS:OriginLiveBird') (0)
+WHEN  ('?PBS:OriginPacking') (0)
+WHEN  ('?PBS:OriginProcessing') (0)
+WHEN  ('?PBS:OriginSlautherHouse') (0)
+WHEN  ('?PBS:ProductNetWeight_310') (0)
+WHEN  ('?PBS:ProductionDate_11') (0)
+WHEN  ('?PBS:SSCC_NVE_00') (0)
+WHEN  ('?PBS:SellByDate_15') (0)
+WHEN  ('?PBS:TransportEnOpslag') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?TBarcode') (0)
+WHEN  ('?TBarcode:2') (0)
+WHEN  ('?TBarcode:3') (0)
+
+%PDFOriginalFont DEPEND %ReportControl DEFAULT TIMES 57
+WHEN  ('?BOX1') ('HELVETICA')
+WHEN  ('?Detail') ('HELVETICA')
+WHEN  ('?Footer') ('HELVETICA')
+WHEN  ('?Header') ('HELVETICA')
+WHEN  ('?HeaderImage') ('HELVETICA')
+WHEN  ('?IMAGEOvaal') ('HELVETICA')
+WHEN  ('?LINE1') ('HELVETICA')
+WHEN  ('?LINE1:2') ('HELVETICA')
+WHEN  ('?LINE1:3') ('HELVETICA')
+WHEN  ('?LINE1:4') ('HELVETICA')
+WHEN  ('?LINE1:5') ('HELVETICA')
+WHEN  ('?LINE1:6') ('HELVETICA')
+WHEN  ('?LINE1:7') ('HELVETICA')
+WHEN  ('?LINE2') ('HELVETICA')
+WHEN  ('?LINE3') ('HELVETICA')
+WHEN  ('?LINE3:2') ('HELVETICA')
+WHEN  ('?LOC:ARTNUM241') ('HELVETICA')
+WHEN  ('?LOC:ARTOMS') ('HELVETICA')
+WHEN  ('?LOC:AfzenderGegevens') ('HELVETICA')
+WHEN  ('?LOC:BARCODE1') ('HELVETICA')
+WHEN  ('?LOC:BARCODE2') ('HELVETICA')
+WHEN  ('?LOC:BARCODE3') ('HELVETICA')
+WHEN  ('?LOC:CHARGELOS10') ('HELVETICA')
+WHEN  ('?LOC:DATE11') ('HELVETICA')
+WHEN  ('?LOC:DATE12') ('HELVETICA')
+WHEN  ('?LOC:DATE15') ('HELVETICA')
+WHEN  ('?LOC:EBENR400') ('HELVETICA')
+WHEN  ('?LOC:Klantgegevens') ('HELVETICA')
+WHEN  ('?LOC:NETTOGEWICHT310') ('HELVETICA')
+WHEN  ('?LOC:SSCCNVE00') ('HELVETICA')
+WHEN  ('?Loc:OriginLiveBird:2') ('HELVETICA')
+WHEN  ('?Loc:OriginPacking') ('HELVETICA')
+WHEN  ('?Loc:OriginProcessing') ('HELVETICA')
+WHEN  ('?Loc:OriginSlautherHouse') ('HELVETICA')
+WHEN  ('?PBS:ArtikelOms') ('HELVETICA')
+WHEN  ('?PBS:BatchNumber_10') ('HELVETICA')
+WHEN  ('?PBS:CustomerPartNumber_241') ('HELVETICA')
+WHEN  ('?PBS:CustomerPurchaseOrderNumber_400') ('HELVETICA')
+WHEN  ('?PBS:DueDate_12') ('HELVETICA')
+WHEN  ('?PBS:Klant') ('HELVETICA')
+WHEN  ('?PBS:Leverancier') ('HELVETICA')
+WHEN  ('?PBS:NaOntdooien') ('HELVETICA')
+WHEN  ('?PBS:NumberOfUnitsContained_37') ('HELVETICA')
+WHEN  ('?PBS:OriginLiveBird') ('HELVETICA')
+WHEN  ('?PBS:OriginPacking') ('HELVETICA')
+WHEN  ('?PBS:OriginProcessing') ('HELVETICA')
+WHEN  ('?PBS:OriginSlautherHouse') ('HELVETICA')
+WHEN  ('?PBS:ProductNetWeight_310') ('HELVETICA')
+WHEN  ('?PBS:ProductionDate_11') ('HELVETICA')
+WHEN  ('?PBS:SSCC_NVE_00') ('HELVETICA')
+WHEN  ('?PBS:SellByDate_15') ('HELVETICA')
+WHEN  ('?PBS:TransportEnOpslag') ('HELVETICA')
+WHEN  ('?STRING2') ('HELVETICA')
+WHEN  ('?STRING2:2') ('HELVETICA')
+WHEN  ('?TBarcode') ('HELVETICA')
+WHEN  ('?TBarcode:2') ('HELVETICA')
+WHEN  ('?TBarcode:3') ('HELVETICA')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReporter')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 2
+OWNER 5
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%WindowsVisibleAfterOpen LONG  (1)
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 1
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME Barcode TBarcodeControl
+[INSTANCE]
+INSTANCE 3
+[PROMPTS]
+%TABSymbology DEFAULT  ('')
+%TABBCSymbology FIELD  ()
+%TABBCValue DEFAULT  ('LOC:BARCODE1')
+%TABDrawText LONG  (0)
+%TABWide2NarrowRatio DEFAULT  ('2')
+%TABFixedXWidth LONG  (0)
+%TABXWidth DEFAULT  ('')
+%TABForcePixels LONG  (0)
+%TABClearAreaLeft DEFAULT  ('0')
+%TABClearAreaRight DEFAULT  ('0')
+%TABClearAreaTop DEFAULT  ('0')
+%TABClearAreaBottom DEFAULT  ('0')
+%TABPrintStartStop LONG  (0)
+%TABAddCheckDigit LONG  (0)
+%TABDrawOnEntry LONG  (1)
+%pDrawOff LONG  (0)
+%pObj DEFAULT  ('TBarcode:Draw')
+[INSTANCE]
+INSTANCE 4
+[PROMPTS]
+%TABSymbology DEFAULT  ('')
+%TABBCSymbology FIELD  ()
+%TABBCValue DEFAULT  ('LOC:BARCODE2')
+%TABDrawText LONG  (0)
+%TABWide2NarrowRatio DEFAULT  ('2')
+%TABFixedXWidth LONG  (0)
+%TABXWidth DEFAULT  ('')
+%TABForcePixels LONG  (0)
+%TABClearAreaLeft DEFAULT  ('0')
+%TABClearAreaRight DEFAULT  ('0')
+%TABClearAreaTop DEFAULT  ('0')
+%TABClearAreaBottom DEFAULT  ('0')
+%TABPrintStartStop LONG  (0)
+%TABAddCheckDigit LONG  (0)
+%TABDrawOnEntry LONG  (1)
+%pDrawOff LONG  (0)
+%pObj DEFAULT  ('TBarcode:2:Draw')
+[INSTANCE]
+INSTANCE 5
+[PROMPTS]
+%TABSymbology DEFAULT  ('')
+%TABBCSymbology FIELD  ()
+%TABBCValue DEFAULT  ('LOC:BARCODE3')
+%TABDrawText LONG  (0)
+%TABWide2NarrowRatio DEFAULT  ('2')
+%TABFixedXWidth LONG  (0)
+%TABXWidth DEFAULT  ('')
+%TABForcePixels LONG  (0)
+%TABClearAreaLeft DEFAULT  ('0')
+%TABClearAreaRight DEFAULT  ('0')
+%TABClearAreaTop DEFAULT  ('0')
+%TABClearAreaBottom DEFAULT  ('0')
+%TABPrintStartStop LONG  (0)
+%TABAddCheckDigit LONG  (0)
+%TABDrawOnEntry LONG  (1)
+%pDrawOff LONG  (0)
+%pObj DEFAULT  ('TBarcode:3:Draw')
+[WINDOW]
+ProgressWindow WINDOW('Voortgang Palletblad...'),AT(,,142,63),DOUBLE,CENTER,GRAY,TIMER(1)
+          PROGRESS,AT(15,15,111,12),USE(Progress:Thermometer),RANGE(0,100),#ORIG(Progress:Thermometer), |
+            #ORDINAL(1)
+          STRING(''),AT(0,3,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString), |
+            #ORDINAL(2)
+          STRING(''),AT(0,30,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText), |
+            #ORDINAL(3)
+          BUTTON('Cancel'),AT(45,42,50,15),USE(?Progress:Cancel),#ORIG(?Progress:Cancel),#ORDINAL(4)
+        END
+
+[REPORT]
+Report  REPORT,AT(521,521,7219,10677),PRE(RPT),PAPER(PAPER:A4),FONT('Arial',10,,FONT:regular, |
+          CHARSET:ANSI),THOUS
+          HEADER,AT(490,479,7250,115),USE(?Header),#ORDINAL(1)
+          END
+Detail    DETAIL,AT(0,500,7250,9760),USE(?Detail),#ORDINAL(2)
+            BOX,AT(42,0,7146,9656),USE(?BOX1),COLOR(COLOR:Black),LINEWIDTH(3),#ORDINAL(3)
+            IMAGE,AT(1469,73,3208,960),USE(?HeaderImage),#ORDINAL(4)
+            LINE,AT(62,1094,7115,0),USE(?LINE1),LINEWIDTH(3),#ORDINAL(5)
+            STRING(@s100),AT(135,1167,3344),USE(PBS:SSCC_NVE_00),FONT(,10,,FONT:bold),CENTER, |
+              #ORDINAL(6)
+            STRING(@s30),AT(135,1479,3302,229),USE(LOC:SSCCNVE00),FONT(,16,,FONT:bold),CENTER, |
+              #ORDINAL(7)
+            LINE,AT(62,1958,7115,0),USE(?LINE1:2),LINEWIDTH(3),#ORDINAL(8)
+            LINE,AT(73,2583,7115,0),USE(?LINE1:3),LINEWIDTH(3),#ORDINAL(9)
+            LINE,AT(62,3896,7115,0),USE(?LINE1:4),LINEWIDTH(3),#ORDINAL(10)
+            LINE,AT(62,5417,7115,0),USE(?LINE1:5),LINEWIDTH(3),#ORDINAL(11)
+            LINE,AT(3552,1083,0,4333),USE(?LINE2),LINEWIDTH(3),#ORDINAL(12)
+            STRING(@s100),AT(3635,1167,3490,229),USE(PBS:DueDate_12),FONT(,10,,FONT:bold), |
+              CENTER,#ORDINAL(13)
+            STRING(@s6),AT(3635,1417,3469,396),USE(LOC:DATE12),FONT(,24,,FONT:bold),CENTER, |
+              #ORDINAL(14)
+            STRING(@s100),AT(3635,1990,3510,229),USE(PBS:ProductionDate_11),FONT(,10,,FONT:bold), |
+              CENTER,#ORDINAL(15)
+            STRING(@s6),AT(3635,2187,3469,396),USE(LOC:DATE11),FONT(,24,,FONT:bold),CENTER, |
+              #ORDINAL(16)
+            STRING(@s100),AT(135,1990,3323,229),USE(PBS:CustomerPurchaseOrderNumber_400),FONT(, |
+              10,,FONT:bold),CENTER,#ORDINAL(17)
+            STRING(@s20),AT(115,2187,3323,396),USE(LOC:EBENR400),FONT(,24,,FONT:bold),CENTER, |
+              #ORDINAL(18)
+            STRING(@s100),AT(135,2635,3323,229),USE(PBS:ArtikelOms),FONT(,10,,FONT:bold),CENTER, |
+              #ORDINAL(19)
+            STRING(@s100),AT(3635,2635,3490,229),USE(PBS:CustomerPartNumber_241),FONT(,10, |
+              ,FONT:bold),CENTER,#ORDINAL(20)
+            STRING(@s20),AT(3635,3021,3470,396),USE(LOC:ARTNUM241),FONT(,24,,FONT:bold),CENTER, |
+              #ORDINAL(21)
+            STRING(@s100),AT(1896,3917,1583,229),USE(PBS:SellByDate_15),FONT(,10,,FONT:bold), |
+              CENTER,#ORDINAL(22)
+            STRING(@s6),AT(1896,4156,1583,396),USE(LOC:DATE15),FONT(,24,,FONT:bold),CENTER, |
+              #ORDINAL(23)
+            LINE,AT(1812,3896,0,1521),USE(?LINE3),LINEWIDTH(3),#ORDINAL(24)
+            STRING(@s100),AT(135,3917,1656,229),USE(PBS:BatchNumber_10),FONT(,10,,FONT:bold), |
+              CENTER,#ORDINAL(25)
+            STRING(@s10),AT(115,4156,1680,396),USE(LOC:CHARGELOS10),FONT(,24,,FONT:bold),CENTER, |
+              #ORDINAL(26)
+            STRING(@s100),AT(3635,3917,1802,229),USE(PBS:NumberOfUnitsContained_37),FONT(, |
+              10,,FONT:bold),CENTER,#ORDINAL(27)
+            STRING('1'),AT(3760,4156,1177,396),USE(?STRING2),FONT(,24,,FONT:bold),CENTER,#ORDINAL(28)
+            STRING(@s100),AT(5552,3917,1583,229),USE(PBS:ProductNetWeight_310),FONT(,10,,FONT:bold), |
+              CENTER,#ORDINAL(29)
+            STRING(@s20),AT(5562,4156,1542,396),USE(LOC:NETTOGEWICHT310),FONT(,24,,FONT:bold), |
+              CENTER,#ORDINAL(30)
+            LINE,AT(5479,3896,0,1521),USE(?LINE3:2),LINEWIDTH(3),#ORDINAL(31)
+            STRING('NVE'),AT(146,8292,615,1302),USE(?STRING2:2),FONT(,42,,FONT:bold),RIGHT, |
+              ANGLE(900),#ORDINAL(32)
+            STRING(@s100),AT(187,6594,6875),USE(LOC:BARCODE1),CENTER,#ORDINAL(33)
+            STRING(@s100),AT(865,9396,4729,198),USE(LOC:BARCODE3),CENTER,#ORDINAL(34)
+            STRING(@s100),AT(187,7948,6875,198),USE(LOC:BARCODE2),CENTER,#ORDINAL(35)
+            STRING('Barcode'),AT(187,5573,6875,958),USE(?TBarcode),#ORIG(?TBarcode),#SEQ(3), |
+              #ORDINAL(36)
+            STRING('Barcode'),AT(187,6927,6875,958),USE(?TBarcode:2),#ORIG(?TBarcode),#SEQ(4), |
+              #ORDINAL(37)
+            STRING('Barcode'),AT(865,8292,4750,1062),USE(?TBarcode:3),#ORIG(?TBarcode),#SEQ(5), |
+              #ORDINAL(38)
+            TEXT,AT(73,302,1333,729),USE(LOC:AfzenderGegevens),FONT(,8),#ORDINAL(39)
+            TEXT,AT(4740,302,2385,729),USE(LOC:Klantgegevens),FONT(,8),#ORDINAL(40)
+            TEXT,AT(115,2812,3406,792),USE(LOC:ARTOMS),FONT(,16,,FONT:bold),CENTER,#ORDINAL(41)
+            STRING(@s100),AT(4740,73,2406,229),USE(PBS:Klant),FONT(,10,,FONT:bold),LEFT,#ORDINAL(42)
+            STRING(@s100),AT(115,73,1969,229),USE(PBS:Leverancier),FONT(,10,,FONT:bold),LEFT, |
+              #ORDINAL(43)
+            LINE,AT(73,4615,7094,-20),USE(?LINE1:6),LINEWIDTH(3),#ORDINAL(44)
+            TEXT,AT(73,4875,1719,552),USE(Loc:OriginLiveBird,,?Loc:OriginLiveBird:2),FONT(, |
+              16,,FONT:bold),CENTER,#ORDINAL(45)
+            TEXT,AT(1812,4875,1719,552),USE(Loc:OriginSlautherHouse),FONT(,16,,FONT:bold), |
+              CENTER,#ORDINAL(46)
+            TEXT,AT(3594,4875,1844,552),USE(Loc:OriginProcessing),FONT(,16,,FONT:bold),CENTER, |
+              #ORDINAL(47)
+            TEXT,AT(5490,4875,1687,552),USE(Loc:OriginPacking),FONT(,16,,FONT:bold),CENTER, |
+              #ORDINAL(48)
+            STRING(@s50),AT(167,4667,1573),USE(PBS:OriginLiveBird),FONT(,,,FONT:bold),CENTER, |
+              #ORDINAL(49)
+            STRING(@s50),AT(1906,4667,1573,198),USE(PBS:OriginSlautherHouse),FONT(,,,FONT:bold), |
+              CENTER,#ORDINAL(50)
+            STRING(@s50),AT(3625,4667,1781,198),USE(PBS:OriginProcessing),FONT(,,,FONT:bold), |
+              CENTER,#ORDINAL(51)
+            STRING(@s50),AT(5531,4667,1573,198),USE(PBS:OriginPacking),FONT(,,,FONT:bold), |
+              CENTER,#ORDINAL(52)
+            LINE,AT(73,3604,7094,0),USE(?LINE1:7),LINEWIDTH(3),#ORDINAL(53)
+            STRING(@s50),AT(3635,3635,3469),USE(PBS:TransportEnOpslag),FONT(,,,FONT:bold), |
+              CENTER,#ORDINAL(54)
+            STRING(@s50),AT(146,3656,3385),USE(PBS:NaOntdooien),FONT(,,,FONT:bold),CENTER, |
+              #ORDINAL(55)
+            IMAGE('NL5664EG.png'),AT(5677,8208,1427,1385),USE(?IMAGEOvaal),#ORDINAL(56)
+          END
+          FOOTER,AT(521,11156,7250,156),USE(?Footer),#ORDINAL(57)
+          END
+        END
+
+[END]

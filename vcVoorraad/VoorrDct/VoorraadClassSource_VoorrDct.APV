@@ -1,0 +1,1933 @@
+[MODULE]
+NAME 'VoorraadClassSource_VoorrDct.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME VoorraadClassSource
+NOEXPORT
+[COMMON]
+FROM MTMaxtel MT_ClassC7_Declaration
+[FILES]
+[OTHERS]
+ViewVoorraadPartij
+PartijCelVoorraad
+Inkoop
+AMutatie
+Verkoop
+Planning
+[PROMPTS]
+%MTClassName DEFAULT  ('VoorraadClass')
+%MTDefIncFileName DEFAULT  ('VoorraadClassDef.inc')
+%MTSrcIncFileName DEFAULT  ('VoorraadClassSrc.inc')
+%MTHandcode LONG  (0)
+%MTNotType LONG  (1)
+[EMBED]
+EMBED %ClassDeclaration
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2001
+PROPERTY:END
+BerekenPlanningMutatieGrootte       PROCEDURE(LONG PRM:PlanningID)
+VerwerkGekoppeldeVerkoop    PROCEDURE(LONG PRM:PlanningID, LONG PRM:OverboekingPlanningID, LONG PRM:CelID)
+BepaalHuidigeVoorraad       PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID), REAL
+VerwijderPlanningMutaties   PROCEDURE(LONG PRM:PlanningID, BYTE PRM:TestOnly = 0), BYTE
+VerwijderVerkoopMutaties    PROCEDURE(LONG PRM:VerkoopID, BYTE PRM:TestOnly = 0), BYTE
+VerwijderInkoopMutaties     PROCEDURE(LONG PRM:InkoopID, BYTE PRM:TestOnly = 0), BYTE
+
+BerekenPartijInkoopPrijs    PROCEDURE(<LONG PRM:PartijID>)
+BerekenPartijenInkoopPrijs  PROCEDURE(<LONG PRM:InkoopID>, <LONG PRM:UitgezonderdPartij>)
+
+ControleerCelLocatie        PROCEDURE(LONG PRM:CelID, LONG PRM:CelLocatieID), LONG
+
+ResetPartijCelControle      PROCEDURE()
+AddPartijCelControle        PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID, REAL PRM:KG, REAL PRM:Pallets)
+AddPartijCelControleOverboeking PROCEDURE(LONG PRM:PartijID, LONG PRM:VanCelID, LONG PRM:NaarCelID, REAL PRM:KG, REAL PRM:Pallets)
+PartijCelControleOK         PROCEDURE(), STRING
+[END]
+EMBED %ClassSource
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3240
+PROPERTY:END
+VoorraadClass.VerwerkGekoppeldeVerkoop      PROCEDURE(LONG PRM:PlanningID, LONG PRM:OverboekingPlanningID, LONG PRM:CelID)
+BufferID            USHORT
+FileID              USHORT
+CODE
+	GLO:GebruikerLogHandelingOpmerking = 'VerwerkGekoppeldeVerkoop'			
+	
+	IF PRM:OverboekingPlanningID > 0 THEN
+		FileID = Access:Planning.SaveFile()
+		BufferID = Access:Planning.SaveBuffer()
+		
+		CLEAR(Pla:Record)
+		Pla:PlanningID = PRM:OverboekingPlanningID
+		IF (Access:Planning.TryFetch(Pla:PK_Planning) = Level:Benign) THEN
+			IF Pla:OverboekingPlanningID = PRM:PlanningID THEN
+				Pla:CelID = PRM:CelID
+				Access:Planning.Update()
+			END
+		END
+			
+		Access:Planning.RestoreFile(FileID)
+		Access:Planning.RestoreBuffer(BufferID)	
+	END
+	
+	GLO:GebruikerLogHandelingOpmerking = ''			
+	
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+VoorraadClass.BerekenPlanningMutatieGrootte PROCEDURE(LONG PRM:PlanningID)
+BufferID                                        USHORT
+FileID                                          USHORT
+SAV:MutatieKG                                   LIKE(Pla:MutatieKG)
+SAV:MutatiePallets                              LIKE(Pla:MutatiePallets)
+SAV:MutatieGemaakt                              LIKE(Pla:MutatieGemaakt)
+CODE
+	GLO:GebruikerLogHandelingOpmerking = 'BerekenPlanningMutatieGrootte'
+
+	BufferID = Access:Mutatie.SaveBuffer()
+	FileID = Access:Mutatie.SaveFile()
+	
+	CLEAR(Pla:Record)
+	Pla:PlanningID = PRM:PlanningID
+    IF Access:Planning.TryFetch(Pla:PK_Planning) = Level:Benign THEN
+        SAV:MutatieKG = Pla:MutatieKG
+        SAV:MutatiePallets = Pla:MutatiePallets
+        SAV:MutatieGemaakt = Pla:MutatieGemaakt
+		Pla:MutatieKG = 0
+		Pla:MutatiePallets = 0
+
+		CLEAR(Mut:Record)
+		Mut:PlanningID = Pla:PlanningID
+		SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+		LOOP UNTIL Access:Mutatie.Next()
+			IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+			
+			IF Pla:InkoopID > 0 THEN
+				Pla:MutatieKG += Mut:InslagKG
+				Pla:MutatiePallets += Mut:InslagPallet
+			ELSIF Pla:VerkoopID > 0 THEN
+				Pla:MutatieKG += Mut:UitslagKG
+				Pla:MutatiePallets += Mut:UitslagPallet
+			ELSE
+				! Overboeking (Inslag = Uitslag)
+				Pla:MutatieKG += Mut:InslagKG
+				Pla:MutatiePallets += Mut:InslagPallet
+			END
+        END
+        IF Pla:MutatieKG <>0 OR PLA:MutatiePallets<>0
+            Pla:MutatieGemaakt = TRUE
+        END
+
+	    IF NOT (SAV:MutatieKG = Pla:MutatieKG AND SAV:MutatiePallets = Pla:MutatiePallets AND SAV:MutatieGemaakt = Pla:MutatieGemaakt)
+            Access:Planning.Update()
+        END
+    ELSE
+        Message('Foutmelding :'&CLIP(ERROR())&' bij VoorraadClass.BerekenPlanningMutatieGrootte('&PRM:PlanningID&')')
+	END
+	
+	Access:Mutatie.RestoreFile(FileID)
+	Access:Mutatie.RestoreBuffer(BufferID)
+	
+	GLO:GebruikerLogHandelingOpmerking = ''
+	
+	
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.BepaalHuidigeVoorraad       PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID)
+CODE
+    CLEAR(PCV:Record)
+    PCV:PartijID = PRM:PartijID
+    PCV:CelID = PRM:CelID
+	IF (Access:PartijCelVoorraad.TryFetch(PCV:FK1_PartijCelVoorraad) = Level:Benign)
+		RETURN PCV:PartijCelVoorraadKG
+	ELSE
+		RETURN 0
+	END
+
+!	CLEAR(VVPar:Record)
+!	VVPar:PartijID = Mut:PartijID
+!	VVPar:CelID = Mut:CelID
+!	IF (Access:ViewVoorraadPartij.TryFetch(VVPar:PartijID_CelID_K) = Level:Benign)
+!		RETURN VVPar:VoorraadKG
+!	ELSE
+!		RETURN 0
+!	END
+	
+	
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.VerwijderPlanningMutaties     PROCEDURE(LONG PRM:PlanningID, BYTE PRM:TestOnly)
+PartijID                                        LONG
+InkoopID                                        LONG
+VerkoopID                                        LONG
+PlanningVerwerkt                                BYTE
+CODE
+    db.DebugOut('VoorraadClass.VerwijderPlanningMutaties(' & PRM:PlanningID & ', ' & PRM:TestOnly & ')')
+    CLEAR(Pla:Record)
+    Pla:PlanningID = PRM:PlanningID
+    IF (Access:Planning.Fetch(Pla:PK_Planning) = Level:Benign)
+        IF Pla:VerkoopID <> 0 THEN
+			! Mutaties behorende bij een verkoop-regel zijn UITslagen.
+			! Deze kunnen zonder verdere voorraad-controle worden verwijderd.
+            CLEAR(Mut:Record)
+            Mut:PlanningID = Pla:PlanningID
+			! Controleren of de bijbehorende mutaties allemaal uitslagen zijn
+            SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+            LOOP UNTIL Access:Mutatie.Next()
+                IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+                IF CLIP(Mut:SoortMutatie) <> 'UIT' THEN
+                    MESSAGE('Onverwachte niet-uitslag mutatie (' & Mut:MutatieID & ', ' & Mut:SoortMutatie & ')', 'Niet-uitslag mutatie', ICON:Exclamation)
+                    RETURN False
+                END
+            END
+			
+            IF NOT(PRM:TestOnly)
+                CLEAR(Mut:Record)
+                Mut:PlanningID = Pla:PlanningID
+                SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+                LOOP UNTIL Access:Mutatie.Next()
+                    IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+					
+                    db.DebugOut('VoorraadClass.VerwijderPlanningMutaties - Verwijderen UIT-mutaties (' & MUT:MutatieID & ', ' & MUT:PlanningID & ')')
+                    Access:Mutatie.DeleteRecord(0)
+                END
+                Pla:MutatieGemaakt = 0
+                Pla:Verwerkt = 0
+                Pla:Gewogen = 0
+                Pla:MutatieKG = 0
+                Pla:MutatiePallets = 0
+                Access:Planning.Update()
+            END
+            PlanningVerwerkt=FALSE
+            VERKOOPID=Pla:VerkoopID
+            Clear(PLA:Record)
+            Pla:VerkoopID=VerkoopID
+            Set(Pla:Planning_FK02,Pla:Planning_FK02)
+            Loop Until Access:Planning.Next()
+                IF NOT Pla:InkoopID=VERkoopID THEN BREAK.
+                IF (Pla:Verwerkt)
+                    PlanningVerwerkt=TRUE
+                    Break
+                END
+            END
+            Clear(Ver2:Record)
+            Ver2:VerkoopID=VerkoopID
+            IF Access:Verkoop.Fetch(Ver2:PK_Verkoop)=Level:Benign
+                IF Ver2:Verwerkt<>PlanningVerwerkt
+                    Ver2:Verwerkt=PlanningVerwerkt
+                    Access:Verkoop.Update()
+                END
+            END
+
+            RETURN True
+        ELSIF Pla:InkoopID <> 0 THEN
+			! Controleren of de bijbehorende mutaties allemaal inslagen zijn
+            PartijID = -1
+			! Mutaties behorende bij een inkoop-regel zijn INslagen.
+			! Deze kunnen zonder verdere voorraad-controle worden verwijderd.
+            CLEAR(Mut:Record)
+            Mut:PlanningID = Pla:PlanningID
+            SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+            LOOP UNTIL Access:Mutatie.Next()
+                IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+                IF CLIP(Mut:SoortMutatie) <> 'IN'  AND CLIP(Mut:SoortMutatie) <> 'EIN' THEN
+                    MESSAGE('Onverwachte niet-inslag mutatie (' & Mut:MutatieID & ', ' & Mut:SoortMutatie & ')', 'Niet-uitslag mutatie', ICON:Exclamation)
+                    RETURN False
+                END
+                IF PartijID = -1 THEN
+                    PartijID = Mut:PartijID
+                ELSE
+                    IF PartijID <> Mut:PartijID THEN
+                        MESSAGE('Onverwachte inslag-mutatie van een andere partij ('& PartijID & ') i.p.v. (' & Mut:PartijID & ')', 'Onverwachte Partijnummer', ICON:Exclamation)
+                    END
+                END
+            END
+            IF PartijID <> -1 THEN
+                IF PartijID<>0          ! toegoeved 13-1-2020
+				! Controleren of er nog andere mutaties zijn met de ingeslagen partij, dan deze inslagen
+                    CLEAR(Mut:Record)
+                    Mut:PartijID = PartijID
+                    SET(Mut:Mutatie_FK01, Mut:Mutatie_FK01)
+                    LOOP UNTIL Access:Mutatie.Next()
+                        IF Mut:PartijID <> PartijID THEN BREAK.
+                        IF Mut:PlanningID = Pla:PlanningID THEN CYCLE.
+                        MESSAGE('Er zijn nog mutaties uitgevoerd met de ingeslagen partij ' & PartijID & '. De inslag-mutaties kunnen daarom niet verwijderd worden.', 'Partij al gemuteerd', ICON:Exclamation)
+                        RETURN False
+                    END
+                END
+                ! Nu kijken of de verwerkt flag van de inkoop teruggedraaid moet worden
+                PlanningVerwerkt=FALSE
+                INKOOPID=Pla:InkoopID
+                Clear(PLA:Record)
+                Pla:InkoopID=InkoopID
+                Set(Pla:Planning_FK01,Pla:Planning_FK01)
+                Loop Until Access:Planning.Next()
+                    IF NOT Pla:InkoopID=InkoopID THEN BREAK.
+                    IF (Pla:Verwerkt)
+                        PlanningVerwerkt=FALSE
+                        Break
+                    END
+                END
+                Clear(INK:Record)
+                Ink:InkoopID=InkoopID
+                IF Access:Inkoop.Fetch(Ink:PK_Inkoop)=Level:Benign
+                    IF Ink:Verwerkt<>PlanningVerwerkt
+                        Ink:Verwerkt=PlanningVerwerkt
+                        Access:Inkoop.Update()
+                    END
+                END
+
+                IF NOT(PRM:TestOnly)
+                    CLEAR(Mut:Record)
+                    Mut:PlanningID = Pla:PlanningID
+                    SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+                    LOOP UNTIL Access:Mutatie.Next()
+                        IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+                        db.DebugOut('VoorraadClass.VerwijderPlanningMutaties - Verwijderen IN-mutaties (' & MUT:MutatieID & ', ' & MUT:PlanningID & ')')
+                        Access:Mutatie.DeleteRecord(0)
+                    END
+                END
+            END
+				
+            IF NOT(PRM:TestOnly)
+                Pla:MutatieGemaakt = 0
+                Pla:Verwerkt = 0
+                Pla:Gewogen = 0
+                Pla:MutatieKG = 0
+                Pla:MutatiePallets = 0
+                Access:Planning.Update()
+            END
+        ELSE
+            MESSAGE('VoorraadClass.VerwijderPlanningMutaties ondersteunt alleen inkopen / verkopen')
+            RETURN False
+        END
+    ELSE
+        RETURN False
+    END
+	
+	
+	
+	
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.VerwijderVerkoopMutaties      PROCEDURE(LONG PRM:VerkoopID, BYTE PRM:TestOnly)
+GeenFouten BYTE
+CODE
+	CLEAR(Ver2:Record)
+	Ver2:VerkoopID = PRM:VerkoopID
+	IF (Access:Verkoop.Fetch(Ver2:PK_Verkoop) = Level:Benign) THEN
+		GeenFouten = True
+		
+		CLEAR(Pla:Record)
+		Pla:VerkoopID = Ver2:VerkoopID
+		SET(Pla:Planning_FK02, Pla:Planning_FK02)
+		LOOP UNTIL Access:Planning.Next()
+			IF Pla:VerkoopID <> Ver2:VerkoopID THEN BREAK.
+			GeenFouten = SELF.VerwijderPlanningMutaties(Pla:PlanningID, 1)
+			IF NOT(GeenFouten) THEN BREAK.
+		END
+		
+		IF GeenFouten AND NOT(PRM:TestOnly)
+			CLEAR(Pla:Record)
+			Pla:VerkoopID = Ver2:VerkoopID
+			SET(Pla:Planning_FK02, Pla:Planning_FK02)
+			LOOP UNTIL Access:Planning.Next()
+				IF Pla:VerkoopID <> Ver2:VerkoopID THEN BREAK.
+				SELF.VerwijderPlanningMutaties(Pla:PlanningID)
+			END
+			
+			RETURN True
+		ELSE
+			RETURN GeenFouten
+		END
+	ELSE
+		RETURN False
+	END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.VerwijderInkoopMutaties       PROCEDURE(LONG PRM:InkoopID, BYTE PRM:TestOnly)
+GeenFouten BYTE
+CODE
+	CLEAR(Ink:Record)
+	Ink:InkoopID = PRM:InkoopID
+	IF (Access:Inkoop.Fetch(Ink:PK_Inkoop) = Level:Benign) THEN
+		GeenFouten = True
+		
+		CLEAR(Pla:Record)
+		Pla:InkoopID = Ink:InkoopID
+		SET(Pla:Planning_FK01, Pla:Planning_FK01)
+		LOOP UNTIL Access:Planning.Next()
+			IF Pla:InkoopID <> Ink:InkoopID THEN BREAK.
+			GeenFouten = SELF.VerwijderPlanningMutaties(Pla:PlanningID, 1)
+			IF NOT(GeenFouten) THEN BREAK.
+		END
+		
+		IF GeenFouten AND NOT(PRM:TestOnly)
+			CLEAR(Pla:Record)
+			Pla:InkoopID = Ink:InkoopID
+			SET(Pla:Planning_FK01, Pla:Planning_FK01)
+			LOOP UNTIL Access:Planning.Next()
+				IF Pla:InkoopID <> Ink:InkoopID THEN BREAK.
+				
+				SELF.VerwijderPlanningMutaties(Pla:PlanningID)
+			END
+			
+			RETURN True
+		ELSE
+			RETURN GeenFouten
+		END
+	ELSE
+		RETURN False
+	END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.BerekenPartijInkoopPrijs      PROCEDURE(<LONG PRM:PartijID>)
+TotaalKG                                        DECIMAL(11,2)
+PartijKG                                        DECIMAL(11,2)
+PartijKGPrijs                                   DECIMAL(12,3)
+PlanningKG                                      DECIMAL(11,2)
+
+SavedInkoopBuffer                               USHORT
+SavedInkoopFile                                 USHORT
+CODE
+    db.DebugOut('VoorraadClass.BerekenPartijInkoopPrijs :'&PRM:PartijID)
+	GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.BerekenPartijInkoopPrijs'
+	
+	SavedInkoopBuffer = Access:Inkoop.SaveBuffer()
+	SavedInkoopFile = Access:Inkoop.SaveFile()
+	
+	IF NOT(OMITTED(2)) THEN
+		CLEAR(Par:Record)
+		Par:PartijID = PRM:PartijID
+		IF (Access:Partij.Fetch(Par:Partij_PK) <> Level:Benign) THEN RETURN.
+	END
+
+	TotaalKG = 0
+	PartijKG = 0
+	
+	CLEAR(Ink:Record)
+	Ink:InkoopID = Par:InkoopID
+	IF (Access:Inkoop.Fetch(Ink:PK_Inkoop) = Level:Benign) THEN
+		! Alle planning-regels van de inkoop doorlopen
+		CLEAR(Pla:Record)
+		Pla:InkoopID = Ink:InkoopID
+		SET(Pla:Planning_FK01, Pla:Planning_FK01)
+		LOOP UNTIL Access:Planning.Next()
+			IF Pla:InkoopID <> Ink:InkoopID THEN BREAK.
+			
+			! Bepaal KG's op basis van de mutatie indien mogelijk / anders op basis van de planning
+			PlanningKG = 0
+			
+			CLEAR(Mut:Record)
+			Mut:PlanningID = Pla:PlanningID
+			SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+			LOOP UNTIL Access:Mutatie.Next()
+				IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+				PlanningKG += Mut:InslagKG
+			END
+			
+			IF PlanningKG = 0 THEN
+				PlanningKG = Pla:KG
+			END
+			
+			!db.DebugOut('BerekenInkoopPrijs - Planning: ' & PlanningKG & ', ' & Pla:InkoopID & '=' & Par:InkoopPlanningID)
+			
+			TotaalKG += PlanningKG
+			IF Pla:PlanningID = Par:InkoopPlanningID THEN
+				PartijKG += PlanningKG
+				PartijKGPrijs = Pla:InkoopKGPrijs
+			END
+		END
+		
+		Par:InkoopKGPrijs = PartijKGPrijs
+		Par:BerekendeInkoopKGPrijs = PartijKGPrijs + ((Ink:ExtraKosten + Ink:TransportKosten)/ TotaalKG)
+		db.DebugOut('BerekenInkoopPrijs: ' & Par:BerekendeInkoopKGPrijs & ', ' & Ink:ExtraKosten & ', ' & Ink:TransportKosten & ', ' & TotaalKG & ', ' & PartijKG & ', ' & PartijKGPrijs)
+	ELSE
+		Par:InkoopKGPrijs = 0
+		Par:BerekendeInkoopKGPrijs = 0
+	END
+	
+	IF NOT(OMITTED(2)) THEN
+		Access:Partij.Update()
+	END
+	
+	Access:Inkoop.RestoreBuffer(SavedInkoopBuffer)
+	Access:Inkoop.RestoreFile(SavedInkoopFile)
+	
+	GLO:GebruikerLogHandelingOpmerking = ''
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.BerekenPartijenInkoopPrijs    PROCEDURE(<LONG PRM:InkoopID>, <LONG PRM:UitgezonderdPartij>)
+SavedMutatieBuffer                              USHORT
+SavedPlanningBuffer                             USHORT
+SavedMutatieFile	                            USHORT
+SavedPlanningFile                               USHORT
+CODE
+	IF NOT(OMITTED(2)) THEN
+		CLEAR(Ink:Record)
+		Ink:InkoopID = PRM:InkoopID
+        IF (Access:Inkoop.Fetch(Ink:PK_Inkoop) <> Level:Benign) THEN
+            db.DebugOut('VoorraadClass.BerekenPartijenInkoopPrijs met Inkoop kan niet gevonden worden:'&ERROR())
+            RETURN
+        END
+	END
+	
+	! Alle planning-regels van de inkoop doorlopen
+	CLEAR(Pla:Record)
+	Pla:InkoopID = Ink:InkoopID
+	SET(Pla:Planning_FK01, Pla:Planning_FK01)
+	LOOP UNTIL Access:Planning.Next()
+		IF Pla:InkoopID <> Ink:InkoopID THEN BREAK.
+		
+        db.DebugOut('VoorraadClass.BerekenPartijenInkoopPrijs Pla:PlanningID'&Pla:PlanningID&' inkoopid '&Pla:InkoopId)
+        ! de eerste keer krijgen we errorcode()33 Record Not Available, eens kijken of ik kan testen of Mutatie bestand geopend is
+		CLEAR(Mut:Record)
+        Mut:PlanningID = Pla:PlanningID
+		SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+        LOOP UNTIL Access:Mutatie.Next()
+			IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
+			
+			IF NOT(OMITTED(3)) AND PRM:UitgezonderdPartij = Mut:PartijID THEN CYCLE.
+			
+			SavedMutatieBuffer = Access:Mutatie.SaveBuffer()
+			SavedMutatieFile = Access:Mutatie.SaveFile()
+			SavedPlanningBuffer = Access:Planning.SaveBuffer()
+			SavedPlanningFile = Access:Planning.SaveFile()
+			SELF.BerekenPartijInkoopPrijs(Mut:PartijID)
+			Access:Mutatie.RestoreBuffer(SavedMutatieBuffer)
+			Access:Mutatie.RestoreFile(SavedMutatieFile)
+			Access:Planning.RestoreBuffer(SavedPlanningBuffer)
+			Access:Planning.RestoreFile(SavedPlanningFile)
+        END
+        db.DebugOut('VoorraadClass.BerekenPartijenInkoopPrijs Mutatieloop'&CLIP(ERROR())&'|'&CLIP(FileERROR()))
+
+    END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.ControleerCelLocatie      PROCEDURE(LONG PRM:CelID, LONG PRM:CelLocatieID)
+CODE
+    CLEAR(CL:Record)
+    CL:CelLocatieID = PRM:CelLocatieID
+    IF Access:CelLocatie.TryFetch(CL:PK_CelLocatie) = Level:Benign THEN
+        IF CL:CelID <> PRM:CelID THEN
+            RETURN 0
+        ELSE
+            RETURN PRM:CelLocatieID
+        END
+    ELSE
+        RETURN 0
+    END
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+!----------------------------------------
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.ResetPartijCelControle        PROCEDURE()
+CODE
+    db.DebugOut('VoorraadClass.ResetPartijCelControle')
+    FREE(GLO:PartijCelControleQ)
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.AddPartijCelControle      PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID, REAL PRM:KG, REAL PRM:Pallets)
+CODE
+    db.DebugOut('VoorraadClass.ResetPartijCelControle')
+    PCC:PartijID = PRM:PartijID
+    PCC:CelID = PRM:CelID
+    GET(GLO:PartijCelControleQ, +PCC:PartijID, +PCC:CelID)
+    IF ERROR() THEN
+        PCC:PartijID = PRM:PartijID
+        PCC:CelID = PRM:CelID
+        PCC:KG = PRM:KG
+        PCC:Pallets = PRM:Pallets
+        ADD(GLO:PartijCelControleQ, +PCC:PartijID, +PCC:CelID)
+
+        db.DebugOut('VoorraadClass.ResetPartijCelControle - ADD (' & RECORDS(GLO:PartijCelControleQ))
+    ELSE
+        PCC:KG += PRM:KG
+        PCC:Pallets += PRM:Pallets
+        PUT(GLO:PartijCelControleQ, +PCC:PartijID, +PCC:CelID)
+
+        db.DebugOut('VoorraadClass.ResetPartijCelControle - PUT (' & RECORDS(GLO:PartijCelControleQ))
+    END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.AddPartijCelControleOverboeking       PROCEDURE(LONG PRM:PartijID, LONG PRM:VanCelID, LONG PRM:NaarCelID, REAL PRM:KG, REAL PRM:Pallets)
+CODE
+    ! Nieuwe mutaties meenemen
+    IF NOT(PRM:KG = 0 AND PRM:Pallets = 0) THEN
+        ! Nieuwe OUIT-toevoegen, deze moet dus van de huidige voorraadstand worden afgetrokken.
+        VoorraadClass.AddPartijCelControle(PRM:PartijID, PRM:VanCelID, -PRM:KG, -PRM:Pallets)
+
+        ! Nieuwe OIN-toevoegen
+        VoorraadClass.AddPartijCelControle(PRM:PartijID, PRM:NaarCelID, PRM:KG, PRM:Pallets)
+    END
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VoorraadClass.PartijCelControleOK   PROCEDURE()
+CODE
+    LOOP i# = 1 TO RECORDS(GLO:PartijCelControleQ)
+        GET(GLO:PartijCelControleQ, i#)
+
+        CLEAR(VVPar:Record)
+        VVPar:PartijID = PCC:PartijID
+        VVPar:CelID = PCC:CelID
+        IF (Access:ViewVoorraadPartij.Fetch(VVPar:PartijID_CelID_K) = Level:Benign) THEN
+            db.DebugOut('Controle: ' & PCC:PartijID & '.' & PCC:CelID & ' = ' & VVPar:VoorraadKG & ' + ' & PCC:KG & ' / ' & VVPar:VoorraadPallets & ' + ' & PCC:Pallets)
+            IF VVPar:VoorraadKG + PCC:KG < 0 THEN
+                RETURN CLIP('Negatieve voorraad van ' & CLIP(LEFT(FORMAT(VVPar:VoorraadKG + PCC:KG, @n-12`2))) & ' KG voor partij/cel ' & CLIP(PCC:PartijID) & '.' & CLIP(PCC:CelID))
+            END
+
+            ! Pallet-standen negeren
+            !IF VVPar:VoorraadPallets + PCC:Pallets < 0 THEN
+            !    RETURN CLIP('Negatieve voorraad van ' & CLIP(LEFT(FORMAT(VVPar:VoorraadPallets + PCC:Pallets, @n_10))) & ' pallets voor partij/cel ' & CLIP(PCC:PartijID) & '.' & CLIP(PCC:CelID))
+            !END
+        ELSE
+            errorcode# = ERRORCODE()
+
+            db.DebugOut('Controle: ' & PCC:PartijID & '.' & PCC:CelID & ' = ' & PCC:KG & ' / ' & PCC:Pallets)
+
+            IF errorcode# = 35 THEN! File Not Found
+                IF PCC:KG < 0 THEN
+                    RETURN CLIP('Negatieve voorraad van ' & CLIP(LEFT(FORMAT(PCC:KG, @n-12`2))) & ' KG voor partij/cel ' & CLIP(PCC:PartijID) & '.' & CLIP(PCC:CelID))
+                END
+
+                ! Pallet-standen negeren
+                !IF PCC:Pallets < 0 THEN
+                !    RETURN CLIP('Negatieve voorraad van ' & CLIP(LEFT(FORMAT(PCC:Pallets, @n_10))) & ' pallets voor partij/cel ' & CLIP(PCC:PartijID) & '.' & CLIP(PCC:CelID))
+                !END
+            ELSE
+                RETURN CLIP('Onverwachte fout ' & CLIP(errorcode#) & ' in VoorraadClass.PartijCelControleOK op bestand ViewVoorraadPartij')
+            END
+        END
+    END
+
+    RETURN ''
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 2
+OWNER 3
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 1
+OWNER 1
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[PROCEDURE]
+NAME CachingClassSource
+NOEXPORT
+[COMMON]
+FROM MTMaxtel MT_ClassC7_Declaration
+[PROMPTS]
+%MTClassName DEFAULT  ('CachingClass')
+%MTDefIncFileName DEFAULT  ('CachingClassDef.inc')
+%MTSrcIncFileName DEFAULT  ('CachingClassSrc.inc')
+%MTHandcode LONG  (0)
+%MTNotType LONG  (1)
+[EMBED]
+EMBED %ClassDeclaration
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 1620
+PROPERTY:END
+VerkoopArtikelQueue  QUEUE,PRE(VAQ),THREAD
+VerkoopID               LONG
+Artikelen				CSTRING(512)
+					END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 1620
+PROPERTY:END
+InkoopArtikelQueue  QUEUE,PRE(IAQ),THREAD
+InkoopID                LONG
+Artikelen				CSTRING(512)
+					END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 1800
+PROPERTY:END
+CelLocatieQueue		QUEUE,PRE(CLQ),THREAD
+PartijID                LONG
+CelID                   LONG
+LocatieNaam				CSTRING(50)
+					END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2001
+PROPERTY:END
+GetInkoopArtikelen	PROCEDURE(LONG PRM:InkoopID), STRING
+GetVerkoopArtikelen PROCEDURE(LONG PRM:VerkoopID), STRING
+GetCelLocatieNaam   PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID), STRING
+[END]
+EMBED %ClassSource
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3240
+PROPERTY:END
+CachingClass.GetVerkoopArtikelen PROCEDURE(LONG PRM:VerkoopID)
+SQLFile                                 &File
+SQLGroup 								&GROUP
+SQLField                                ANY
+LastVerkoopID                           LONG
+Artikelen								CSTRING(512)
+CODE
+    IF RECORDS(VerkoopArtikelQueue) = 0 THEN
+        timingmeting# = CLOCK()
+		SQLFile &= NEW(File)
+
+		SQLFile{Prop:Driver}='MSSQL'
+		SQLFile{Prop:DriverString}='/BUSYHANDLING=2'
+		SQLFile{Prop:Owner}=GLO:Owner
+		SQLFile{Prop:Sql}='SELECT Planning.VerkoopID, Planning.KG, ViewArtikel.ArtikelOms, Planning.MutatieGemaakt, Planning.MutatieKG '&|
+			'FROM Planning INNER JOIN ViewArtikel ON ViewArtikel.ArtikelID = Planning.ArtikelID '&|
+			'WHERE Planning.VerkoopID > 0 ORDER BY Planning.VerkoopID, Planning.PlanningID'
+
+		LastVerkoopID = -1
+		LaatsteRecord# = 0
+		
+		FIXFORMAT(SQLFile)	
+		IF ERROR() THEN STOP(ERROR()&' bij de fixformat').
+		SQLGroup &= SQLFile{Prop:Record}
+		
+		LOOP
+			Next(SQLFile)
+			IF ERROR() THEN LaatsteRecord# = 1.
+			
+			
+			SQLField &= WHAT(SQLGroup,1)
+			IF (LastVerkoopID <> SQLField OR LaatsteRecord#) THEN
+				IF LastVerkoopID <> -1 THEN
+					VAQ:VerkoopID = LastVerkoopID
+					VAQ:Artikelen = Artikelen
+					ADD(VerkoopArtikelQueue, +VAQ:VerkoopID)
+				END
+				
+				IF LaatsteRecord# THEN
+					BREAK
+				ELSE
+					LastVerkoopID = SQLField
+					
+					SQLField &= WHAT(SQLGroup,4) ! Pla:MutatieGemaakt
+					IF SQLField = 1 THEN
+						SQLField &= WHAT(SQLGroup,5)
+					ELSE
+						SQLField &= WHAT(SQLGroup,2)
+					END
+					Artikelen = CLIP(LEFT(FORMAT(SQLField,@n-12_`2))) & ' kg'
+					SQLField &= WHAT(SQLGroup,3)
+					Artikelen = CLIP(Artikelen) & ' ' & CLIP(SQLField)
+				END
+			ELSE
+				SQLField &= WHAT(SQLGroup,4) ! Pla:MutatieGemaakt
+				IF SQLField = 1 THEN
+					SQLField &= WHAT(SQLGroup,5)
+				ELSE
+					SQLField &= WHAT(SQLGroup,2)
+				END
+				Artikelen = CLIP(Artikelen) & ' | ' & CLIP(LEFT(FORMAT(SQLField,@n-12_`2))) & ' kg'
+				SQLField &= WHAT(SQLGroup,3)
+				Artikelen = CLIP(Artikelen) & ' ' & CLIP(SQLField)
+			END
+		END	
+		
+		CLOSE(SQLFile)
+		IF ERROR() THEN STOP(ERROR()&' bij de close').
+		DISPOSE(SQLFile)
+        IF ERROR() THEN STOP(ERROR()&' bij de dispose').
+
+        GLO:TimingMeting[1] = CLOCK() - timingmeting#
+        GlobalClass.RefreshTiming()
+    END
+
+	VAQ:VerkoopID = PRM:VerkoopID
+	GET(VerkoopArtikelQueue, +VAQ:VerkoopID)
+	IF NOT(ERROR()) THEN
+		RETURN CLIP(VAQ:Artikelen)
+	ELSE
+		RETURN ''
+	END
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+CachingClass.GetInkoopArtikelen PROCEDURE(LONG PRM:InkoopID)
+SQLFile                                 &File
+SQLGroup 								&GROUP
+SQLField                                ANY
+LastInkoopID                           LONG
+Artikelen								CSTRING(512)
+CODE
+    IF RECORDS(InkoopArtikelQueue) = 0 THEN
+        timingmeting# = CLOCK()
+
+		SQLFile &= NEW(File)
+
+		SQLFile{Prop:Driver}='MSSQL'
+		SQLFile{Prop:DriverString}='/BUSYHANDLING=2'
+		SQLFile{Prop:Owner}=GLO:Owner
+		SQLFile{Prop:Sql}='SELECT Planning.InkoopID, Planning.KG, ViewArtikel.ArtikelOms, Planning.MutatieGemaakt, Planning.MutatieKG '&|
+			'FROM Planning INNER JOIN ViewArtikel ON ViewArtikel.ArtikelID = Planning.ArtikelID '&|
+			'WHERE Planning.InkoopID > 0 ORDER BY Planning.InkoopID, Planning.PlanningID'
+
+		LastInkoopID = -1
+		LaatsteRecord# = 0
+		
+		FIXFORMAT(SQLFile)
+		IF ERROR() THEN STOP(ERROR()&' bij de fixformat').
+		SQLGroup &= SQLFile{Prop:Record}
+		
+		LOOP
+			Next(SQLFile)
+			IF ERROR() THEN LaatsteRecord# = 1.
+			
+			SQLField &= WHAT(SQLGroup,1)
+			IF (LastInkoopID <> SQLField OR LaatsteRecord#) THEN
+				IF LastInkoopID <> -1 THEN
+					IAQ:InkoopID = LastInkoopID
+					IAQ:Artikelen = Artikelen
+					ADD(InkoopArtikelQueue, +IAQ:InkoopID)
+				END
+				
+				IF LaatsteRecord# THEN
+					BREAK
+				ELSE
+					LastInkoopID = SQLField
+					SQLField &= WHAT(SQLGroup,4) ! Pla:MutatieGemaakt
+					IF SQLField = 1 THEN
+						SQLField &= WHAT(SQLGroup,5)
+					ELSE
+						SQLField &= WHAT(SQLGroup,2)
+					END
+					
+					Artikelen = CLIP(LEFT(FORMAT(SQLField,@n-12_`2))) & ' kg'
+					SQLField &= WHAT(SQLGroup,3)
+					Artikelen = CLIP(Artikelen) & ' ' & CLIP(SQLField)
+				END
+			ELSE
+				SQLField &= WHAT(SQLGroup,4) ! Pla:MutatieGemaakt
+				IF SQLField = 1 THEN
+					SQLField &= WHAT(SQLGroup,5)
+				ELSE
+					SQLField &= WHAT(SQLGroup,2)
+				END
+				Artikelen = CLIP(Artikelen) & ' | ' & CLIP(LEFT(FORMAT(SQLField,@n-12_`2))) & ' kg'
+				SQLField &= WHAT(SQLGroup,3)
+				Artikelen = CLIP(Artikelen) & ' ' & CLIP(SQLField)
+			END
+		END	
+		
+		CLOSE(SQLFile)
+		IF ERROR() THEN STOP(ERROR()&' bij de close').
+		DISPOSE(SQLFile)
+        IF ERROR() THEN STOP(ERROR()&' bij de dispose').
+
+        GLO:TimingMeting[2] = CLOCK() - timingmeting#
+        GlobalClass.RefreshTiming()
+	END
+
+	IAQ:InkoopID = PRM:InkoopID
+	GET(InkoopArtikelQueue, +IAQ:InkoopID)
+	IF NOT(ERROR()) THEN
+		RETURN CLIP(IAQ:Artikelen)
+	ELSE
+		RETURN ''
+	END
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+CachingClass.GetCelLocatieNaam PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID)
+CODE
+    IF RECORDS(CelLocatieQueue)=0
+        !timingmeting# = CLOCK()
+
+		BUFFER(ViewPartijCelLocaties,5000)
+		CLEAR(VPCL:Record)	
+		SET(VPCL:ViewPartijCelLocaties_PK,VPCL:ViewPartijCelLocaties_PK)
+		Loop Until Access:ViewPartijCelLocaties.Next()
+			CLQ:PartijID=VPCL:PartijID
+			CLQ:CelID=VPCL:CELID
+			GET(CelLocatieQueue,+CLQ:PartijID,+CLQ:CelID)
+			IF ERROR()
+				CLQ:PartijID=VPCL:PartijID
+				CLQ:CelID=VPCL:CELID
+				if CLIP(VPCL:CelLocatienaam) = ''
+					CLQ:LocatieNaam='?'
+				ELSE
+					CLQ:LocatieNaam=VPCL:CelLocatienaam
+				END			
+				ADD(CelLocatieQueue,+CLQ:PartijID,+CLQ:CelID)
+			ELSE
+				if CLIP(VPCL:CelLocatienaam) = ''
+					! Controle of er een vraagteken in staat
+					IF INSTRING('?',CLIP(CLQ:LocatieNaam),1,1)=0 ! Not Found
+						CLQ:LocatieNaam = CLIP(CLQ:LocatieNaam) & ', ?'
+					END	
+				ELSE
+					CLQ:LocatieNaam = CLIP(CLQ:LocatieNaam) & ', ' & CLIP(VPCL:CelLocatienaam)
+				END	
+				PUT(CelLocatieQueue)
+			END
+        END	
+
+        FLUSH(ViewPartijCelLocaties)
+		
+		Loop i#=1 to Records(CelLocatieQueue)
+			GET(CelLocatieQueue,i#)
+			IF CLQ:LocatieNaam='?' THEN
+				!Clear(CLQ:LocatieNaam)
+                CLQ:LocatieNaam = ''
+				PUT(CelLocatieQueue)
+			END
+        END	
+
+        !GLO:TimingMeting[3] = CLOCK() - timingmeting#
+        !GlobalClass.RefreshTiming()
+	END
+
+	CLQ:PartijID=PRM:PartijID
+	CLQ:CelID=PRM:CELID
+	GET(CelLocatieQueue,+CLQ:PartijID,+CLQ:CelID)
+	IF ERROR()
+		Return('')
+	ELSE
+		Return(CLIP(CLQ:LocatieNaam))
+	END
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 2
+OWNER 3
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 1
+OWNER 1
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[PROCEDURE]
+NAME GebruikerLogClassSource
+NOEXPORT
+[COMMON]
+FROM MTMaxtel MT_ClassC7_Declaration
+[PROMPTS]
+%MTClassName DEFAULT  ('GebruikerLogClass')
+%MTDefIncFileName DEFAULT  ('GebruikerLogClassDef.inc')
+%MTSrcIncFileName DEFAULT  ('GebruikerLogClassSrc.inc')
+%MTHandcode LONG  (0)
+%MTNotType LONG  (1)
+[EMBED]
+EMBED %ClassDeclaration
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2001
+PROPERTY:END
+Log PROCEDURE(STRING PRM:Handeling, STRING PRM:Tabel, STRING PRM:RecordInhoudPre, <STRING PRM:RecordInhoudPost>)
+BepaalRecordContent PROCEDURE(*GROUP RecordContent), STRING
+CleanString PROCEDURE(STRING PRM:String), STRING
+[END]
+EMBED %ClassSource
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+GebruikerLogClass.Log       PROCEDURE(STRING PRM:Handeling, STRING PRM:Tabel, STRING PRM:RecordInhoudPre, <STRING PRM:RecordInhoudPost>)
+CODE
+    !db.Debugout('Voor Access:GebruikerLog.Open()')
+	Access:GebruikerLog.Open()
+    !db.Debugout('Na Access:GebruikerLog.Open()')
+	
+	CLEAR(LOG:Record)
+	Log:WindowsInlog = IGB:WindowsInlog
+	Log:Uitgevoerd_DATE = TODAY()
+	Log:Uitgevoerd_TIME = CLOCK()
+    Log:Handeling = PRM:Handeling
+    IF CLIP(GLO:GebruikerLogHandelingOpmerking)=''
+        Log:HandelingOpmerking = GlobalErrors.GetProcedureName()
+    ELSE
+        Log:HandelingOpmerking = GLO:GebruikerLogHandelingOpmerking
+    END
+	Log:Tabel = PRM:Tabel
+	Log:RecordInhoudPre = PRM:RecordInhoudPre
+	IF NOT(OMITTED(5))
+		Log:RecordInhoudPost = PRM:RecordInhoudPost
+	END
+	
+    !db.Debugout('Voor Access:GebruikerLog.Insert()')
+	Access:GebruikerLog.Insert()
+    !db.Debugout('Na Access:GebruikerLog.Insert()')
+	Access:GebruikerLog.Close()
+    !db.Debugout('Na Access:GebruikerLog.Close()')
+	
+	GLO:GebruikerLogHandelingOpmerking = ''
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+GebruikerLogClass.BepaalRecordContent  PROCEDURE(*GROUP RecordContent)
+TempAny                                     ANY
+FieldName                                   STRING(100)
+CountFields                                 LONG
+ReturnString                                STRING(5000)
+Eerste										BYTE
+CODE
+	LOOP i# = 1000 TO 1 BY -1
+		IF CLIP(WHO(RecordContent, i#)) <> '' THEN
+			CountFields = i#
+			BREAK
+		END
+	END
+	
+	Eerste = true
+	
+	LOOP i# = 1 TO CountFields
+		FieldName = WHO(RecordContent, i#)
+		TempAny &= WHAT(RecordContent, i#)
+		
+		IF Eerste THEN
+			ReturnString = ''
+			Eerste = false
+		ELSE
+			ReturnString = CLIP(ReturnString) & CHR(13) & CHR(10)
+		END
+		
+		IF LEN(TempAny) > 0 THEN
+			ReturnString = CLIP(ReturnString) & CLIP(FieldName) & '=' & SELF.CleanString(TempAny) &|
+				'            , ' & FORMAT(SELF.CleanString(TempAny), @d6-) &|
+				'            , ' & FORMAT(SELF.CleanString(TempAny), @t1) &|
+				'            , ' & (VAL(SUB(TempAny, 1, 1)) - 48)
+		ELSE
+			ReturnString = CLIP(ReturnString) & CLIP(FieldName) & '=' & SELF.CleanString(TempAny) &|
+				'            , ' & FORMAT(SELF.CleanString(TempAny), @d6-) &|
+				'            , ' & FORMAT(SELF.CleanString(TempAny), @t1)
+		END
+	END
+	
+	RETURN CLIP(ReturnString)
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+GebruikerLogClass.CleanString       PROCEDURE(STRING PRM:String)
+ReturnString                            STRING(5000)
+SubString								STRING(1)
+CODE
+	IF LEN(PRM:String) > 1 THEN
+		LOOP i# = 1 TO LEN(PRM:String)
+			SubString = SUB(PRM:String,i#,1)
+			IF (SubString <> CHR(10) AND SubString <> CHR(13) AND SubString <> CHR(7) AND SubString <> CHR(0))
+				ReturnString = CLIP(ReturnString) & SubString
+			END
+		END
+	
+		RETURN CLIP(ReturnString)
+	ELSE
+		RETURN ''
+	END
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 2
+OWNER 3
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 1
+OWNER 1
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[PROCEDURE]
+NAME ExportInvoiceXML
+PROTOTYPE '(<<VER:Record>, <<INK:Record>, String layout)'
+PARAMETERS '(<<VER:Record __p1>,<<INK:Record __p2>,String __layout)'
+[COMMON]
+FROM ABC Source
+[PROMPTS]
+%GenerateOpenClose LONG  (0)
+%GenerateSaveRestore LONG  (0)
+[EMBED]
+EMBED %LocalProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ExportClass.XMLHeader       PROCEDURE()
+
+CurrenTag                       CString(20)
+CODE
+    IF CurrentLayout=LayOut:Invoice
+        CurrenTag = 'Invoices'
+    ELSE
+        CurrenTag = 'Orders'
+    END
+
+    if not bestaandbestand
+        st.SetValue('<?xml version="1.0" ?>')
+        st.Append('<eExact xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eExact-Schema.xsd">')
+        st.Append('<'&CurrenTag&'>')
+    END
+    ExportClass.XMLOrder()
+    st.Append('</'&CurrenTag&'>')
+    st.Append('</eExact>')
+
+    RETURN
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ExportClass.XMLOrder        PROCEDURE()
+
+OrderLine                       LONG
+LayoutTag                       CString(20)
+CODE
+    IF CurrentLayout=LayOut:Invoice
+        st.Append('<Invoice type="V" code="10">')
+        st.Append('<Order type="V" number="'&Ver2:VerkoopID&'"/>')
+    ELSIF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('<Order type="B" number="'&Ink:InkoopID&'" >')
+    ELSE
+        st.Append('<Order type="V" number="" partialdelivery="1" confirm="0" invoicemethod="F">')
+    END
+    st.Append('<Description>'&Ver2:VerkoopID&'</Description>')
+    IF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('<OurRef>Verkoop: '&Ink:InkoopID&'</OurRef>')
+    ELSE
+        IF Ver2:ExternVerkoopID=''
+            st.Append('<YourRef>-</YourRef>')
+        ELSE
+            st.Append('<YourRef>'&Ver2:ExternVerkoopID&'</YourRef>')
+        END
+    END
+
+    IF Ver2:Valuta='Pond' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="GBP"/>')
+    ELSIF Ver2:Valuta='Dollar' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="USD"/>')
+    ELSE
+        st.Append('<Currency code="EUR"/>')
+    END
+
+    st.Append('<CalcIncludeVAT>N</CalcIncludeVAT>')
+    IF CurrentLayout<>LayOut:PurchaseOrder
+        Rel:RelatieID=Ver2:Klant
+        Access:Relatie.Fetch(Rel:Relatie_PK)
+        ! Aangepast 26-10-2018 eerst de vertegenwoordiger uit Exact
+        Clear(GEB:Record)
+        Geb:ID=Ver2:GebruikerID
+        IF Access:Gebruiker.Fetch(Geb:PK_Gebruiker)=Level:Benign AND Geb:res_id <> 0
+            st.Append('<Resource number="'&geb:res_id&'" >')
+        ELSE
+            IF Rel:Acc_Man=0
+                Message('Vertegenwoordiger en Relatie ('&Ver2:GebruikerID&') en Relatie ('&Ver2:Klant&') hebben res_id gelijk aan 0 ('&Geb:res_id&')')
+            END
+            st.Append('<Resource number="'&Rel:Acc_Man&'" >')
+        END
+        st.Append(' </Resource>')
+    ELSE
+        Rel:RelatieID=INk:Leverancier
+        Access:Relatie.Fetch(Rel:Relatie_PK)
+    END
+
+    IF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('<OrderedAt>')
+        ExportClass.ExportDebtor()
+        st.Append('</OrderedAt>')
+    ELSE
+        st.Append('<OrderedBy>')
+        ExportClass.ExportDebtor()
+        st.Append('</OrderedBy>')
+    END
+
+    st.Append('<DeliverTo>')
+    ExportClass.ExportDebtor()
+    st.Append('</DeliverTo>')
+    st.Append('<InvoiceTo>')
+    ExportClass.ExportDebtor()
+    st.Append('</InvoiceTo>')
+
+    ! ik skip de warehouse
+    st.Append('<Warehouse code="1">')
+!   <Description>Hoofdmagazijn</Description>
+!    <Address>
+!     <AddressLine1 />
+!     <AddressLine2 />
+!     <AddressLine3 />
+!     <PostalCode />
+!     <City />
+!     <Country code="NL" />
+!    </Address>
+    st.Append('</Warehouse>')
+
+    ! ik skip de payment
+    ! ik skip de delivery
+    ! ik skip de costcenter
+    ! ik skip de invoicegroup
+    ! ik skip de Freight
+    ! ik skip de FreeFeilds
+    Clear(OrderLine)
+    CLEAR(Pla:Record)
+    IF CurrentLayout=LayOut:PurchaseOrder
+        Pla:InkoopID = Ink:InkoopID
+        Set(Pla:Planning_FK01,Pla:Planning_FK01)
+        Loop UNTIL Access:Planning.Next()
+            IF NOT Pla:InkoopID = Ink:InkoopID THEN BReak.
+            Clear(Art:Record)
+            Art:ArtikelID=Pla:ArtikelID
+            if Access:ViewArtikel.Fetch(Art:Artikel_PK)=Level:Benign
+
+            END
+
+            OrderLine +=1
+            ExportClass.XMLOrderLine(OrderLine)
+        END
+    ELSE
+        Pla:VerkoopID = Ver2:VerkoopID
+        Set(Pla:Planning_FK02,Pla:Planning_FK02)
+        Loop UNTIL Access:Planning.Next()
+            IF NOT Pla:VerkoopID = Ver2:VerkoopID THEN BReak.
+            Clear(Art:Record)
+            Art:ArtikelID=Pla:ArtikelID
+            if Access:ViewArtikel.Fetch(Art:Artikel_PK)=Level:Benign
+
+            END
+
+            OrderLine +=1
+            ExportClass.XMLOrderLine(OrderLine)
+        END
+    END
+    IF CurrentLayout=LayOut:Invoice
+        st.Append('</Invoice>')
+    ELSE
+        st.Append('</Order>')
+    END
+
+    RETURN
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ExportClass.XMLOrderLine  PROCEDURE(LONG pLineNo)
+
+
+CODE
+    IF CurrentLayout=LayOut:Invoice
+        st.Append('<InvoiceLine lineNo="'&pLineNo&'">')
+        st.Append('<SalesOrderNo>'&Ver2:VerkoopID&'</SalesOrderNo>')
+        st.Append('<LineYourRef>'&Ver2:VerkoopID&'</LineYourRef>')
+    ELSE
+        st.Append('<OrderLine lineNo="'&pLineNo&'">')
+    END
+
+    st.Append('<Description>'&CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms)&'</Description>')
+    st.Append('<LongDescription>'&CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms)&'</LongDescription>')
+    st.Append('<Item code="'&Pla:ArtikelID&'" type="S" searchcode="'&Pla:ArtikelID&'">')
+
+!    st.Append('<Assortment number="5" code="030"><Description>Geslachte kuikens</Description>')
+!    st.Append('<GLRevenue code="     8015" side="C" type="W" subtype="J">    <Description>Opbrengst kuikens</Description>   </GLRevenue>')
+!    st.Append('<GLCosts code="     7015" side="D" type="W" subtype="K">    <Description>Inkopen geslachte kuikens</Description>   </GLCosts>')
+!    st.Append('<GLPurchase code="     3015" side="D" type="B" subtype="G">    <Description>Voorraad geslachte kuikens</Description>   </GLPurchase>')
+!    st.Append('<GLPriceDifference code="     7021" side="D" type="W" subtype="K">    <Description>Prijsverschil overige</Description>   </GLPriceDifference>')
+!    st.Append(' </Assortment>')
+    st.Append('')
+!    st.Append('<Sales>')
+!    st.Append('<Price type="S">')
+!    st.Append('<Currency code="EUR"/>')
+!    st.Append('<Value>'&Pla:VerkoopKGPrijs&'</Value>')
+!    st.Append('</Price>')
+!    st.Append('<Unit unit="kg" type="W" active="1">')
+!    st.Append('</Unit>')
+!    st.Append('</Sales>')
+
+    st.Append('<Costs>')
+    st.Append('<Price>')
+    IF Ver2:Valuta='Pond' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="GBP"/>')
+    ELSIF Ver2:Valuta='Dollar' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="USD"/>')
+    ELSE
+        st.Append('<Currency code="EUR"/>')
+    END
+    IF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('<Value>'&Pla:InkoopKGPrijs&'</Value>')
+    ELSE
+        IF PLA:PartijID >0
+            CLEAR(Par:Record)
+            Par:PartijID = Pla:PartijID
+            IF Access:Partij.TryFetch(Par:Partij_PK) <> Level:Benign THEN
+                CLEAR(Par:Record)
+            END
+            st.Append('<Value>'&Par:InkoopKGPrijs&'</Value>')
+        ELSE
+            st.Append('<Value>'&Pla:InkoopKGPrijs&'</Value>')
+        END
+    END
+
+    st.Append('</Price>')
+    st.Append('</Costs>')
+
+    st.Append('</Item>')
+    st.Append('<Quantity>'&CHOOSE(Pla:MutatieGemaakt,Pla:MutatieKG,Pla:KG)&'</Quantity>')
+    st.Append('<Unit unit="kg" type="O" active="1">')
+    st.Append('</Unit>')
+
+    st.Append('<Price type="S">')
+    IF Ver2:Valuta='Pond' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="GBP"/>')
+    ELSIF Ver2:Valuta='Dollar' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="USD"/>')
+    ELSE
+        st.Append('<Currency code="EUR"/>')
+    END
+    IF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('<Value>'&Pla:InkoopKGPrijs&'</Value>')
+    ELSE
+        st.Append('<Value>'&Pla:VerkoopKGPrijs&'</Value>')
+    END
+
+    st.Append('<VAT code="'&CLIP(Rel:VatCode)&'" type="V" vattype="N" taxtype="V">')
+!        <Description>B.T.W. verk. 0%  E.G.</Description>
+!        <MultiDescriptions>
+!             <MultiDescription number="1">B.T.W. verk. 0%  E.G.</MultiDescription>
+!             <MultiDescription number="2">B.T.W. verk. 0%  E.G.</MultiDescription>
+!             <MultiDescription number="3">B.T.W. verk. 0%  E.G.</MultiDescription>
+!             <MultiDescription number="4">B.T.W. verk. 0%  E.G.</MultiDescription>
+!        </MultiDescriptions>
+!        <Percentage>0</Percentage>
+!        <Charged>0</Charged>
+!        <VATExemption>0</VATExemption>
+!        <ExtraDutyPercentage>0</ExtraDutyPercentage>
+!        <GLToPay code="     1308" side="D" type="B" subtype="C">
+!         <Description></Description>
+!        </GLToPay>
+!        <Creditor code="              000002" number="000002" type="S">
+!         <Name>Belastingdienst OB</Name>
+!        </Creditor>
+!        <PaymentPeriod>M</PaymentPeriod>
+!        <VATListing>L</VATListing>
+    st.Append('</VAT>')
+    st.Append('</Price>')
+
+    st.Append('<Amount type="S">')
+    IF Ver2:Valuta='Pond' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="GBP"/>')
+    ELSIF Ver2:Valuta='Dollar' AND CurrentLayout<>LayOut:PurchaseOrder
+        st.Append('<Currency code="USD"/>')
+    ELSE
+        st.Append('<Currency code="EUR"/>')
+    END
+    IF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('<Value>'&Pla:InkoopKGPrijs&'</Value>')
+    ELSE
+        st.Append('<Value>'&Pla:VerkoopKGPrijs*CHOOSE(Pla:MutatieGemaakt,Pla:MutatieKG,Pla:KG)&'</Value>')
+    END
+
+    st.Append('</Amount>')
+
+    st.Append('<Delivery>')
+    st.Append('<Date>'&Format(Ver2:Planning_DATE,@D010-)&'</Date>')
+    st.Append('</Delivery>')
+    st.Append('<Text>'&CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms)&'</Text>')
+
+    IF CurrentLayout=LayOut:Invoice
+        st.Append('</InvoiceLine>')
+    ELSE
+        st.Append('</OrderLine>')
+    END
+
+    RETURN
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ExportClass.ExportDebtor    PROCEDURE()
+
+
+CODE
+    IF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('<Creditor code="'&CLIP(Rel:Code)&'" number="" type="S">')
+    ELSE
+        st.Append('<Debtor code="'&CLIP(Rel:Code)&'" number="" type="C">')
+    END
+
+    st.Append('<Name>'&ExportClass.DecodeXML(Rel:FirmaNaam)&'</Name>')
+    IF CurrentLayout=LayOut:PurchaseOrder
+        st.Append('</Creditor>')
+    ELSE
+        st.Append('</Debtor>')
+    END
+    st.Append('<Address>')
+    st.Append('<Addressee>')
+!      st.Append('<Name>Menida</Name>')
+!      st.Append('<Initials>L.</Initials>')
+!      st.Append('<Title code="DHR" />')
+!      st.Append('<JobDescription>--</JobDescription>')
+    st.Append('</Addressee>')
+    st.Append('<AddressLine1>'&ExportClass.DecodeXML(Rel:Adres1)&'</AddressLine1>')
+    st.Append('<AddressLine2>'&ExportClass.DecodeXML(Rel:Adres2)&'</AddressLine2>')
+    st.Append('<AddressLine3 />')
+    st.Append('<PostalCode>'&Rel:Postcode&'</PostalCode>')
+    st.Append('<City>'&ExportClass.DecodeXML(Rel:Plaats)&'</City>')
+    st.Append('<State code="GR" />')
+    st.Append('<Country code="'&Rel:cmp_fctry&'" />')
+    st.Append('</Address>')
+    st.Append('<Date>'&Format(Ver2:Planning_DATE,@D010-)&'</Date>')
+
+    RETURN
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ExportClass.DecodeXML       PROCEDURE(String pXML)
+decodexml               StringTheory
+CODE
+    decodexml.SetValue(pXml)
+    decodexml.Replace('&','&amp;')
+    decodexml.Replace('<','&lt;')
+    decodexml.Replace('>','&gt;')
+    return decodexml.Str()
+
+[END]
+EMBED %LocalDataAfterClasses
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ExportClass         CLASS
+XMLHeader               PROCEDURE
+XMLOrder                PROCEDURE
+XMLOrderLine            PROCEDURE(LONG)
+ExportDebtor            PROCEDURE()
+DecodeXML               PROCEDURE(String), String
+                    END
+
+st                  StringTheory()
+FileName            CString(200)
+bestaandbestand     Byte
+VerkoopPrijsNul     Byte
+
+LayOut              ITEMIZE,PRE
+InvoiceOrder            EQUATE
+Invoice                 EQUATE
+PurchaseOrder           EQUATE
+Unkown                  EQUATE
+                    END
+CurrentLayout       LONG
+[END]
+EMBED %ProcessedCode
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+LABEL
+PROPERTY:END
+    Case __layout
+    of 'Order'
+        CurrentLayout=LayOut:InvoiceOrder
+        FileName = GETINI('Exact','ExportBestand','','.\Voorraad.ini')
+    of 'Invoice'
+        CurrentLayout=LayOut:Invoice
+        FileName = GETINI('Exact','ExportBestandInvoice','','.\Voorraad.ini')
+    of 'PurchaseOrder'
+        CurrentLayout=LayOut:PurchaseOrder
+        FileName = GETINI('Exact','ExportBestandPurchaseOrder','','.\Voorraad.ini')
+    Else
+        CurrentLayout=LayOut:Unkown
+        Message('Layout is onbekend')
+    END
+    IF FileName=''
+        Message('In systeemgegevens bestandslocatie opgeven')
+    END
+
+    Access:Gebruiker.Open()
+    Access:Gebruiker.UseFile()
+    st.SetValue('')
+    bestaandbestand = st.LoadFile(FileName)    ! bij een nieuw bestand gewoon toevoegen, anders xml erin plaatsten
+    if bestaandbestand
+                ! dan moet ik de sluittags verwijderen
+        st.Remove('<</Orders','<</eExact>')
+    END
+    IF CurrentLayout=LayOut:PurchaseOrder
+        IF Access:Inkoop.Fetch(Ink:PK_Inkoop)=Level:Benign
+            ExportClass.XMLHeader
+            st.ToUnicode(st:EncodeUtf8,st:CP_WINDOWS_1250)
+            st.SaveFile(FileName)
+        END
+    ELSE
+        IF Access:Verkoop.Fetch(Ver2:PK_Verkoop)=Level:Benign
+            !2019-6-28 controle op verkoopprijs gelijk aan 0
+            VerkoopPrijsNul=FALSE
+            CLEAR(Pla:Record)
+            Pla:VerkoopID = Ver2:VerkoopID
+            Set(Pla:Planning_FK02,Pla:Planning_FK02)
+            Loop UNTIL Access:Planning.Next()
+                IF NOT Pla:VerkoopID = Ver2:VerkoopID THEN BReak.
+                IF Pla:VerkoopKGPrijs=0
+                    VerkoopPrijsNul=TRUE
+                    BREAK
+                END
+            END
+            IF VerkoopPrijsNul=FALSE OR |
+                Message('Verkoop '&Ver2:VerkoopID&' heeft een orderregel met verkoopprijs gelijk aan nul|Wilt u deze toch exporteren?',|
+                    'Verkoopprijs gelijk aan nul',Icon:Cross,Button:Yes+Button:No, Button:No)=Button:Yes
+                ExportClass.XMLHeader
+                st.ToUnicode(st:EncodeUtf8,st:CP_WINDOWS_1250)
+                st.SaveFile(FileName)
+                IF CurrentLayout=LayOut:InvoiceOrder
+                    Ver2:Exported=TRUE
+                    GLO:GebruikerLogHandelingOpmerking='Export naar Exact'
+                    Access:Verkoop.Update()
+                END
+            END
+        ELSE
+            Message('Verkoop zoek error '&ERROR())
+        END
+    END
+    Access:Gebruiker.Close()
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 2
+OWNER 3
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 1
+OWNER 1
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%CheckForCantCloseNowSetHere LONG  (1)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%WindowsVisibleAfterOpen LONG  (1)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+[PROCEDURE]
+NAME PackLijstClassSource
+[COMMON]
+FROM MTMaxtel MT_ClassC7_Declaration
+[PROMPTS]
+%MTClassName DEFAULT  ('ClassPackLijst')
+%MTDefIncFileName DEFAULT  ('ClassPackLijstDef.inc')
+%MTSrcIncFileName DEFAULT  ('ClassPackLijstSrc.inc')
+%MTHandcode LONG  (0)
+%MTNotType LONG  (0)
+[EMBED]
+EMBED %ClassSource
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ClassPackLijst.VulPackLijstQ        PROCEDURE(Long _verkoopID, *PackLijstQ _PackLijstQ)
+
+CODE
+    Access:Planning.Open()
+    Access:Planning.UseFile()
+    Clear(Pla:Record)
+    Pla:VerkoopID=_verkoopID
+    Set(Pla:Planning_FK02,Pla:Planning_FK02)
+    Loop Until Access:Planning.Next()
+        IF NOT Pla:VerkoopID=_verkoopID THEN BREAK.
+        _PackLijstQ:ArtikelID=Pla:ArtikelID
+        _PackLijstQ:VerkoopPrijs=Pla:VerkoopKGPrijs
+        _PackLijstQ:VerpakkingID=Pla:VerpakkingID
+        _PackLijstQ:PlantNumber=Pla:PlantNumber
+        GET(_PackLijstQ,+_PackLijstQ:ArtikelID,+_PackLijstQ:VerkoopPrijs,+_PackLijstQ:VerpakkingID,+_PackLijstQ:PlantNumber)
+        IF NOT ERROR()
+            _PackLijstQ:KG+=CHOOSE(Pla:MutatieGemaakt, Pla:MutatieKG,Pla:Kg)
+            _PackLijstQ:Bedrag+=CHOOSE(Pla:MutatieGemaakt, Pla:MutatieKG,Pla:Kg)*_PackLijstQ:VerkoopPrijs
+            _PackLijstQ:Pallet+=CHOOSE(Pla:MutatieGemaakt, Pla:MutatiePallets,Pla:Pallets)
+            _PackLijstQ:Dozen+=Pla:Dozen
+            _PackLijstQ:GrossWeight+=Pla:GrossWeight
+            _PackLijstQ:Aantal+=CHOOSE(Pla:Dozen=0,CHOOSE(Pla:MutatieGemaakt, Pla:MutatiePallets,Pla:Pallets),Pla:Dozen)
+            ! 2019-12-4 Altijd de oudste
+            IF NOT NULL(Pla:UitslagPalletbladProductionDate11) AND Pla:UitslagPalletbladProductionDate11<_PackLijstQ:ProductieDatum
+                _PackLijstQ:ProductieDatum=Pla:UitslagPalletbladProductionDate11_DATE
+            END
+            IF NOT NULL(Pla:UitslagPalletbladSellByDate15) AND Pla:UitslagPalletbladSellByDate15_DATE<_PackLijstQ:THTDatum
+                _PackLijstQ:THTDatum=Pla:UitslagPalletbladSellByDate15_DATE
+            END
+            Put(_PackLijstQ)
+        ELSE
+            _PackLijstQ:ArtikelID=Pla:ArtikelID
+            CLEAR(Art2:RECORD)
+            Art2:ex_artcode='GB'
+            Art2:artcode=Pla:ArtikelID
+            !
+            _PackLijstQ:ArtikelOms = GlobalClass.CMRArtikelOms(Ver2:Klant, Pla:ArtikelID)
+            IF Pla:AlternatieveArtikelOms<>''
+                _PackLijstQ:ArtikelOmsAlt=CLIP(Pla:AlternatieveArtikelOms)
+            ELSIF Access:ArtikelOmschrijvingExtra.Fetch(Art2:PK_ArtikelOmschrijvingExtra)=Level:Benign AND Art2:tekst<>''
+                _PackLijstQ:ArtikelOmsAlt=CLIP(Art2:tekst)
+            ELSE
+                _PackLijstQ:ArtikelOmsAlt=CLIP(Art:ArtikelOms)
+            END
+            _PackLijstQ:VerkoopPrijs=Pla:VerkoopKGPrijs
+            _PackLijstQ:VerpakkingID=Pla:VerpakkingID
+            Clear(Ver:Record)
+            Ver:VerpakkingID=Pla:VerpakkingID
+            IF Access:Verpakking.Fetch(Ver:Verpakking_PK)=Level:Benign
+                IF Ver:Description=''
+                    _PackLijstQ:VerpakkingOmschrijving=Ver:VerpakkingOmschrijving
+                ELSE
+                    _PackLijstQ:VerpakkingOmschrijving=Ver:Description
+                END
+            END
+            _PackLijstQ:KG=CHOOSE(Pla:MutatieGemaakt, Pla:MutatieKG,Pla:Kg)
+            _PackLijstQ:Dozen=Pla:Dozen
+            _PackLijstQ:Aantal=CHOOSE(Pla:Dozen=0,CHOOSE(Pla:MutatieGemaakt, Pla:MutatiePallets,Pla:Pallets),Pla:Dozen)
+            !Loc:DozenPallet=_PackLijstQ:DozenPallets
+            _PackLijstQ:GrossWeight=Pla:GrossWeight
+            _PackLijstQ:VerkoopPrijs=Pla:VerkoopKGPrijs
+            _PackLijstQ:Bedrag=_PackLijstQ:KG*_PackLijstQ:VerkoopPrijs
+            _PackLijstQ:Pallet=CHOOSE(Pla:MutatieGemaakt, Pla:MutatiePallets,Pla:Pallets)
+            _PackLijstQ:PlantNumber=Pla:PlantNumber
+            IF NOT NULL(Pla:UitslagPalletbladProductionDate11)
+                _PackLijstQ:ProductieDatum=Pla:UitslagPalletbladProductionDate11_DATE
+            END
+            IF NOT NULL(Pla:UitslagPalletbladSellByDate15)
+                _PackLijstQ:THTDatum=Pla:UitslagPalletbladSellByDate15_DATE
+            END
+
+            Clear(GNA:Record)
+            GNA:ArtikelID=Pla:ArtikelID
+            IF  Access:GNCodeArtikelen.Fetch(GNA:GNCodeArtikelen_FK1)=Level:Benign
+                _PackLijstQ:GNCode=GNA:GNCode
+                IF AREL:Country='ISLAS CANARIAS - ESPANA'
+                    Clear(GNC:Record)
+                    GNC:GNCode=GNA:GNCode
+                    IF Access:GNCode.Fetch(GNC:GNCode_PK)=Level:Benign
+                        _PackLijstQ:GNCode=GNC:GNCode_Can
+                    END
+                END
+            ELSE
+                _PackLijstQ:GNCode=''
+            END
+!            IF Loc:GNCodes=''
+!                Loc:GNCodes=_PackLijstQ:GNCode
+!            ELSIF NOT Instring(_PackLijstQ:GNCode,Loc:GNCodes,1,1)
+!                Loc:GNCodes=CLIP(Loc:GNCodes)&', '&_PackLijstQ:GNCode
+!            END
+
+            ADD(_PackLijstQ,+_PackLijstQ:ArtikelID)
+        END
+        !Loc:TotaalBedrag+=CHOOSE(Pla:MutatieGemaakt, Pla:MutatieKG,Pla:KG)*Pla:VerkoopKGPrijs
+        !Loc:TotaalKG+=CHOOSE(Pla:MutatieGemaakt, Pla:MutatieKG,Pla:KG)
+        !IF Loc:DozenPallet='Pallet'
+        !    Loc:TotaalDozen+=CHOOSE(Pla:MutatieGemaakt, Pla:MutatiePallets,Pla:Pallets)
+        !ELSE
+        !    Loc:TotaalDozen+=Pla:Dozen
+        !END
+        !Loc:TotaalGrossWeight+=Pla:GrossWeight
+
+    END
+    Access:Planning.Close()
+    Return
+[END]
+EMBED %ClassDeclaration
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 1800
+LABEL
+PROPERTY:END
+PackLijstQ          QUEUE,TYPE,PRE(LTQ)                        !
+ArtikelID            CSTRING(31)                           !
+ArtikelOms           STRING(60)                            !
+ArtikelOmsAlt        CSTRING(1001)                            !
+KG                   DECIMAL(10,2)                         !
+Pallet               LONG                                  !
+Dozen                LONG                                  !
+Aantal               LONG                                  !
+GrossWeight          DECIMAL(8,3)                          !
+VerkoopPrijs         DECIMAL(11,3)                         !
+VerpakkingID         LONG                                  !
+VerpakkingOmschrijving CSTRING(51)                         !
+Bedrag               DECIMAL(11,2)                         !
+PlantNumber          CSTRING(51)                           !
+ProductieDatum       DATE                                  !
+THTDatum             DATE                                  !
+GNCode               CSTRING(100)                          !
+                    END
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2001
+LABEL
+PROPERTY:END
+VulPackLijstQ           PROCEDURE(LONG,*PackLijstQ)
+
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 2
+OWNER 3
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 1
+OWNER 1
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%CheckForCantCloseNowSetHere LONG  (1)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%WindowsVisibleAfterOpen LONG  (1)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+[END]

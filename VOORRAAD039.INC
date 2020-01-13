@@ -1,0 +1,3 @@
+  MODULE('VOORRAAD039.CLW')
+ConvertInkoopVerkoopStatus PROCEDURE
+  END

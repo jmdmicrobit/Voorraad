@@ -1,0 +1,3 @@
+  MODULE('VOORRAAD052.CLW')
+ShowNewVersion         PROCEDURE
+  END

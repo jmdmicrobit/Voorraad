@@ -1,0 +1,2851 @@
+[MODULE]
+NAME 'ReportPlanning_VoorrRpt.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME ReportPlanning
+PROTOTYPE '(STRING)'
+PARAMETERS '(Datum)'
+[COMMON]
+FROM ABC Report
+[DATA]
+Progress:Thermometer     BYTE
+!!> GUID('a778faee-905e-470f-b470-d5fbd14a3d0b')
+[SCREENCONTROLS]
+! PROMPT('LOC : Datum:'),USE(?LOC:Datum:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:Datum),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:Datum),RIGHT(1)
+LOC:Datum                LONG
+!!> GUID('a14a5993-d983-4845-ae11-e890a66d7ed8'),PROMPT('LOC : Datum:'),HEADER('LOC : Datum'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Printed:'),USE(?LOC:Printed:Prompt)
+! ENTRY(@n3),USE(LOC:Printed)
+[REPORTCONTROLS]
+! STRING(@n3),USE(LOC:Printed)
+LOC:Printed              BYTE
+!!> GUID('3183f9b8-239f-4cff-8f08-055bb4fba285'),PROMPT('LOC : Printed:'),HEADER('LOC : Printed'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Detail Datum:'),USE(?LOC:DetailDatum:Prompt)
+! ENTRY(@s100),USE(LOC:DetailDatum)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:DetailDatum)
+LOC:DetailDatum          STRING(100)
+!!> GUID('e426416e-87e3-40f8-8504-1b4a6769a6f8'),PROMPT('LOC : Detail Datum:'),HEADER('LOC : Detail Datum'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Magazijn Printer:'),USE(?LOC:MagazijnPrinter:Prompt)
+! ENTRY(@s255),USE(LOC:MagazijnPrinter)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:MagazijnPrinter)
+LOC:MagazijnPrinter      STRING(255)
+!!> GUID('aefdf805-c075-4eba-9bb8-8664e69f94ef'),PROMPT('LOC : Magazijn Printer:'),HEADER('LOC : Magazijn Printer'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('SAV : Printer:'),USE(?SAV:Printer:Prompt)
+! ENTRY(@s198),USE(SAV:Printer)
+[REPORTCONTROLS]
+! STRING(@s198),USE(SAV:Printer)
+SAV:Printer              CSTRING(199)
+!!> GUID('2202340b-c1ff-4b3e-8932-3a01270e1cab'),PROMPT('SAV : Printer:'),HEADER('SAV : Printer'),PICTURE(@s198),TYPEMODE(INS)
+Loc:SavePath             STRING(255)
+!!> GUID('31d78c56-e905-460e-bd46-0cf3c887b99d')
+Loc:TMPDirectory         STRING(255)
+!!> GUID('9ee44b71-ea92-4fbd-a49a-2a52b9795a72')
+Loc:Commando             CSTRING(10000)
+!!> GUID('fc99bd5e-1249-407a-9fa3-763411334cc2')
+Loc:TmpAtt               STRING(255)
+!!> GUID('231861ef-72f9-422e-8743-4d80d80a23c1')
+Loc:Landscape            BYTE
+!!> GUID('27a20650-4bb7-4c71-a4fc-b3cc16f3e74e')
+Loc:LandscapeOverride    BYTE
+!!> GUID('7344b591-0654-4349-b680-48829aa7d6ca')
+Loc:MailButtonID         LONG
+!!> GUID('be737bff-4cb1-4f7f-9e72-d084624a36d8')
+[FILES]
+[PRIMARY]
+Cel
+[INSTANCE]
+0
+[KEY]
+CEL:CEL_PK
+[OTHERS]
+AACel
+Planning
+PlanningVerkoop
+ACel
+Relatie
+ViewArtikel
+PlanningInkoop
+[PROMPTS]
+%RangeLimitType DEFAULT  ('Current Value')
+%ClassItem UNIQUE DEFAULT  ('BreakMgr', 'Default', 'Previewer', 'Process', 'ProgressMgr', |
+  'TargetSelector', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakManagerClass')
+WHEN  ('Default') ('ReportManager')
+WHEN  ('Previewer') ('PrintPreviewClass')
+WHEN  ('Process') ('ProcessClass')
+WHEN  ('ProgressMgr') ('StepClass')
+WHEN  ('TargetSelector') ('ReportTargetSelectorClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('')
+WHEN  ('Default') ('')
+WHEN  ('Previewer') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('StepLongClass')
+WHEN  ('TargetSelector') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 3
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Init {19}PROCEDURE(ProcessClass PC,<<REPORT R>,<<PrintPreviewClass PV>)', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'OpenReport {13}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+WHEN  ('Previewer') ('Open {19}PROCEDURE(),DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED')
+WHEN  ('Process') ('Close {18}PROCEDURE(),DERIVED', 'TakeRecord {13}PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('NO')
+WHEN  ('Default') ('NO')
+WHEN  ('Previewer') ('NO')
+WHEN  ('Process') ('NO')
+WHEN  ('ProgressMgr') ('NO')
+WHEN  ('TargetSelector') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakMgr')
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('Previewer') ('Previewer')
+WHEN  ('Process') ('ThisReport')
+WHEN  ('ProgressMgr') ('ProgressMgr')
+WHEN  ('TargetSelector') ('TargetSelector')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('ADOBlob')
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('Previewer') ('ADOBlob')
+WHEN  ('Process') ('ADOBlob')
+WHEN  ('ProgressMgr') ('ADOBlob')
+WHEN  ('TargetSelector') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (0)
+WHEN  ('Default') (0)
+WHEN  ('Previewer') (0)
+WHEN  ('Process') (0)
+WHEN  ('ProgressMgr') (0)
+WHEN  ('TargetSelector') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 3
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 3
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%WindowMessage DEFAULT  ('')
+%ReportTargetList MULTI LONG  (1)
+%ReportTargetListName DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDF')
+
+%ReportTargetListClass DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDFReportGenerator')
+
+%ReportTargetListObject DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDFReporter')
+
+%ReportTargetListCondition DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('')
+
+%ReportTargetHiddenControls MULTI LONG  ()
+%ReportTargetHiddenControl DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%ReportTargetHiddenControlTemplate DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%EnablePrintPreview LONG  (1)
+%ReportDataSource DEFAULT  ('File')
+%MDIProgressWindow LONG  (0)
+%ProgressInterval DEFAULT  ('10')
+%EnableQuickScan LONG  (1)
+%RecordFilter DEFAULT  ('')
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%AddConditionalSort MULTI LONG  ()
+%AddConditionalSortCondition DEPEND %AddConditionalSort DEFAULT TIMES 0
+
+%AddConditionalSortFieldsAssisted DEPEND %AddConditionalSort MULTI LONG TIMES 0
+
+%AddConditionalSortFieldAssisted DEPEND %AddConditionalSortFieldsAssisted FIELD TIMES 0
+
+%AddConditionalSortFieldAssistedOrder DEPEND %AddConditionalSortFieldsAssisted DEFAULT TIMES 0
+
+%AddSortDynamicNamed MULTI LONG  ()
+%AddSortFieldDinNameDescription DEPEND %AddSortDynamicNamed DEFAULT TIMES 0
+
+%AddSortFieldsDinName DEPEND %AddSortDynamicNamed MULTI LONG TIMES 0
+
+%AddSortFieldDinName DEPEND %AddSortFieldsDinName FIELD TIMES 0
+
+%AddSortFieldDinNameOrder DEPEND %AddSortFieldsDinName DEFAULT TIMES 0
+
+%AddSortFieldsDinSort MULTI LONG  ()
+%AddSortFieldDinSortDescription DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AddSortFieldDinSort DEPEND %AddSortFieldsDinSort FIELD TIMES 0
+
+%AddSortFieldDinSortOrder DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AdditionalSortWindowTitle DEFAULT  ('Select the Order')
+%AdditionalSortWindowMessage DEFAULT  ('Select the order to process the data.')
+%AdditionalSortWindowOkButtonText DEFAULT  ('&OK')
+%AdditionalSortWindowOkButtonIcon DEFAULT  ('SOK.ICO')
+%AdditionalSortWindowOkButtonCursor DEFAULT  ('')
+%AdditionalSortWindowOkButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowOkButtonMsg DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonTip DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonFlat LONG  (1)
+%AdditionalSortWindowOkButtonSkip LONG  (0)
+%AdditionalSortWindowOkButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowCancelButtonText DEFAULT  ('&Cancel')
+%AdditionalSortWindowCancelButtonIcon DEFAULT  ('SCANCEL.ICO')
+%AdditionalSortWindowCancelButtonCursor DEFAULT  ('')
+%AdditionalSortWindowCancelButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowCancelButtonMsg DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonTip DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonFlat LONG  (1)
+%AdditionalSortWindowCancelButtonSkip LONG  (0)
+%AdditionalSortWindowCancelButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowUpButtonText DEFAULT  ('')
+%AdditionalSortWindowUpButtonIcon DEFAULT  ('SUP.ICO')
+%AdditionalSortWindowUpButtonCursor DEFAULT  ('')
+%AdditionalSortWindowUpButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowUpButtonMsg DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonTip DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonFlat LONG  (1)
+%AdditionalSortWindowUpButtonSkip LONG  (0)
+%AdditionalSortWindowUpButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowDownButtonText DEFAULT  ('')
+%AdditionalSortWindowDownButtonIcon DEFAULT  ('SDOWN.ICO')
+%AdditionalSortWindowDownButtonCursor DEFAULT  ('')
+%AdditionalSortWindowDownButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowDownButtonMsg DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonTip DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonFlat LONG  (1)
+%AdditionalSortWindowDownButtonSkip LONG  (0)
+%AdditionalSortWindowDownButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowChOrdButtonText DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonIcon DEFAULT  ('SCH-ORD.ICO')
+%AdditionalSortWindowChOrdButtonCursor DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonMsg DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonTip DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonFlat LONG  (1)
+%AdditionalSortWindowChOrdButtonSkip LONG  (0)
+%AdditionalSortWindowChOrdButtonJustification DEFAULT  ('Left')
+%ApproxRecordCount DEFAULT  ('')
+%ManuallySetProgressLimits LONG  (0)
+%LowLimit DEFAULT  ('')
+%HighLimit DEFAULT  ('')
+%ReportDataSourceQueueName DEFAULT  ('')
+%UseMRP LONG  (1)
+%ReportTargetOutput DEFAULT  ('Printer')
+%ReportTargetAskWithPrint LONG  (1)
+%ReportTargetOtherOutput DEFAULT  ('')
+%RangeField COMPONENT  ()
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%RuntimeSkipPreview DEFAULT  ('False')
+%InitialZoom DEFAULT  ('No Zoom')
+%AllowUserZooms LONG  (1)
+%InitWindowPosition LONG  (0)
+%WinXPos DEFAULT  ('')
+%WinYPos DEFAULT  ('')
+%WinWidth DEFAULT  ('315')
+%WinHeight DEFAULT  ('200')
+%MaximizePreviewWindow LONG  (0)
+%MDIPreviewer LONG  (0)
+%ProcessBreaks MULTI LONG  ()
+%BreakName DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakLevelCero DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevelBreakNumber DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevel DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakFields DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakField DEPEND %BreakFields FIELD TIMES 0
+
+%BreakTotals DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakTotalTarget DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalType DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalField DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalFieldWeight DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalBasedOn DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalCondition DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalReset DEPEND %BreakTotals LONG TIMES 0
+
+%BreakReportHeaderYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportHeader DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakReportFooterYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportFooter DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldRestoreOnBreak DEPEND %HotFields LONG TIMES 0
+
+%DetailFilter DEPEND %ReportControl DEFAULT TIMES 0
+
+%DetailFilterExclusive DEPEND %ReportControl LONG TIMES 0
+
+%DetailFilterExternal DEPEND %ReportControl DEFAULT TIMES 81
+WHEN  ('') ('')
+WHEN  ('?AACel:CelOms') ('')
+WHEN  ('?ACel:CelOms') ('')
+WHEN  ('?Art:ArtikelOms') ('')
+WHEN  ('?Art:ArtikelOms:2') ('')
+WHEN  ('?Art:ArtikelOms:3') ('')
+WHEN  ('?DETAIL1') ('')
+WHEN  ('?DETAIL2') ('')
+WHEN  ('?DETAIL3') ('')
+WHEN  ('?DETAIL3:2') ('')
+WHEN  ('?DETAIL3:3') ('')
+WHEN  ('?DETAIL4') ('')
+WHEN  ('?DETAIL5') ('')
+WHEN  ('?Detail') ('')
+WHEN  ('?Footer') ('')
+WHEN  ('?Header') ('')
+WHEN  ('?LINE1') ('')
+WHEN  ('?LINE1:2') ('')
+WHEN  ('?LINE1:3') ('')
+WHEN  ('?LOC:DetailDatum') ('')
+WHEN  ('?LOC:DetailDatum:3') ('')
+WHEN  ('?PLA3:Geprint') ('')
+WHEN  ('?PLA3:Instructie') ('')
+WHEN  ('?PLA3:KG') ('')
+WHEN  ('?PLA3:Pallets') ('')
+WHEN  ('?PLA3:Transport') ('')
+WHEN  ('?PLA3:Verwerkt') ('')
+WHEN  ('?Pla2:Geprint:2') ('')
+WHEN  ('?Pla2:Ingeslagen:2') ('')
+WHEN  ('?Pla2:Instructie') ('')
+WHEN  ('?Pla2:KG') ('')
+WHEN  ('?Pla2:Pallets') ('')
+WHEN  ('?Pla2:Planning_TIME') ('')
+WHEN  ('?Pla2:Transport') ('')
+WHEN  ('?Pla2:Verwerkt:2') ('')
+WHEN  ('?Pla3:Geprint') ('')
+WHEN  ('?Pla3:Instructie') ('')
+WHEN  ('?Pla3:KG') ('')
+WHEN  ('?Pla3:Pallets') ('')
+WHEN  ('?Pla3:Transport') ('')
+WHEN  ('?Pla3:Verwerkt') ('')
+WHEN  ('?Pla:Instructie') ('')
+WHEN  ('?Pla:Instructie:2') ('')
+WHEN  ('?Pla:KG') ('')
+WHEN  ('?Pla:Pallets') ('')
+WHEN  ('?Pla:Planning_TIME') ('')
+WHEN  ('?Pla:Planning_TIME:2') ('')
+WHEN  ('?Pla:Transport') ('')
+WHEN  ('?Pla:Verwerkt:2') ('')
+WHEN  ('?Pla:Verwerkt:3') ('')
+WHEN  ('?Rel:FirmaNaam') ('')
+WHEN  ('?Rel:FirmaNaam:2') ('')
+WHEN  ('?STRING1') ('')
+WHEN  ('?STRING10') ('')
+WHEN  ('?STRING10:2') ('')
+WHEN  ('?STRING10:3') ('')
+WHEN  ('?STRING11') ('')
+WHEN  ('?STRING1:2') ('')
+WHEN  ('?STRING1:3') ('')
+WHEN  ('?STRING2') ('')
+WHEN  ('?STRING2:2') ('')
+WHEN  ('?STRING2:3') ('')
+WHEN  ('?STRING3') ('')
+WHEN  ('?STRING3:2') ('')
+WHEN  ('?STRING3:3') ('')
+WHEN  ('?STRING4') ('')
+WHEN  ('?STRING4:2') ('')
+WHEN  ('?STRING4:3') ('')
+WHEN  ('?STRING5') ('')
+WHEN  ('?STRING6') ('')
+WHEN  ('?STRING6:2') ('')
+WHEN  ('?STRING6:3') ('')
+WHEN  ('?STRING7') ('')
+WHEN  ('?STRING7:2') ('')
+WHEN  ('?STRING7:3') ('')
+WHEN  ('?STRING8') ('')
+WHEN  ('?STRING8:2') ('')
+WHEN  ('?STRING8:3') ('')
+WHEN  ('?STRING9') ('')
+WHEN  ('?STRING9:2') ('')
+WHEN  ('?STRING9:3') ('')
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Default')
+WHEN  ('?Progress:Cancel') ('Default')
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('No Special Action')
+WHEN  ('?Progress:Cancel') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('25000')
+WHEN  ('?Progress:Cancel') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('None')
+WHEN  ('?Progress:Cancel') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 2
+WHEN  ('') (1)
+WHEN  ('?Progress:Cancel') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FirstPage DEFAULT  ('')
+%ReportTargetOpen LONG  (0)
+%HideOutputProgress LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Progress:Thermometer')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+	LOC:Datum = Datum
+	LOC:Printed = false
+
+	Loc:MagazijnPrinter=GETINI('Printer','Magazijn',,'.\Voorraad.ini')
+[END]
+[END]
+WHEN 'OpenReport'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+	SAV:Printer=PRINTER{PROPPRINT:Device}
+	IF Loc:MagazijnPrinter<>''
+		PRINTER{PROPPRINT:Device}=Loc:MagazijnPrinter
+    End
+[END]
+[END]
+[END]
+EMBED %ProcessManagerMethodCodeSection
+[INSTANCES]
+WHEN 'TakeRecord'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5500
+PROPERTY:END
+IF False THEN
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8000
+PROPERTY:END
+ELSE
+IF GLO:HidePlanningInstructie = 1 THEN
+    ?Pla:Instructie{PROP:Visible} = FALSE
+    ?Pla:Instructie:2{PROP:Visible} = FALSE
+    ?Pla2:Instructie{PROP:Visible} = FALSE
+    ?Pla3:Instructie{PROP:Visible} = FALSE
+    ?STRING9{PROP:Visible} = FALSE
+    ?STRING9:2{PROP:Visible} = FALSE
+    ?STRING9:3{PROP:Visible} = FALSE
+END
+		IF NOT(LOC:Printed)
+			Execute (Loc:DAtum%7 )+ 1
+				LOC:DetailDatum='Zondag '&Format(Loc:DAtum,@d6-)
+				LOC:DetailDatum='Maandag '&Format(Loc:DAtum,@d6-)
+				LOC:DetailDatum='Dinsdag '&Format(Loc:DAtum,@d6-)
+				LOC:DetailDatum='Woensdag '&Format(Loc:DAtum,@d6-)
+				LOC:DetailDatum='Donderdag '&Format(Loc:DAtum,@d6-)
+				LOC:DetailDatum='Vrijdag '&Format(Loc:DAtum,@d6-)
+				LOC:DetailDatum='Zaterdag '&Format(Loc:DAtum,@d6-)
+			End	
+			PRINT(RPT:DetailDatum)
+
+			! Geplande inkopen
+			LOC:DetailDatum='Geplande inkopen'
+			PRINT(RPT:DetailKop)
+
+			PRINT(RPT:DetailInkoopPlanningKop)
+
+			CLEAR(Pla2:Record)
+			Pla2:Planning_DATE = Loc:Datum
+			SET(Pla2:Planning_FirmaNaam_K,Pla2:Planning_FirmaNaam_K)
+			LOOP UNTIL Access:PlanningInkoop.Next()
+				IF Pla2:Planning_DATE > LOC:Datum THEN BREAK.
+				
+				Rel:RelatieID=Pla2:Leverancier
+				Access:Relatie.TryFetch(Rel:Relatie_PK)
+
+				Art:ArtikelID=Pla2:ArtikelID
+				Access:ViewArtikel.TryFetch(Art:Artikel_PK)
+				
+				PRINT(RPT:DetailInkoopPlanning)
+			.
+			
+			! Overboekingen
+			LOC:DetailDatum='Overboekingen'
+			PRINT(RPT:DetailKop)
+
+			PRINT(RPT:DetailOverboekingPlanningKop)
+
+			CLEAR(Pla:Record)
+			Pla:Planning_DATE = Loc:Datum
+			SET(Pla:Datum_Tijd_K,Pla:Datum_Tijd_K)
+			LOOP UNTIL Access:Planning.Next()
+				IF Pla:Planning_DATE > LOC:Datum THEN BREAK.
+				
+				Art:ArtikelID=Pla:ArtikelID
+				Access:ViewArtikel.TryFetch(Art:Artikel_PK)
+				
+				ACel:CelID=Pla:CelID
+				Access:ACel.TryFetch(ACel:CEL_PK)
+				
+				AACel:CelID=Pla:OverboekingCelID
+				Access:AACel.TryFetch(AACel:CEL_PK)
+				
+				PRINT(RPT:DetailOverboekingPlanning)
+			.
+
+			! Geplande verkopen
+			LOC:DetailDatum='Geplande verkopen'
+			PRINT(RPT:DetailKop)
+
+			PRINT(RPT:DetailVerkoopPlanningKop)
+
+			CLEAR(Pla3:Record)
+			Pla3:Planning_DATE = Loc:Datum
+			SET(Pla3:Planning_FirmaNaam_K,Pla3:Planning_FirmaNaam_K)
+			LOOP UNTIL Access:PlanningVerkoop.Next()
+				IF Pla3:Planning_DATE > LOC:Datum THEN BREAK.
+				
+				Rel:RelatieID=Pla3:Klant
+				Access:Relatie.TryFetch(Rel:Relatie_PK)
+
+				Art:ArtikelID=Pla3:ArtikelID
+				Access:ViewArtikel.TryFetch(Art:Artikel_PK)
+				
+				PRINT(RPT:DetailVerkoopPlanning)
+			.
+			
+			LOC:Printed = true
+		.
+	.
+[END]
+[END]
+WHEN 'Close'
+[INSTANCES]
+WHEN '()'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+    IF SAV:Printer<>''
+		PRINTER{PROPPRINT:Device}=SAV:Printer
+	END
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME SVReportToPDFSupport SVReportToPDF
+[INSTANCE]
+INSTANCE 2
+OWNER 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('PDFReporter')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReportGenerator')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('SetUp {18}PROCEDURE(),DERIVED')
+
+%Populate DEFAULT  ('Always')
+%PopulateCondition DEFAULT  ('')
+%OutputNameType DEFAULT  ('Runtime')
+%OutputNameFixed DEFAULT  ('')
+%OutputNameVariable DEFAULT  ('')
+%DocumentTitle DEFAULT  ('CW Report')
+%ApplicationName DEFAULT  ('VoorrRpt')
+%ProgramName DEFAULT  ('ReportPlanning')
+%PDFSubject DEFAULT  ('ReportPlanning')
+%PDFAuthor DEFAULT  ('')
+%PDFKeywords DEFAULT  ('')
+%PagesAsParentBookmark LONG  (0)
+%UseScanCopyMode LONG  (0)
+%ScanCopyModeRes DEFAULT  ('Original')
+%CompressText LONG  (1)
+%CompressImages LONG  (1)
+%Encryptdoc DEFAULT  ('Never')
+%EncryptDocCondition DEFAULT  ('')
+%PDFPassword DEFAULT  ('')
+%PDFUseVariableAccess LONG  (0)
+%PDFVariableAccess DEFAULT  ('')
+%PDFAccessPrint LONG  (1)
+%PDFAccessModifyContent LONG  (1)
+%PDFAccessCopy LONG  (1)
+%PDFAccessModifyAnnotations LONG  (1)
+%PDFTempControlInstance DEFAULT  ('74')
+%PDFTempReportControl DEFAULT  ('?Footer')
+%PDFHideControl DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFSkipControl DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFHideControlOnPDF DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFPossibleTextOrigin DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?AACel:CelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ACel:CelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Footer') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Header') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DetailDatum') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DetailDatum:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Geprint:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Ingeslagen:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Instructie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Planning_TIME') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Transport') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Verwerkt:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Geprint') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Instructie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Transport') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Verwerkt') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Instructie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Instructie:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Planning_TIME') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Planning_TIME:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Transport') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Verwerkt:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Verwerkt:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Rel:FirmaNaam') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Rel:FirmaNaam:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFPossibleBookmarkTextOrigin DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?AACel:CelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ACel:CelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Footer') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Header') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:2') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LINE1:3') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DetailDatum') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:DetailDatum:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Geprint:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Ingeslagen:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Instructie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Planning_TIME') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Transport') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla2:Verwerkt:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Geprint') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Instructie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Transport') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla3:Verwerkt') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Instructie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Instructie:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Planning_TIME') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Planning_TIME:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Transport') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Verwerkt:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Pla:Verwerkt:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Rel:FirmaNaam') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Rel:FirmaNaam:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFFieldAction DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFFieldActionType DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('Hyperlink')
+WHEN  ('?AACel:CelOms') ('Hyperlink')
+WHEN  ('?ACel:CelOms') ('Hyperlink')
+WHEN  ('?Art:ArtikelOms') ('Hyperlink')
+WHEN  ('?Art:ArtikelOms:2') ('Hyperlink')
+WHEN  ('?Art:ArtikelOms:3') ('Hyperlink')
+WHEN  ('?DETAIL1') ('Hyperlink')
+WHEN  ('?DETAIL2') ('Hyperlink')
+WHEN  ('?DETAIL3') ('Hyperlink')
+WHEN  ('?DETAIL3:2') ('Hyperlink')
+WHEN  ('?DETAIL3:3') ('Hyperlink')
+WHEN  ('?DETAIL4') ('Hyperlink')
+WHEN  ('?DETAIL5') ('Hyperlink')
+WHEN  ('?Detail') ('Hyperlink')
+WHEN  ('?Footer') ('Hyperlink')
+WHEN  ('?Header') ('Hyperlink')
+WHEN  ('?LINE1') ('Hyperlink')
+WHEN  ('?LINE1:2') ('Hyperlink')
+WHEN  ('?LINE1:3') ('Hyperlink')
+WHEN  ('?LOC:DetailDatum') ('Hyperlink')
+WHEN  ('?LOC:DetailDatum:3') ('Hyperlink')
+WHEN  ('?Pla2:Geprint:2') ('Hyperlink')
+WHEN  ('?Pla2:Ingeslagen:2') ('Hyperlink')
+WHEN  ('?Pla2:Instructie') ('Hyperlink')
+WHEN  ('?Pla2:KG') ('Hyperlink')
+WHEN  ('?Pla2:Pallets') ('Hyperlink')
+WHEN  ('?Pla2:Planning_TIME') ('Hyperlink')
+WHEN  ('?Pla2:Transport') ('Hyperlink')
+WHEN  ('?Pla2:Verwerkt:2') ('Hyperlink')
+WHEN  ('?Pla3:Geprint') ('Hyperlink')
+WHEN  ('?Pla3:Instructie') ('Hyperlink')
+WHEN  ('?Pla3:KG') ('Hyperlink')
+WHEN  ('?Pla3:Pallets') ('Hyperlink')
+WHEN  ('?Pla3:Transport') ('Hyperlink')
+WHEN  ('?Pla3:Verwerkt') ('Hyperlink')
+WHEN  ('?Pla:Instructie') ('Hyperlink')
+WHEN  ('?Pla:Instructie:2') ('Hyperlink')
+WHEN  ('?Pla:KG') ('Hyperlink')
+WHEN  ('?Pla:Pallets') ('Hyperlink')
+WHEN  ('?Pla:Planning_TIME') ('Hyperlink')
+WHEN  ('?Pla:Planning_TIME:2') ('Hyperlink')
+WHEN  ('?Pla:Transport') ('Hyperlink')
+WHEN  ('?Pla:Verwerkt:2') ('Hyperlink')
+WHEN  ('?Pla:Verwerkt:3') ('Hyperlink')
+WHEN  ('?Rel:FirmaNaam') ('Hyperlink')
+WHEN  ('?Rel:FirmaNaam:2') ('Hyperlink')
+WHEN  ('?STRING1') ('Hyperlink')
+WHEN  ('?STRING10') ('Hyperlink')
+WHEN  ('?STRING10:2') ('Hyperlink')
+WHEN  ('?STRING10:3') ('Hyperlink')
+WHEN  ('?STRING11') ('Hyperlink')
+WHEN  ('?STRING1:2') ('Hyperlink')
+WHEN  ('?STRING1:3') ('Hyperlink')
+WHEN  ('?STRING2') ('Hyperlink')
+WHEN  ('?STRING2:2') ('Hyperlink')
+WHEN  ('?STRING2:3') ('Hyperlink')
+WHEN  ('?STRING3') ('Hyperlink')
+WHEN  ('?STRING3:2') ('Hyperlink')
+WHEN  ('?STRING3:3') ('Hyperlink')
+WHEN  ('?STRING4') ('Hyperlink')
+WHEN  ('?STRING4:2') ('Hyperlink')
+WHEN  ('?STRING4:3') ('Hyperlink')
+WHEN  ('?STRING5') ('Hyperlink')
+WHEN  ('?STRING6') ('Hyperlink')
+WHEN  ('?STRING6:2') ('Hyperlink')
+WHEN  ('?STRING6:3') ('Hyperlink')
+WHEN  ('?STRING7') ('Hyperlink')
+WHEN  ('?STRING7:2') ('Hyperlink')
+WHEN  ('?STRING7:3') ('Hyperlink')
+WHEN  ('?STRING8') ('Hyperlink')
+WHEN  ('?STRING8:2') ('Hyperlink')
+WHEN  ('?STRING8:3') ('Hyperlink')
+WHEN  ('?STRING9') ('Hyperlink')
+WHEN  ('?STRING9:2') ('Hyperlink')
+WHEN  ('?STRING9:3') ('Hyperlink')
+
+%PDFAnnotationOrigin DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('Text')
+WHEN  ('?AACel:CelOms') ('Text')
+WHEN  ('?ACel:CelOms') ('Text')
+WHEN  ('?Art:ArtikelOms') ('Text')
+WHEN  ('?Art:ArtikelOms:2') ('Text')
+WHEN  ('?Art:ArtikelOms:3') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?DETAIL2') ('Text')
+WHEN  ('?DETAIL3') ('Text')
+WHEN  ('?DETAIL3:2') ('Text')
+WHEN  ('?DETAIL3:3') ('Text')
+WHEN  ('?DETAIL4') ('Text')
+WHEN  ('?DETAIL5') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?LINE1') ('HardCoded')
+WHEN  ('?LINE1:2') ('HardCoded')
+WHEN  ('?LINE1:3') ('HardCoded')
+WHEN  ('?LOC:DetailDatum') ('Text')
+WHEN  ('?LOC:DetailDatum:3') ('Text')
+WHEN  ('?Pla2:Geprint:2') ('Text')
+WHEN  ('?Pla2:Ingeslagen:2') ('Text')
+WHEN  ('?Pla2:Instructie') ('Text')
+WHEN  ('?Pla2:KG') ('Text')
+WHEN  ('?Pla2:Pallets') ('Text')
+WHEN  ('?Pla2:Planning_TIME') ('Text')
+WHEN  ('?Pla2:Transport') ('Text')
+WHEN  ('?Pla2:Verwerkt:2') ('Text')
+WHEN  ('?Pla3:Geprint') ('Text')
+WHEN  ('?Pla3:Instructie') ('Text')
+WHEN  ('?Pla3:KG') ('Text')
+WHEN  ('?Pla3:Pallets') ('Text')
+WHEN  ('?Pla3:Transport') ('Text')
+WHEN  ('?Pla3:Verwerkt') ('Text')
+WHEN  ('?Pla:Instructie') ('Text')
+WHEN  ('?Pla:Instructie:2') ('Text')
+WHEN  ('?Pla:KG') ('Text')
+WHEN  ('?Pla:Pallets') ('Text')
+WHEN  ('?Pla:Planning_TIME') ('Text')
+WHEN  ('?Pla:Planning_TIME:2') ('Text')
+WHEN  ('?Pla:Transport') ('Text')
+WHEN  ('?Pla:Verwerkt:2') ('Text')
+WHEN  ('?Pla:Verwerkt:3') ('Text')
+WHEN  ('?Rel:FirmaNaam') ('Text')
+WHEN  ('?Rel:FirmaNaam:2') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING10') ('Text')
+WHEN  ('?STRING10:2') ('Text')
+WHEN  ('?STRING10:3') ('Text')
+WHEN  ('?STRING11') ('Text')
+WHEN  ('?STRING1:2') ('Text')
+WHEN  ('?STRING1:3') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING2:2') ('Text')
+WHEN  ('?STRING2:3') ('Text')
+WHEN  ('?STRING3') ('Text')
+WHEN  ('?STRING3:2') ('Text')
+WHEN  ('?STRING3:3') ('Text')
+WHEN  ('?STRING4') ('Text')
+WHEN  ('?STRING4:2') ('Text')
+WHEN  ('?STRING4:3') ('Text')
+WHEN  ('?STRING5') ('Text')
+WHEN  ('?STRING6') ('Text')
+WHEN  ('?STRING6:2') ('Text')
+WHEN  ('?STRING6:3') ('Text')
+WHEN  ('?STRING7') ('Text')
+WHEN  ('?STRING7:2') ('Text')
+WHEN  ('?STRING7:3') ('Text')
+WHEN  ('?STRING8') ('Text')
+WHEN  ('?STRING8:2') ('Text')
+WHEN  ('?STRING8:3') ('Text')
+WHEN  ('?STRING9') ('Text')
+WHEN  ('?STRING9:2') ('Text')
+WHEN  ('?STRING9:3') ('Text')
+
+%PDFAnnotationHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFAnnotationDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFPageAction DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('NEXT')
+WHEN  ('?AACel:CelOms') ('NEXT')
+WHEN  ('?ACel:CelOms') ('NEXT')
+WHEN  ('?Art:ArtikelOms') ('NEXT')
+WHEN  ('?Art:ArtikelOms:2') ('NEXT')
+WHEN  ('?Art:ArtikelOms:3') ('NEXT')
+WHEN  ('?DETAIL1') ('NEXT')
+WHEN  ('?DETAIL2') ('NEXT')
+WHEN  ('?DETAIL3') ('NEXT')
+WHEN  ('?DETAIL3:2') ('NEXT')
+WHEN  ('?DETAIL3:3') ('NEXT')
+WHEN  ('?DETAIL4') ('NEXT')
+WHEN  ('?DETAIL5') ('NEXT')
+WHEN  ('?Detail') ('NEXT')
+WHEN  ('?Footer') ('NEXT')
+WHEN  ('?Header') ('NEXT')
+WHEN  ('?LINE1') ('NEXT')
+WHEN  ('?LINE1:2') ('NEXT')
+WHEN  ('?LINE1:3') ('NEXT')
+WHEN  ('?LOC:DetailDatum') ('NEXT')
+WHEN  ('?LOC:DetailDatum:3') ('NEXT')
+WHEN  ('?Pla2:Geprint:2') ('NEXT')
+WHEN  ('?Pla2:Ingeslagen:2') ('NEXT')
+WHEN  ('?Pla2:Instructie') ('NEXT')
+WHEN  ('?Pla2:KG') ('NEXT')
+WHEN  ('?Pla2:Pallets') ('NEXT')
+WHEN  ('?Pla2:Planning_TIME') ('NEXT')
+WHEN  ('?Pla2:Transport') ('NEXT')
+WHEN  ('?Pla2:Verwerkt:2') ('NEXT')
+WHEN  ('?Pla3:Geprint') ('NEXT')
+WHEN  ('?Pla3:Instructie') ('NEXT')
+WHEN  ('?Pla3:KG') ('NEXT')
+WHEN  ('?Pla3:Pallets') ('NEXT')
+WHEN  ('?Pla3:Transport') ('NEXT')
+WHEN  ('?Pla3:Verwerkt') ('NEXT')
+WHEN  ('?Pla:Instructie') ('NEXT')
+WHEN  ('?Pla:Instructie:2') ('NEXT')
+WHEN  ('?Pla:KG') ('NEXT')
+WHEN  ('?Pla:Pallets') ('NEXT')
+WHEN  ('?Pla:Planning_TIME') ('NEXT')
+WHEN  ('?Pla:Planning_TIME:2') ('NEXT')
+WHEN  ('?Pla:Transport') ('NEXT')
+WHEN  ('?Pla:Verwerkt:2') ('NEXT')
+WHEN  ('?Pla:Verwerkt:3') ('NEXT')
+WHEN  ('?Rel:FirmaNaam') ('NEXT')
+WHEN  ('?Rel:FirmaNaam:2') ('NEXT')
+WHEN  ('?STRING1') ('NEXT')
+WHEN  ('?STRING10') ('NEXT')
+WHEN  ('?STRING10:2') ('NEXT')
+WHEN  ('?STRING10:3') ('NEXT')
+WHEN  ('?STRING11') ('NEXT')
+WHEN  ('?STRING1:2') ('NEXT')
+WHEN  ('?STRING1:3') ('NEXT')
+WHEN  ('?STRING2') ('NEXT')
+WHEN  ('?STRING2:2') ('NEXT')
+WHEN  ('?STRING2:3') ('NEXT')
+WHEN  ('?STRING3') ('NEXT')
+WHEN  ('?STRING3:2') ('NEXT')
+WHEN  ('?STRING3:3') ('NEXT')
+WHEN  ('?STRING4') ('NEXT')
+WHEN  ('?STRING4:2') ('NEXT')
+WHEN  ('?STRING4:3') ('NEXT')
+WHEN  ('?STRING5') ('NEXT')
+WHEN  ('?STRING6') ('NEXT')
+WHEN  ('?STRING6:2') ('NEXT')
+WHEN  ('?STRING6:3') ('NEXT')
+WHEN  ('?STRING7') ('NEXT')
+WHEN  ('?STRING7:2') ('NEXT')
+WHEN  ('?STRING7:3') ('NEXT')
+WHEN  ('?STRING8') ('NEXT')
+WHEN  ('?STRING8:2') ('NEXT')
+WHEN  ('?STRING8:3') ('NEXT')
+WHEN  ('?STRING9') ('NEXT')
+WHEN  ('?STRING9:2') ('NEXT')
+WHEN  ('?STRING9:3') ('NEXT')
+
+%PDFTargetCommand DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('notepad.exe')
+WHEN  ('?AACel:CelOms') ('notepad.exe')
+WHEN  ('?ACel:CelOms') ('notepad.exe')
+WHEN  ('?Art:ArtikelOms') ('notepad.exe')
+WHEN  ('?Art:ArtikelOms:2') ('notepad.exe')
+WHEN  ('?Art:ArtikelOms:3') ('notepad.exe')
+WHEN  ('?DETAIL1') ('notepad.exe')
+WHEN  ('?DETAIL2') ('notepad.exe')
+WHEN  ('?DETAIL3') ('notepad.exe')
+WHEN  ('?DETAIL3:2') ('notepad.exe')
+WHEN  ('?DETAIL3:3') ('notepad.exe')
+WHEN  ('?DETAIL4') ('notepad.exe')
+WHEN  ('?DETAIL5') ('notepad.exe')
+WHEN  ('?Detail') ('notepad.exe')
+WHEN  ('?Footer') ('notepad.exe')
+WHEN  ('?Header') ('notepad.exe')
+WHEN  ('?LINE1') ('notepad.exe')
+WHEN  ('?LINE1:2') ('notepad.exe')
+WHEN  ('?LINE1:3') ('notepad.exe')
+WHEN  ('?LOC:DetailDatum') ('notepad.exe')
+WHEN  ('?LOC:DetailDatum:3') ('notepad.exe')
+WHEN  ('?Pla2:Geprint:2') ('notepad.exe')
+WHEN  ('?Pla2:Ingeslagen:2') ('notepad.exe')
+WHEN  ('?Pla2:Instructie') ('notepad.exe')
+WHEN  ('?Pla2:KG') ('notepad.exe')
+WHEN  ('?Pla2:Pallets') ('notepad.exe')
+WHEN  ('?Pla2:Planning_TIME') ('notepad.exe')
+WHEN  ('?Pla2:Transport') ('notepad.exe')
+WHEN  ('?Pla2:Verwerkt:2') ('notepad.exe')
+WHEN  ('?Pla3:Geprint') ('notepad.exe')
+WHEN  ('?Pla3:Instructie') ('notepad.exe')
+WHEN  ('?Pla3:KG') ('notepad.exe')
+WHEN  ('?Pla3:Pallets') ('notepad.exe')
+WHEN  ('?Pla3:Transport') ('notepad.exe')
+WHEN  ('?Pla3:Verwerkt') ('notepad.exe')
+WHEN  ('?Pla:Instructie') ('notepad.exe')
+WHEN  ('?Pla:Instructie:2') ('notepad.exe')
+WHEN  ('?Pla:KG') ('notepad.exe')
+WHEN  ('?Pla:Pallets') ('notepad.exe')
+WHEN  ('?Pla:Planning_TIME') ('notepad.exe')
+WHEN  ('?Pla:Planning_TIME:2') ('notepad.exe')
+WHEN  ('?Pla:Transport') ('notepad.exe')
+WHEN  ('?Pla:Verwerkt:2') ('notepad.exe')
+WHEN  ('?Pla:Verwerkt:3') ('notepad.exe')
+WHEN  ('?Rel:FirmaNaam') ('notepad.exe')
+WHEN  ('?Rel:FirmaNaam:2') ('notepad.exe')
+WHEN  ('?STRING1') ('notepad.exe')
+WHEN  ('?STRING10') ('notepad.exe')
+WHEN  ('?STRING10:2') ('notepad.exe')
+WHEN  ('?STRING10:3') ('notepad.exe')
+WHEN  ('?STRING11') ('notepad.exe')
+WHEN  ('?STRING1:2') ('notepad.exe')
+WHEN  ('?STRING1:3') ('notepad.exe')
+WHEN  ('?STRING2') ('notepad.exe')
+WHEN  ('?STRING2:2') ('notepad.exe')
+WHEN  ('?STRING2:3') ('notepad.exe')
+WHEN  ('?STRING3') ('notepad.exe')
+WHEN  ('?STRING3:2') ('notepad.exe')
+WHEN  ('?STRING3:3') ('notepad.exe')
+WHEN  ('?STRING4') ('notepad.exe')
+WHEN  ('?STRING4:2') ('notepad.exe')
+WHEN  ('?STRING4:3') ('notepad.exe')
+WHEN  ('?STRING5') ('notepad.exe')
+WHEN  ('?STRING6') ('notepad.exe')
+WHEN  ('?STRING6:2') ('notepad.exe')
+WHEN  ('?STRING6:3') ('notepad.exe')
+WHEN  ('?STRING7') ('notepad.exe')
+WHEN  ('?STRING7:2') ('notepad.exe')
+WHEN  ('?STRING7:3') ('notepad.exe')
+WHEN  ('?STRING8') ('notepad.exe')
+WHEN  ('?STRING8:2') ('notepad.exe')
+WHEN  ('?STRING8:3') ('notepad.exe')
+WHEN  ('?STRING9') ('notepad.exe')
+WHEN  ('?STRING9:2') ('notepad.exe')
+WHEN  ('?STRING9:3') ('notepad.exe')
+
+%PDFTargetParameters DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('note.txt')
+WHEN  ('?AACel:CelOms') ('note.txt')
+WHEN  ('?ACel:CelOms') ('note.txt')
+WHEN  ('?Art:ArtikelOms') ('note.txt')
+WHEN  ('?Art:ArtikelOms:2') ('note.txt')
+WHEN  ('?Art:ArtikelOms:3') ('note.txt')
+WHEN  ('?DETAIL1') ('note.txt')
+WHEN  ('?DETAIL2') ('note.txt')
+WHEN  ('?DETAIL3') ('note.txt')
+WHEN  ('?DETAIL3:2') ('note.txt')
+WHEN  ('?DETAIL3:3') ('note.txt')
+WHEN  ('?DETAIL4') ('note.txt')
+WHEN  ('?DETAIL5') ('note.txt')
+WHEN  ('?Detail') ('note.txt')
+WHEN  ('?Footer') ('note.txt')
+WHEN  ('?Header') ('note.txt')
+WHEN  ('?LINE1') ('note.txt')
+WHEN  ('?LINE1:2') ('note.txt')
+WHEN  ('?LINE1:3') ('note.txt')
+WHEN  ('?LOC:DetailDatum') ('note.txt')
+WHEN  ('?LOC:DetailDatum:3') ('note.txt')
+WHEN  ('?Pla2:Geprint:2') ('note.txt')
+WHEN  ('?Pla2:Ingeslagen:2') ('note.txt')
+WHEN  ('?Pla2:Instructie') ('note.txt')
+WHEN  ('?Pla2:KG') ('note.txt')
+WHEN  ('?Pla2:Pallets') ('note.txt')
+WHEN  ('?Pla2:Planning_TIME') ('note.txt')
+WHEN  ('?Pla2:Transport') ('note.txt')
+WHEN  ('?Pla2:Verwerkt:2') ('note.txt')
+WHEN  ('?Pla3:Geprint') ('note.txt')
+WHEN  ('?Pla3:Instructie') ('note.txt')
+WHEN  ('?Pla3:KG') ('note.txt')
+WHEN  ('?Pla3:Pallets') ('note.txt')
+WHEN  ('?Pla3:Transport') ('note.txt')
+WHEN  ('?Pla3:Verwerkt') ('note.txt')
+WHEN  ('?Pla:Instructie') ('note.txt')
+WHEN  ('?Pla:Instructie:2') ('note.txt')
+WHEN  ('?Pla:KG') ('note.txt')
+WHEN  ('?Pla:Pallets') ('note.txt')
+WHEN  ('?Pla:Planning_TIME') ('note.txt')
+WHEN  ('?Pla:Planning_TIME:2') ('note.txt')
+WHEN  ('?Pla:Transport') ('note.txt')
+WHEN  ('?Pla:Verwerkt:2') ('note.txt')
+WHEN  ('?Pla:Verwerkt:3') ('note.txt')
+WHEN  ('?Rel:FirmaNaam') ('note.txt')
+WHEN  ('?Rel:FirmaNaam:2') ('note.txt')
+WHEN  ('?STRING1') ('note.txt')
+WHEN  ('?STRING10') ('note.txt')
+WHEN  ('?STRING10:2') ('note.txt')
+WHEN  ('?STRING10:3') ('note.txt')
+WHEN  ('?STRING11') ('note.txt')
+WHEN  ('?STRING1:2') ('note.txt')
+WHEN  ('?STRING1:3') ('note.txt')
+WHEN  ('?STRING2') ('note.txt')
+WHEN  ('?STRING2:2') ('note.txt')
+WHEN  ('?STRING2:3') ('note.txt')
+WHEN  ('?STRING3') ('note.txt')
+WHEN  ('?STRING3:2') ('note.txt')
+WHEN  ('?STRING3:3') ('note.txt')
+WHEN  ('?STRING4') ('note.txt')
+WHEN  ('?STRING4:2') ('note.txt')
+WHEN  ('?STRING4:3') ('note.txt')
+WHEN  ('?STRING5') ('note.txt')
+WHEN  ('?STRING6') ('note.txt')
+WHEN  ('?STRING6:2') ('note.txt')
+WHEN  ('?STRING6:3') ('note.txt')
+WHEN  ('?STRING7') ('note.txt')
+WHEN  ('?STRING7:2') ('note.txt')
+WHEN  ('?STRING7:3') ('note.txt')
+WHEN  ('?STRING8') ('note.txt')
+WHEN  ('?STRING8:2') ('note.txt')
+WHEN  ('?STRING8:3') ('note.txt')
+WHEN  ('?STRING9') ('note.txt')
+WHEN  ('?STRING9:2') ('note.txt')
+WHEN  ('?STRING9:3') ('note.txt')
+
+%PDFTargetOrigin DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('Text')
+WHEN  ('?AACel:CelOms') ('Text')
+WHEN  ('?ACel:CelOms') ('Text')
+WHEN  ('?Art:ArtikelOms') ('Text')
+WHEN  ('?Art:ArtikelOms:2') ('Text')
+WHEN  ('?Art:ArtikelOms:3') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?DETAIL2') ('Text')
+WHEN  ('?DETAIL3') ('Text')
+WHEN  ('?DETAIL3:2') ('Text')
+WHEN  ('?DETAIL3:3') ('Text')
+WHEN  ('?DETAIL4') ('Text')
+WHEN  ('?DETAIL5') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?LINE1') ('HardCoded')
+WHEN  ('?LINE1:2') ('HardCoded')
+WHEN  ('?LINE1:3') ('HardCoded')
+WHEN  ('?LOC:DetailDatum') ('Text')
+WHEN  ('?LOC:DetailDatum:3') ('Text')
+WHEN  ('?Pla2:Geprint:2') ('Text')
+WHEN  ('?Pla2:Ingeslagen:2') ('Text')
+WHEN  ('?Pla2:Instructie') ('Text')
+WHEN  ('?Pla2:KG') ('Text')
+WHEN  ('?Pla2:Pallets') ('Text')
+WHEN  ('?Pla2:Planning_TIME') ('Text')
+WHEN  ('?Pla2:Transport') ('Text')
+WHEN  ('?Pla2:Verwerkt:2') ('Text')
+WHEN  ('?Pla3:Geprint') ('Text')
+WHEN  ('?Pla3:Instructie') ('Text')
+WHEN  ('?Pla3:KG') ('Text')
+WHEN  ('?Pla3:Pallets') ('Text')
+WHEN  ('?Pla3:Transport') ('Text')
+WHEN  ('?Pla3:Verwerkt') ('Text')
+WHEN  ('?Pla:Instructie') ('Text')
+WHEN  ('?Pla:Instructie:2') ('Text')
+WHEN  ('?Pla:KG') ('Text')
+WHEN  ('?Pla:Pallets') ('Text')
+WHEN  ('?Pla:Planning_TIME') ('Text')
+WHEN  ('?Pla:Planning_TIME:2') ('Text')
+WHEN  ('?Pla:Transport') ('Text')
+WHEN  ('?Pla:Verwerkt:2') ('Text')
+WHEN  ('?Pla:Verwerkt:3') ('Text')
+WHEN  ('?Rel:FirmaNaam') ('Text')
+WHEN  ('?Rel:FirmaNaam:2') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING10') ('Text')
+WHEN  ('?STRING10:2') ('Text')
+WHEN  ('?STRING10:3') ('Text')
+WHEN  ('?STRING11') ('Text')
+WHEN  ('?STRING1:2') ('Text')
+WHEN  ('?STRING1:3') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING2:2') ('Text')
+WHEN  ('?STRING2:3') ('Text')
+WHEN  ('?STRING3') ('Text')
+WHEN  ('?STRING3:2') ('Text')
+WHEN  ('?STRING3:3') ('Text')
+WHEN  ('?STRING4') ('Text')
+WHEN  ('?STRING4:2') ('Text')
+WHEN  ('?STRING4:3') ('Text')
+WHEN  ('?STRING5') ('Text')
+WHEN  ('?STRING6') ('Text')
+WHEN  ('?STRING6:2') ('Text')
+WHEN  ('?STRING6:3') ('Text')
+WHEN  ('?STRING7') ('Text')
+WHEN  ('?STRING7:2') ('Text')
+WHEN  ('?STRING7:3') ('Text')
+WHEN  ('?STRING8') ('Text')
+WHEN  ('?STRING8:2') ('Text')
+WHEN  ('?STRING8:3') ('Text')
+WHEN  ('?STRING9') ('Text')
+WHEN  ('?STRING9:2') ('Text')
+WHEN  ('?STRING9:3') ('Text')
+
+%PDFTargetHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFTargetDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkType DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('None')
+WHEN  ('?AACel:CelOms') ('None')
+WHEN  ('?ACel:CelOms') ('None')
+WHEN  ('?Art:ArtikelOms') ('None')
+WHEN  ('?Art:ArtikelOms:2') ('None')
+WHEN  ('?Art:ArtikelOms:3') ('None')
+WHEN  ('?DETAIL1') ('None')
+WHEN  ('?DETAIL2') ('None')
+WHEN  ('?DETAIL3') ('None')
+WHEN  ('?DETAIL3:2') ('None')
+WHEN  ('?DETAIL3:3') ('None')
+WHEN  ('?DETAIL4') ('None')
+WHEN  ('?DETAIL5') ('None')
+WHEN  ('?Detail') ('None')
+WHEN  ('?Footer') ('None')
+WHEN  ('?Header') ('None')
+WHEN  ('?LINE1') ('None')
+WHEN  ('?LINE1:2') ('None')
+WHEN  ('?LINE1:3') ('None')
+WHEN  ('?LOC:DetailDatum') ('None')
+WHEN  ('?LOC:DetailDatum:3') ('None')
+WHEN  ('?Pla2:Geprint:2') ('None')
+WHEN  ('?Pla2:Ingeslagen:2') ('None')
+WHEN  ('?Pla2:Instructie') ('None')
+WHEN  ('?Pla2:KG') ('None')
+WHEN  ('?Pla2:Pallets') ('None')
+WHEN  ('?Pla2:Planning_TIME') ('None')
+WHEN  ('?Pla2:Transport') ('None')
+WHEN  ('?Pla2:Verwerkt:2') ('None')
+WHEN  ('?Pla3:Geprint') ('None')
+WHEN  ('?Pla3:Instructie') ('None')
+WHEN  ('?Pla3:KG') ('None')
+WHEN  ('?Pla3:Pallets') ('None')
+WHEN  ('?Pla3:Transport') ('None')
+WHEN  ('?Pla3:Verwerkt') ('None')
+WHEN  ('?Pla:Instructie') ('None')
+WHEN  ('?Pla:Instructie:2') ('None')
+WHEN  ('?Pla:KG') ('None')
+WHEN  ('?Pla:Pallets') ('None')
+WHEN  ('?Pla:Planning_TIME') ('None')
+WHEN  ('?Pla:Planning_TIME:2') ('None')
+WHEN  ('?Pla:Transport') ('None')
+WHEN  ('?Pla:Verwerkt:2') ('None')
+WHEN  ('?Pla:Verwerkt:3') ('None')
+WHEN  ('?Rel:FirmaNaam') ('None')
+WHEN  ('?Rel:FirmaNaam:2') ('None')
+WHEN  ('?STRING1') ('None')
+WHEN  ('?STRING10') ('None')
+WHEN  ('?STRING10:2') ('None')
+WHEN  ('?STRING10:3') ('None')
+WHEN  ('?STRING11') ('None')
+WHEN  ('?STRING1:2') ('None')
+WHEN  ('?STRING1:3') ('None')
+WHEN  ('?STRING2') ('None')
+WHEN  ('?STRING2:2') ('None')
+WHEN  ('?STRING2:3') ('None')
+WHEN  ('?STRING3') ('None')
+WHEN  ('?STRING3:2') ('None')
+WHEN  ('?STRING3:3') ('None')
+WHEN  ('?STRING4') ('None')
+WHEN  ('?STRING4:2') ('None')
+WHEN  ('?STRING4:3') ('None')
+WHEN  ('?STRING5') ('None')
+WHEN  ('?STRING6') ('None')
+WHEN  ('?STRING6:2') ('None')
+WHEN  ('?STRING6:3') ('None')
+WHEN  ('?STRING7') ('None')
+WHEN  ('?STRING7:2') ('None')
+WHEN  ('?STRING7:3') ('None')
+WHEN  ('?STRING8') ('None')
+WHEN  ('?STRING8:2') ('None')
+WHEN  ('?STRING8:3') ('None')
+WHEN  ('?STRING9') ('None')
+WHEN  ('?STRING9:2') ('None')
+WHEN  ('?STRING9:3') ('None')
+
+%PDFHyperlinkTypeOther DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkTypeOtherDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperLinkBoxed DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFHyperLinkBoxColor DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (255)
+WHEN  ('?AACel:CelOms') (255)
+WHEN  ('?ACel:CelOms') (255)
+WHEN  ('?Art:ArtikelOms') (255)
+WHEN  ('?Art:ArtikelOms:2') (255)
+WHEN  ('?Art:ArtikelOms:3') (255)
+WHEN  ('?DETAIL1') (255)
+WHEN  ('?DETAIL2') (255)
+WHEN  ('?DETAIL3') (255)
+WHEN  ('?DETAIL3:2') (255)
+WHEN  ('?DETAIL3:3') (255)
+WHEN  ('?DETAIL4') (255)
+WHEN  ('?DETAIL5') (255)
+WHEN  ('?Detail') (255)
+WHEN  ('?Footer') (255)
+WHEN  ('?Header') (255)
+WHEN  ('?LINE1') (255)
+WHEN  ('?LINE1:2') (255)
+WHEN  ('?LINE1:3') (255)
+WHEN  ('?LOC:DetailDatum') (255)
+WHEN  ('?LOC:DetailDatum:3') (255)
+WHEN  ('?Pla2:Geprint:2') (255)
+WHEN  ('?Pla2:Ingeslagen:2') (255)
+WHEN  ('?Pla2:Instructie') (255)
+WHEN  ('?Pla2:KG') (255)
+WHEN  ('?Pla2:Pallets') (255)
+WHEN  ('?Pla2:Planning_TIME') (255)
+WHEN  ('?Pla2:Transport') (255)
+WHEN  ('?Pla2:Verwerkt:2') (255)
+WHEN  ('?Pla3:Geprint') (255)
+WHEN  ('?Pla3:Instructie') (255)
+WHEN  ('?Pla3:KG') (255)
+WHEN  ('?Pla3:Pallets') (255)
+WHEN  ('?Pla3:Transport') (255)
+WHEN  ('?Pla3:Verwerkt') (255)
+WHEN  ('?Pla:Instructie') (255)
+WHEN  ('?Pla:Instructie:2') (255)
+WHEN  ('?Pla:KG') (255)
+WHEN  ('?Pla:Pallets') (255)
+WHEN  ('?Pla:Planning_TIME') (255)
+WHEN  ('?Pla:Planning_TIME:2') (255)
+WHEN  ('?Pla:Transport') (255)
+WHEN  ('?Pla:Verwerkt:2') (255)
+WHEN  ('?Pla:Verwerkt:3') (255)
+WHEN  ('?Rel:FirmaNaam') (255)
+WHEN  ('?Rel:FirmaNaam:2') (255)
+WHEN  ('?STRING1') (255)
+WHEN  ('?STRING10') (255)
+WHEN  ('?STRING10:2') (255)
+WHEN  ('?STRING10:3') (255)
+WHEN  ('?STRING11') (255)
+WHEN  ('?STRING1:2') (255)
+WHEN  ('?STRING1:3') (255)
+WHEN  ('?STRING2') (255)
+WHEN  ('?STRING2:2') (255)
+WHEN  ('?STRING2:3') (255)
+WHEN  ('?STRING3') (255)
+WHEN  ('?STRING3:2') (255)
+WHEN  ('?STRING3:3') (255)
+WHEN  ('?STRING4') (255)
+WHEN  ('?STRING4:2') (255)
+WHEN  ('?STRING4:3') (255)
+WHEN  ('?STRING5') (255)
+WHEN  ('?STRING6') (255)
+WHEN  ('?STRING6:2') (255)
+WHEN  ('?STRING6:3') (255)
+WHEN  ('?STRING7') (255)
+WHEN  ('?STRING7:2') (255)
+WHEN  ('?STRING7:3') (255)
+WHEN  ('?STRING8') (255)
+WHEN  ('?STRING8:2') (255)
+WHEN  ('?STRING8:3') (255)
+WHEN  ('?STRING9') (255)
+WHEN  ('?STRING9:2') (255)
+WHEN  ('?STRING9:3') (255)
+
+%PDFBookmark DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFBookmarkOrigin DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('Text')
+WHEN  ('?AACel:CelOms') ('Text')
+WHEN  ('?ACel:CelOms') ('Text')
+WHEN  ('?Art:ArtikelOms') ('Text')
+WHEN  ('?Art:ArtikelOms:2') ('Text')
+WHEN  ('?Art:ArtikelOms:3') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?DETAIL2') ('Text')
+WHEN  ('?DETAIL3') ('Text')
+WHEN  ('?DETAIL3:2') ('Text')
+WHEN  ('?DETAIL3:3') ('Text')
+WHEN  ('?DETAIL4') ('Text')
+WHEN  ('?DETAIL5') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?LINE1') ('HardCoded')
+WHEN  ('?LINE1:2') ('HardCoded')
+WHEN  ('?LINE1:3') ('HardCoded')
+WHEN  ('?LOC:DetailDatum') ('Text')
+WHEN  ('?LOC:DetailDatum:3') ('Text')
+WHEN  ('?Pla2:Geprint:2') ('Text')
+WHEN  ('?Pla2:Ingeslagen:2') ('Text')
+WHEN  ('?Pla2:Instructie') ('Text')
+WHEN  ('?Pla2:KG') ('Text')
+WHEN  ('?Pla2:Pallets') ('Text')
+WHEN  ('?Pla2:Planning_TIME') ('Text')
+WHEN  ('?Pla2:Transport') ('Text')
+WHEN  ('?Pla2:Verwerkt:2') ('Text')
+WHEN  ('?Pla3:Geprint') ('Text')
+WHEN  ('?Pla3:Instructie') ('Text')
+WHEN  ('?Pla3:KG') ('Text')
+WHEN  ('?Pla3:Pallets') ('Text')
+WHEN  ('?Pla3:Transport') ('Text')
+WHEN  ('?Pla3:Verwerkt') ('Text')
+WHEN  ('?Pla:Instructie') ('Text')
+WHEN  ('?Pla:Instructie:2') ('Text')
+WHEN  ('?Pla:KG') ('Text')
+WHEN  ('?Pla:Pallets') ('Text')
+WHEN  ('?Pla:Planning_TIME') ('Text')
+WHEN  ('?Pla:Planning_TIME:2') ('Text')
+WHEN  ('?Pla:Transport') ('Text')
+WHEN  ('?Pla:Verwerkt:2') ('Text')
+WHEN  ('?Pla:Verwerkt:3') ('Text')
+WHEN  ('?Rel:FirmaNaam') ('Text')
+WHEN  ('?Rel:FirmaNaam:2') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING10') ('Text')
+WHEN  ('?STRING10:2') ('Text')
+WHEN  ('?STRING10:3') ('Text')
+WHEN  ('?STRING11') ('Text')
+WHEN  ('?STRING1:2') ('Text')
+WHEN  ('?STRING1:3') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING2:2') ('Text')
+WHEN  ('?STRING2:3') ('Text')
+WHEN  ('?STRING3') ('Text')
+WHEN  ('?STRING3:2') ('Text')
+WHEN  ('?STRING3:3') ('Text')
+WHEN  ('?STRING4') ('Text')
+WHEN  ('?STRING4:2') ('Text')
+WHEN  ('?STRING4:3') ('Text')
+WHEN  ('?STRING5') ('Text')
+WHEN  ('?STRING6') ('Text')
+WHEN  ('?STRING6:2') ('Text')
+WHEN  ('?STRING6:3') ('Text')
+WHEN  ('?STRING7') ('Text')
+WHEN  ('?STRING7:2') ('Text')
+WHEN  ('?STRING7:3') ('Text')
+WHEN  ('?STRING8') ('Text')
+WHEN  ('?STRING8:2') ('Text')
+WHEN  ('?STRING8:3') ('Text')
+WHEN  ('?STRING9') ('Text')
+WHEN  ('?STRING9:2') ('Text')
+WHEN  ('?STRING9:3') ('Text')
+
+%PDFBookmarkHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkParent DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFParentBookmark DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('?Header')
+WHEN  ('?AACel:CelOms') ('?Header')
+WHEN  ('?ACel:CelOms') ('?Header')
+WHEN  ('?Art:ArtikelOms') ('?Header')
+WHEN  ('?Art:ArtikelOms:2') ('?Header')
+WHEN  ('?Art:ArtikelOms:3') ('?Header')
+WHEN  ('?DETAIL1') ('?Header')
+WHEN  ('?DETAIL2') ('?Header')
+WHEN  ('?DETAIL3') ('?Header')
+WHEN  ('?DETAIL3:2') ('?Header')
+WHEN  ('?DETAIL3:3') ('?Header')
+WHEN  ('?DETAIL4') ('?Header')
+WHEN  ('?DETAIL5') ('?Header')
+WHEN  ('?Detail') ('?Header')
+WHEN  ('?Footer') ('?Header')
+WHEN  ('?Header') ('?Header')
+WHEN  ('?LINE1') ('?Header')
+WHEN  ('?LINE1:2') ('?Header')
+WHEN  ('?LINE1:3') ('?Header')
+WHEN  ('?LOC:DetailDatum') ('?Header')
+WHEN  ('?LOC:DetailDatum:3') ('?Header')
+WHEN  ('?Pla2:Geprint:2') ('?Header')
+WHEN  ('?Pla2:Ingeslagen:2') ('?Header')
+WHEN  ('?Pla2:Instructie') ('?Header')
+WHEN  ('?Pla2:KG') ('?Header')
+WHEN  ('?Pla2:Pallets') ('?Header')
+WHEN  ('?Pla2:Planning_TIME') ('?Header')
+WHEN  ('?Pla2:Transport') ('?Header')
+WHEN  ('?Pla2:Verwerkt:2') ('?Header')
+WHEN  ('?Pla3:Geprint') ('?Header')
+WHEN  ('?Pla3:Instructie') ('?Header')
+WHEN  ('?Pla3:KG') ('?Header')
+WHEN  ('?Pla3:Pallets') ('?Header')
+WHEN  ('?Pla3:Transport') ('?Header')
+WHEN  ('?Pla3:Verwerkt') ('?Header')
+WHEN  ('?Pla:Instructie') ('?Header')
+WHEN  ('?Pla:Instructie:2') ('?Header')
+WHEN  ('?Pla:KG') ('?Header')
+WHEN  ('?Pla:Pallets') ('?Header')
+WHEN  ('?Pla:Planning_TIME') ('?Header')
+WHEN  ('?Pla:Planning_TIME:2') ('?Header')
+WHEN  ('?Pla:Transport') ('?Header')
+WHEN  ('?Pla:Verwerkt:2') ('?Header')
+WHEN  ('?Pla:Verwerkt:3') ('?Header')
+WHEN  ('?Rel:FirmaNaam') ('?Header')
+WHEN  ('?Rel:FirmaNaam:2') ('?Header')
+WHEN  ('?STRING1') ('?Header')
+WHEN  ('?STRING10') ('?Header')
+WHEN  ('?STRING10:2') ('?Header')
+WHEN  ('?STRING10:3') ('?Header')
+WHEN  ('?STRING11') ('?Header')
+WHEN  ('?STRING1:2') ('?Header')
+WHEN  ('?STRING1:3') ('?Header')
+WHEN  ('?STRING2') ('?Header')
+WHEN  ('?STRING2:2') ('?Header')
+WHEN  ('?STRING2:3') ('?Header')
+WHEN  ('?STRING3') ('?Header')
+WHEN  ('?STRING3:2') ('?Header')
+WHEN  ('?STRING3:3') ('?Header')
+WHEN  ('?STRING4') ('?Header')
+WHEN  ('?STRING4:2') ('?Header')
+WHEN  ('?STRING4:3') ('?Header')
+WHEN  ('?STRING5') ('?Header')
+WHEN  ('?STRING6') ('?Header')
+WHEN  ('?STRING6:2') ('?Header')
+WHEN  ('?STRING6:3') ('?Header')
+WHEN  ('?STRING7') ('?Header')
+WHEN  ('?STRING7:2') ('?Header')
+WHEN  ('?STRING7:3') ('?Header')
+WHEN  ('?STRING8') ('?Header')
+WHEN  ('?STRING8:2') ('?Header')
+WHEN  ('?STRING8:3') ('?Header')
+WHEN  ('?STRING9') ('?Header')
+WHEN  ('?STRING9:2') ('?Header')
+WHEN  ('?STRING9:3') ('?Header')
+
+%PDFUsePDFFont DEPEND %ReportControl LONG TIMES 75
+WHEN  ('') (0)
+WHEN  ('?AACel:CelOms') (0)
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?Art:ArtikelOms:2') (0)
+WHEN  ('?Art:ArtikelOms:3') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL3:2') (0)
+WHEN  ('?DETAIL3:3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LINE1') (0)
+WHEN  ('?LINE1:2') (0)
+WHEN  ('?LINE1:3') (0)
+WHEN  ('?LOC:DetailDatum') (0)
+WHEN  ('?LOC:DetailDatum:3') (0)
+WHEN  ('?Pla2:Geprint:2') (0)
+WHEN  ('?Pla2:Ingeslagen:2') (0)
+WHEN  ('?Pla2:Instructie') (0)
+WHEN  ('?Pla2:KG') (0)
+WHEN  ('?Pla2:Pallets') (0)
+WHEN  ('?Pla2:Planning_TIME') (0)
+WHEN  ('?Pla2:Transport') (0)
+WHEN  ('?Pla2:Verwerkt:2') (0)
+WHEN  ('?Pla3:Geprint') (0)
+WHEN  ('?Pla3:Instructie') (0)
+WHEN  ('?Pla3:KG') (0)
+WHEN  ('?Pla3:Pallets') (0)
+WHEN  ('?Pla3:Transport') (0)
+WHEN  ('?Pla3:Verwerkt') (0)
+WHEN  ('?Pla:Instructie') (0)
+WHEN  ('?Pla:Instructie:2') (0)
+WHEN  ('?Pla:KG') (0)
+WHEN  ('?Pla:Pallets') (0)
+WHEN  ('?Pla:Planning_TIME') (0)
+WHEN  ('?Pla:Planning_TIME:2') (0)
+WHEN  ('?Pla:Transport') (0)
+WHEN  ('?Pla:Verwerkt:2') (0)
+WHEN  ('?Pla:Verwerkt:3') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?Rel:FirmaNaam:2') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING10:2') (0)
+WHEN  ('?STRING10:3') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING1:2') (0)
+WHEN  ('?STRING1:3') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING2:2') (0)
+WHEN  ('?STRING2:3') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING3:2') (0)
+WHEN  ('?STRING3:3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING4:2') (0)
+WHEN  ('?STRING4:3') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING6:2') (0)
+WHEN  ('?STRING6:3') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING7:2') (0)
+WHEN  ('?STRING7:3') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING8:2') (0)
+WHEN  ('?STRING8:3') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?STRING9:2') (0)
+WHEN  ('?STRING9:3') (0)
+
+%PDFOriginalFont DEPEND %ReportControl DEFAULT TIMES 75
+WHEN  ('') ('HELVETICA')
+WHEN  ('?AACel:CelOms') ('HELVETICA')
+WHEN  ('?ACel:CelOms') ('HELVETICA')
+WHEN  ('?Art:ArtikelOms') ('HELVETICA')
+WHEN  ('?Art:ArtikelOms:2') ('HELVETICA')
+WHEN  ('?Art:ArtikelOms:3') ('HELVETICA')
+WHEN  ('?DETAIL1') ('HELVETICA')
+WHEN  ('?DETAIL2') ('HELVETICA')
+WHEN  ('?DETAIL3') ('HELVETICA')
+WHEN  ('?DETAIL3:2') ('HELVETICA')
+WHEN  ('?DETAIL3:3') ('HELVETICA')
+WHEN  ('?DETAIL4') ('HELVETICA')
+WHEN  ('?DETAIL5') ('HELVETICA')
+WHEN  ('?Detail') ('HELVETICA')
+WHEN  ('?Footer') ('HELVETICA')
+WHEN  ('?Header') ('HELVETICA')
+WHEN  ('?LINE1') ('HELVETICA')
+WHEN  ('?LINE1:2') ('HELVETICA')
+WHEN  ('?LINE1:3') ('HELVETICA')
+WHEN  ('?LOC:DetailDatum') ('HELVETICA')
+WHEN  ('?LOC:DetailDatum:3') ('HELVETICA')
+WHEN  ('?Pla2:Geprint:2') ('HELVETICA')
+WHEN  ('?Pla2:Ingeslagen:2') ('HELVETICA')
+WHEN  ('?Pla2:Instructie') ('HELVETICA')
+WHEN  ('?Pla2:KG') ('HELVETICA')
+WHEN  ('?Pla2:Pallets') ('HELVETICA')
+WHEN  ('?Pla2:Planning_TIME') ('HELVETICA')
+WHEN  ('?Pla2:Transport') ('HELVETICA')
+WHEN  ('?Pla2:Verwerkt:2') ('HELVETICA')
+WHEN  ('?Pla3:Geprint') ('HELVETICA')
+WHEN  ('?Pla3:Instructie') ('HELVETICA')
+WHEN  ('?Pla3:KG') ('HELVETICA')
+WHEN  ('?Pla3:Pallets') ('HELVETICA')
+WHEN  ('?Pla3:Transport') ('HELVETICA')
+WHEN  ('?Pla3:Verwerkt') ('HELVETICA')
+WHEN  ('?Pla:Instructie') ('HELVETICA')
+WHEN  ('?Pla:Instructie:2') ('HELVETICA')
+WHEN  ('?Pla:KG') ('HELVETICA')
+WHEN  ('?Pla:Pallets') ('HELVETICA')
+WHEN  ('?Pla:Planning_TIME') ('HELVETICA')
+WHEN  ('?Pla:Planning_TIME:2') ('HELVETICA')
+WHEN  ('?Pla:Transport') ('HELVETICA')
+WHEN  ('?Pla:Verwerkt:2') ('HELVETICA')
+WHEN  ('?Pla:Verwerkt:3') ('HELVETICA')
+WHEN  ('?Rel:FirmaNaam') ('HELVETICA')
+WHEN  ('?Rel:FirmaNaam:2') ('HELVETICA')
+WHEN  ('?STRING1') ('HELVETICA')
+WHEN  ('?STRING10') ('HELVETICA')
+WHEN  ('?STRING10:2') ('HELVETICA')
+WHEN  ('?STRING10:3') ('HELVETICA')
+WHEN  ('?STRING11') ('HELVETICA')
+WHEN  ('?STRING1:2') ('HELVETICA')
+WHEN  ('?STRING1:3') ('HELVETICA')
+WHEN  ('?STRING2') ('HELVETICA')
+WHEN  ('?STRING2:2') ('HELVETICA')
+WHEN  ('?STRING2:3') ('HELVETICA')
+WHEN  ('?STRING3') ('HELVETICA')
+WHEN  ('?STRING3:2') ('HELVETICA')
+WHEN  ('?STRING3:3') ('HELVETICA')
+WHEN  ('?STRING4') ('HELVETICA')
+WHEN  ('?STRING4:2') ('HELVETICA')
+WHEN  ('?STRING4:3') ('HELVETICA')
+WHEN  ('?STRING5') ('HELVETICA')
+WHEN  ('?STRING6') ('HELVETICA')
+WHEN  ('?STRING6:2') ('HELVETICA')
+WHEN  ('?STRING6:3') ('HELVETICA')
+WHEN  ('?STRING7') ('HELVETICA')
+WHEN  ('?STRING7:2') ('HELVETICA')
+WHEN  ('?STRING7:3') ('HELVETICA')
+WHEN  ('?STRING8') ('HELVETICA')
+WHEN  ('?STRING8:2') ('HELVETICA')
+WHEN  ('?STRING8:3') ('HELVETICA')
+WHEN  ('?STRING9') ('HELVETICA')
+WHEN  ('?STRING9:2') ('HELVETICA')
+WHEN  ('?STRING9:3') ('HELVETICA')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReporter')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 4
+OWNER 5
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 3
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME JMDTemplates JMDMAIL
+[INSTANCE]
+INSTANCE 1
+[PROMPTS]
+%RAPPORTNAAM DEFAULT  ('Planning')
+[WINDOW]
+ProgressWindow WINDOW('Progress...'),AT(,,142,59),DOUBLE,CENTER,GRAY,TIMER(1)
+          PROGRESS,AT(15,15,111,12),USE(Progress:Thermometer),RANGE(0,100),#ORIG(Progress:Thermometer)
+          STRING(''),AT(0,3,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString)
+          STRING(''),AT(0,30,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText)
+          BUTTON('Cancel'),AT(45,42,50,15),USE(?Progress:Cancel),#ORIG(?Progress:Cancel)
+        END
+
+[REPORT]
+Report  REPORT,AT(448,521,10896,7135),PRE(RPT),PAPER(PAPER:A4),LANDSCAPE,FONT('Arial',8,,FONT:regular, |
+          CHARSET:DEFAULT),THOUS
+          HEADER,AT(31,0,11625,531),USE(?Header),#ORDINAL(1)
+          END
+DetailOverboekingPlanning DETAIL,AT(0,0,10896,125),USE(?Detail),#ORDINAL(2)
+            STRING(@t7),AT(1646,-1062),USE(Pla:Planning_TIME),#ORDINAL(3)
+            STRING(@t7),AT(1667,-31),USE(Pla:Planning_TIME,,?Pla:Planning_TIME:2),#ORDINAL(4)
+            STRING(@n-13`2),AT(2021,-31),USE(Pla:KG),RIGHT,#ORDINAL(5)
+            STRING(@n-14.),AT(2896,-31,729),USE(Pla:Pallets),RIGHT,#ORDINAL(6)
+            CHECK('Verwerkt:'),AT(5083,-1145),USE(Pla:Verwerkt,,?Pla:Verwerkt:2),#ORDINAL(7)
+            CHECK,AT(5250,-31),USE(Pla:Verwerkt,,?Pla:Verwerkt:3),#ORDINAL(8)
+            STRING(@s60),AT(5646,-31,1552),USE(Art:ArtikelOms,,?Art:ArtikelOms:3),#ORDINAL(9)
+            STRING(@s100),AT(7552,-1093),USE(Pla:Instructie),DECIMAL,#ORDINAL(10)
+            STRING(@s100),AT(7281,-31,1979),USE(Pla:Instructie,,?Pla:Instructie:2),LEFT,#ORDINAL(11)
+            STRING(@s100),AT(9292,-31,1500),USE(Pla:Transport),LEFT,#ORDINAL(12)
+            STRING(@s50),AT(3896,-31,625),USE(ACel:CelOms),#ORDINAL(13)
+            STRING(@s50),AT(4562,-31,625),USE(AACel:CelOms),#ORDINAL(14)
+          END
+DetailVerkoopPlanning DETAIL,AT(0,0,10896,125),USE(?DETAIL5),#ORDINAL(15)
+            STRING(@s50),AT(62,-31,1521),USE(Rel:FirmaNaam,,?Rel:FirmaNaam:2),LEFT,#ORDINAL(16)
+            STRING(@n-14.),AT(2896,-31,729),USE(Pla3:Pallets),RIGHT,#ORDINAL(18)
+            STRING(@n-13`2),AT(2021,-31,812,167),USE(Pla3:KG),RIGHT,#ORDINAL(19)
+            STRING(@s100),AT(7281,-31,1979),USE(Pla3:Instructie),#ORDINAL(20)
+            STRING(@s100),AT(9292,-31,1500),USE(Pla3:Transport),#ORDINAL(21)
+            STRING(@s60),AT(5646,-31,1552),USE(Art:ArtikelOms,,?Art:ArtikelOms:2),#ORDINAL(22)
+            CHECK,AT(5250,-31),USE(Pla3:Verwerkt),#ORDINAL(23)
+            CHECK,AT(4781,-31),USE(Pla3:Geprint),#ORDINAL(24)
+          END
+DetailInkoopPlanning DETAIL,AT(0,0,10896,125),USE(?DETAIL4),#ORDINAL(25)
+            STRING(@t7),AT(1594,-21),USE(Pla2:Planning_TIME),RIGHT,#ORDINAL(26)
+            STRING(@s50),AT(62,-21,1521),USE(Rel:FirmaNaam),LEFT,#ORDINAL(27)
+            STRING(@n-13`2),AT(2021,-21,812),USE(Pla2:KG),RIGHT,#ORDINAL(28)
+            STRING(@n-14.),AT(2896,-21,729,156),USE(Pla2:Pallets),RIGHT,#ORDINAL(29)
+            STRING(@s100),AT(7281,-21,1979),USE(Pla2:Instructie),#ORDINAL(30)
+            STRING(@s100),AT(9292,-21,1500),USE(Pla2:Transport),#ORDINAL(31)
+            STRING(@s60),AT(5646,-21,1552),USE(Art:ArtikelOms),#ORDINAL(32)
+            CHECK,AT(5250,-42),USE(Pla2:Verwerkt,,?Pla2:Verwerkt:2),#ORDINAL(33)
+            CHECK,AT(4781,-42),USE(Pla2:Geprint,,?Pla2:Geprint:2),#ORDINAL(34)
+            CHECK,AT(4187,-42),USE(Pla2:MutatieGemaakt,,?Pla2:Ingeslagen:2),#ORDINAL(35)
+          END
+DetailInkoopPlanningKop DETAIL,AT(0,0,10896,240),USE(?DETAIL3),#ORDINAL(36)
+            STRING('Klant'),AT(62,10),USE(?STRING1),#ORDINAL(37)
+            STRING('Laadtijd'),AT(1583,31),USE(?STRING2),#ORDINAL(38)
+            STRING('KG'),AT(2635,10),USE(?STRING3),#ORDINAL(39)
+            STRING('Pallets'),AT(3104,10,521,198),USE(?STRING4),RIGHT,#ORDINAL(40)
+            STRING('Ingeslagen'),AT(3937,10),USE(?STRING5),#ORDINAL(41)
+            STRING('Gepr.'),AT(4687,10),USE(?STRING6),#ORDINAL(42)
+            STRING('Verw.'),AT(5198,10),USE(?STRING7),#ORDINAL(43)
+            STRING('Product'),AT(5646,10,615,208),USE(?STRING8),#ORDINAL(44)
+            STRING('Instructie'),AT(7281,10),USE(?STRING9),#ORDINAL(45)
+            STRING('Transport'),AT(9292,10),USE(?STRING10),#ORDINAL(46)
+            LINE,AT(52,177,10687,0),USE(?LINE1),#ORDINAL(47)
+          END
+DetailVerkoopPlanningKop DETAIL,AT(0,0,10896,240),USE(?DETAIL3:2),#ORDINAL(48)
+            STRING('Klant'),AT(62,10),USE(?STRING1:2),#ORDINAL(49)
+            STRING('Laadtijd'),AT(1583,31),USE(?STRING2:2),#ORDINAL(50)
+            STRING('KG'),AT(2635,10),USE(?STRING3:2),#ORDINAL(51)
+            STRING('Pallets'),AT(3104,10,521,198),USE(?STRING4:2),RIGHT,#ORDINAL(52)
+            STRING('Gepr.'),AT(4687,10),USE(?STRING6:2),#ORDINAL(53)
+            STRING('Verw.'),AT(5198,10),USE(?STRING7:2),#ORDINAL(54)
+            STRING('Product'),AT(5646,10,615,208),USE(?STRING8:2),#ORDINAL(55)
+            STRING('Instructie'),AT(7281,10),USE(?STRING9:2),#ORDINAL(56)
+            STRING('Transport'),AT(9292,10),USE(?STRING10:2),#ORDINAL(57)
+            LINE,AT(52,187,10687,0),USE(?LINE1:2),#ORDINAL(58)
+          END
+DetailKop DETAIL,AT(0,0,10896,260),USE(?DETAIL2),#ORDINAL(59)
+            STRING(@s100),AT(62,42,7365),USE(LOC:DetailDatum,,?LOC:DetailDatum:3),FONT(,,, |
+              FONT:bold),#ORDINAL(60)
+          END
+DetailDatum DETAIL,AT(0,0,10896,208),USE(?DETAIL1),#ORDINAL(61)
+            STRING(@s100),AT(62,10,7500),USE(LOC:DetailDatum),#ORDINAL(62)
+          END
+DetailOverboekingPlanningKop DETAIL,AT(0,0,10896,240),USE(?DETAIL3:3),#ORDINAL(63)
+            STRING('Klant'),AT(62,0),USE(?STRING1:3),#ORDINAL(64)
+            STRING('Laadtijd'),AT(1583,21),USE(?STRING2:3),#ORDINAL(65)
+            STRING('KG'),AT(2635,0),USE(?STRING3:3),#ORDINAL(66)
+            STRING('Pallets'),AT(3104,0,521,198),USE(?STRING4:3),RIGHT,#ORDINAL(67)
+            STRING('Naar Cel'),AT(4615,0),USE(?STRING6:3),#ORDINAL(68)
+            STRING('Verw.'),AT(5198,0),USE(?STRING7:3),#ORDINAL(69)
+            STRING('Product'),AT(5646,0,615,208),USE(?STRING8:3),#ORDINAL(70)
+            STRING('Instructie'),AT(7281,0),USE(?STRING9:3),#ORDINAL(71)
+            STRING('Transport'),AT(9292,0),USE(?STRING10:3),#ORDINAL(72)
+            LINE,AT(52,187,10687,0),USE(?LINE1:3),#ORDINAL(73)
+            STRING('Van Cel'),AT(3969,10),USE(?STRING11),#ORDINAL(74)
+          END
+          FOOTER,AT(31,7719,11625,500),USE(?Footer),#ORDINAL(75)
+          END
+        END
+
+[END]

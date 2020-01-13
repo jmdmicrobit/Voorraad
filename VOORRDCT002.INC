@@ -1,0 +1,3 @@
+  MODULE('VOORRDCT002.CLW')
+GlobalClassSource      PROCEDURE
+  END

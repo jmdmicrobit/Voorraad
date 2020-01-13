@@ -1,0 +1,3 @@
+  MODULE('VOORRAAD079.CLW')
+ReportPlanning         PROCEDURE(STRING)
+  END

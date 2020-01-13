@@ -1,0 +1,3 @@
+  MODULE('VOORRAAD005.CLW')
+WindowSysteemgegevens  PROCEDURE
+  END

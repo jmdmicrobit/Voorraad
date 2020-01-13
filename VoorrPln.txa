@@ -1,0 +1,191 @@
+[PROCEDURE]
+NAME UpdateVerkoopExport
+CATEGORY 'Form'
+[COMMON]
+DESCRIPTION 'Form Verkoop'
+FROM ABC Window
+[DATA]
+CurrentTab                STRING(80)
+[FILES]
+[PRIMARY]
+Verkoop
+[INSTANCE]
+2
+[PROMPTS]
+%ButtonAction DEPEND %Control STRING TIMES 0
+
+%ButtonRunName DEPEND %Control STRING TIMES 0
+
+%ButtonRunParameters DEPEND %Control STRING TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control @n7 TIMES 0
+
+%ButtonParameters DEPEND %Control STRING TIMES 0
+
+%ButtonRequest DEPEND %Control STRING TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+[ADDITION]
+NAME ABC RecordValidation
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%ValidateOnAccept LONG  (1)
+%ValidateOnNonStopSelect LONG  (1)
+%ControlsExcluded MULTI LONG  ()
+%ControlToExclude DEPEND %ControlsExcluded STRING TIMES 0
+[ADDITION]
+NAME ABC SaveButton
+[INSTANCE]
+INSTANCE 2
+PROCPROP
+[PROMPTS]
+%InsertAllowed LONG  (0)
+%InsertMessage @S40  ('Record Will Be Added')
+%ChangeAllowed LONG  (1)
+%ChangeMessage @S40  ('Record Will Be Changed')
+%DeleteAllowed LONG  (0)
+%DeleteMessage @S40  ('Record Will Be Deleted')
+%ViewMessage @S40  ('View Record')
+%MessageHeader LONG  (0)
+%ActionOnDelete STRING  ('Standard Warning')
+%PrimingFields MULTI LONG  ()
+%PrimedField DEPEND %PrimingFields FIELD TIMES 0
+
+%PrimedValue DEPEND %PrimingFields @S255 TIMES 0
+
+%ActionOnCancel STRING  ('Confirm cancel')
+%MessageLocation STRING  ('Title Bar')
+%MessageStatusSection @n1  (0)
+
+%HistoryKey        DEFAULT (CtrlH)
+
+%AppendToTitle LONG  ()
+%AppendToTitleID @S255  ('')
+[ADDITION]
+NAME ABC CancelButton
+[INSTANCE]
+INSTANCE 3
+[ADDITION]
+NAME ABC HelpButton
+[INSTANCE]
+INSTANCE 4
+[ADDITION]
+NAME ABC ViewFormActions
+[INSTANCE]
+INSTANCE 5
+[ADDITION]
+NAME ABC WindowResize
+[INSTANCE]
+INSTANCE 6
+[PROMPTS]
+%UseAppStrategy    DEFAULT (1)
+%AppStrategy       DEFAULT ('Surface')
+%RestrictMinSize   DEFAULT (1)
+%WindowMinWidth    DEFAULT (0)
+%WindowMaxWidth    DEFAULT (0)
+[WINDOW]
+QuickWindow WINDOW('Form Verkoop'),AT(,,358,182),RESIZE,IMM,GRAY,MDI,HLP('UpdateVerkoopExport'),FONT('Microsoft Sans Serif',8,,400,1),CENTER,SYSTEM
+  SHEET,AT(4,4,350,156),USE(?CurrentTab),#ORIG(CurrentTab)
+    TAB('&1) General'),USE(?Tab:1)
+         PROMPT('Verkoop ID:'),USE(?Ver2:VerkoopID:Prompt),TRN,AT(8,20),#ORIG(?Ver2:VerkoopID:Prompt),#LINK(Ver2:VerkoopID)
+         ENTRY(@n-14),USE(Ver2:VerkoopID),AT(112,20,64,10),#ORIG(Ver2:VerkoopID),#LINK(?Ver2:VerkoopID:Prompt)
+         PROMPT('Klant:'),USE(?Ver2:Klant:Prompt),TRN,AT(8,34),#ORIG(?Ver2:Klant:Prompt),#LINK(Ver2:Klant)
+         ENTRY(@n-14),USE(Ver2:Klant),AT(112,34,64,10),#ORIG(Ver2:Klant),#LINK(?Ver2:Klant:Prompt)
+         PROMPT('Verwerkt:'),USE(?Ver2:Verwerkt:Prompt),TRN,AT(8,48),#ORIG(?Ver2:Verwerkt:Prompt),#LINK(Ver2:Verwerkt)
+         ENTRY(@n3),USE(Ver2:Verwerkt),AT(112,48,40,10),#ORIG(Ver2:Verwerkt),#LINK(?Ver2:Verwerkt:Prompt)
+         PROMPT('Planning DATE:'),USE(?Ver2:Planning_DATE:Prompt),TRN,AT(8,62),#ORIG(?Ver2:Planning_DATE:Prompt),#LINK(Ver2:Planning_DATE)
+         SPIN(@d17),USE(Ver2:Planning_DATE),AT(112,62,119,10),#ORIG(Ver2:Planning_DATE),#LINK(?Ver2:Planning_DATE:Prompt)
+         PROMPT('Planning TIME:'),USE(?Ver2:Planning_TIME:Prompt),TRN,AT(8,76),#ORIG(?Ver2:Planning_TIME:Prompt),#LINK(Ver2:Planning_TIME)
+         ENTRY(@t7),USE(Ver2:Planning_TIME),AT(112,76,104,10),#ORIG(Ver2:Planning_TIME),#LINK(?Ver2:Planning_TIME:Prompt)
+         PROMPT('Instructie:'),USE(?Ver2:Instructie:Prompt),TRN,AT(8,90),#ORIG(?Ver2:Instructie:Prompt),#LINK(Ver2:Instructie)
+         ENTRY(@s100),USE(Ver2:Instructie),AT(112,90,238,10),#ORIG(Ver2:Instructie),#LINK(?Ver2:Instructie:Prompt)
+         PROMPT('Transport:'),USE(?Ver2:Transport:Prompt),TRN,AT(8,104),#ORIG(?Ver2:Transport:Prompt),#LINK(Ver2:Transport)
+         ENTRY(@s100),USE(Ver2:Transport),AT(112,104,238,10),#ORIG(Ver2:Transport),#LINK(?Ver2:Transport:Prompt)
+         PROMPT('ID:'),USE(?Ver2:KlantAlternatiefAdres:Prompt),TRN,AT(8,118),#ORIG(?Ver2:KlantAlternatiefAdres:Prompt),#LINK(Ver2:KlantAlternatiefAdres)
+         ENTRY(@n-14),USE(Ver2:KlantAlternatiefAdres),AT(112,118,64,10),#ORIG(Ver2:KlantAlternatiefAdres),#LINK(?Ver2:KlantAlternatiefAdres:Prompt)
+         PROMPT('Extra Kosten:'),USE(?Ver2:ExtraKosten:Prompt),TRN,AT(8,132),#ORIG(?Ver2:ExtraKosten:Prompt),#LINK(Ver2:ExtraKosten)
+         ENTRY(@n-13`3),USE(Ver2:ExtraKosten),DECIMAL(12),AT(112,132,104,10),#ORIG(Ver2:ExtraKosten),#LINK(?Ver2:ExtraKosten:Prompt)
+         PROMPT('Extra Kosten Tekst:'),USE(?Ver2:ExtraKostenTekst:Prompt),TRN,AT(8,146),#ORIG(?Ver2:ExtraKostenTekst:Prompt),#LINK(Ver2:ExtraKostenTekst)
+         ENTRY(@s255),USE(Ver2:ExtraKostenTekst),AT(112,146,238,10),#ORIG(Ver2:ExtraKostenTekst),#LINK(?Ver2:ExtraKostenTekst:Prompt)
+    END
+    TAB('&2) General (cont.)'),USE(?Tab:2)
+         PROMPT('Extern Verkoop ID:'),USE(?Ver2:ExternVerkoopID:Prompt),TRN,AT(8,20),#ORIG(?Ver2:ExternVerkoopID:Prompt),#LINK(Ver2:ExternVerkoopID)
+         ENTRY(@s50),USE(Ver2:ExternVerkoopID),AT(112,20,204,10),#ORIG(Ver2:ExternVerkoopID),#LINK(?Ver2:ExternVerkoopID:Prompt)
+         PROMPT('Negatieve Order:'),USE(?Ver2:NegatieveOrder:Prompt),TRN,AT(8,34),#ORIG(?Ver2:NegatieveOrder:Prompt),#LINK(Ver2:NegatieveOrder)
+         ENTRY(@s50),USE(Ver2:NegatieveOrder),AT(112,34,204,10),#ORIG(Ver2:NegatieveOrder),#LINK(?Ver2:NegatieveOrder:Prompt)
+         PROMPT('Reden Retour:'),USE(?Ver2:RedenRetour:Prompt),TRN,AT(8,48),#ORIG(?Ver2:RedenRetour:Prompt),#LINK(Ver2:RedenRetour)
+         ENTRY(@s50),USE(Ver2:RedenRetour),AT(112,48,204,10),#ORIG(Ver2:RedenRetour),#LINK(?Ver2:RedenRetour:Prompt)
+         PROMPT('Confirmation Date:'),USE(?Ver2:ConfirmationDate:Prompt),TRN,AT(8,62),#ORIG(?Ver2:ConfirmationDate:Prompt),#LINK(Ver2:ConfirmationDate)
+         ENTRY(@s8),USE(Ver2:ConfirmationDate),AT(112,62,40,10),#ORIG(Ver2:ConfirmationDate),#LINK(?Ver2:ConfirmationDate:Prompt)
+         PROMPT('Confirmation Date DATE:'),USE(?Ver2:ConfirmationDate_DATE:Prompt),TRN,AT(8,76),#ORIG(?Ver2:ConfirmationDate_DATE:Prompt),#LINK(Ver2:ConfirmationDate_DATE)
+         SPIN(@d17),USE(Ver2:ConfirmationDate_DATE),AT(112,76,119,10),#ORIG(Ver2:ConfirmationDate_DATE),#LINK(?Ver2:ConfirmationDate_DATE:Prompt)
+         PROMPT('Confirmation Date TIME:'),USE(?Ver2:ConfirmationDate_TIME:Prompt),TRN,AT(8,90),#ORIG(?Ver2:ConfirmationDate_TIME:Prompt),#LINK(Ver2:ConfirmationDate_TIME)
+         ENTRY(@t7),USE(Ver2:ConfirmationDate_TIME),AT(112,90,104,10),#ORIG(Ver2:ConfirmationDate_TIME),#LINK(?Ver2:ConfirmationDate_TIME:Prompt)
+         PROMPT('Gebruiker ID:'),USE(?Ver2:GebruikerID:Prompt),TRN,AT(8,104),#ORIG(?Ver2:GebruikerID:Prompt),#LINK(Ver2:GebruikerID)
+         ENTRY(@n-14),USE(Ver2:GebruikerID),RIGHT(1),AT(112,104,64,10),#ORIG(Ver2:GebruikerID),#LINK(?Ver2:GebruikerID:Prompt)
+         PROMPT('Bevestiging Geprint:'),USE(?Ver2:BevestigingGeprint:Prompt),TRN,AT(8,118),#ORIG(?Ver2:BevestigingGeprint:Prompt),#LINK(Ver2:BevestigingGeprint)
+         ENTRY(@s8),USE(Ver2:BevestigingGeprint),AT(112,118,40,10),#ORIG(Ver2:BevestigingGeprint),#LINK(?Ver2:BevestigingGeprint:Prompt)
+         PROMPT('Bevestiging Geprint DATE:'),USE(?Ver2:BevestigingGeprint_DATE:Prompt),TRN,AT(8,132),#ORIG(?Ver2:BevestigingGeprint_DATE:Prompt),#LINK(Ver2:BevestigingGeprint_DATE)
+         ENTRY(@d17),USE(Ver2:BevestigingGeprint_DATE),AT(112,132,104,10),#ORIG(Ver2:BevestigingGeprint_DATE),#LINK(?Ver2:BevestigingGeprint_DATE:Prompt)
+         PROMPT('Bevestiging Geprint TIME:'),USE(?Ver2:BevestigingGeprint_TIME:Prompt),TRN,AT(8,146),#ORIG(?Ver2:BevestigingGeprint_TIME:Prompt),#LINK(Ver2:BevestigingGeprint_TIME)
+         ENTRY(@t7),USE(Ver2:BevestigingGeprint_TIME),AT(112,146,104,10),#ORIG(Ver2:BevestigingGeprint_TIME),#LINK(?Ver2:BevestigingGeprint_TIME:Prompt)
+    END
+    TAB('&3) General (cont. 2)'),USE(?Tab:3)
+         PROMPT('Delivery Terms ID:'),USE(?Ver2:DeliveryTermsID:Prompt),TRN,AT(8,20),#ORIG(?Ver2:DeliveryTermsID:Prompt),#LINK(Ver2:DeliveryTermsID)
+         ENTRY(@n-14),USE(Ver2:DeliveryTermsID),RIGHT(1),AT(112,20,64,10),#ORIG(Ver2:DeliveryTermsID),#LINK(?Ver2:DeliveryTermsID:Prompt)
+         PROMPT('Retour Datum:'),USE(?Ver2:RetourDatum:Prompt),TRN,AT(8,34),#ORIG(?Ver2:RetourDatum:Prompt),#LINK(Ver2:RetourDatum)
+         ENTRY(@s8),USE(Ver2:RetourDatum),AT(112,34,40,10),#ORIG(Ver2:RetourDatum),#LINK(?Ver2:RetourDatum:Prompt)
+         PROMPT('Retour Datum DATE:'),USE(?Ver2:RetourDatum_DATE:Prompt),TRN,AT(8,48),#ORIG(?Ver2:RetourDatum_DATE:Prompt),#LINK(Ver2:RetourDatum_DATE)
+         ENTRY(@d17),USE(Ver2:RetourDatum_DATE),AT(112,48,104,10),#ORIG(Ver2:RetourDatum_DATE),#LINK(?Ver2:RetourDatum_DATE:Prompt)
+         PROMPT('Retour Datum TIME:'),USE(?Ver2:RetourDatum_TIME:Prompt),TRN,AT(8,62),#ORIG(?Ver2:RetourDatum_TIME:Prompt),#LINK(Ver2:RetourDatum_TIME)
+         ENTRY(@t7),USE(Ver2:RetourDatum_TIME),AT(112,62,104,10),#ORIG(Ver2:RetourDatum_TIME),#LINK(?Ver2:RetourDatum_TIME:Prompt)
+         PROMPT('Exported:'),USE(?Ver2:Exported:Prompt),TRN,AT(8,76),#ORIG(?Ver2:Exported:Prompt),#LINK(Ver2:Exported)
+         ENTRY(@n3),USE(Ver2:Exported),AT(112,76,40,10),#ORIG(Ver2:Exported),#LINK(?Ver2:Exported:Prompt)
+         PROMPT('Valuta:'),USE(?Ver2:Valuta:Prompt),TRN,AT(8,90),#ORIG(?Ver2:Valuta:Prompt),#LINK(Ver2:Valuta)
+         LIST,USE(Ver2:Valuta),FROM('Euro|#Euro|Dollar|#Dollar|Pond|#Pond'),AT(112,90,100,24),#ORIG(Ver2:Valuta),#LINK(?Ver2:Valuta:Prompt)
+         PROMPT('Koersverschil:'),USE(?Ver2:Koersverschil:Prompt),TRN,AT(8,118),#ORIG(?Ver2:Koersverschil:Prompt),#LINK(Ver2:Koersverschil)
+         ENTRY(@n-15.3),USE(Ver2:Koersverschil),DECIMAL(12),AT(112,118,68,10),#ORIG(Ver2:Koersverschil),#LINK(?Ver2:Koersverschil:Prompt)
+         PROMPT('Containernr:'),USE(?Ver2:Containernr:Prompt),TRN,AT(8,132),#ORIG(?Ver2:Containernr:Prompt),#LINK(Ver2:Containernr)
+         ENTRY(@s50),USE(Ver2:Containernr),AT(112,132,204,10),#ORIG(Ver2:Containernr),#LINK(?Ver2:Containernr:Prompt)
+         PROMPT('Sealnr:'),USE(?Ver2:Sealnr:Prompt),TRN,AT(8,146),#ORIG(?Ver2:Sealnr:Prompt),#LINK(Ver2:Sealnr)
+         ENTRY(@s50),USE(Ver2:Sealnr),AT(112,146,204,10),#ORIG(Ver2:Sealnr),#LINK(?Ver2:Sealnr:Prompt)
+    END
+    TAB('&4) General (cont. 3)'),USE(?Tab:4)
+         PROMPT('Vessel:'),USE(?Ver2:Vessel:Prompt),TRN,AT(8,20),#ORIG(?Ver2:Vessel:Prompt),#LINK(Ver2:Vessel)
+         ENTRY(@s50),USE(Ver2:Vessel),AT(112,20,204,10),#ORIG(Ver2:Vessel),#LINK(?Ver2:Vessel:Prompt)
+         PROMPT('Pro Forma Memo:'),USE(?Ver2:ProFormaMemo:Prompt),TRN,AT(8,34),#ORIG(?Ver2:ProFormaMemo:Prompt),#LINK(Ver2:ProFormaMemo)
+         ENTRY(@s255),USE(Ver2:ProFormaMemo),AT(112,34,238,10),#ORIG(Ver2:ProFormaMemo),#LINK(?Ver2:ProFormaMemo:Prompt)
+         PROMPT('Tarra Container:'),USE(?Ver2:TarraContainer:Prompt),TRN,AT(8,48),#ORIG(?Ver2:TarraContainer:Prompt),#LINK(Ver2:TarraContainer)
+         ENTRY(@n-14),USE(Ver2:TarraContainer),RIGHT(1),AT(112,48,64,10),#ORIG(Ver2:TarraContainer),#LINK(?Ver2:TarraContainer:Prompt)
+         PROMPT('Laadhaven:'),USE(?Ver2:Laadhaven:Prompt),TRN,AT(8,62),#ORIG(?Ver2:Laadhaven:Prompt),#LINK(Ver2:Laadhaven)
+         ENTRY(@s50),USE(Ver2:Laadhaven),AT(112,62,204,10),#ORIG(Ver2:Laadhaven),#LINK(?Ver2:Laadhaven:Prompt)
+         PROMPT('Loshaven:'),USE(?Ver2:Loshaven:Prompt),TRN,AT(8,76),#ORIG(?Ver2:Loshaven:Prompt),#LINK(Ver2:Loshaven)
+         ENTRY(@s50),USE(Ver2:Loshaven),AT(112,76,204,10),#ORIG(Ver2:Loshaven),#LINK(?Ver2:Loshaven:Prompt)
+         PROMPT('Referentie:'),USE(?Ver2:Referentie:Prompt),TRN,AT(8,90),#ORIG(?Ver2:Referentie:Prompt),#LINK(Ver2:Referentie)
+         ENTRY(@s50),USE(Ver2:Referentie),AT(112,90,204,10),#ORIG(Ver2:Referentie),#LINK(?Ver2:Referentie:Prompt)
+         PROMPT('Boekingsnr:'),USE(?Ver2:Boekingsnr:Prompt),TRN,AT(8,104),#ORIG(?Ver2:Boekingsnr:Prompt),#LINK(Ver2:Boekingsnr)
+         ENTRY(@s50),USE(Ver2:Boekingsnr),AT(112,104,204,10),#ORIG(Ver2:Boekingsnr),#LINK(?Ver2:Boekingsnr:Prompt)
+    END
+  END
+  BUTTON('&OK'),AT(199,164,49,14),USE(?OK),ICON('WAOK.ICO'),FLAT,MSG('Accept data and close the window'),TIP('Accept data and close the window'),LEFT,DEFAULT,#SEQ(2),#ORIG(?OK)
+  BUTTON('&Cancel'),AT(252,164,49,14),USE(?Cancel),ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'),TIP('Cancel operation'),LEFT,#SEQ(3),#ORIG(?Cancel)
+  BUTTON('&Help'),AT(305,164,49,14),USE(?Help),ICON('WAHELP.ICO'),FLAT,MSG('See Help Window'),TIP('See Help Window'),LEFT,STD(STD:Help),#SEQ(4),#ORIG(?Help)
+ END

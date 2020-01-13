@@ -1,0 +1,3 @@
+  MODULE('VOORRAAD063.CLW')
+WindowSQLBackup        PROCEDURE
+  END

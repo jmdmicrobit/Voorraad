@@ -1,0 +1,3 @@
+  MODULE('VOORRAAD048.CLW')
+ProcessSyncRelatie     PROCEDURE
+  END

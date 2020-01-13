@@ -1,0 +1,52 @@
+[PROCEDURE]
+NAME ReportVrdCelLocatie
+CATEGORY 'Process'
+[COMMON]
+DESCRIPTION 'Process the ViewPartijCelLocaties File'
+FROM ABC Process
+[DATA]
+[FILES]
+[PRIMARY]
+ViewPartijCelLocaties
+[INSTANCE]
+0
+[KEY]
+VPCL:ViewPartijCelLocaties_PK
+[PROMPTS]
+%ButtonAction DEPEND %Control STRING TIMES 0
+
+%ButtonRunName DEPEND %Control STRING TIMES 0
+
+%ButtonRunParameters DEPEND %Control STRING TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control @n7 TIMES 0
+
+%ButtonParameters DEPEND %Control STRING TIMES 0
+
+%ButtonRequest DEPEND %Control STRING TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+[WINDOW]
+ProgressWindow WINDOW('Process ViewPartijCelLocaties'),|
+       AT(,,142,59),TIMER(1),GRAY,DOUBLE,FONT('Microsoft Sans Serif',8,,400,1),CENTER
+       PROGRESS,USE(Progress:Thermometer),AT(15,15,111,12),RANGE(0,100),#ORIG(Progress:Thermometer)
+       STRING(''),AT(0,3,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString)
+       STRING(''),AT(0,30,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText)
+       BUTTON('Cancel'),AT(46,42,49,15),USE(?Progress:Cancel),ICON('WACANCEL.ICO'),FLAT,MSG('Cancel Process'),TIP('Cancel Process'),LEFT,#ORIG(?Progress:Cancel)
+     END

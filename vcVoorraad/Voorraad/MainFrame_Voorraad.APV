@@ -1,0 +1,3621 @@
+[MODULE]
+NAME 'MainFrame_Voorraad.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME MainFrame
+[COMMON]
+FROM ABC Frame
+[DATA]
+[SCREENCONTROLS]
+! PROMPT('Loc : Net Options:'),USE(?Loc:NetOptions:Prompt)
+! ENTRY(@s255),USE(Loc:NetOptions)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:NetOptions)
+Loc:NetOptions           STRING(256)
+!!> GUID('32b487a7-f7e0-44ee-9d7b-45a1e679fc03'),PROMPT('Loc : Net Options:'),HEADER('Loc : Net Options'),PICTURE(@s255),TYPEMODE(INS)
+[FILES]
+[OTHERS]
+AViewArtikel
+ARelatie
+RelatieArtikelOmschrijving
+PartijCelVoorraad
+ViewVoorraadPartij
+Sjabloon
+ArtikelOmschrijvingExtra
+Gebruiker
+Versie
+[PROMPTS]
+%INISaveWindow LONG  (1)
+%ButtonAction DEPEND %Control DEFAULT TIMES 64
+WHEN  ('') ('No Special Action')
+WHEN  ('?ActieAfwijkingen') ('Call a Procedure')
+WHEN  ('?Activiteiten') ('Call a Procedure')
+WHEN  ('?Arrange') ('No Special Action')
+WHEN  ('?BrowseVersie') ('Call a Procedure')
+WHEN  ('?Cascade') ('No Special Action')
+WHEN  ('?Cel') ('Call a Procedure')
+WHEN  ('?CelLocatieVullenMutaties') ('Call a Procedure')
+WHEN  ('?CelLocaties') ('Call a Procedure')
+WHEN  ('?Copy') ('No Special Action')
+WHEN  ('?Cut') ('No Special Action')
+WHEN  ('?Exit') ('No Special Action')
+WHEN  ('?ExportMutaties') ('Call a Procedure')
+WHEN  ('?GNCode') ('Call a Procedure')
+WHEN  ('?GebruikerLogTerugzetten') ('Call a Procedure')
+WHEN  ('?Gebruikers') ('Call a Procedure')
+WHEN  ('?GewogenPallets') ('Call a Procedure')
+WHEN  ('?HelpOnHelp') ('No Special Action')
+WHEN  ('?HelpSearch') ('No Special Action')
+WHEN  ('?Helpindex') ('No Special Action')
+WHEN  ('?HulpOpAfstand') ('Run a Program')
+WHEN  ('?ISOCountries') ('Call a Procedure')
+WHEN  ('?ITEM1') ('Call a Procedure')
+WHEN  ('?ITEM10') ('Call a Procedure')
+WHEN  ('?ITEM11') ('Call a Procedure')
+WHEN  ('?ITEM12') ('Call a Procedure')
+WHEN  ('?ITEM13') ('Call a Procedure')
+WHEN  ('?ITEM14') ('Call a Procedure')
+WHEN  ('?ITEM15') ('Call a Procedure')
+WHEN  ('?ITEM3') ('Call a Procedure')
+WHEN  ('?ITEM4') ('Call a Procedure')
+WHEN  ('?ITEM5') ('Call a Procedure')
+WHEN  ('?ITEM6') ('Call a Procedure')
+WHEN  ('?ITEM7') ('Call a Procedure')
+WHEN  ('?ITEM8') ('Call a Procedure')
+WHEN  ('?ITEM9') ('Call a Procedure')
+WHEN  ('?Inkoop:2') ('Call a Procedure')
+WHEN  ('?Logging') ('Call a Procedure')
+WHEN  ('?MENUBAR1') ('No Special Action')
+WHEN  ('?Overboeking') ('Call a Procedure')
+WHEN  ('?PalletTegoeden') ('Call a Procedure')
+WHEN  ('?Pallets') ('Call a Procedure')
+WHEN  ('?PartijVoorraad:2') ('Call a Procedure')
+WHEN  ('?Paste') ('No Special Action')
+WHEN  ('?Planning') ('Call a Procedure')
+WHEN  ('?PrintSetup') ('No Special Action')
+WHEN  ('?Rapporten') ('Call a Procedure')
+WHEN  ('?SSOPCategorie') ('Call a Procedure')
+WHEN  ('?SSOPRegistratie') ('Call a Procedure')
+WHEN  ('?SSOPRegistratie:2') ('Call a Procedure')
+WHEN  ('?StamgegevensAdressen') ('Call a Procedure')
+WHEN  ('?StamgegevensArtikelen') ('Call a Procedure')
+WHEN  ('?StamgegevensDeliveryTerms') ('Call a Procedure')
+WHEN  ('?StamgegevensKosten') ('Call a Procedure')
+WHEN  ('?StamgegevensRelaties') ('Call a Procedure')
+WHEN  ('?StamgegevensSjablonen') ('Call a Procedure')
+WHEN  ('?StamgegevensTransporteurs') ('Call a Procedure')
+WHEN  ('?StamgegevensVerpakkingen') ('Call a Procedure')
+WHEN  ('?Systeemgegevens') ('Call a Procedure')
+WHEN  ('?Tile') ('No Special Action')
+WHEN  ('?Uitvoerhavens') ('Call a Procedure')
+WHEN  ('?Verkoop:2') ('Call a Procedure')
+WHEN  ('?Voorraad') ('Call a Procedure')
+WHEN  ('?WindowTimingVerklaring') ('No Special Action')
+
+%MenuAction DEPEND %Control STRING TIMES 1
+WHEN  ('?Exit') ('No Special Action')
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Ask {20}PROCEDURE(),DERIVED', 'Init {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%SplashProcedure PROCEDURE  (ShowNewVersion)
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 53
+WHEN  ('') ('Default')
+WHEN  ('?ActieAfwijkingen') ('Default')
+WHEN  ('?Activiteiten') ('Default')
+WHEN  ('?BrowseVersie') ('Default')
+WHEN  ('?Cel') ('Default')
+WHEN  ('?CelLocatieVullenMutaties') ('Default')
+WHEN  ('?CelLocaties') ('Default')
+WHEN  ('?ExportMutaties') ('Default')
+WHEN  ('?GNCode') ('Default')
+WHEN  ('?GebruikerLogTerugzetten') ('Default')
+WHEN  ('?Gebruikers') ('Default')
+WHEN  ('?GewogenPallets') ('Default')
+WHEN  ('?HulpOpAfstand') ('Default')
+WHEN  ('?ISOCountries') ('Default')
+WHEN  ('?ITEM1') ('Default')
+WHEN  ('?ITEM10') ('Default')
+WHEN  ('?ITEM11') ('Default')
+WHEN  ('?ITEM12') ('Default')
+WHEN  ('?ITEM13') ('Default')
+WHEN  ('?ITEM14') ('Default')
+WHEN  ('?ITEM15') ('Default')
+WHEN  ('?ITEM3') ('Default')
+WHEN  ('?ITEM4') ('Default')
+WHEN  ('?ITEM5') ('Default')
+WHEN  ('?ITEM6') ('Default')
+WHEN  ('?ITEM7') ('Default')
+WHEN  ('?ITEM8') ('Default')
+WHEN  ('?ITEM9') ('Default')
+WHEN  ('?Inkoop:2') ('Default')
+WHEN  ('?Logging') ('Default')
+WHEN  ('?MENUBAR1') ('Default')
+WHEN  ('?Overboeking') ('Default')
+WHEN  ('?PalletTegoeden') ('Default')
+WHEN  ('?Pallets') ('Default')
+WHEN  ('?PartijVoorraad:2') ('Default')
+WHEN  ('?Planning') ('Default')
+WHEN  ('?Rapporten') ('Default')
+WHEN  ('?SSOPCategorie') ('Default')
+WHEN  ('?SSOPRegistratie') ('Default')
+WHEN  ('?SSOPRegistratie:2') ('Default')
+WHEN  ('?StamgegevensAdressen') ('Default')
+WHEN  ('?StamgegevensArtikelen') ('Default')
+WHEN  ('?StamgegevensDeliveryTerms') ('Default')
+WHEN  ('?StamgegevensKosten') ('Default')
+WHEN  ('?StamgegevensRelaties') ('Default')
+WHEN  ('?StamgegevensSjablonen') ('Default')
+WHEN  ('?StamgegevensTransporteurs') ('Default')
+WHEN  ('?StamgegevensVerpakkingen') ('Default')
+WHEN  ('?Systeemgegevens') ('Default')
+WHEN  ('?Uitvoerhavens') ('Default')
+WHEN  ('?Verkoop:2') ('Default')
+WHEN  ('?Voorraad') ('Default')
+WHEN  ('?WindowTimingVerklaring') ('Default')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 50
+WHEN  ('?ActieAfwijkingen') ('')
+WHEN  ('?Activiteiten') ('')
+WHEN  ('?BrowseVersie') ('')
+WHEN  ('?Cel') ('')
+WHEN  ('?CelLocatieVullenMutaties') ('')
+WHEN  ('?CelLocaties') ('')
+WHEN  ('?ExportMutaties') ('')
+WHEN  ('?GNCode') ('')
+WHEN  ('?GebruikerLogTerugzetten') ('')
+WHEN  ('?Gebruikers') ('')
+WHEN  ('?GewogenPallets') ('')
+WHEN  ('?HulpOpAfstand') ('JMDHelpdesk.exe')
+WHEN  ('?ISOCountries') ('')
+WHEN  ('?ITEM1') ('')
+WHEN  ('?ITEM10') ('')
+WHEN  ('?ITEM11') ('')
+WHEN  ('?ITEM12') ('')
+WHEN  ('?ITEM13') ('')
+WHEN  ('?ITEM14') ('')
+WHEN  ('?ITEM15') ('')
+WHEN  ('?ITEM3') ('')
+WHEN  ('?ITEM4') ('')
+WHEN  ('?ITEM5') ('')
+WHEN  ('?ITEM6') ('')
+WHEN  ('?ITEM7') ('')
+WHEN  ('?ITEM8') ('')
+WHEN  ('?ITEM9') ('')
+WHEN  ('?Inkoop:2') ('')
+WHEN  ('?Logging') ('')
+WHEN  ('?Overboeking') ('')
+WHEN  ('?PalletTegoeden') ('')
+WHEN  ('?Pallets') ('')
+WHEN  ('?PartijVoorraad:2') ('')
+WHEN  ('?Planning') ('')
+WHEN  ('?Rapporten') ('')
+WHEN  ('?SSOPCategorie') ('')
+WHEN  ('?SSOPRegistratie') ('')
+WHEN  ('?SSOPRegistratie:2') ('')
+WHEN  ('?StamgegevensAdressen') ('')
+WHEN  ('?StamgegevensArtikelen') ('')
+WHEN  ('?StamgegevensDeliveryTerms') ('')
+WHEN  ('?StamgegevensKosten') ('')
+WHEN  ('?StamgegevensRelaties') ('')
+WHEN  ('?StamgegevensSjablonen') ('')
+WHEN  ('?StamgegevensTransporteurs') ('')
+WHEN  ('?StamgegevensVerpakkingen') ('')
+WHEN  ('?Systeemgegevens') ('')
+WHEN  ('?Uitvoerhavens') ('')
+WHEN  ('?Verkoop:2') ('')
+WHEN  ('?Voorraad') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 50
+WHEN  ('?ActieAfwijkingen') ('')
+WHEN  ('?Activiteiten') ('')
+WHEN  ('?BrowseVersie') ('')
+WHEN  ('?Cel') ('')
+WHEN  ('?CelLocatieVullenMutaties') ('')
+WHEN  ('?CelLocaties') ('')
+WHEN  ('?ExportMutaties') ('')
+WHEN  ('?GNCode') ('')
+WHEN  ('?GebruikerLogTerugzetten') ('')
+WHEN  ('?Gebruikers') ('')
+WHEN  ('?GewogenPallets') ('')
+WHEN  ('?HulpOpAfstand') ('')
+WHEN  ('?ISOCountries') ('')
+WHEN  ('?ITEM1') ('')
+WHEN  ('?ITEM10') ('')
+WHEN  ('?ITEM11') ('')
+WHEN  ('?ITEM12') ('')
+WHEN  ('?ITEM13') ('')
+WHEN  ('?ITEM14') ('')
+WHEN  ('?ITEM15') ('')
+WHEN  ('?ITEM3') ('')
+WHEN  ('?ITEM4') ('')
+WHEN  ('?ITEM5') ('')
+WHEN  ('?ITEM6') ('')
+WHEN  ('?ITEM7') ('')
+WHEN  ('?ITEM8') ('')
+WHEN  ('?ITEM9') ('')
+WHEN  ('?Inkoop:2') ('')
+WHEN  ('?Logging') ('')
+WHEN  ('?Overboeking') ('')
+WHEN  ('?PalletTegoeden') ('')
+WHEN  ('?Pallets') ('')
+WHEN  ('?PartijVoorraad:2') ('')
+WHEN  ('?Planning') ('')
+WHEN  ('?Rapporten') ('')
+WHEN  ('?SSOPCategorie') ('')
+WHEN  ('?SSOPRegistratie') ('')
+WHEN  ('?SSOPRegistratie:2') ('')
+WHEN  ('?StamgegevensAdressen') ('')
+WHEN  ('?StamgegevensArtikelen') ('')
+WHEN  ('?StamgegevensDeliveryTerms') ('')
+WHEN  ('?StamgegevensKosten') ('')
+WHEN  ('?StamgegevensRelaties') ('')
+WHEN  ('?StamgegevensSjablonen') ('')
+WHEN  ('?StamgegevensTransporteurs') ('')
+WHEN  ('?StamgegevensVerpakkingen') ('')
+WHEN  ('?Systeemgegevens') ('')
+WHEN  ('?Uitvoerhavens') ('')
+WHEN  ('?Verkoop:2') ('')
+WHEN  ('?Voorraad') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 50
+WHEN  ('?ActieAfwijkingen') (ReportActieAfwijkingen)
+WHEN  ('?Activiteiten') (BrowseActiviteit)
+WHEN  ('?BrowseVersie') (BrowseVersie)
+WHEN  ('?Cel') (BrowseCel)
+WHEN  ('?CelLocatieVullenMutaties') (ProcessCelLocatieVullen)
+WHEN  ('?CelLocaties') (WindowCelLocaties)
+WHEN  ('?ExportMutaties') (ReportMutaties)
+WHEN  ('?GNCode') (BrowseGNCode)
+WHEN  ('?GebruikerLogTerugzetten') (ProcessGebruikerLogTerugzetten)
+WHEN  ('?Gebruikers') (BrowseGebruiker)
+WHEN  ('?GewogenPallets') (BrowsePallet)
+WHEN  ('?HulpOpAfstand') ()
+WHEN  ('?ISOCountries') (BrowseISOCountries)
+WHEN  ('?ITEM1') (Systeembeheer)
+WHEN  ('?ITEM10') (ConvertLegeExtPartijnr)
+WHEN  ('?ITEM11') (BrowsePalletSoort)
+WHEN  ('?ITEM12') (VulPlanning_MutatieKG)
+WHEN  ('?ITEM13') (VulPartij_InkoopKGPrijs)
+WHEN  ('?ITEM14') (WindowSQLBackup)
+WHEN  ('?ITEM15') (BrowsePalletBladSjabloon)
+WHEN  ('?ITEM3') (ConvertInkoopVerkoopStatus)
+WHEN  ('?ITEM4') (ClearPlanning)
+WHEN  ('?ITEM5') (FixEMutaties)
+WHEN  ('?ITEM6') (FixEPlanning)
+WHEN  ('?ITEM7') (BrowsePartijZonderInslag)
+WHEN  ('?ITEM8') (BrowseRareMutaties)
+WHEN  ('?ITEM9') (BrowseDubbeleInslagMutaties)
+WHEN  ('?Inkoop:2') (BrowseInkoop)
+WHEN  ('?Logging') (BrowseGebruikerLog)
+WHEN  ('?Overboeking') (BrowseOverboeking)
+WHEN  ('?PalletTegoeden') (BrowsePalletTegoeden)
+WHEN  ('?Pallets') (BrowsePallets)
+WHEN  ('?PartijVoorraad:2') (BrowsePartijVoorraadVIEW)
+WHEN  ('?Planning') (BrowsePlanning)
+WHEN  ('?Rapporten') (BrowseRapporten)
+WHEN  ('?SSOPCategorie') (BrowseSSOPCategorie)
+WHEN  ('?SSOPRegistratie') (BrowseSSOPRegistratie)
+WHEN  ('?SSOPRegistratie:2') (ReportSSOPRegistraties)
+WHEN  ('?StamgegevensAdressen') (BrowseRelatieAdres)
+WHEN  ('?StamgegevensArtikelen') (BrowseArtikel)
+WHEN  ('?StamgegevensDeliveryTerms') (BrowseDeliveryTerms)
+WHEN  ('?StamgegevensKosten') (BrowseKostenStam)
+WHEN  ('?StamgegevensRelaties') (BrowseRelatie)
+WHEN  ('?StamgegevensSjablonen') (BrowseSjablonen)
+WHEN  ('?StamgegevensTransporteurs') (BrowseTransporteurs)
+WHEN  ('?StamgegevensVerpakkingen') (BrowseVerpakking)
+WHEN  ('?Systeemgegevens') (WindowSysteemgegevens)
+WHEN  ('?Uitvoerhavens') (BrowseHavens)
+WHEN  ('?Verkoop:2') (BrowseVerkoop)
+WHEN  ('?Voorraad') (BrowseVoorraadVIEW)
+
+%ButtonThread DEPEND %Control LONG TIMES 50
+WHEN  ('?ActieAfwijkingen') (1)
+WHEN  ('?Activiteiten') (1)
+WHEN  ('?BrowseVersie') (1)
+WHEN  ('?Cel') (1)
+WHEN  ('?CelLocatieVullenMutaties') (1)
+WHEN  ('?CelLocaties') (1)
+WHEN  ('?ExportMutaties') (1)
+WHEN  ('?GNCode') (1)
+WHEN  ('?GebruikerLogTerugzetten') (1)
+WHEN  ('?Gebruikers') (1)
+WHEN  ('?GewogenPallets') (1)
+WHEN  ('?HulpOpAfstand') (0)
+WHEN  ('?ISOCountries') (1)
+WHEN  ('?ITEM1') (1)
+WHEN  ('?ITEM10') (1)
+WHEN  ('?ITEM11') (1)
+WHEN  ('?ITEM12') (1)
+WHEN  ('?ITEM13') (1)
+WHEN  ('?ITEM14') (1)
+WHEN  ('?ITEM15') (1)
+WHEN  ('?ITEM3') (1)
+WHEN  ('?ITEM4') (1)
+WHEN  ('?ITEM5') (1)
+WHEN  ('?ITEM6') (1)
+WHEN  ('?ITEM7') (1)
+WHEN  ('?ITEM8') (1)
+WHEN  ('?ITEM9') (1)
+WHEN  ('?Inkoop:2') (1)
+WHEN  ('?Logging') (1)
+WHEN  ('?Overboeking') (1)
+WHEN  ('?PalletTegoeden') (1)
+WHEN  ('?Pallets') (1)
+WHEN  ('?PartijVoorraad:2') (1)
+WHEN  ('?Planning') (1)
+WHEN  ('?Rapporten') (1)
+WHEN  ('?SSOPCategorie') (1)
+WHEN  ('?SSOPRegistratie') (1)
+WHEN  ('?SSOPRegistratie:2') (1)
+WHEN  ('?StamgegevensAdressen') (1)
+WHEN  ('?StamgegevensArtikelen') (1)
+WHEN  ('?StamgegevensDeliveryTerms') (1)
+WHEN  ('?StamgegevensKosten') (1)
+WHEN  ('?StamgegevensRelaties') (1)
+WHEN  ('?StamgegevensSjablonen') (1)
+WHEN  ('?StamgegevensTransporteurs') (1)
+WHEN  ('?StamgegevensVerpakkingen') (1)
+WHEN  ('?Systeemgegevens') (1)
+WHEN  ('?Uitvoerhavens') (1)
+WHEN  ('?Verkoop:2') (1)
+WHEN  ('?Voorraad') (1)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 64
+WHEN  ('') ('25000')
+WHEN  ('?ActieAfwijkingen') ('25000')
+WHEN  ('?Activiteiten') ('25000')
+WHEN  ('?Arrange') ('25000')
+WHEN  ('?BrowseVersie') ('25000')
+WHEN  ('?Cascade') ('25000')
+WHEN  ('?Cel') ('25000')
+WHEN  ('?CelLocatieVullenMutaties') ('25000')
+WHEN  ('?CelLocaties') ('25000')
+WHEN  ('?Copy') ('25000')
+WHEN  ('?Cut') ('25000')
+WHEN  ('?Exit') ('25000')
+WHEN  ('?ExportMutaties') ('25000')
+WHEN  ('?GNCode') ('25000')
+WHEN  ('?GebruikerLogTerugzetten') ('25000')
+WHEN  ('?Gebruikers') ('25000')
+WHEN  ('?GewogenPallets') ('25000')
+WHEN  ('?HelpOnHelp') ('25000')
+WHEN  ('?HelpSearch') ('25000')
+WHEN  ('?Helpindex') ('25000')
+WHEN  ('?HulpOpAfstand') ('25000')
+WHEN  ('?ISOCountries') ('25000')
+WHEN  ('?ITEM1') ('25000')
+WHEN  ('?ITEM10') ('25000')
+WHEN  ('?ITEM11') ('25000')
+WHEN  ('?ITEM12') ('25000')
+WHEN  ('?ITEM13') ('25000')
+WHEN  ('?ITEM14') ('25000')
+WHEN  ('?ITEM15') ('25000')
+WHEN  ('?ITEM3') ('25000')
+WHEN  ('?ITEM4') ('25000')
+WHEN  ('?ITEM5') ('25000')
+WHEN  ('?ITEM6') ('25000')
+WHEN  ('?ITEM7') ('25000')
+WHEN  ('?ITEM8') ('25000')
+WHEN  ('?ITEM9') ('25000')
+WHEN  ('?Inkoop:2') ('25000')
+WHEN  ('?Logging') ('25000')
+WHEN  ('?MENUBAR1') ('25000')
+WHEN  ('?Overboeking') ('25000')
+WHEN  ('?PalletTegoeden') ('25000')
+WHEN  ('?Pallets') ('25000')
+WHEN  ('?PartijVoorraad:2') ('25000')
+WHEN  ('?Paste') ('25000')
+WHEN  ('?Planning') ('25000')
+WHEN  ('?PrintSetup') ('25000')
+WHEN  ('?Rapporten') ('25000')
+WHEN  ('?SSOPCategorie') ('25000')
+WHEN  ('?SSOPRegistratie') ('25000')
+WHEN  ('?SSOPRegistratie:2') ('25000')
+WHEN  ('?StamgegevensAdressen') ('25000')
+WHEN  ('?StamgegevensArtikelen') ('25000')
+WHEN  ('?StamgegevensDeliveryTerms') ('25000')
+WHEN  ('?StamgegevensKosten') ('25000')
+WHEN  ('?StamgegevensRelaties') ('25000')
+WHEN  ('?StamgegevensSjablonen') ('25000')
+WHEN  ('?StamgegevensTransporteurs') ('25000')
+WHEN  ('?StamgegevensVerpakkingen') ('25000')
+WHEN  ('?Systeemgegevens') ('25000')
+WHEN  ('?Tile') ('25000')
+WHEN  ('?Uitvoerhavens') ('25000')
+WHEN  ('?Verkoop:2') ('25000')
+WHEN  ('?Voorraad') ('25000')
+WHEN  ('?WindowTimingVerklaring') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 50
+WHEN  ('?ActieAfwijkingen') ('')
+WHEN  ('?Activiteiten') ('')
+WHEN  ('?BrowseVersie') ('')
+WHEN  ('?Cel') ('')
+WHEN  ('?CelLocatieVullenMutaties') ('')
+WHEN  ('?CelLocaties') ('')
+WHEN  ('?ExportMutaties') ('')
+WHEN  ('?GNCode') ('')
+WHEN  ('?GebruikerLogTerugzetten') ('')
+WHEN  ('?Gebruikers') ('')
+WHEN  ('?GewogenPallets') ('')
+WHEN  ('?HulpOpAfstand') ('')
+WHEN  ('?ISOCountries') ('')
+WHEN  ('?ITEM1') ('')
+WHEN  ('?ITEM10') ('')
+WHEN  ('?ITEM11') ('')
+WHEN  ('?ITEM12') ('')
+WHEN  ('?ITEM13') ('')
+WHEN  ('?ITEM14') ('')
+WHEN  ('?ITEM15') ('')
+WHEN  ('?ITEM3') ('')
+WHEN  ('?ITEM4') ('')
+WHEN  ('?ITEM5') ('')
+WHEN  ('?ITEM6') ('')
+WHEN  ('?ITEM7') ('')
+WHEN  ('?ITEM8') ('')
+WHEN  ('?ITEM9') ('')
+WHEN  ('?Inkoop:2') ('')
+WHEN  ('?Logging') ('')
+WHEN  ('?Overboeking') ('')
+WHEN  ('?PalletTegoeden') ('')
+WHEN  ('?Pallets') ('')
+WHEN  ('?PartijVoorraad:2') ('')
+WHEN  ('?Planning') ('')
+WHEN  ('?Rapporten') ('')
+WHEN  ('?SSOPCategorie') ('')
+WHEN  ('?SSOPRegistratie') ('')
+WHEN  ('?SSOPRegistratie:2') ('')
+WHEN  ('?StamgegevensAdressen') ('')
+WHEN  ('?StamgegevensArtikelen') ('')
+WHEN  ('?StamgegevensDeliveryTerms') ('')
+WHEN  ('?StamgegevensKosten') ('')
+WHEN  ('?StamgegevensRelaties') ('')
+WHEN  ('?StamgegevensSjablonen') ('')
+WHEN  ('?StamgegevensTransporteurs') ('')
+WHEN  ('?StamgegevensVerpakkingen') ('')
+WHEN  ('?Systeemgegevens') ('')
+WHEN  ('?Uitvoerhavens') ('')
+WHEN  ('?Verkoop:2') ('')
+WHEN  ('?Voorraad') ('')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 50
+WHEN  ('?ActieAfwijkingen') ()
+WHEN  ('?Activiteiten') ()
+WHEN  ('?BrowseVersie') ()
+WHEN  ('?Cel') ()
+WHEN  ('?CelLocatieVullenMutaties') ()
+WHEN  ('?CelLocaties') ()
+WHEN  ('?ExportMutaties') ()
+WHEN  ('?GNCode') ()
+WHEN  ('?GebruikerLogTerugzetten') ()
+WHEN  ('?Gebruikers') ()
+WHEN  ('?GewogenPallets') ()
+WHEN  ('?HulpOpAfstand') ()
+WHEN  ('?ISOCountries') ()
+WHEN  ('?ITEM1') ()
+WHEN  ('?ITEM10') ()
+WHEN  ('?ITEM11') ()
+WHEN  ('?ITEM12') ()
+WHEN  ('?ITEM13') ()
+WHEN  ('?ITEM14') ()
+WHEN  ('?ITEM15') ()
+WHEN  ('?ITEM3') ()
+WHEN  ('?ITEM4') ()
+WHEN  ('?ITEM5') ()
+WHEN  ('?ITEM6') ()
+WHEN  ('?ITEM7') ()
+WHEN  ('?ITEM8') ()
+WHEN  ('?ITEM9') ()
+WHEN  ('?Inkoop:2') ()
+WHEN  ('?Logging') ()
+WHEN  ('?Overboeking') ()
+WHEN  ('?PalletTegoeden') ()
+WHEN  ('?Pallets') ()
+WHEN  ('?PartijVoorraad:2') ()
+WHEN  ('?Planning') ()
+WHEN  ('?Rapporten') ()
+WHEN  ('?SSOPCategorie') ()
+WHEN  ('?SSOPRegistratie') ()
+WHEN  ('?SSOPRegistratie:2') ()
+WHEN  ('?StamgegevensAdressen') ()
+WHEN  ('?StamgegevensArtikelen') ()
+WHEN  ('?StamgegevensDeliveryTerms') ()
+WHEN  ('?StamgegevensKosten') ()
+WHEN  ('?StamgegevensRelaties') ()
+WHEN  ('?StamgegevensSjablonen') ()
+WHEN  ('?StamgegevensTransporteurs') ()
+WHEN  ('?StamgegevensVerpakkingen') ()
+WHEN  ('?Systeemgegevens') ()
+WHEN  ('?Uitvoerhavens') ()
+WHEN  ('?Verkoop:2') ()
+WHEN  ('?Voorraad') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 50
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?Activiteiten') (0)
+WHEN  ('?BrowseVersie') (0)
+WHEN  ('?Cel') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?Gebruikers') (0)
+WHEN  ('?GewogenPallets') (0)
+WHEN  ('?HulpOpAfstand') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?ITEM1') (0)
+WHEN  ('?ITEM10') (0)
+WHEN  ('?ITEM11') (0)
+WHEN  ('?ITEM12') (0)
+WHEN  ('?ITEM13') (0)
+WHEN  ('?ITEM14') (0)
+WHEN  ('?ITEM15') (0)
+WHEN  ('?ITEM3') (0)
+WHEN  ('?ITEM4') (0)
+WHEN  ('?ITEM5') (0)
+WHEN  ('?ITEM6') (0)
+WHEN  ('?ITEM7') (0)
+WHEN  ('?ITEM8') (0)
+WHEN  ('?ITEM9') (0)
+WHEN  ('?Inkoop:2') (0)
+WHEN  ('?Logging') (0)
+WHEN  ('?Overboeking') (0)
+WHEN  ('?PalletTegoeden') (0)
+WHEN  ('?Pallets') (0)
+WHEN  ('?PartijVoorraad:2') (0)
+WHEN  ('?Planning') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensAdressen') (0)
+WHEN  ('?StamgegevensArtikelen') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?StamgegevensRelaties') (0)
+WHEN  ('?StamgegevensSjablonen') (0)
+WHEN  ('?StamgegevensTransporteurs') (0)
+WHEN  ('?StamgegevensVerpakkingen') (0)
+WHEN  ('?Systeemgegevens') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Verkoop:2') (0)
+WHEN  ('?Voorraad') (0)
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 64
+WHEN  ('') ('None')
+WHEN  ('?ActieAfwijkingen') ('None')
+WHEN  ('?Activiteiten') ('None')
+WHEN  ('?Arrange') ('None')
+WHEN  ('?BrowseVersie') ('None')
+WHEN  ('?Cascade') ('None')
+WHEN  ('?Cel') ('None')
+WHEN  ('?CelLocatieVullenMutaties') ('None')
+WHEN  ('?CelLocaties') ('None')
+WHEN  ('?Copy') ('None')
+WHEN  ('?Cut') ('None')
+WHEN  ('?Exit') ('None')
+WHEN  ('?ExportMutaties') ('None')
+WHEN  ('?GNCode') ('None')
+WHEN  ('?GebruikerLogTerugzetten') ('None')
+WHEN  ('?Gebruikers') ('None')
+WHEN  ('?GewogenPallets') ('None')
+WHEN  ('?HelpOnHelp') ('None')
+WHEN  ('?HelpSearch') ('None')
+WHEN  ('?Helpindex') ('None')
+WHEN  ('?HulpOpAfstand') ('None')
+WHEN  ('?ISOCountries') ('None')
+WHEN  ('?ITEM1') ('None')
+WHEN  ('?ITEM10') ('None')
+WHEN  ('?ITEM11') ('None')
+WHEN  ('?ITEM12') ('None')
+WHEN  ('?ITEM13') ('None')
+WHEN  ('?ITEM14') ('None')
+WHEN  ('?ITEM15') ('None')
+WHEN  ('?ITEM3') ('None')
+WHEN  ('?ITEM4') ('None')
+WHEN  ('?ITEM5') ('None')
+WHEN  ('?ITEM6') ('None')
+WHEN  ('?ITEM7') ('None')
+WHEN  ('?ITEM8') ('None')
+WHEN  ('?ITEM9') ('None')
+WHEN  ('?Inkoop:2') ('None')
+WHEN  ('?Logging') ('None')
+WHEN  ('?MENUBAR1') ('None')
+WHEN  ('?Overboeking') ('None')
+WHEN  ('?PalletTegoeden') ('None')
+WHEN  ('?Pallets') ('None')
+WHEN  ('?PartijVoorraad:2') ('None')
+WHEN  ('?Paste') ('None')
+WHEN  ('?Planning') ('None')
+WHEN  ('?PrintSetup') ('None')
+WHEN  ('?Rapporten') ('None')
+WHEN  ('?SSOPCategorie') ('None')
+WHEN  ('?SSOPRegistratie') ('None')
+WHEN  ('?SSOPRegistratie:2') ('None')
+WHEN  ('?StamgegevensAdressen') ('None')
+WHEN  ('?StamgegevensArtikelen') ('None')
+WHEN  ('?StamgegevensDeliveryTerms') ('None')
+WHEN  ('?StamgegevensKosten') ('None')
+WHEN  ('?StamgegevensRelaties') ('None')
+WHEN  ('?StamgegevensSjablonen') ('None')
+WHEN  ('?StamgegevensTransporteurs') ('None')
+WHEN  ('?StamgegevensVerpakkingen') ('None')
+WHEN  ('?Systeemgegevens') ('None')
+WHEN  ('?Tile') ('None')
+WHEN  ('?Uitvoerhavens') ('None')
+WHEN  ('?Verkoop:2') ('None')
+WHEN  ('?Voorraad') ('None')
+WHEN  ('?WindowTimingVerklaring') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 50
+WHEN  ('?ActieAfwijkingen') ('')
+WHEN  ('?Activiteiten') ('')
+WHEN  ('?BrowseVersie') ('')
+WHEN  ('?Cel') ('')
+WHEN  ('?CelLocatieVullenMutaties') ('')
+WHEN  ('?CelLocaties') ('')
+WHEN  ('?ExportMutaties') ('')
+WHEN  ('?GNCode') ('')
+WHEN  ('?GebruikerLogTerugzetten') ('')
+WHEN  ('?Gebruikers') ('')
+WHEN  ('?GewogenPallets') ('')
+WHEN  ('?HulpOpAfstand') ('')
+WHEN  ('?ISOCountries') ('')
+WHEN  ('?ITEM1') ('')
+WHEN  ('?ITEM10') ('')
+WHEN  ('?ITEM11') ('')
+WHEN  ('?ITEM12') ('')
+WHEN  ('?ITEM13') ('')
+WHEN  ('?ITEM14') ('')
+WHEN  ('?ITEM15') ('')
+WHEN  ('?ITEM3') ('')
+WHEN  ('?ITEM4') ('')
+WHEN  ('?ITEM5') ('')
+WHEN  ('?ITEM6') ('')
+WHEN  ('?ITEM7') ('')
+WHEN  ('?ITEM8') ('')
+WHEN  ('?ITEM9') ('')
+WHEN  ('?Inkoop:2') ('')
+WHEN  ('?Logging') ('')
+WHEN  ('?Overboeking') ('')
+WHEN  ('?PalletTegoeden') ('')
+WHEN  ('?Pallets') ('')
+WHEN  ('?PartijVoorraad:2') ('')
+WHEN  ('?Planning') ('')
+WHEN  ('?Rapporten') ('')
+WHEN  ('?SSOPCategorie') ('')
+WHEN  ('?SSOPRegistratie') ('')
+WHEN  ('?SSOPRegistratie:2') ('')
+WHEN  ('?StamgegevensAdressen') ('')
+WHEN  ('?StamgegevensArtikelen') ('')
+WHEN  ('?StamgegevensDeliveryTerms') ('')
+WHEN  ('?StamgegevensKosten') ('')
+WHEN  ('?StamgegevensRelaties') ('')
+WHEN  ('?StamgegevensSjablonen') ('')
+WHEN  ('?StamgegevensTransporteurs') ('')
+WHEN  ('?StamgegevensVerpakkingen') ('')
+WHEN  ('?Systeemgegevens') ('')
+WHEN  ('?Uitvoerhavens') ('')
+WHEN  ('?Verkoop:2') ('')
+WHEN  ('?Voorraad') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 50
+WHEN  ('?ActieAfwijkingen') ()
+WHEN  ('?Activiteiten') ()
+WHEN  ('?BrowseVersie') ()
+WHEN  ('?Cel') ()
+WHEN  ('?CelLocatieVullenMutaties') ()
+WHEN  ('?CelLocaties') ()
+WHEN  ('?ExportMutaties') ()
+WHEN  ('?GNCode') ()
+WHEN  ('?GebruikerLogTerugzetten') ()
+WHEN  ('?Gebruikers') ()
+WHEN  ('?GewogenPallets') ()
+WHEN  ('?HulpOpAfstand') ()
+WHEN  ('?ISOCountries') ()
+WHEN  ('?ITEM1') ()
+WHEN  ('?ITEM10') ()
+WHEN  ('?ITEM11') ()
+WHEN  ('?ITEM12') ()
+WHEN  ('?ITEM13') ()
+WHEN  ('?ITEM14') ()
+WHEN  ('?ITEM15') ()
+WHEN  ('?ITEM3') ()
+WHEN  ('?ITEM4') ()
+WHEN  ('?ITEM5') ()
+WHEN  ('?ITEM6') ()
+WHEN  ('?ITEM7') ()
+WHEN  ('?ITEM8') ()
+WHEN  ('?ITEM9') ()
+WHEN  ('?Inkoop:2') ()
+WHEN  ('?Logging') ()
+WHEN  ('?Overboeking') ()
+WHEN  ('?PalletTegoeden') ()
+WHEN  ('?Pallets') ()
+WHEN  ('?PartijVoorraad:2') ()
+WHEN  ('?Planning') ()
+WHEN  ('?Rapporten') ()
+WHEN  ('?SSOPCategorie') ()
+WHEN  ('?SSOPRegistratie') ()
+WHEN  ('?SSOPRegistratie:2') ()
+WHEN  ('?StamgegevensAdressen') ()
+WHEN  ('?StamgegevensArtikelen') ()
+WHEN  ('?StamgegevensDeliveryTerms') ()
+WHEN  ('?StamgegevensKosten') ()
+WHEN  ('?StamgegevensRelaties') ()
+WHEN  ('?StamgegevensSjablonen') ()
+WHEN  ('?StamgegevensTransporteurs') ()
+WHEN  ('?StamgegevensVerpakkingen') ()
+WHEN  ('?Systeemgegevens') ()
+WHEN  ('?Uitvoerhavens') ()
+WHEN  ('?Verkoop:2') ()
+WHEN  ('?Voorraad') ()
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 53
+WHEN  ('') (1)
+WHEN  ('?ActieAfwijkingen') (1)
+WHEN  ('?Activiteiten') (1)
+WHEN  ('?BrowseVersie') (1)
+WHEN  ('?Cel') (1)
+WHEN  ('?CelLocatieVullenMutaties') (1)
+WHEN  ('?CelLocaties') (1)
+WHEN  ('?ExportMutaties') (1)
+WHEN  ('?GNCode') (1)
+WHEN  ('?GebruikerLogTerugzetten') (1)
+WHEN  ('?Gebruikers') (1)
+WHEN  ('?GewogenPallets') (1)
+WHEN  ('?HulpOpAfstand') (1)
+WHEN  ('?ISOCountries') (1)
+WHEN  ('?ITEM1') (1)
+WHEN  ('?ITEM10') (1)
+WHEN  ('?ITEM11') (1)
+WHEN  ('?ITEM12') (1)
+WHEN  ('?ITEM13') (1)
+WHEN  ('?ITEM14') (1)
+WHEN  ('?ITEM15') (1)
+WHEN  ('?ITEM3') (1)
+WHEN  ('?ITEM4') (1)
+WHEN  ('?ITEM5') (1)
+WHEN  ('?ITEM6') (1)
+WHEN  ('?ITEM7') (1)
+WHEN  ('?ITEM8') (1)
+WHEN  ('?ITEM9') (1)
+WHEN  ('?Inkoop:2') (1)
+WHEN  ('?Logging') (1)
+WHEN  ('?MENUBAR1') (1)
+WHEN  ('?Overboeking') (1)
+WHEN  ('?PalletTegoeden') (1)
+WHEN  ('?Pallets') (1)
+WHEN  ('?PartijVoorraad:2') (1)
+WHEN  ('?Planning') (1)
+WHEN  ('?Rapporten') (1)
+WHEN  ('?SSOPCategorie') (1)
+WHEN  ('?SSOPRegistratie') (1)
+WHEN  ('?SSOPRegistratie:2') (1)
+WHEN  ('?StamgegevensAdressen') (1)
+WHEN  ('?StamgegevensArtikelen') (1)
+WHEN  ('?StamgegevensDeliveryTerms') (1)
+WHEN  ('?StamgegevensKosten') (1)
+WHEN  ('?StamgegevensRelaties') (1)
+WHEN  ('?StamgegevensSjablonen') (1)
+WHEN  ('?StamgegevensTransporteurs') (1)
+WHEN  ('?StamgegevensVerpakkingen') (1)
+WHEN  ('?Systeemgegevens') (1)
+WHEN  ('?Uitvoerhavens') (1)
+WHEN  ('?Verkoop:2') (1)
+WHEN  ('?Voorraad') (1)
+WHEN  ('?WindowTimingVerklaring') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 53
+WHEN  ('')TIMES 0
+WHEN  ('?ActieAfwijkingen')TIMES 0
+WHEN  ('?Activiteiten')TIMES 0
+WHEN  ('?BrowseVersie')TIMES 0
+WHEN  ('?Cel')TIMES 0
+WHEN  ('?CelLocatieVullenMutaties')TIMES 0
+WHEN  ('?CelLocaties')TIMES 0
+WHEN  ('?ExportMutaties')TIMES 0
+WHEN  ('?GNCode')TIMES 0
+WHEN  ('?GebruikerLogTerugzetten')TIMES 0
+WHEN  ('?Gebruikers')TIMES 0
+WHEN  ('?GewogenPallets')TIMES 0
+WHEN  ('?HulpOpAfstand')TIMES 0
+WHEN  ('?ISOCountries')TIMES 0
+WHEN  ('?ITEM1')TIMES 0
+WHEN  ('?ITEM10')TIMES 0
+WHEN  ('?ITEM11')TIMES 0
+WHEN  ('?ITEM12')TIMES 0
+WHEN  ('?ITEM13')TIMES 0
+WHEN  ('?ITEM14')TIMES 0
+WHEN  ('?ITEM15')TIMES 0
+WHEN  ('?ITEM3')TIMES 0
+WHEN  ('?ITEM4')TIMES 0
+WHEN  ('?ITEM5')TIMES 0
+WHEN  ('?ITEM6')TIMES 0
+WHEN  ('?ITEM7')TIMES 0
+WHEN  ('?ITEM8')TIMES 0
+WHEN  ('?ITEM9')TIMES 0
+WHEN  ('?Inkoop:2')TIMES 0
+WHEN  ('?Logging')TIMES 0
+WHEN  ('?MENUBAR1')TIMES 0
+WHEN  ('?Overboeking')TIMES 0
+WHEN  ('?PalletTegoeden')TIMES 0
+WHEN  ('?Pallets')TIMES 0
+WHEN  ('?PartijVoorraad:2')TIMES 0
+WHEN  ('?Planning')TIMES 0
+WHEN  ('?Rapporten')TIMES 0
+WHEN  ('?SSOPCategorie')TIMES 0
+WHEN  ('?SSOPRegistratie')TIMES 0
+WHEN  ('?SSOPRegistratie:2')TIMES 0
+WHEN  ('?StamgegevensAdressen')TIMES 0
+WHEN  ('?StamgegevensArtikelen')TIMES 0
+WHEN  ('?StamgegevensDeliveryTerms')TIMES 0
+WHEN  ('?StamgegevensKosten')TIMES 0
+WHEN  ('?StamgegevensRelaties')TIMES 0
+WHEN  ('?StamgegevensSjablonen')TIMES 0
+WHEN  ('?StamgegevensTransporteurs')TIMES 0
+WHEN  ('?StamgegevensVerpakkingen')TIMES 0
+WHEN  ('?Systeemgegevens')TIMES 0
+WHEN  ('?Uitvoerhavens')TIMES 0
+WHEN  ('?Verkoop:2')TIMES 0
+WHEN  ('?Voorraad')TIMES 0
+WHEN  ('?WindowTimingVerklaring')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 53
+WHEN  ('')TIMES 0
+WHEN  ('?ActieAfwijkingen')TIMES 0
+WHEN  ('?Activiteiten')TIMES 0
+WHEN  ('?BrowseVersie')TIMES 0
+WHEN  ('?Cel')TIMES 0
+WHEN  ('?CelLocatieVullenMutaties')TIMES 0
+WHEN  ('?CelLocaties')TIMES 0
+WHEN  ('?ExportMutaties')TIMES 0
+WHEN  ('?GNCode')TIMES 0
+WHEN  ('?GebruikerLogTerugzetten')TIMES 0
+WHEN  ('?Gebruikers')TIMES 0
+WHEN  ('?GewogenPallets')TIMES 0
+WHEN  ('?HulpOpAfstand')TIMES 0
+WHEN  ('?ISOCountries')TIMES 0
+WHEN  ('?ITEM1')TIMES 0
+WHEN  ('?ITEM10')TIMES 0
+WHEN  ('?ITEM11')TIMES 0
+WHEN  ('?ITEM12')TIMES 0
+WHEN  ('?ITEM13')TIMES 0
+WHEN  ('?ITEM14')TIMES 0
+WHEN  ('?ITEM15')TIMES 0
+WHEN  ('?ITEM3')TIMES 0
+WHEN  ('?ITEM4')TIMES 0
+WHEN  ('?ITEM5')TIMES 0
+WHEN  ('?ITEM6')TIMES 0
+WHEN  ('?ITEM7')TIMES 0
+WHEN  ('?ITEM8')TIMES 0
+WHEN  ('?ITEM9')TIMES 0
+WHEN  ('?Inkoop:2')TIMES 0
+WHEN  ('?Logging')TIMES 0
+WHEN  ('?MENUBAR1')TIMES 0
+WHEN  ('?Overboeking')TIMES 0
+WHEN  ('?PalletTegoeden')TIMES 0
+WHEN  ('?Pallets')TIMES 0
+WHEN  ('?PartijVoorraad:2')TIMES 0
+WHEN  ('?Planning')TIMES 0
+WHEN  ('?Rapporten')TIMES 0
+WHEN  ('?SSOPCategorie')TIMES 0
+WHEN  ('?SSOPRegistratie')TIMES 0
+WHEN  ('?SSOPRegistratie:2')TIMES 0
+WHEN  ('?StamgegevensAdressen')TIMES 0
+WHEN  ('?StamgegevensArtikelen')TIMES 0
+WHEN  ('?StamgegevensDeliveryTerms')TIMES 0
+WHEN  ('?StamgegevensKosten')TIMES 0
+WHEN  ('?StamgegevensRelaties')TIMES 0
+WHEN  ('?StamgegevensSjablonen')TIMES 0
+WHEN  ('?StamgegevensTransporteurs')TIMES 0
+WHEN  ('?StamgegevensVerpakkingen')TIMES 0
+WHEN  ('?Systeemgegevens')TIMES 0
+WHEN  ('?Uitvoerhavens')TIMES 0
+WHEN  ('?Verkoop:2')TIMES 0
+WHEN  ('?Voorraad')TIMES 0
+WHEN  ('?WindowTimingVerklaring')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 53
+WHEN  ('')TIMES 0
+WHEN  ('?ActieAfwijkingen')TIMES 0
+WHEN  ('?Activiteiten')TIMES 0
+WHEN  ('?BrowseVersie')TIMES 0
+WHEN  ('?Cel')TIMES 0
+WHEN  ('?CelLocatieVullenMutaties')TIMES 0
+WHEN  ('?CelLocaties')TIMES 0
+WHEN  ('?ExportMutaties')TIMES 0
+WHEN  ('?GNCode')TIMES 0
+WHEN  ('?GebruikerLogTerugzetten')TIMES 0
+WHEN  ('?Gebruikers')TIMES 0
+WHEN  ('?GewogenPallets')TIMES 0
+WHEN  ('?HulpOpAfstand')TIMES 0
+WHEN  ('?ISOCountries')TIMES 0
+WHEN  ('?ITEM1')TIMES 0
+WHEN  ('?ITEM10')TIMES 0
+WHEN  ('?ITEM11')TIMES 0
+WHEN  ('?ITEM12')TIMES 0
+WHEN  ('?ITEM13')TIMES 0
+WHEN  ('?ITEM14')TIMES 0
+WHEN  ('?ITEM15')TIMES 0
+WHEN  ('?ITEM3')TIMES 0
+WHEN  ('?ITEM4')TIMES 0
+WHEN  ('?ITEM5')TIMES 0
+WHEN  ('?ITEM6')TIMES 0
+WHEN  ('?ITEM7')TIMES 0
+WHEN  ('?ITEM8')TIMES 0
+WHEN  ('?ITEM9')TIMES 0
+WHEN  ('?Inkoop:2')TIMES 0
+WHEN  ('?Logging')TIMES 0
+WHEN  ('?MENUBAR1')TIMES 0
+WHEN  ('?Overboeking')TIMES 0
+WHEN  ('?PalletTegoeden')TIMES 0
+WHEN  ('?Pallets')TIMES 0
+WHEN  ('?PartijVoorraad:2')TIMES 0
+WHEN  ('?Planning')TIMES 0
+WHEN  ('?Rapporten')TIMES 0
+WHEN  ('?SSOPCategorie')TIMES 0
+WHEN  ('?SSOPRegistratie')TIMES 0
+WHEN  ('?SSOPRegistratie:2')TIMES 0
+WHEN  ('?StamgegevensAdressen')TIMES 0
+WHEN  ('?StamgegevensArtikelen')TIMES 0
+WHEN  ('?StamgegevensDeliveryTerms')TIMES 0
+WHEN  ('?StamgegevensKosten')TIMES 0
+WHEN  ('?StamgegevensRelaties')TIMES 0
+WHEN  ('?StamgegevensSjablonen')TIMES 0
+WHEN  ('?StamgegevensTransporteurs')TIMES 0
+WHEN  ('?StamgegevensVerpakkingen')TIMES 0
+WHEN  ('?Systeemgegevens')TIMES 0
+WHEN  ('?Uitvoerhavens')TIMES 0
+WHEN  ('?Verkoop:2')TIMES 0
+WHEN  ('?Voorraad')TIMES 0
+WHEN  ('?WindowTimingVerklaring')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 53
+WHEN  ('')TIMES 0
+WHEN  ('?ActieAfwijkingen')TIMES 0
+WHEN  ('?Activiteiten')TIMES 0
+WHEN  ('?BrowseVersie')TIMES 0
+WHEN  ('?Cel')TIMES 0
+WHEN  ('?CelLocatieVullenMutaties')TIMES 0
+WHEN  ('?CelLocaties')TIMES 0
+WHEN  ('?ExportMutaties')TIMES 0
+WHEN  ('?GNCode')TIMES 0
+WHEN  ('?GebruikerLogTerugzetten')TIMES 0
+WHEN  ('?Gebruikers')TIMES 0
+WHEN  ('?GewogenPallets')TIMES 0
+WHEN  ('?HulpOpAfstand')TIMES 0
+WHEN  ('?ISOCountries')TIMES 0
+WHEN  ('?ITEM1')TIMES 0
+WHEN  ('?ITEM10')TIMES 0
+WHEN  ('?ITEM11')TIMES 0
+WHEN  ('?ITEM12')TIMES 0
+WHEN  ('?ITEM13')TIMES 0
+WHEN  ('?ITEM14')TIMES 0
+WHEN  ('?ITEM15')TIMES 0
+WHEN  ('?ITEM3')TIMES 0
+WHEN  ('?ITEM4')TIMES 0
+WHEN  ('?ITEM5')TIMES 0
+WHEN  ('?ITEM6')TIMES 0
+WHEN  ('?ITEM7')TIMES 0
+WHEN  ('?ITEM8')TIMES 0
+WHEN  ('?ITEM9')TIMES 0
+WHEN  ('?Inkoop:2')TIMES 0
+WHEN  ('?Logging')TIMES 0
+WHEN  ('?MENUBAR1')TIMES 0
+WHEN  ('?Overboeking')TIMES 0
+WHEN  ('?PalletTegoeden')TIMES 0
+WHEN  ('?Pallets')TIMES 0
+WHEN  ('?PartijVoorraad:2')TIMES 0
+WHEN  ('?Planning')TIMES 0
+WHEN  ('?Rapporten')TIMES 0
+WHEN  ('?SSOPCategorie')TIMES 0
+WHEN  ('?SSOPRegistratie')TIMES 0
+WHEN  ('?SSOPRegistratie:2')TIMES 0
+WHEN  ('?StamgegevensAdressen')TIMES 0
+WHEN  ('?StamgegevensArtikelen')TIMES 0
+WHEN  ('?StamgegevensDeliveryTerms')TIMES 0
+WHEN  ('?StamgegevensKosten')TIMES 0
+WHEN  ('?StamgegevensRelaties')TIMES 0
+WHEN  ('?StamgegevensSjablonen')TIMES 0
+WHEN  ('?StamgegevensTransporteurs')TIMES 0
+WHEN  ('?StamgegevensVerpakkingen')TIMES 0
+WHEN  ('?Systeemgegevens')TIMES 0
+WHEN  ('?Uitvoerhavens')TIMES 0
+WHEN  ('?Verkoop:2')TIMES 0
+WHEN  ('?Voorraad')TIMES 0
+WHEN  ('?WindowTimingVerklaring')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 53
+WHEN  ('')TIMES 0
+WHEN  ('?ActieAfwijkingen')TIMES 0
+WHEN  ('?Activiteiten')TIMES 0
+WHEN  ('?BrowseVersie')TIMES 0
+WHEN  ('?Cel')TIMES 0
+WHEN  ('?CelLocatieVullenMutaties')TIMES 0
+WHEN  ('?CelLocaties')TIMES 0
+WHEN  ('?ExportMutaties')TIMES 0
+WHEN  ('?GNCode')TIMES 0
+WHEN  ('?GebruikerLogTerugzetten')TIMES 0
+WHEN  ('?Gebruikers')TIMES 0
+WHEN  ('?GewogenPallets')TIMES 0
+WHEN  ('?HulpOpAfstand')TIMES 0
+WHEN  ('?ISOCountries')TIMES 0
+WHEN  ('?ITEM1')TIMES 0
+WHEN  ('?ITEM10')TIMES 0
+WHEN  ('?ITEM11')TIMES 0
+WHEN  ('?ITEM12')TIMES 0
+WHEN  ('?ITEM13')TIMES 0
+WHEN  ('?ITEM14')TIMES 0
+WHEN  ('?ITEM15')TIMES 0
+WHEN  ('?ITEM3')TIMES 0
+WHEN  ('?ITEM4')TIMES 0
+WHEN  ('?ITEM5')TIMES 0
+WHEN  ('?ITEM6')TIMES 0
+WHEN  ('?ITEM7')TIMES 0
+WHEN  ('?ITEM8')TIMES 0
+WHEN  ('?ITEM9')TIMES 0
+WHEN  ('?Inkoop:2')TIMES 0
+WHEN  ('?Logging')TIMES 0
+WHEN  ('?MENUBAR1')TIMES 0
+WHEN  ('?Overboeking')TIMES 0
+WHEN  ('?PalletTegoeden')TIMES 0
+WHEN  ('?Pallets')TIMES 0
+WHEN  ('?PartijVoorraad:2')TIMES 0
+WHEN  ('?Planning')TIMES 0
+WHEN  ('?Rapporten')TIMES 0
+WHEN  ('?SSOPCategorie')TIMES 0
+WHEN  ('?SSOPRegistratie')TIMES 0
+WHEN  ('?SSOPRegistratie:2')TIMES 0
+WHEN  ('?StamgegevensAdressen')TIMES 0
+WHEN  ('?StamgegevensArtikelen')TIMES 0
+WHEN  ('?StamgegevensDeliveryTerms')TIMES 0
+WHEN  ('?StamgegevensKosten')TIMES 0
+WHEN  ('?StamgegevensRelaties')TIMES 0
+WHEN  ('?StamgegevensSjablonen')TIMES 0
+WHEN  ('?StamgegevensTransporteurs')TIMES 0
+WHEN  ('?StamgegevensVerpakkingen')TIMES 0
+WHEN  ('?Systeemgegevens')TIMES 0
+WHEN  ('?Uitvoerhavens')TIMES 0
+WHEN  ('?Verkoop:2')TIMES 0
+WHEN  ('?Voorraad')TIMES 0
+WHEN  ('?WindowTimingVerklaring')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 53
+WHEN  ('')TIMES 0
+WHEN  ('?ActieAfwijkingen')TIMES 0
+WHEN  ('?Activiteiten')TIMES 0
+WHEN  ('?BrowseVersie')TIMES 0
+WHEN  ('?Cel')TIMES 0
+WHEN  ('?CelLocatieVullenMutaties')TIMES 0
+WHEN  ('?CelLocaties')TIMES 0
+WHEN  ('?ExportMutaties')TIMES 0
+WHEN  ('?GNCode')TIMES 0
+WHEN  ('?GebruikerLogTerugzetten')TIMES 0
+WHEN  ('?Gebruikers')TIMES 0
+WHEN  ('?GewogenPallets')TIMES 0
+WHEN  ('?HulpOpAfstand')TIMES 0
+WHEN  ('?ISOCountries')TIMES 0
+WHEN  ('?ITEM1')TIMES 0
+WHEN  ('?ITEM10')TIMES 0
+WHEN  ('?ITEM11')TIMES 0
+WHEN  ('?ITEM12')TIMES 0
+WHEN  ('?ITEM13')TIMES 0
+WHEN  ('?ITEM14')TIMES 0
+WHEN  ('?ITEM15')TIMES 0
+WHEN  ('?ITEM3')TIMES 0
+WHEN  ('?ITEM4')TIMES 0
+WHEN  ('?ITEM5')TIMES 0
+WHEN  ('?ITEM6')TIMES 0
+WHEN  ('?ITEM7')TIMES 0
+WHEN  ('?ITEM8')TIMES 0
+WHEN  ('?ITEM9')TIMES 0
+WHEN  ('?Inkoop:2')TIMES 0
+WHEN  ('?Logging')TIMES 0
+WHEN  ('?MENUBAR1')TIMES 0
+WHEN  ('?Overboeking')TIMES 0
+WHEN  ('?PalletTegoeden')TIMES 0
+WHEN  ('?Pallets')TIMES 0
+WHEN  ('?PartijVoorraad:2')TIMES 0
+WHEN  ('?Planning')TIMES 0
+WHEN  ('?Rapporten')TIMES 0
+WHEN  ('?SSOPCategorie')TIMES 0
+WHEN  ('?SSOPRegistratie')TIMES 0
+WHEN  ('?SSOPRegistratie:2')TIMES 0
+WHEN  ('?StamgegevensAdressen')TIMES 0
+WHEN  ('?StamgegevensArtikelen')TIMES 0
+WHEN  ('?StamgegevensDeliveryTerms')TIMES 0
+WHEN  ('?StamgegevensKosten')TIMES 0
+WHEN  ('?StamgegevensRelaties')TIMES 0
+WHEN  ('?StamgegevensSjablonen')TIMES 0
+WHEN  ('?StamgegevensTransporteurs')TIMES 0
+WHEN  ('?StamgegevensVerpakkingen')TIMES 0
+WHEN  ('?Systeemgegevens')TIMES 0
+WHEN  ('?Uitvoerhavens')TIMES 0
+WHEN  ('?Verkoop:2')TIMES 0
+WHEN  ('?Voorraad')TIMES 0
+WHEN  ('?WindowTimingVerklaring')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 17
+WHEN  ('') ('Off')
+WHEN  ('?ActieAfwijkingen') ('Off')
+WHEN  ('?CelLocatieVullenMutaties') ('Off')
+WHEN  ('?CelLocaties') ('Off')
+WHEN  ('?ExportMutaties') ('Off')
+WHEN  ('?GNCode') ('Off')
+WHEN  ('?GebruikerLogTerugzetten') ('Off')
+WHEN  ('?ISOCountries') ('Off')
+WHEN  ('?MENUBAR1') ('Off')
+WHEN  ('?Rapporten') ('Off')
+WHEN  ('?SSOPCategorie') ('Off')
+WHEN  ('?SSOPRegistratie') ('Off')
+WHEN  ('?SSOPRegistratie:2') ('Off')
+WHEN  ('?StamgegevensDeliveryTerms') ('Off')
+WHEN  ('?StamgegevensKosten') ('Off')
+WHEN  ('?Uitvoerhavens') ('Off')
+WHEN  ('?Voorraad') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 17
+WHEN  ('') ('')
+WHEN  ('?ActieAfwijkingen') ('')
+WHEN  ('?CelLocatieVullenMutaties') ('')
+WHEN  ('?CelLocaties') ('')
+WHEN  ('?ExportMutaties') ('')
+WHEN  ('?GNCode') ('')
+WHEN  ('?GebruikerLogTerugzetten') ('')
+WHEN  ('?ISOCountries') ('')
+WHEN  ('?MENUBAR1') ('')
+WHEN  ('?Rapporten') ('')
+WHEN  ('?SSOPCategorie') ('')
+WHEN  ('?SSOPRegistratie') ('')
+WHEN  ('?SSOPRegistratie:2') ('')
+WHEN  ('?StamgegevensDeliveryTerms') ('')
+WHEN  ('?StamgegevensKosten') ('')
+WHEN  ('?Uitvoerhavens') ('')
+WHEN  ('?Voorraad') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 17
+WHEN  ('') (0)
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?MENUBAR1') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Voorraad') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 17
+WHEN  ('') (-1)
+WHEN  ('?ActieAfwijkingen') (-1)
+WHEN  ('?CelLocatieVullenMutaties') (-1)
+WHEN  ('?CelLocaties') (-1)
+WHEN  ('?ExportMutaties') (-1)
+WHEN  ('?GNCode') (-1)
+WHEN  ('?GebruikerLogTerugzetten') (-1)
+WHEN  ('?ISOCountries') (-1)
+WHEN  ('?MENUBAR1') (-1)
+WHEN  ('?Rapporten') (-1)
+WHEN  ('?SSOPCategorie') (-1)
+WHEN  ('?SSOPRegistratie') (-1)
+WHEN  ('?SSOPRegistratie:2') (-1)
+WHEN  ('?StamgegevensDeliveryTerms') (-1)
+WHEN  ('?StamgegevensKosten') (-1)
+WHEN  ('?Uitvoerhavens') (-1)
+WHEN  ('?Voorraad') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 17
+WHEN  ('') (0)
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?MENUBAR1') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Voorraad') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 17
+WHEN  ('') (-1)
+WHEN  ('?ActieAfwijkingen') (-1)
+WHEN  ('?CelLocatieVullenMutaties') (-1)
+WHEN  ('?CelLocaties') (-1)
+WHEN  ('?ExportMutaties') (-1)
+WHEN  ('?GNCode') (-1)
+WHEN  ('?GebruikerLogTerugzetten') (-1)
+WHEN  ('?ISOCountries') (-1)
+WHEN  ('?MENUBAR1') (-1)
+WHEN  ('?Rapporten') (-1)
+WHEN  ('?SSOPCategorie') (-1)
+WHEN  ('?SSOPRegistratie') (-1)
+WHEN  ('?SSOPRegistratie:2') (-1)
+WHEN  ('?StamgegevensDeliveryTerms') (-1)
+WHEN  ('?StamgegevensKosten') (-1)
+WHEN  ('?Uitvoerhavens') (-1)
+WHEN  ('?Voorraad') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 17
+WHEN  ('') (0)
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?MENUBAR1') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Voorraad') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 16
+WHEN  ('') ('AIBtn0')
+WHEN  ('?ActieAfwijkingen') ('AIBtn59')
+WHEN  ('?CelLocatieVullenMutaties') ('AIBtn17')
+WHEN  ('?CelLocaties') ('AIBtn58')
+WHEN  ('?ExportMutaties') ('AIBtn58')
+WHEN  ('?GNCode') ('AIBtn33')
+WHEN  ('?GebruikerLogTerugzetten') ('AIBtn6')
+WHEN  ('?ISOCountries') ('AIBtn27')
+WHEN  ('?Rapporten') ('AIBtn42')
+WHEN  ('?SSOPCategorie') ('AIBtn44')
+WHEN  ('?SSOPRegistratie') ('AIBtn57')
+WHEN  ('?SSOPRegistratie:2') ('AIBtn61')
+WHEN  ('?StamgegevensDeliveryTerms') ('AIBtn27')
+WHEN  ('?StamgegevensKosten') ('AIBtn31')
+WHEN  ('?Uitvoerhavens') ('AIBtn35')
+WHEN  ('?Voorraad') ('AIBtn48')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 16
+WHEN  ('') (1)
+WHEN  ('?ActieAfwijkingen') (1)
+WHEN  ('?CelLocatieVullenMutaties') (1)
+WHEN  ('?CelLocaties') (1)
+WHEN  ('?ExportMutaties') (1)
+WHEN  ('?GNCode') (1)
+WHEN  ('?GebruikerLogTerugzetten') (1)
+WHEN  ('?ISOCountries') (1)
+WHEN  ('?Rapporten') (1)
+WHEN  ('?SSOPCategorie') (1)
+WHEN  ('?SSOPRegistratie') (1)
+WHEN  ('?SSOPRegistratie:2') (1)
+WHEN  ('?StamgegevensDeliveryTerms') (1)
+WHEN  ('?StamgegevensKosten') (1)
+WHEN  ('?Uitvoerhavens') (1)
+WHEN  ('?Voorraad') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 16
+WHEN  ('') ('?MENUBAR1')
+WHEN  ('?ActieAfwijkingen') ('?MENUBAR1')
+WHEN  ('?CelLocatieVullenMutaties') ('?MENUBAR1')
+WHEN  ('?CelLocaties') ('?MENUBAR1')
+WHEN  ('?ExportMutaties') ('?MENUBAR1')
+WHEN  ('?GNCode') ('?MENUBAR1')
+WHEN  ('?GebruikerLogTerugzetten') ('?MENUBAR1')
+WHEN  ('?ISOCountries') ('?MENUBAR1')
+WHEN  ('?Rapporten') ('?MENUBAR1')
+WHEN  ('?SSOPCategorie') ('?MENUBAR1')
+WHEN  ('?SSOPRegistratie') ('?MENUBAR1')
+WHEN  ('?SSOPRegistratie:2') ('?MENUBAR1')
+WHEN  ('?StamgegevensDeliveryTerms') ('?MENUBAR1')
+WHEN  ('?StamgegevensKosten') ('?MENUBAR1')
+WHEN  ('?Uitvoerhavens') ('?MENUBAR1')
+WHEN  ('?Voorraad') ('?MENUBAR1')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 16
+WHEN  ('') (0)
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Voorraad') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 16
+WHEN  ('') (0)
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Voorraad') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 16
+WHEN  ('') (0)
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Voorraad') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 16
+WHEN  ('') (0)
+WHEN  ('?ActieAfwijkingen') (0)
+WHEN  ('?CelLocatieVullenMutaties') (0)
+WHEN  ('?CelLocaties') (0)
+WHEN  ('?ExportMutaties') (0)
+WHEN  ('?GNCode') (0)
+WHEN  ('?GebruikerLogTerugzetten') (0)
+WHEN  ('?ISOCountries') (0)
+WHEN  ('?Rapporten') (0)
+WHEN  ('?SSOPCategorie') (0)
+WHEN  ('?SSOPRegistratie') (0)
+WHEN  ('?SSOPRegistratie:2') (0)
+WHEN  ('?StamgegevensDeliveryTerms') (0)
+WHEN  ('?StamgegevensKosten') (0)
+WHEN  ('?Uitvoerhavens') (0)
+WHEN  ('?Voorraad') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[PROCEDURE]
+SourceCheckVersie()
+PRIORITY 501
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 501
+PROPERTY:END
+	GLO:Planning_ThreadID = 0
+	GLO:Inkoop_ThreadID = 0
+	GLO:Verkoop_ThreadID = 0
+	GLO:Overboeking_ThreadID = 0
+	GLO:PartijVoorraad_ThreadID = 0
+	GLO:PalletAdministratie_ThreadID = 0
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8001
+PROPERTY:END
+! Gebruiker inlog
+CLEAR(Geb:Record)
+Geb:WindowsInlog = CLIP(GETUSERNAME())
+IF Access:Gebruiker.TryFetch(Geb:FK1_Gebruiker) = Level:Benign
+	! Gebruiker bestaat al
+    IGB:GebruikerID=Geb:ID
+    IGB:WindowsInlog = Geb:WindowsInlog
+	GetComputerName(ComputerName, ComputerLen)
+	IGB:Werkstation = ComputerName
+	IGB:Administrator = Geb:Administrator
+	IGB:BekijkenPrijzen = Geb:BekijkenPrijzen
+    IGB:MakenVerkoopMutatie = Geb:MakenVerkoopMutatie
+    IGB:Verwerken = Geb:Verwerken
+ELSE
+	! Gebruiker bestaat nog niet
+	CLEAR(Geb:Record)
+	Geb:WindowsInlog = CLIP(GETUSERNAME())
+	Access:Gebruiker.TryInsert()
+	
+    IGB:GebruikerID=Geb:ID
+	IGB:WindowsInlog = Geb:WindowsInlog
+	GetComputerName(ComputerName, ComputerLen)
+	IGB:Werkstation = ComputerName
+	IGB:Administrator = 0
+	IGB:BekijkenPrijzen = 0
+    IGB:MakenVerkoopMutatie = 0
+    IGB:Verwerken = 0
+END
+
+IF NOT(IGB:Administrator) THEN
+	HIDE(?Gebruikers)
+	HIDE(?OnderhoudMenu)
+END
+
+GLO:HidePlanningInstructie = GETINI('Voorraad','HidePlanningInstructie',0,'.\Voorraad.ini')
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8001
+PROPERTY:END
+	Alias(DecimalKey, 00BCH)
+[PROCEDURE]
+ProcessSyncArtikel()
+PRIORITY 8501
+[PROCEDURE]
+ProcessSyncRelatie()
+PRIORITY 8501
+[END]
+[END]
+WHEN 'Ask'
+[INSTANCES]
+WHEN '()'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+0{Prop:Text}='JMD Voorraad '&CLIP(GLO:Versie)
+Comma#=Instring(',',GLO:Owner,1,1)
+
+0{PROP:StatusText,3}=SUB(Glo:OWner,1,Comma#-1)
+0{PROP:Status,3}=160
+
+TweedeComma#=Instring(',',GLO:Owner,1,Comma#+1)
+0{PROP:StatusText,2}=SUB(Glo:OWner,Comma#+1,TweedeComma#-Comma#-1)
+[END]
+[END]
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Planning'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2500
+PROPERTY:END
+IF GLO:Planning_ThreadID = 0
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 6000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:Planning_ThreadID)
+	.
+[END]
+[END]
+WHEN '?Inkoop:2'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+IF GLO:Inkoop_ThreadID = 0
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:Inkoop_ThreadID)
+	.
+[END]
+[END]
+WHEN '?Verkoop:2'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+	IF GLO:Verkoop_ThreadID = 0 THEN
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:Verkoop_ThreadID)
+	.
+[END]
+[END]
+WHEN '?Overboeking'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+IF GLO:Overboeking_ThreadID = 0
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:Overboeking_ThreadID)
+	.
+[END]
+[END]
+WHEN '?Voorraad:2 '
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+	IF GLO:Voorraad_ThreadID = 0 THEN
+	
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:Voorraad_ThreadID)
+	.
+[END]
+[END]
+WHEN '?Pallets'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+IF GLO:PalletAdministratie_ThreadID = 0
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:PalletAdministratie_ThreadID)
+	.
+[END]
+[END]
+WHEN '?PartijVoorraad '
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 2500
+PROPERTY:END
+	IF GLO:PartijVoorraad_ThreadID = 0 THEN
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 6000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:PartijVoorraad_ThreadID)
+	.
+[END]
+[END]
+WHEN '?WindowTimingVerklaring'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+MESSAGE('1-Opbouwen VerkoopQueue' & CHR(10) & CHR(13) &|
+        '2-Opbouwen InkoopQueue' & CHR(10) & CHR(13) &|
+        '3-Opbouwen CelLocatieQueue' & CHR(10) & CHR(13) &|
+        '4-Kopieren Inkoop/Verkoop: Toevoegen Inkoop/Verkoop-records' & CHR(10) & CHR(13) &|
+        '5-Kopieren Inkoop/Verkoop: Toevoegen gerelateerde Planning-records' & CHR(10) & CHR(13) &|
+        '6-Kopieren Inkoop/Verkoop: NetRefreshPlanningViews()' & CHR(10) & CHR(13) &|
+        '7-Kopieren Inkoop/Verkoop: DO ResetBrowse' & CHR(10) & CHR(13) &|
+        '8-OKen UpdateInkoop/Verkoop: UpdateVerwerkStatus' & CHR(10) & CHR(13) &|
+        '9-OKen UpdateInkoop: BerekenPartijenInkoopPrijs()' & CHR(10) & CHR(13) &|
+        '10-OKen UpdateInkoop/Verkoop: NetRefreshPlanningViewS()' & CHR(10) & CHR(13) &|
+        '11-VoorraadVerloop (Selecteren Klant): DO VulKlantSaldoQueue' & CHR(10) & CHR(13) &|
+        '12-VoorraadVerloop (Selecteren Klant): BRW1.ResetQueue(Reset:Queue)' & CHR(10) & CHR(13) &|
+        '13-VoorraadVerloop (Selecteren Klant): BRW1.ResetFromView' & CHR(10) & CHR(13) &|
+        '14-PalletVerloop: VulPalletMutatieQueue' & CHR(10) & CHR(13) &|
+        '15-PalletVerloop: ResetQueue', 'Verklaring Meting-Report')
+[END]
+[END]
+WHEN '?PartijVoorraad:2'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+	IF GLO:PartijVoorraad_ThreadID = 0 THEN
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:PartijVoorraad_ThreadID)
+	.
+[END]
+[END]
+WHEN '?Voorraad'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+	IF GLO:Voorraad_ThreadID = 0 THEN
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	ELSE
+		NOTIFY(1, GLO:Voorraad_ThreadID)
+	.
+[END]
+[END]
+WHEN '?Activiteiten'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+IF GLO:Activiteit_ThreadID = 0
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+ELSE
+    NOTIFY(1, GLO:Activiteit_ThreadID)
+END
+[END]
+[END]
+[END]
+EMBED %WindowEventHandling
+[INSTANCES]
+WHEN 'Timer'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+!GlobalClass.RefreshTiming()
+[END]
+[END]
+EMBED %NetTalkBeforeInitSection
+[INSTANCES]
+WHEN '3'
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+Loc:NetOptions=50
+NetOptions(NET:SETMAXINSTANCES,Loc:NetOptions)
+
+!NetOptions(NET:GETMAXINSTANCES,Loc:NetOptions)
+!Message('Hoe veel Instances?'&Loc:NetOptions)
+[END]
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 4
+OWNER 4
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 2
+OWNER 2
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (1)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC DateTimeDisplay
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%DisplayDate LONG  (0)
+%DatePicture DEFAULT  ('October 31, 1959')
+%OtherDatePicture DEFAULT  ('')
+%ShowDayOfWeek LONG  (1)
+%DateDisplayLocation DEFAULT  ('Status Bar')
+%DateStatusSection DEFAULT  ('3')
+%DateControl DEFAULT  ('')
+%DisplayTime LONG  (0)
+%TimePicture DEFAULT  ('5:30PM')
+%OtherTimePicture DEFAULT  ('')
+%TimeDisplayLocation DEFAULT  ('Status Bar')
+%TimeStatusSection DEFAULT  ('4')
+%TimeControl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk IncludeNetTalkObject
+[INSTANCE]
+INSTANCE 3
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NetClient')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%NoThisObj DEPEND %ClassItem LONG TIMES 0
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ThisNetAutoCloseServer')
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NetAutoCloseServer')
+
+%SimpleMode DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Client')
+
+%NetSuppressErrorMsg DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%RoomName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('myRoom')
+
+%NetAppSite DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''dip.capesoft.com''')
+
+%NetAppPort DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('6873')
+
+%NetDIPAutoAddMe DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%NetDIPAutoConnect DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%NetDIPAutoDeleteMe DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%NetDIPSuppressErrorMsg DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%NetFtpData DEPEND %ClassItem DEFAULT TIMES 0
+
+%NetFtpControl DEPEND %ClassItem DEFAULT TIMES 0
+
+%NetPassiveFTP DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NetChatAppName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Voorraad')
+
+%RemoteMachineAppName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Voorraad')
+
+%AutoCloseWarningMessage DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('For maintainence reasons this program needs to be closed down. Please immediately save what you are doing and exit the program.')
+
+%AutoCloseCloseDownMessage DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('This application is being closed down by an administrator.')
+
+%AutoCloseWarningTimer DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('4500')
+
+%AutoCloseCloseDownTimer DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('1000')
+
+%NetAutoCloseServerUseMessageBox DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%CloseAppsConfirmation DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%FileTransferAppName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Voorraad')
+
+%FileTransferSilent DEPEND %ClassItem LONG TIMES 0
+
+%TimeAppName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Voorraad')
+
+%ServiceName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('MyService')
+
+%PrivateServiceClient DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%PrivateServiceServer DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ListenOnPort DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('80')
+
+%WebSecure DEPEND %ClassItem LONG TIMES 0
+
+%Certificate DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''certificates\settings''')
+
+%WebHandlerProc DEPEND %ClassItem PROCEDURE TIMES 1
+WHEN  ('Default') ()
+
+%WebDirectory DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''web''')
+
+%WebDefaultPage DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''index.htm''')
+
+%WebLoginPage DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''login.htm''')
+
+%WebLoginPageControl DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%WebDatePicture DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('@D2')
+
+%GenericPageHeaderTag DEPEND %ClassItem DEFAULT TIMES 0
+
+%GenericPageFooterTag DEPEND %ClassItem DEFAULT TIMES 0
+
+%ContentBody DEPEND %ClassItem DEFAULT TIMES 0
+
+%GenericPagetitle DEPEND %ClassItem DEFAULT TIMES 0
+
+%mSupport DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%mHeaderFixedB DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%mFooterFixedB DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%mHeaderFixedF DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%mFooterFixedF DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%mPhoneMax DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('600')
+
+%IncludeHTMLEditor DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%ScriptsDir DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''scripts''')
+
+%scripts DEPEND %ClassItem MULTI LONG TIMES 0
+
+%scriptname DEPEND %scripts DEFAULT TIMES 0
+
+%ScriptBrowser DEPEND %scripts DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ScriptDesktop DEPEND %scripts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ScriptMobile DEPEND %scripts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ScriptInAll DEPEND %scripts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%IncludeChromejs DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeXPTPjs DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%DefaultHtmlClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-html''')
+
+%DefaultBodyClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-body''')
+
+%DefaultBodyDivClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-body-div''')
+
+%ContentBodyCss DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-left''')
+
+%DefaultBusyDivClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-busy''')
+
+%DefaultBusyImage DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''/images/_busy.gif''')
+
+%DefaultValidationMessage DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-width-99 nt-alert ui-state-error ui-corner-all''')
+
+%resetBrowseDefaults DEPEND %ClassItem LONG TIMES 0
+
+%DefaultBrowseDiv DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-left''')
+
+%DefaultBrowseHeading DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-header nt-browse-header''')
+
+%DefaultBrowseHeadingSub DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-header nt-browse-header-sub''')
+
+%DefaultBrowseTableDiv DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''ui-widget''')
+
+%DefaultBrowseTable DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-table ui-widget-content ui-corner-all''')
+
+%DefaultBrowseHeader DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''ui-widget-header''')
+
+%DefaultBrowseBody DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-table-body''')
+
+%DefaultBrowseRow DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-table-row''')
+
+%DefaultBrowseFooter DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-table-footer''')
+
+%DefaultBrowseLocator DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-locator''')
+
+%DefaultBrowseLocatorButtonSet DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultBrowseNavButtonSet DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultBrowseUpdateButtonSet DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultBrowseSelectButtonSet DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultBrowseHyperlinks DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultBrowseEmpty DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultBrowseEditEntry DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-entry''')
+
+%DefaultBrowseEditText DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-entry''')
+
+%DefaultBrowseEditDate DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-entry''')
+
+%DefaultBrowseEditDrop DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-entry''')
+
+%DefaultBrowseEditDropOption DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-entry''')
+
+%DefaultBrowseEditCheck DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-entry''')
+
+%DefaultBrowseOtherButtonWithText DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultBrowseOtherButtonWithOutText DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%netBrowseOverColorA DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%netBrowseHighlightColorA DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%netBrowseOneColorA DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%netBrowseTwoColorA DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%resetFormDefaults DEPEND %ClassItem LONG TIMES 0
+
+%WebFormStyle DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Net:Web:Tab')
+
+%DefaultFormDiv DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultFormHeading DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-header nt-form-header''')
+
+%DefaultFormHeadingSub DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-header nt-form-header-sub''')
+
+%DefaultFormTable DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-form-table''')
+
+%DefaultPromptClassA DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-form-div nt-prompt nt-formcell''')
+
+%DefaultButtonDivClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-form-div nt-left''')
+
+%DefaultEntryDivClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-form-div nt-formcell''')
+
+%DefaultEntryClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-entry ui-corner-all''')
+
+%DefaultEntryRequiredClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-entry-required''')
+
+%DefaultEntryReadonlyClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-entry-readonly''')
+
+%DefaultEntryErrorClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-entry-error''')
+
+%DefaultSelectClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') (''' nt-select''')
+
+%DefaultCommentClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-form-div nt-comment nt-formcell''')
+
+%DefaultCommentErrorClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-comment-error ui-state-error ui-corner-all''')
+
+%defaultTabOuterDiv DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-tab-outer''')
+
+%defaultTabTitle DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-tab-title''')
+
+%defaultTabInnerDiv DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-tab-inner''')
+
+%defaultFormSaveButtonSet DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultFormOtherButtonWithText DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%DefaultFormOtherButtonWithOutText DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%resetHotDefaults DEPEND %ClassItem LONG TIMES 0
+
+%defaultMonthSet DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-month-set''')
+
+%defaultMonthHeader DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''ui-widget-header ui-corner-top nt-month-header''')
+
+%defaultMonthHeaderCell DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-month-header-cell nt-wide''')
+
+%defaultMonthDayCell DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-monthday-cell ui-corner-all''')
+
+%defaultMonthEmptyDayCell DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-monthday-empty-cell''')
+
+%defaultMonth DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-month-big ui-widget-content ui-corner-all''')
+
+%DefaultMonthContentClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-content''')
+
+%defaultMonthLabelClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-label''')
+
+%defaultMonthEmptyLabelClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-label-empty''')
+
+%defaultMonthSmall DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-month-small ui-widget-content ui-corner-all''')
+
+%DefaultMonthContentClassSmall DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-hidden''')
+
+%defaultMonthLabelClassSmall DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-label-small''')
+
+%defaultMonthEmptyLabelClassSmall DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-label-empty-small''')
+
+%ThemesDir DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''themes''')
+
+%Theme DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''ui-lightness''')
+
+%ThemeFiles DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ThemeName DEPEND %ThemeFiles DEFAULT TIMES 0
+
+%ThemeDesktop DEPEND %ThemeFiles LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ThemeMobile DEPEND %ThemeFiles LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%StylesDir DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''styles''')
+
+%styles DEPEND %ClassItem MULTI LONG TIMES 0
+
+%stylename DEPEND %styles DEFAULT TIMES 0
+
+%StyleDesktop DEPEND %styles LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%StyleMobile DEPEND %styles LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%StyleBrowser DEPEND %styles DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%StyleInAll DEPEND %styles LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%IncludeCss4 DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeChrome DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeXPTP DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%UseLocatorSets DEPEND %ClassItem LONG TIMES 0
+
+%UseNavigationSets DEPEND %ClassItem LONG TIMES 0
+
+%UseUpdateSets DEPEND %ClassItem LONG TIMES 0
+
+%UseSelectionSets DEPEND %ClassItem LONG TIMES 0
+
+%UseFormSaveSets DEPEND %ClassItem LONG TIMES 0
+
+%Buttons DEPEND %ClassItem MULTI LONG TIMES 1
+WHEN  ('Default') (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, |
+  19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, |
+  39, 40)
+
+%ButtonName DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('UploadButton')
+WHEN  (2) ('LookupButton')
+WHEN  (3) ('SaveButton')
+WHEN  (4) ('CancelButton')
+WHEN  (5) ('DeletefButton')
+WHEN  (6) ('CloseButton')
+WHEN  (7) ('InsertButton')
+WHEN  (8) ('ChangeButton')
+WHEN  (9) ('ViewButton')
+WHEN  (10) ('DeletebButton')
+WHEN  (11) ('SelectButton')
+WHEN  (12) ('BrowseCancelButton')
+WHEN  (13) ('BrowseCloseButton')
+WHEN  (14) ('SmallInsertButton')
+WHEN  (15) ('SmallChangeButton')
+WHEN  (16) ('SmallViewButton')
+WHEN  (17) ('SmallDeleteButton')
+WHEN  (18) ('SmallSelectButton')
+WHEN  (19) ('LocateButton')
+WHEN  (20) ('FirstButton')
+WHEN  (21) ('PreviousButton')
+WHEN  (22) ('NextButton')
+WHEN  (23) ('LastButton')
+WHEN  (24) ('PrintButton')
+WHEN  (25) ('StartButton')
+WHEN  (26) ('DateLookupButton')
+WHEN  (27) ('WizPreviousButton')
+WHEN  (28) ('WizNextButton')
+WHEN  (29) ('SmallOtherButton')
+WHEN  (30) ('SmallPrintButton')
+WHEN  (31) ('CopyButton')
+WHEN  (32) ('SmallCopyButton')
+WHEN  (33) ('ClearButton')
+WHEN  (34) ('LogoutButton')
+WHEN  (35) ('AddFileButton')
+WHEN  (36) ('ClearFileButton')
+WHEN  (37) ('StartFileButton')
+WHEN  (38) ('CancelFileButton')
+WHEN  (39) ('RemoveFileButton')
+WHEN  (40) ('ExportButton')
+
+%ButtonText DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('''Upload''')
+WHEN  (2) ('''''')
+WHEN  (3) ('''Save''')
+WHEN  (4) ('''Cancel''')
+WHEN  (5) ('''Delete''')
+WHEN  (6) ('''Close''')
+WHEN  (7) ('''Insert''')
+WHEN  (8) ('''Change''')
+WHEN  (9) ('''View''')
+WHEN  (10) ('''Delete''')
+WHEN  (11) ('''Select''')
+WHEN  (12) ('''Cancel''')
+WHEN  (13) ('''Close''')
+WHEN  (14) ('''''')
+WHEN  (15) ('''''')
+WHEN  (16) ('''''')
+WHEN  (17) ('''''')
+WHEN  (18) ('''''')
+WHEN  (19) ('''Search''')
+WHEN  (20) ('''First''')
+WHEN  (21) ('''Previous''')
+WHEN  (22) ('''Next''')
+WHEN  (23) ('''Last''')
+WHEN  (24) ('''Print''')
+WHEN  (25) ('''Start''')
+WHEN  (26) ('''...''')
+WHEN  (27) ('''Previous''')
+WHEN  (28) ('''Next''')
+WHEN  (29) ('''''')
+WHEN  (30) ('''''')
+WHEN  (31) ('''Copy''')
+WHEN  (32) ('''''')
+WHEN  (33) ('''Clear''')
+WHEN  (34) ('''Logout''')
+WHEN  (35) ('''Add File''')
+WHEN  (36) ('''Clear''')
+WHEN  (37) ('''Start''')
+WHEN  (38) ('''Cancel''')
+WHEN  (39) ('''Remove''')
+WHEN  (40) ('''Export''')
+
+%ButtonImage DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('')
+WHEN  (2) ('')
+WHEN  (3) ('')
+WHEN  (4) ('')
+WHEN  (5) ('')
+WHEN  (6) ('')
+WHEN  (7) ('')
+WHEN  (8) ('')
+WHEN  (9) ('')
+WHEN  (10) ('')
+WHEN  (11) ('')
+WHEN  (12) ('')
+WHEN  (13) ('')
+WHEN  (14) ('')
+WHEN  (15) ('')
+WHEN  (16) ('')
+WHEN  (17) ('')
+WHEN  (18) ('')
+WHEN  (19) ('')
+WHEN  (20) ('')
+WHEN  (21) ('')
+WHEN  (22) ('')
+WHEN  (23) ('')
+WHEN  (24) ('')
+WHEN  (25) ('')
+WHEN  (26) ('')
+WHEN  (27) ('')
+WHEN  (28) ('')
+WHEN  (29) ('')
+WHEN  (30) ('')
+WHEN  (31) ('')
+WHEN  (32) ('')
+WHEN  (33) ('')
+WHEN  (34) ('')
+WHEN  (35) ('')
+WHEN  (36) ('')
+WHEN  (37) ('')
+WHEN  (38) ('')
+WHEN  (39) ('')
+WHEN  (40) ('')
+
+%ButtonImageWidth DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('')
+WHEN  (2) ('')
+WHEN  (3) ('')
+WHEN  (4) ('')
+WHEN  (5) ('')
+WHEN  (6) ('')
+WHEN  (7) ('')
+WHEN  (8) ('')
+WHEN  (9) ('')
+WHEN  (10) ('')
+WHEN  (11) ('')
+WHEN  (12) ('')
+WHEN  (13) ('')
+WHEN  (14) ('')
+WHEN  (15) ('')
+WHEN  (16) ('')
+WHEN  (17) ('')
+WHEN  (18) ('')
+WHEN  (19) ('')
+WHEN  (20) ('')
+WHEN  (21) ('')
+WHEN  (22) ('')
+WHEN  (23) ('')
+WHEN  (24) ('')
+WHEN  (25) ('')
+WHEN  (26) ('')
+WHEN  (27) ('')
+WHEN  (28) ('')
+WHEN  (29) ('')
+WHEN  (30) ('')
+WHEN  (31) ('')
+WHEN  (32) ('')
+WHEN  (33) ('')
+WHEN  (34) ('')
+WHEN  (35) ('')
+WHEN  (36) ('')
+WHEN  (37) ('')
+WHEN  (38) ('')
+WHEN  (39) ('')
+WHEN  (40) ('')
+
+%ButtonImageHeight DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('')
+WHEN  (2) ('')
+WHEN  (3) ('')
+WHEN  (4) ('')
+WHEN  (5) ('')
+WHEN  (6) ('')
+WHEN  (7) ('')
+WHEN  (8) ('')
+WHEN  (9) ('')
+WHEN  (10) ('')
+WHEN  (11) ('')
+WHEN  (12) ('')
+WHEN  (13) ('')
+WHEN  (14) ('')
+WHEN  (15) ('')
+WHEN  (16) ('')
+WHEN  (17) ('')
+WHEN  (18) ('')
+WHEN  (19) ('')
+WHEN  (20) ('')
+WHEN  (21) ('')
+WHEN  (22) ('')
+WHEN  (23) ('')
+WHEN  (24) ('')
+WHEN  (25) ('')
+WHEN  (26) ('')
+WHEN  (27) ('')
+WHEN  (28) ('')
+WHEN  (29) ('')
+WHEN  (30) ('')
+WHEN  (31) ('')
+WHEN  (32) ('')
+WHEN  (33) ('')
+WHEN  (34) ('')
+WHEN  (35) ('')
+WHEN  (36) ('')
+WHEN  (37) ('')
+WHEN  (38) ('')
+WHEN  (39) ('')
+WHEN  (40) ('')
+
+%ButtonImageAlt DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('')
+WHEN  (2) ('')
+WHEN  (3) ('')
+WHEN  (4) ('')
+WHEN  (5) ('')
+WHEN  (6) ('')
+WHEN  (7) ('')
+WHEN  (8) ('')
+WHEN  (9) ('')
+WHEN  (10) ('')
+WHEN  (11) ('')
+WHEN  (12) ('')
+WHEN  (13) ('')
+WHEN  (14) ('')
+WHEN  (15) ('')
+WHEN  (16) ('')
+WHEN  (17) ('')
+WHEN  (18) ('')
+WHEN  (19) ('')
+WHEN  (20) ('')
+WHEN  (21) ('')
+WHEN  (22) ('')
+WHEN  (23) ('')
+WHEN  (24) ('')
+WHEN  (25) ('')
+WHEN  (26) ('')
+WHEN  (27) ('')
+WHEN  (28) ('')
+WHEN  (29) ('')
+WHEN  (30) ('')
+WHEN  (31) ('')
+WHEN  (32) ('')
+WHEN  (33) ('')
+WHEN  (34) ('')
+WHEN  (35) ('')
+WHEN  (36) ('')
+WHEN  (37) ('')
+WHEN  (38) ('')
+WHEN  (39) ('')
+WHEN  (40) ('')
+
+%ButtonClass DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('''''')
+WHEN  (2) ('''nt-small-button''')
+WHEN  (3) ('''''')
+WHEN  (4) ('''''')
+WHEN  (5) ('''''')
+WHEN  (6) ('''''')
+WHEN  (7) ('''''')
+WHEN  (8) ('''''')
+WHEN  (9) ('''''')
+WHEN  (10) ('''''')
+WHEN  (11) ('''''')
+WHEN  (12) ('''''')
+WHEN  (13) ('''''')
+WHEN  (14) ('''nt-small-button''')
+WHEN  (15) ('''nt-small-button''')
+WHEN  (16) ('''nt-small-button''')
+WHEN  (17) ('''nt-small-button''')
+WHEN  (18) ('''nt-small-button''')
+WHEN  (19) ('''''')
+WHEN  (20) ('''''')
+WHEN  (21) ('''''')
+WHEN  (22) ('''''')
+WHEN  (23) ('''''')
+WHEN  (24) ('''''')
+WHEN  (25) ('''''')
+WHEN  (26) ('''''')
+WHEN  (27) ('''''')
+WHEN  (28) ('''''')
+WHEN  (29) ('''nt-small-button''')
+WHEN  (30) ('''nt-small-button''')
+WHEN  (31) ('''''')
+WHEN  (32) ('''nt-small-button''')
+WHEN  (33) ('''''')
+WHEN  (34) ('''''')
+WHEN  (35) ('''nt-insert-button''')
+WHEN  (36) ('''nt-deletef-button''')
+WHEN  (37) ('''nt-save-button''')
+WHEN  (38) ('''nt-cancel-button''')
+WHEN  (39) ('''nt-deletef-button''')
+WHEN  (40) ('''nt-export-button''')
+
+%ButtonToolTip DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('''Click here to Upload the file''')
+WHEN  (2) ('''Click here to Search for a value''')
+WHEN  (3) ('''Click on this to Save the form''')
+WHEN  (4) ('''Click on this to Cancel the form''')
+WHEN  (5) ('''Click here to Delete this record''')
+WHEN  (6) ('''Click here to Close this form''')
+WHEN  (7) ('''Click here to Insert a new record''')
+WHEN  (8) ('''Click here to Change the highlighted record''')
+WHEN  (9) ('''Click here to view details of the highlighted record''')
+WHEN  (10) ('''Click here to Delete the highlighted record''')
+WHEN  (11) ('''Click here to Select the highlighted record''')
+WHEN  (12) ('''Click here to return without selecting anything''')
+WHEN  (13) ('''Click here to Close this browse''')
+WHEN  (14) ('''Click here to Insert a new record''')
+WHEN  (15) ('''Click here to Change this record''')
+WHEN  (16) ('''Click here to View details of this record''')
+WHEN  (17) ('''Click here to Delete this record''')
+WHEN  (18) ('''Click here to Select this record''')
+WHEN  (19) ('''Click here to start the Search''')
+WHEN  (20) ('''Click here to go to the First page in the list''')
+WHEN  (21) ('''Click here to go to the Previous page in the list''')
+WHEN  (22) ('''Click here to go to the Next page in the list''')
+WHEN  (23) ('''Click here to go to the Last page in the list''')
+WHEN  (24) ('''Click here to Print this page''')
+WHEN  (25) ('''Click here to Start the report''')
+WHEN  (26) ('''Click here to select a date''')
+WHEN  (27) ('''Click here to go back to the Previous step''')
+WHEN  (28) ('''Click here to go to the Next step''')
+WHEN  (29) ('''''')
+WHEN  (30) ('''Click here to print this record''')
+WHEN  (31) ('''Click here to copy the highlighted record''')
+WHEN  (32) ('''Click here to copy this record''')
+WHEN  (33) ('''Click here to clear the locator''')
+WHEN  (34) ('''Click here to logout''')
+WHEN  (35) ('''Click here to add files''')
+WHEN  (36) ('''Click here to clear the file list''')
+WHEN  (37) ('''Click here to start the upload''')
+WHEN  (38) ('''Click here to cancel the upload''')
+WHEN  (39) ('''Click here to remove this file from the list''')
+WHEN  (40) ('''Click here to export the data in this browse''')
+
+%ButtonUseJs DEPEND %Buttons LONG TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) (0)
+WHEN  (2) (1)
+WHEN  (3) (1)
+WHEN  (4) (1)
+WHEN  (5) (1)
+WHEN  (6) (1)
+WHEN  (7) (1)
+WHEN  (8) (1)
+WHEN  (9) (1)
+WHEN  (10) (1)
+WHEN  (11) (1)
+WHEN  (12) (1)
+WHEN  (13) (1)
+WHEN  (14) (1)
+WHEN  (15) (1)
+WHEN  (16) (1)
+WHEN  (17) (1)
+WHEN  (18) (1)
+WHEN  (19) (1)
+WHEN  (20) (1)
+WHEN  (21) (1)
+WHEN  (22) (1)
+WHEN  (23) (1)
+WHEN  (24) (1)
+WHEN  (25) (1)
+WHEN  (26) (1)
+WHEN  (27) (1)
+WHEN  (28) (1)
+WHEN  (29) (1)
+WHEN  (30) (1)
+WHEN  (31) (1)
+WHEN  (32) (1)
+WHEN  (33) (1)
+WHEN  (34) (1)
+WHEN  (35) (1)
+WHEN  (36) (1)
+WHEN  (37) (1)
+WHEN  (38) (1)
+WHEN  (39) (1)
+WHEN  (40) (1)
+
+%ButtonJsIcon DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('''''')
+WHEN  (2) ('''help''')
+WHEN  (3) ('''check''')
+WHEN  (4) ('''cancel''')
+WHEN  (5) ('''trash''')
+WHEN  (6) ('''check''')
+WHEN  (7) ('''plus''')
+WHEN  (8) ('''pencil''')
+WHEN  (9) ('''minus''')
+WHEN  (10) ('''trash''')
+WHEN  (11) ('''check''')
+WHEN  (12) ('''cancel''')
+WHEN  (13) ('''check''')
+WHEN  (14) ('''plus''')
+WHEN  (15) ('''pencil''')
+WHEN  (16) ('''zoomin''')
+WHEN  (17) ('''trash''')
+WHEN  (18) ('''check''')
+WHEN  (19) ('''lightbulb''')
+WHEN  (20) ('''arrowthickstop-1-w''')
+WHEN  (21) ('''arrowthick-1-w''')
+WHEN  (22) ('''arrowthick-1-e''')
+WHEN  (23) ('''arrowthickstop-1-e''')
+WHEN  (24) ('''print''')
+WHEN  (25) ('''check''')
+WHEN  (26) ('''help''')
+WHEN  (27) ('''arrowthick-1-w''')
+WHEN  (28) ('''arrowthick-1-e''')
+WHEN  (29) ('''''')
+WHEN  (30) ('''print''')
+WHEN  (31) ('''copy''')
+WHEN  (32) ('''copy''')
+WHEN  (33) ('''arrowrefresh-1-w''')
+WHEN  (34) ('''locked''')
+WHEN  (35) ('''plus''')
+WHEN  (36) ('''trash''')
+WHEN  (37) ('''play''')
+WHEN  (38) ('''cancel''')
+WHEN  (39) ('''trash''')
+WHEN  (40) ('''arrowreturnthick-1-e''')
+
+%ButtonPopupHeader DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('')
+WHEN  (2) ('''Lookup''')
+WHEN  (3) ('')
+WHEN  (4) ('')
+WHEN  (5) ('')
+WHEN  (6) ('')
+WHEN  (7) ('''Insert''')
+WHEN  (8) ('''Change''')
+WHEN  (9) ('''View''')
+WHEN  (10) ('''Delete''')
+WHEN  (11) ('')
+WHEN  (12) ('')
+WHEN  (13) ('')
+WHEN  (14) ('''Insert''')
+WHEN  (15) ('''Change''')
+WHEN  (16) ('''View''')
+WHEN  (17) ('''Delete''')
+WHEN  (18) ('')
+WHEN  (19) ('')
+WHEN  (20) ('')
+WHEN  (21) ('')
+WHEN  (22) ('')
+WHEN  (23) ('')
+WHEN  (24) ('')
+WHEN  (25) ('')
+WHEN  (26) ('')
+WHEN  (27) ('')
+WHEN  (28) ('')
+WHEN  (29) ('')
+WHEN  (30) ('')
+WHEN  (31) ('''Copy''')
+WHEN  (32) ('''Copy''')
+WHEN  (33) ('')
+WHEN  (34) ('')
+WHEN  (35) ('')
+WHEN  (36) ('')
+WHEN  (37) ('')
+WHEN  (38) ('')
+WHEN  (39) ('')
+WHEN  (40) ('')
+
+%ButtonCompact DEPEND %Buttons LONG TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) (1)
+WHEN  (2) (1)
+WHEN  (3) (1)
+WHEN  (4) (1)
+WHEN  (5) (1)
+WHEN  (6) (1)
+WHEN  (7) (1)
+WHEN  (8) (1)
+WHEN  (9) (1)
+WHEN  (10) (1)
+WHEN  (11) (1)
+WHEN  (12) (1)
+WHEN  (13) (1)
+WHEN  (14) (1)
+WHEN  (15) (1)
+WHEN  (16) (1)
+WHEN  (17) (1)
+WHEN  (18) (1)
+WHEN  (19) (1)
+WHEN  (20) (1)
+WHEN  (21) (1)
+WHEN  (22) (1)
+WHEN  (23) (1)
+WHEN  (24) (1)
+WHEN  (25) (1)
+WHEN  (26) (1)
+WHEN  (27) (1)
+WHEN  (28) (1)
+WHEN  (29) (1)
+WHEN  (30) (1)
+WHEN  (31) (1)
+WHEN  (32) (1)
+WHEN  (33) (1)
+WHEN  (34) (1)
+WHEN  (35) (1)
+WHEN  (36) (1)
+WHEN  (37) (1)
+WHEN  (38) (1)
+WHEN  (39) (1)
+WHEN  (40) (1)
+
+%ButtonMobileIcon DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('''''')
+WHEN  (2) ('''search''')
+WHEN  (3) ('''check''')
+WHEN  (4) ('''delete''')
+WHEN  (5) ('''trash''')
+WHEN  (6) ('''check''')
+WHEN  (7) ('''plus''')
+WHEN  (8) ('''edit''')
+WHEN  (9) ('''gear''')
+WHEN  (10) ('''trash''')
+WHEN  (11) ('''check''')
+WHEN  (12) ('''delete''')
+WHEN  (13) ('''check''')
+WHEN  (14) ('''plus''')
+WHEN  (15) ('''arrow-r''')
+WHEN  (16) ('''arrow-r''')
+WHEN  (17) ('''minus''')
+WHEN  (18) ('''check''')
+WHEN  (19) ('''search''')
+WHEN  (20) ('''arrow-u''')
+WHEN  (21) ('''arrow-l''')
+WHEN  (22) ('''arrow-r''')
+WHEN  (23) ('''arrow-d''')
+WHEN  (24) ('''page''')
+WHEN  (25) ('''check''')
+WHEN  (26) ('''search''')
+WHEN  (27) ('''arrow-l''')
+WHEN  (28) ('''arrow-r''')
+WHEN  (29) ('''''')
+WHEN  (30) ('''page''')
+WHEN  (31) ('''grid''')
+WHEN  (32) ('''grid''')
+WHEN  (33) ('''back''')
+WHEN  (34) ('''lock''')
+WHEN  (35) ('''plus''')
+WHEN  (36) ('''trash''')
+WHEN  (37) ('''play''')
+WHEN  (38) ('''cancel''')
+WHEN  (39) ('''trash''')
+WHEN  (40) ('''forward''')
+
+%ButtonMobileText DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('''Up''')
+WHEN  (2) ('''''')
+WHEN  (3) ('''Save''')
+WHEN  (4) ('''Cancel''')
+WHEN  (5) ('''''')
+WHEN  (6) ('''Close''')
+WHEN  (7) ('''Add''')
+WHEN  (8) ('''Change''')
+WHEN  (9) ('''View''')
+WHEN  (10) ('''Delete''')
+WHEN  (11) ('''Select''')
+WHEN  (12) ('''Cancel''')
+WHEN  (13) ('''Close''')
+WHEN  (14) ('''''')
+WHEN  (15) ('''''')
+WHEN  (16) ('''''')
+WHEN  (17) ('''''')
+WHEN  (18) ('''''')
+WHEN  (19) ('''''')
+WHEN  (20) ('''First''')
+WHEN  (21) ('''Previous''')
+WHEN  (22) ('''Next''')
+WHEN  (23) ('''Last''')
+WHEN  (24) ('''''')
+WHEN  (25) ('''''')
+WHEN  (26) ('''''')
+WHEN  (27) ('''''')
+WHEN  (28) ('''''')
+WHEN  (29) ('''''')
+WHEN  (30) ('''''')
+WHEN  (31) ('''Copy''')
+WHEN  (32) ('''''')
+WHEN  (33) ('''''')
+WHEN  (34) ('''''')
+WHEN  (35) ('''''')
+WHEN  (36) ('''''')
+WHEN  (37) ('''''')
+WHEN  (38) ('''''')
+WHEN  (39) ('''''')
+WHEN  (40) ('''Export''')
+
+%AlwaysRedirect DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%AlwaysPort DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ServerIP DEPEND %ClassItem DEFAULT TIMES 0
+
+%ServerCombine DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('1')
+
+%ServerPreCompressed DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('1')
+
+%ServerTimeout DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('90001')
+
+%ServerCharset DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''ISO-8859-1''')
+
+%netStoreAs DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('net:StoreAsASCII')
+
+%TranslateLocate DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''Locate''')
+
+%TranslateLocatePosition DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''Locate (Position)''')
+
+%TranslateLocateBegins DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''Locate (Begins With)''')
+
+%TranslateLocateContains DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''Locate (Contains)''')
+
+%GenerateAsAbc DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%ButtonWebName DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('upload_btn')
+WHEN  (2) ('lookup_btn')
+WHEN  (3) ('save_btn')
+WHEN  (4) ('cancel_btn')
+WHEN  (5) ('deletef_btn')
+WHEN  (6) ('close_btn')
+WHEN  (7) ('insert_btn')
+WHEN  (8) ('change_btn')
+WHEN  (9) ('view_btn')
+WHEN  (10) ('deleteb_btn')
+WHEN  (11) ('select_btn')
+WHEN  (12) ('browsecancel_btn')
+WHEN  (13) ('browseclose_btn')
+WHEN  (14) ('insert_btn')
+WHEN  (15) ('change_btn')
+WHEN  (16) ('view_btn')
+WHEN  (17) ('deleteb_btn')
+WHEN  (18) ('select_btn')
+WHEN  (19) ('locate_btn')
+WHEN  (20) ('first_btn')
+WHEN  (21) ('previous_btn')
+WHEN  (22) ('next_btn')
+WHEN  (23) ('last_btn')
+WHEN  (24) ('print_btn')
+WHEN  (25) ('start_btn')
+WHEN  (26) ('lookup_btn')
+WHEN  (27) ('wizprevious_btn')
+WHEN  (28) ('wiznext_btn')
+WHEN  (29) ('other_btn')
+WHEN  (30) ('print_btn')
+WHEN  (31) ('copy_btn')
+WHEN  (32) ('copy_btn')
+WHEN  (33) ('clear_btn')
+WHEN  (34) ('logout_btn')
+WHEN  (35) ('addfile_btn')
+WHEN  (36) ('clearfile_btn')
+WHEN  (37) ('startfile_btn')
+WHEN  (38) ('cancelfile_btn')
+WHEN  (39) ('removefile_btn')
+WHEN  (40) ('export_btn')
+
+%ButtonEquate DEPEND %Buttons DEFAULT TIMES 1
+WHEN  ('Default')TIMES 40
+WHEN  (1) ('NET:WEB:UploadButton')
+WHEN  (2) ('NET:WEB:LookupButton')
+WHEN  (3) ('NET:WEB:SaveButton')
+WHEN  (4) ('NET:WEB:CancelButton')
+WHEN  (5) ('NET:WEB:DeletefButton')
+WHEN  (6) ('NET:WEB:CloseButton')
+WHEN  (7) ('NET:WEB:InsertButton')
+WHEN  (8) ('NET:WEB:ChangeButton')
+WHEN  (9) ('NET:WEB:ViewButton')
+WHEN  (10) ('NET:WEB:DeletebButton')
+WHEN  (11) ('NET:WEB:SelectButton')
+WHEN  (12) ('NET:WEB:BrowseCancelButton')
+WHEN  (13) ('NET:WEB:BrowseCloseButton')
+WHEN  (14) ('NET:WEB:SmallInsertButton')
+WHEN  (15) ('NET:WEB:SmallChangeButton')
+WHEN  (16) ('NET:WEB:SmallViewButton')
+WHEN  (17) ('NET:WEB:SmallDeleteButton')
+WHEN  (18) ('NET:WEB:SmallSelectButton')
+WHEN  (19) ('NET:WEB:LocateButton')
+WHEN  (20) ('NET:WEB:FirstButton')
+WHEN  (21) ('NET:WEB:PreviousButton')
+WHEN  (22) ('NET:WEB:NextButton')
+WHEN  (23) ('NET:WEB:LastButton')
+WHEN  (24) ('NET:WEB:PrintButton')
+WHEN  (25) ('NET:WEB:StartButton')
+WHEN  (26) ('NET:WEB:DateLookupButton')
+WHEN  (27) ('NET:WEB:WizPreviousButton')
+WHEN  (28) ('NET:WEB:WizNextButton')
+WHEN  (29) ('NET:WEB:SmallOtherButton')
+WHEN  (30) ('NET:WEB:SmallPrintButton')
+WHEN  (31) ('NET:WEB:CopyButton')
+WHEN  (32) ('NET:WEB:SmallCopyButton')
+WHEN  (33) ('NET:WEB:ClearButton')
+WHEN  (34) ('NET:WEB:LogoutButton')
+WHEN  (35) ('NET:WEB:AddFileButton')
+WHEN  (36) ('NET:WEB:ClearFileButton')
+WHEN  (37) ('NET:WEB:StartFileButton')
+WHEN  (38) ('NET:WEB:CancelFileButton')
+WHEN  (39) ('NET:WEB:RemoveFileButton')
+WHEN  (40) ('NET:WEB:ExportButton')
+
+%SessionIsNumber DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%SessionLength DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('30')
+
+%ChangeSessionOnLogInOut DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%DeleteSessionOnLogout DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%NoIPSpoofing DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%UseContentBody DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%DefaultDoubleClick DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('3')
+
+%DefaultExport DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%DefaultDeletePrompt DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%DefaultCancelPrompt DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%DefaultHTMLEditor DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Redactor')
+
+%DefaultMapProvider DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('MapQuest')
+
+%DefaultMapType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Net:MapQuestOpen:OSM')
+
+%MapIdMapBox DEPEND %ClassItem DEFAULT TIMES 0
+
+%MapIdNokiaAppId DEPEND %ClassItem DEFAULT TIMES 0
+
+%MapIdNokiaAppCode DEPEND %ClassItem DEFAULT TIMES 0
+
+%MapIdCloudMade DEPEND %ClassItem DEFAULT TIMES 0
+
+%DefaultMapMarkerName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('default')
+
+%DefaultMapMarkerCustomName DEPEND %ClassItem DEFAULT TIMES 0
+
+%IncludeRedactorEditor DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%RedactorLanguage DEPEND %ClassItem DEFAULT TIMES 0
+
+%IncludeHotdatesScript DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%IncludeOtherServerScripts DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeFileUploadScript DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%IncludeGalleryScript DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%IncludeMapsScript DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeMediaScript DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%IncludeOSKScript DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeSignatureScripts DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeWebCamScripts DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NoAutoCheck DEPEND %scripts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%resetsiteDefaults DEPEND %ClassItem LONG TIMES 0
+
+%GoogleFonts DEPEND %ClassItem MULTI LONG TIMES 0
+
+%GoogleFont DEPEND %GoogleFonts DEFAULT TIMES 0
+
+%GoogleFontRegular DEPEND %GoogleFonts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontBold DEPEND %GoogleFonts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontItalic DEPEND %GoogleFonts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontBoldItalic DEPEND %GoogleFonts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontDesktop DEPEND %GoogleFonts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontMobile DEPEND %GoogleFonts LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontCharset DEPEND %GoogleFonts DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontAlphabet DEPEND %GoogleFonts DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%GoogleFontEffect DEPEND %GoogleFonts DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%DefaultBrowseFoot DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-table-foot''')
+
+%DefaultBrowseFooterEmpty DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-browse-table-footer-empty''')
+
+%DefaultCalDiv DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''''')
+
+%defaultMonthHeading DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''nt-heading''')
+
+%MaxPostSize DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('0')
+
+%xframeoptions DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('''sameorigin''')
+
+%ServerCompressStatic DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('true')
+
+%ServerCompressDynamic DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('true')
+
+%ServerCheck DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('true')
+
+%FrontLoaded DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('false')
+
+%AllowKeepAlive DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('true')
+
+%EnableFileCache DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%CacheSmallerThan DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('1000000')
+
+%MaxCacheSize DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('50000000')
+
+%NoJavaScriptCheck DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('false')
+
+%NoScreenSizeCheck DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('false')
+
+%MultiTab DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('false')
+
+%MaxThreads DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('100')
+
+%NetAutoCloseServerUseMessage DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%xFilesIsHere DEFAULT  ('0')
+%MapTokenMapBox DEPEND %ClassItem DEFAULT TIMES 0
+
+%IncludeTreeScripts DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%IncludeCarouselScripts DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%ThemeInAll DEPEND %ThemeFiles LONG TIMES 1
+WHEN  ('Default')TIMES 0
+
+%StrictTransportSecurity DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%WebPoolProc DEPEND %ClassItem PROCEDURE TIMES 0
+
+%WebPoolMax DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('0')
+
+%WebServerState DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+[WINDOW]
+AppFrame APPLICATION('Voorraad'),AT(,,504,353),FONT('Microsoft Sans Serif',10,,,CHARSET:DEFAULT), |
+          RESIZE,ICON('JMDico.ico'),MAX,STATUS(50,50,50,-1),SYSTEM
+          MENUBAR,USE(?MENUBAR1),FONT(,,COLOR:MENUTEXT),#ORDINAL(1)
+            MENU('&Bestand'),USE(?FileMenu),#ORDINAL(2)
+              ITEM('P&rint Setup...'),USE(?PrintSetup),MSG('Setup Printer'),STD(STD:PrintSetup), |
+                #ORDINAL(3)
+              MENU('Onderhoud'),USE(?OnderhoudMenu),#ORDINAL(4)
+                ITEM('Checken Inkoop/VerkoopStatus'),USE(?ITEM3),HIDE,#ORDINAL(5)
+                ITEM('Partijen/Verkoop/Planning terughalen uit GebruikerLog'),USE(?GebruikerLogTerugzetten), |
+                  #ORDINAL(6)
+                ITEM('Planning-regels zonder inkoop/verkoop verwijderen'),USE(?ITEM4),#ORDINAL(8)
+                ITEM('Externe partijnr 0 => leeg'),USE(?ITEM10),HIDE,#ORDINAL(9)
+                ITEM,USE(?SEPARATOR4),HIDE,SEPARATOR,#ORDINAL(10)
+                ITEM('Partij-koppeling Mutatie controleren'),USE(?ITEM5),HIDE,#ORDINAL(11)
+                ITEM('Partij-koppeling Planning controleren'),USE(?ITEM6),HIDE,#ORDINAL(12)
+                ITEM,USE(?SEPARATOR5),HIDE,SEPARATOR,#ORDINAL(13)
+                ITEM('Overzicht rare mutaties'),USE(?ITEM8),#ORDINAL(14)
+                ITEM('Overzicht dubbele inslagen'),USE(?ITEM9),#ORDINAL(15)
+                ITEM('Overzicht partij zonder inslag'),USE(?ITEM7),#ORDINAL(16)
+                ITEM('Vullen Planning:MutatieKG'),USE(?ITEM12),#ORDINAL(17)
+                ITEM('Vullen Partij:InkoopKGPrijs'),USE(?ITEM13),#ORDINAL(18)
+                ITEM('CelLocatieVullenMutaties'),USE(?CelLocatieVullenMutaties),#ORDINAL(19)
+                ITEM,USE(?SEPARATOR6),SEPARATOR,#ORDINAL(20)
+                ITEM('SQLBackup'),USE(?ITEM14),#ORDINAL(21)
+              END
+              ITEM,USE(?SEPARATOR1),SEPARATOR,#ORDINAL(22)
+              ITEM('E&xit'),USE(?Exit),MSG('Exit this application'),STD(STD:Close),#ORDINAL(23)
+            END
+            MENU('&Edit'),USE(?EditMenu),#ORDINAL(24)
+              ITEM('Cu&t'),USE(?Cut),MSG('Remove item to Windows Clipboard'),STD(STD:Cut), |
+                #ORDINAL(25)
+              ITEM('&Copy'),USE(?Copy),MSG('Copy item to Windows Clipboard'),STD(STD:Copy), |
+                #ORDINAL(26)
+              ITEM('&Paste'),USE(?Paste),MSG('Paste contents of Windows Clipboard'),STD(STD:Paste), |
+                #ORDINAL(27)
+            END
+            MENU('Stamgegevens'),USE(?Stamgegevens),#ORDINAL(28)
+              ITEM('Verpakkingen'),USE(?StamgegevensVerpakkingen),#ORDINAL(29)
+              ITEM('Artikelen'),USE(?StamgegevensArtikelen),#ORDINAL(30)
+              ITEM('Cel'),USE(?Cel),#ORDINAL(31)
+              ITEM('&Palletsoorten voor weegmodule'),USE(?ITEM11),#ORDINAL(32)
+              ITEM('Delivery Terms'),USE(?StamgegevensDeliveryTerms),#ORDINAL(33)
+              ITEM('ISO Countries'),USE(?ISOCountries),#ORDINAL(34)
+              ITEM('GNCode'),USE(?GNCode),#ORDINAL(35)
+              ITEM('Uitvoerhavens'),USE(?Uitvoerhavens),#ORDINAL(36)
+              ITEM,USE(?SEPARATOR7),SEPARATOR,#ORDINAL(37)
+              ITEM('Relaties'),USE(?StamgegevensRelaties),#ORDINAL(38)
+              ITEM('Relatie-adressen/-artikelomschrijvingen'),USE(?StamgegevensAdressen),#ORDINAL(39)
+              ITEM('Transporteurs'),USE(?StamgegevensTransporteurs),#ORDINAL(40)
+              ITEM('Kosten'),USE(?StamgegevensKosten),#ORDINAL(41)
+              ITEM,USE(?SEPARATOR2),SEPARATOR,#ORDINAL(42)
+              ITEM('Rapporten'),USE(?Rapporten),#ORDINAL(43)
+              ITEM('Systeemgegevens'),USE(?Systeemgegevens),#ORDINAL(44)
+              ITEM('Gebruikers'),USE(?Gebruikers),#ORDINAL(45)
+              ITEM('Log'),USE(?Logging),#ORDINAL(46)
+              ITEM('Sjablonen'),USE(?StamgegevensSjablonen),#ORDINAL(47)
+              ITEM('Palletblad-Sjablonen'),USE(?ITEM15),#ORDINAL(48)
+              ITEM('SSOP Categorie'),USE(?SSOPCategorie),#ORDINAL(49)
+              ITEM('Systeembeheer'),USE(?ITEM1),#ORDINAL(50)
+            END
+            ITEM('Inkoop'),USE(?Inkoop:2),#ORDINAL(51)
+            ITEM('Verkoop'),USE(?Verkoop:2),#ORDINAL(52)
+            ITEM('Overboeking'),USE(?Overboeking),#ORDINAL(53)
+            ITEM('Planning'),USE(?Planning),#ORDINAL(54)
+            ITEM('Activiteiten'),USE(?Activiteiten),#ORDINAL(55)
+            ITEM('Voorraad'),USE(?Voorraad),#ORDINAL(56)
+            ITEM('Partij-voorraad'),USE(?PartijVoorraad:2),#ORDINAL(57)
+            MENU('Pallets'),USE(?PalletMenu),#ORDINAL(58)
+              ITEM('&Pallet-verloop'),USE(?Pallets),#ORDINAL(59)
+              ITEM('&Pallet-tegoeden'),USE(?PalletTegoeden),#ORDINAL(60)
+              ITEM('Gewogen Pallets'),USE(?GewogenPallets),#ORDINAL(61)
+            END
+            ITEM('SSOP Registratie'),USE(?SSOPRegistratie),#ORDINAL(62)
+            ITEM('Cel Locaties'),USE(?CelLocaties),#ORDINAL(63)
+            MENU('Overzichten'),USE(?Overzichten),#ORDINAL(64)
+              ITEM('Export Mutaties'),USE(?ExportMutaties),#ORDINAL(65)
+              ITEM('Export Actie Afwijkingen'),USE(?ActieAfwijkingen),#ORDINAL(66)
+              ITEM('Export SSOP Registratie'),USE(?SSOPRegistratie:2),#ORDINAL(67)
+            END
+            MENU('&Window'),USE(?MENU1),MSG('Create and Arrange windows'),STD(STD:WindowList), |
+              #ORDINAL(68)
+              ITEM('T&ile'),USE(?Tile),MSG('Make all open windows visible'),STD(STD:TileWindow), |
+                #ORDINAL(69)
+              ITEM('&Cascade'),USE(?Cascade),MSG('Stack all open windows'),STD(STD:CascadeWindow), |
+                #ORDINAL(70)
+              ITEM('&Arrange Icons'),USE(?Arrange),MSG('Align all window icons'),STD(STD:ArrangeIcons), |
+                #ORDINAL(71)
+            END
+            MENU('&Help'),USE(?MENU2),MSG('Windows Help'),#ORDINAL(72)
+              ITEM('&Contents'),USE(?Helpindex),MSG('View the contents of the help file'), |
+                STD(STD:HelpIndex),#ORDINAL(73)
+              ITEM('&Search for Help On...'),USE(?HelpSearch),MSG('Search for help on a subject'), |
+                STD(STD:HelpSearch),#ORDINAL(74)
+              ITEM('&How to Use Help'),USE(?HelpOnHelp),MSG('How to use Windows Help'),STD(STD:HelpOnHelp), |
+                #ORDINAL(75)
+              ITEM,USE(?SEPARATOR3),SEPARATOR,#ORDINAL(76)
+              ITEM('Hulp op afstand'),USE(?HulpOpAfstand),#ORDINAL(77)
+              ITEM('Versie informatie'),USE(?BrowseVersie),#ORDINAL(78)
+              ITEM('&Timing-verklaring'),USE(?WindowTimingVerklaring),#ORDINAL(79)
+            END
+          END
+        END
+
+[END]

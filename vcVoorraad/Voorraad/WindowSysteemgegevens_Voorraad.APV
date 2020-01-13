@@ -1,0 +1,1529 @@
+[MODULE]
+NAME 'WindowSysteemgegevens_Voorraad.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME WindowSysteemgegevens
+[COMMON]
+FROM ABC Window
+[DATA]
+[SCREENCONTROLS]
+! PROMPT('Loc : Pallet Etiket Printer:'),USE(?Loc:PalletEtiketPrinter:Prompt)
+! ENTRY(@s198),USE(Loc:PalletEtiketPrinter)
+[REPORTCONTROLS]
+! STRING(@s198),USE(Loc:PalletEtiketPrinter)
+Loc:PalletEtiketPrinter  CSTRING(199)
+!!> GUID('010a5958-ef4a-4dc6-8cdb-e575b86d821b'),PROMPT('Loc : Pallet Etiket Printer:'),HEADER('Loc : Pallet Etiket Printer'),PICTURE(@s198),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Excel Macro Directory:'),USE(?Loc:ExcelMacroDirectory:Prompt)
+! ENTRY(@s255),USE(Loc:ExcelMacroDirectory)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:ExcelMacroDirectory)
+Loc:ExcelMacroDirectory  STRING(500)
+!!> GUID('5830a304-f688-429f-84b8-37ffaad662f5'),PROMPT('Loc : Excel Macro Directory:'),HEADER('Loc : Excel Macro Directory'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : CMRP rinter:'),USE(?LOC:CMRPrinter:Prompt)
+! ENTRY(@s198),USE(LOC:CMRPrinter)
+[REPORTCONTROLS]
+! STRING(@s198),USE(LOC:CMRPrinter)
+LOC:CMRPrinter           CSTRING(199)
+!!> GUID('cb1cad37-f4f1-4dc5-9fbc-0a44111f88d9'),PROMPT('LOC : CMRP rinter:'),HEADER('LOC : CMRP rinter'),PICTURE(@s198),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Default Palletblad Logo:'),USE(?LOC:DefaultPalletbladLogo:Prompt)
+! ENTRY(@s255),USE(LOC:DefaultPalletbladLogo)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:DefaultPalletbladLogo)
+LOC:DefaultPalletbladLogo CSTRING(256)
+!!> GUID('73a17eda-aa9c-4854-a2a9-3a75049015f8'),PROMPT('LOC : Default Palletblad Logo:'),HEADER('LOC : Default Palletblad Logo'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : CMRV ries Printer:'),USE(?LOC:CMRVriesPrinter:Prompt)
+! ENTRY(@s198),USE(LOC:CMRVriesPrinter)
+[REPORTCONTROLS]
+! STRING(@s198),USE(LOC:CMRVriesPrinter)
+LOC:CMRVriesPrinter      CSTRING(199)
+!!> GUID('4cdbf091-7087-4a74-af11-69251c7ecd2a'),PROMPT('LOC : CMRV ries Printer:'),HEADER('LOC : CMRV ries Printer'),PICTURE(@s198),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Magazijn Printer:'),USE(?LOC:MagazijnPrinter:Prompt)
+! ENTRY(@s255),USE(LOC:MagazijnPrinter)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:MagazijnPrinter)
+LOC:MagazijnPrinter      STRING(255)
+!!> GUID('658a070f-821c-4471-ab46-06e9143b3711'),PROMPT('LOC : Magazijn Printer:'),HEADER('LOC : Magazijn Printer'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Weeglijst Printer:'),USE(?LOC:WeeglijstPrinter:Prompt)
+! ENTRY(@s255),USE(LOC:WeeglijstPrinter)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:WeeglijstPrinter)
+LOC:WeeglijstPrinter     STRING(255)
+!!> GUID('83e9c70d-98c1-4fdd-bc23-ac3a41aa3dbe'),PROMPT('LOC : Weeglijst Printer:'),HEADER('LOC : Weeglijst Printer'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Excel Page Break:'),USE(?LOC:ExcelPageBreak:Prompt)
+! SPIN(@n_10),USE(LOC:ExcelPageBreak),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:ExcelPageBreak),RIGHT(1)
+LOC:ExcelPageBreak       LONG
+!!> GUID('3aa0d527-c48f-4c7f-8233-8525263c2acd'),PROMPT('LOC : Excel Page Break:'),HEADER('LOC : Excel Page Break'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Label Length:'),USE(?LOC:LabelLength:Prompt),RIGHT
+! ENTRY(@n_10),USE(LOC:LabelLength),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:LabelLength),RIGHT(1)
+LOC:LabelLength          LONG
+!!> GUID('81609d60-e705-43e6-9ee5-ef1b10dfcf9e'),PROMPT('LOC : Label Length:'),HEADER('LOC : Label Length'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Label Positie ZPL:'),USE(?LOC:LabelPositieZPL:Prompt)
+! ENTRY(@s50),USE(LOC:LabelPositieZPL)
+[REPORTCONTROLS]
+! STRING(@s50),USE(LOC:LabelPositieZPL)
+LOC:LabelPositieZPL      STRING(50)
+!!> GUID('8ce85a1b-9ce7-4b96-b722-7b4e3c5f9492'),PROMPT('LOC : Label Positie ZPL:'),HEADER('LOC : Label Positie ZPL'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Port Koord:'),USE(?LOC:PortKoord:Prompt)
+! ENTRY(@s50),USE(LOC:PortKoord)
+[REPORTCONTROLS]
+! STRING(@s50),USE(LOC:PortKoord)
+LOC:PortKoord            STRING(50)
+!!> GUID('e899dc24-cfd8-456a-b3c1-75ed698a6eac'),PROMPT('LOC : Port Koord:'),HEADER('LOC : Port Koord'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Port Weeg:'),USE(?LOC:PortWeeg:Prompt)
+! ENTRY(@s50),USE(LOC:PortWeeg)
+[REPORTCONTROLS]
+! STRING(@s50),USE(LOC:PortWeeg)
+LOC:PortWeeg             STRING(50)
+!!> GUID('7f1e61f8-0ae0-4456-9782-d8e8f50e29b3'),PROMPT('LOC : Port Weeg:'),HEADER('LOC : Port Weeg'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Dymo Printer:'),USE(?LOC:DymoPrinter:Prompt)
+! ENTRY(@s199),USE(LOC:DymoPrinter)
+[REPORTCONTROLS]
+! STRING(@s199),USE(LOC:DymoPrinter)
+LOC:DymoPrinter          CSTRING(200)
+!!> GUID('e0359948-0ed9-48c1-9f58-60330afd410d'),PROMPT('LOC : Dymo Printer:'),HEADER('LOC : Dymo Printer'),PICTURE(@s199),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : CRMV ries Kopie:'),USE(?Loc:CRMVriesKopie:Prompt)
+! SPIN(@n3),USE(Loc:CRMVriesKopie)
+[REPORTCONTROLS]
+! STRING(@n3),USE(Loc:CRMVriesKopie)
+Loc:CRMVriesKopie        BYTE
+!!> GUID('4ee41fa6-1453-4f5e-a2b6-db533ee1b79f'),PROMPT('Loc : CRMV ries Kopie:'),HEADER('Loc : CRMV ries Kopie'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : CRMV ries Kopie:'),USE(?Loc:CRMKopie:Prompt)
+! SPIN(@n3),USE(Loc:CRMKopie)
+[REPORTCONTROLS]
+! STRING(@n3),USE(Loc:CRMKopie)
+Loc:CRMKopie             BYTE
+!!> GUID('e7a84750-84e8-417d-b7bb-2d74ddf38f27'),PROMPT('Loc : CRMV ries Kopie:'),HEADER('Loc : CRMV ries Kopie'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : CRMV ries Lade:'),USE(?Loc:CRMVriesLade:Prompt)
+! LIST,USE(Loc:CRMVriesLade),FROM('Upper|#1|Lower|#2|Middle|#3|Manual|#4')
+[REPORTCONTROLS]
+! OPTION('Loc : CRMV ries Lade:'),USE(Loc:CRMVriesLade),BOXED
+! RADIO('Upper'),USE(?Loc:CRMVriesLade:Radio0)
+! RADIO('Lower'),USE(?Loc:CRMVriesLade:Radio1)
+! RADIO('Middle'),USE(?Loc:CRMVriesLade:Radio2)
+! RADIO('Manual'),USE(?Loc:CRMVriesLade:Radio3)
+! END
+Loc:CRMVriesLade         BYTE
+!!> GUID('6cafceb8-a67c-43fe-973f-18e6ca2eb16f'),VALID(INLIST('Upper|Lower|Middle|Manual')),PROMPT('Loc : CRMV ries Lade:'),HEADER('Loc : CRMV ries Lade'),PICTURE(@n3),TYPEMODE(INS),VALUES('1|2|3|4')
+[SCREENCONTROLS]
+! CHECK('LOC : Nieuwe Weegschaal:'),USE(LOC:NieuweWeegschaal),VALUE('1','0')
+[REPORTCONTROLS]
+! CHECK('LOC : Nieuwe Weegschaal:'),USE(LOC:NieuweWeegschaal),VALUE('1','0')
+LOC:NieuweWeegschaal     BYTE
+!!> GUID('d33ace48-db21-46d4-981e-948a9dcc4892'),VALID(BOOLEAN),PROMPT('LOC : Nieuwe Weegschaal:'),HEADER('LOC : Nieuwe Weegschaal'),PICTURE(@n3),TYPEMODE(INS),TRUEVALUE('1'),FALSEVALUE('0')
+[SCREENCONTROLS]
+! PROMPT('LOC : Standaard Palletverloop Periode:'),USE(?LOC:StandaardPalletverloopPeriode:Prompt)
+! SPIN(@n_10),USE(LOC:StandaardPalletverloopPeriode),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:StandaardPalletverloopPeriode),RIGHT(1)
+LOC:StandaardPalletverloopPeriode LONG
+!!> GUID('0aaad25b-57af-478c-9fe5-9d07ccf146a7'),PROMPT('LOC : Standaard Palletverloop Periode:'),HEADER('LOC : Standaard Palletverloop Periode'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Standaard Voorraadverloop Periode:'),USE(?LOC:StandaardVoorraadverloopPeriode:Prompt)
+! SPIN(@n_10),USE(LOC:StandaardVoorraadverloopPeriode),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:StandaardVoorraadverloopPeriode),RIGHT(1)
+LOC:StandaardVoorraadverloopPeriode LONG
+!!> GUID('394fb0bd-e179-456d-a691-06e2ddb16ed0'),PROMPT('LOC : Standaard Voorraadverloop Periode:'),HEADER('LOC : Standaard Voorraadverloop Periode'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Partij Roodkleuren Na Dagen:'),USE(?LOC:PartijRoodkleurenNaDagen:Prompt)
+! SPIN(@n_10),USE(LOC:PartijRoodkleurenNaDagen),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:PartijRoodkleurenNaDagen),RIGHT(1)
+LOC:PartijRoodkleurenNaDagen LONG
+!!> GUID('c81f6c60-2f89-46b6-b7d2-7464dbb59ae3'),PROMPT('LOC : Partij Roodkleuren Na Dagen:'),HEADER('LOC : Partij Roodkleuren Na Dagen'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Palletblad Printer:'),USE(?LOC:PalletbladPrinter:Prompt)
+! ENTRY(@s255),USE(LOC:PalletbladPrinter)
+[REPORTCONTROLS]
+! STRING(@s255),USE(LOC:PalletbladPrinter)
+LOC:PalletbladPrinter    CSTRING(1024)
+!!> GUID('a2d0dcfb-49c4-470e-8205-ce3292829233'),PROMPT('LOC : Palletblad Printer:'),HEADER('LOC : Palletblad Printer'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Country Company SSCCNVE:'),USE(?LOC:CountryCompanySSCCNVE:Prompt)
+! ENTRY(@n09),USE(LOC:CountryCompanySSCCNVE),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n09),USE(LOC:CountryCompanySSCCNVE),RIGHT(1)
+LOC:CountryCompanySSCCNVE LONG
+!!> GUID('d68dd779-8a6a-4636-b68a-d094340c0bee'),PROMPT('LOC : Country Company SSCCNVE:'),HEADER('LOC : Country Company SSCCNVE'),PICTURE(@n09),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Aantal Pogingen:'),USE(?Loc:AantalPogingen:Prompt)
+! SPIN(@n-14),USE(Loc:AantalPogingen),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:AantalPogingen),RIGHT(1)
+Loc:AantalPogingen       LONG
+!!> GUID('d1e80aa4-0a57-4a48-a16b-1a913338b95d'),PROMPT('Loc : Aantal Pogingen:'),HEADER('Loc : Aantal Pogingen'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Export Bestand:'),USE(?Loc:ExportBestand:Prompt)
+! ENTRY(@s254),USE(Loc:ExportBestand)
+[REPORTCONTROLS]
+! STRING(@s254),USE(Loc:ExportBestand)
+Loc:ExportBestand        CSTRING(255)
+!!> GUID('09265856-f9a2-433b-a290-68ba0a00be97'),PROMPT('Loc : Export Bestand:'),HEADER('Loc : Export Bestand'),PICTURE(@s254),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Export Bestand:'),USE(?Loc:ExportBestandInvoice:Prompt)
+! ENTRY(@s254),USE(Loc:ExportBestandInvoice)
+[REPORTCONTROLS]
+! STRING(@s254),USE(Loc:ExportBestandInvoice)
+Loc:ExportBestandInvoice CSTRING(255)
+!!> GUID('3652752b-afe3-40d9-83a9-b30914e12220'),PROMPT('Loc : Export Bestand:'),HEADER('Loc : Export Bestand'),PICTURE(@s254),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Export Bestand Purchase Order:'),USE(?Loc:ExportBestandPurchaseOrder:Prompt)
+! ENTRY(@s254),USE(Loc:ExportBestandPurchaseOrder)
+[REPORTCONTROLS]
+! STRING(@s254),USE(Loc:ExportBestandPurchaseOrder)
+Loc:ExportBestandPurchaseOrder CSTRING(255)
+!!> GUID('e1bbb637-9af1-4ba9-bce8-458c9e9f3dc0'),PROMPT('Loc : Export Bestand Purchase Order:'),HEADER('Loc : Export Bestand Purchase Order'),PICTURE(@s254),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Gewicht Doos:'),USE(?Loc:GewichtDoos:Prompt)
+! ENTRY(@n-10`3),USE(Loc:GewichtDoos),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10`3),USE(Loc:GewichtDoos),DECIMAL(12)
+Loc:GewichtDoos          DECIMAL(7,3)
+!!> GUID('b5f8353a-3564-4303-9bb6-ba89eb2753fe'),PROMPT('Loc : Gewicht Doos:'),HEADER('Loc : Gewicht Doos'),PICTURE(@n-10`3),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Loc : Gewicht Pallet:'),USE(?Loc:GewichtPallet:Prompt)
+! ENTRY(@n-10`3),USE(Loc:GewichtPallet),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10`3),USE(Loc:GewichtPallet),DECIMAL(12)
+Loc:GewichtPallet        DECIMAL(7,3)
+!!> GUID('00f9fecd-2ddb-41c8-a1a9-5b7774e0aa87'),PROMPT('Loc : Gewicht Pallet:'),HEADER('Loc : Gewicht Pallet'),PICTURE(@n-10`3),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Loc : Local Path:'),USE(?Loc:LocalPath:Prompt)
+! ENTRY(@s255),USE(Loc:LocalPath)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:LocalPath)
+Loc:LocalPath            CSTRING(256)
+!!> GUID('a5548f6b-8dcc-4fb1-b81b-09f88f1985c3'),PROMPT('Loc : Local Path:'),HEADER('Loc : Local Path'),PICTURE(@s255),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Net Path:'),USE(?Loc:NetPath:Prompt)
+! ENTRY(@s255),USE(Loc:NetPath)
+[REPORTCONTROLS]
+! STRING(@s255),USE(Loc:NetPath)
+Loc:NetPath              CSTRING(256)
+!!> GUID('c4301760-2422-473c-8b96-40ba1b4f8c9f'),PROMPT('Loc : Net Path:'),HEADER('Loc : Net Path'),PICTURE(@s255),TYPEMODE(INS)
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 9
+WHEN  ('') ('Default')
+WHEN  ('?LOC:PortKoord:Prompt') ('Default')
+WHEN  ('?LOC:PortWeeg') ('Default')
+WHEN  ('?Loc:PalletEtiketPrinter') ('Default')
+WHEN  ('?LookupFile') ('Default')
+WHEN  ('?LookupFile:2') ('Default')
+WHEN  ('?LookupFile:3') ('Default')
+WHEN  ('?LookupFile:4') ('Default')
+WHEN  ('?STRING11') ('Default')
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 11
+WHEN  ('') ('No Special Action')
+WHEN  ('?Cancel') ('No Special Action')
+WHEN  ('?Close') ('No Special Action')
+WHEN  ('?LOC:PortKoord:Prompt') ('No Special Action')
+WHEN  ('?LOC:PortWeeg') ('No Special Action')
+WHEN  ('?Loc:PalletEtiketPrinter') ('No Special Action')
+WHEN  ('?LookupFile') ('No Special Action')
+WHEN  ('?LookupFile:2') ('No Special Action')
+WHEN  ('?LookupFile:3') ('No Special Action')
+WHEN  ('?LookupFile:4') ('No Special Action')
+WHEN  ('?STRING11') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 4
+WHEN  ('?LookupFile') ('')
+WHEN  ('?LookupFile:2') ('')
+WHEN  ('?LookupFile:3') ('')
+WHEN  ('?LookupFile:4') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 4
+WHEN  ('?LookupFile') ('')
+WHEN  ('?LookupFile:2') ('')
+WHEN  ('?LookupFile:3') ('')
+WHEN  ('?LookupFile:4') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 4
+WHEN  ('?LookupFile') ()
+WHEN  ('?LookupFile:2') ()
+WHEN  ('?LookupFile:3') ()
+WHEN  ('?LookupFile:4') ()
+
+%ButtonThread DEPEND %Control LONG TIMES 4
+WHEN  ('?LookupFile') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 11
+WHEN  ('') ('25000')
+WHEN  ('?Cancel') ('25000')
+WHEN  ('?Close') ('25000')
+WHEN  ('?LOC:PortKoord:Prompt') ('25000')
+WHEN  ('?LOC:PortWeeg') ('25000')
+WHEN  ('?Loc:PalletEtiketPrinter') ('25000')
+WHEN  ('?LookupFile') ('25000')
+WHEN  ('?LookupFile:2') ('25000')
+WHEN  ('?LookupFile:3') ('25000')
+WHEN  ('?LookupFile:4') ('25000')
+WHEN  ('?STRING11') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 4
+WHEN  ('?LookupFile') ('')
+WHEN  ('?LookupFile:2') ('')
+WHEN  ('?LookupFile:3') ('')
+WHEN  ('?LookupFile:4') ('')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 4
+WHEN  ('?LookupFile') ()
+WHEN  ('?LookupFile:2') ()
+WHEN  ('?LookupFile:3') ()
+WHEN  ('?LookupFile:4') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 4
+WHEN  ('?LookupFile') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 11
+WHEN  ('') ('None')
+WHEN  ('?Cancel') ('None')
+WHEN  ('?Close') ('None')
+WHEN  ('?LOC:PortKoord:Prompt') ('None')
+WHEN  ('?LOC:PortWeeg') ('None')
+WHEN  ('?Loc:PalletEtiketPrinter') ('None')
+WHEN  ('?LookupFile') ('None')
+WHEN  ('?LookupFile:2') ('None')
+WHEN  ('?LookupFile:3') ('None')
+WHEN  ('?LookupFile:4') ('None')
+WHEN  ('?STRING11') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 4
+WHEN  ('?LookupFile') ('')
+WHEN  ('?LookupFile:2') ('')
+WHEN  ('?LookupFile:3') ('')
+WHEN  ('?LookupFile:4') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 4
+WHEN  ('?LookupFile') ()
+WHEN  ('?LookupFile:2') ()
+WHEN  ('?LookupFile:3') ()
+WHEN  ('?LookupFile:4') ()
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 35
+WHEN  ('') (1)
+WHEN  ('?LOC:CMRPrinter') (1)
+WHEN  ('?LOC:CMRVriesPrinter') (1)
+WHEN  ('?LOC:CountryCompanySSCCNVE') (1)
+WHEN  ('?LOC:DefaultPalletbladLogo') (1)
+WHEN  ('?LOC:DymoPrinter') (1)
+WHEN  ('?LOC:ExcelPageBreak') (1)
+WHEN  ('?LOC:LabelLength') (1)
+WHEN  ('?LOC:LabelPositieZPL') (1)
+WHEN  ('?LOC:MagazijnPrinter') (1)
+WHEN  ('?LOC:PalletbladPrinter') (1)
+WHEN  ('?LOC:PartijRoodkleurenNaDagen:2') (1)
+WHEN  ('?LOC:PortKoord') (1)
+WHEN  ('?LOC:PortKoord:Prompt') (1)
+WHEN  ('?LOC:PortWeeg') (1)
+WHEN  ('?LOC:StandaardPalletverloopPeriode') (1)
+WHEN  ('?LOC:StandaardVoorraadverloopPeriode') (1)
+WHEN  ('?LOC:WeeglijstPrinter') (1)
+WHEN  ('?Loc:AantalPogingen') (1)
+WHEN  ('?Loc:CRMKopie') (1)
+WHEN  ('?Loc:CRMVriesKopie') (1)
+WHEN  ('?Loc:ExcelMacroDirectory') (1)
+WHEN  ('?Loc:ExportBestand') (1)
+WHEN  ('?Loc:ExportBestandInvoice') (1)
+WHEN  ('?Loc:ExportBestandPurchaseOrder') (1)
+WHEN  ('?Loc:GewichtDoos') (1)
+WHEN  ('?Loc:GewichtPallet') (1)
+WHEN  ('?Loc:LocalPath') (1)
+WHEN  ('?Loc:NetPath') (1)
+WHEN  ('?Loc:PalletEtiketPrinter') (1)
+WHEN  ('?LookupFile') (1)
+WHEN  ('?LookupFile:2') (1)
+WHEN  ('?LookupFile:3') (1)
+WHEN  ('?LookupFile:4') (1)
+WHEN  ('?STRING11') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?LOC:PortKoord:Prompt')TIMES 0
+WHEN  ('?LOC:PortWeeg')TIMES 0
+WHEN  ('?Loc:PalletEtiketPrinter')TIMES 0
+WHEN  ('?LookupFile')TIMES 0
+WHEN  ('?LookupFile:2')TIMES 0
+WHEN  ('?LookupFile:3')TIMES 0
+WHEN  ('?LookupFile:4')TIMES 0
+WHEN  ('?STRING11')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?LOC:PortKoord:Prompt')TIMES 0
+WHEN  ('?LOC:PortWeeg')TIMES 0
+WHEN  ('?Loc:PalletEtiketPrinter')TIMES 0
+WHEN  ('?LookupFile')TIMES 0
+WHEN  ('?LookupFile:2')TIMES 0
+WHEN  ('?LookupFile:3')TIMES 0
+WHEN  ('?LookupFile:4')TIMES 0
+WHEN  ('?STRING11')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?LOC:PortKoord:Prompt')TIMES 0
+WHEN  ('?LOC:PortWeeg')TIMES 0
+WHEN  ('?Loc:PalletEtiketPrinter')TIMES 0
+WHEN  ('?LookupFile')TIMES 0
+WHEN  ('?LookupFile:2')TIMES 0
+WHEN  ('?LookupFile:3')TIMES 0
+WHEN  ('?LookupFile:4')TIMES 0
+WHEN  ('?STRING11')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?LOC:PortKoord:Prompt')TIMES 0
+WHEN  ('?LOC:PortWeeg')TIMES 0
+WHEN  ('?Loc:PalletEtiketPrinter')TIMES 0
+WHEN  ('?LookupFile')TIMES 0
+WHEN  ('?LookupFile:2')TIMES 0
+WHEN  ('?LookupFile:3')TIMES 0
+WHEN  ('?LookupFile:4')TIMES 0
+WHEN  ('?STRING11')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?LOC:PortKoord:Prompt')TIMES 0
+WHEN  ('?LOC:PortWeeg')TIMES 0
+WHEN  ('?Loc:PalletEtiketPrinter')TIMES 0
+WHEN  ('?LookupFile')TIMES 0
+WHEN  ('?LookupFile:2')TIMES 0
+WHEN  ('?LookupFile:3')TIMES 0
+WHEN  ('?LookupFile:4')TIMES 0
+WHEN  ('?STRING11')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?LOC:PortKoord:Prompt')TIMES 0
+WHEN  ('?LOC:PortWeeg')TIMES 0
+WHEN  ('?Loc:PalletEtiketPrinter')TIMES 0
+WHEN  ('?LookupFile')TIMES 0
+WHEN  ('?LookupFile:2')TIMES 0
+WHEN  ('?LookupFile:3')TIMES 0
+WHEN  ('?LookupFile:4')TIMES 0
+WHEN  ('?STRING11')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Off')
+WHEN  ('?LookupFile:2') ('Off')
+WHEN  ('?LookupFile:3') ('Off')
+WHEN  ('?LookupFile:4') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('')
+WHEN  ('?LookupFile:2') ('')
+WHEN  ('?LookupFile:3') ('')
+WHEN  ('?LookupFile:4') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
+WHEN  ('?LookupFile:2') (-1)
+WHEN  ('?LookupFile:3') (-1)
+WHEN  ('?LookupFile:4') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
+WHEN  ('?LookupFile:2') (-1)
+WHEN  ('?LookupFile:3') (-1)
+WHEN  ('?LookupFile:4') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('AIBtn0')
+WHEN  ('?LookupFile:2') ('AIBtn64')
+WHEN  ('?LookupFile:3') ('AIBtn67')
+WHEN  ('?LookupFile:4') ('AIBtn70')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 4
+WHEN  ('') (1)
+WHEN  ('?LookupFile:2') (1)
+WHEN  ('?LookupFile:3') (1)
+WHEN  ('?LookupFile:4') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('?Loc:PalletEtiketPrinter:Prompt')
+WHEN  ('?LookupFile:2') ('?Loc:PalletEtiketPrinter:Prompt')
+WHEN  ('?LookupFile:3') ('?Loc:PalletEtiketPrinter:Prompt')
+WHEN  ('?LookupFile:4') ('?Loc:PalletEtiketPrinter:Prompt')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?LookupFile:2') (0)
+WHEN  ('?LookupFile:3') (0)
+WHEN  ('?LookupFile:4') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+Loc:PalletEtiketPrinter=GETINI('Printer','PalletEtiket',,'.\Voorraad.ini')
+LOC:CMRPrinter=GETINI('Printer','CMR',,'.\Voorraad.ini')
+Loc:CRMKopie=GETINI('Printer','CMR Kopie',1,'.\Voorraad.ini')
+LOC:CMRVriesPrinter=GETINI('Printer','CMR-Vrieshuis',,'.\Voorraad.ini')
+Loc:CRMVriesLade=GETINI('Printer','CMR-Vrieshuis Lade',,'.\Voorraad.ini')
+Loc:CRMVriesKopie=GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini')
+LOC:DymoPrinter=GETINI('Printer','DymoPrinter',,'.\Voorraad.ini')
+Loc:ExcelMacroDirectory=GETINI('Excel', 'MacroXLS',,'.\Voorraad.ini')
+LOC:MagazijnPrinter=GETINI('Printer','Magazijn',,'.\Voorraad.ini')
+LOC:WeeglijstPrinter=GETINI('Printer','Weeglijst',,'.\Voorraad.ini')
+LOC:PalletbladPrinter=GETINI('Printer','Palletblad',,'.\Voorraad.ini')
+
+LOC:ExcelPageBreak=GETINI('Excel', 'PageBreak',60, '.\Voorraad.ini')
+LOC:LabelLength=GETINI('Printer','LabelLength',104, '.\Voorraad.ini')
+LOC:LabelPositieZPL=GETINI('Printer','LabelPositieZPL','^FO100,120^AFR,560,200^FD','.\Voorraad.ini')
+LOC:PortKoord=GETINI('Weeg','PortKoord',,'.\Voorraad.ini')
+LOC:PortWeeg=GETINI('Weeg','PortWeeg',,'.\Voorraad.ini')
+LOC:NieuweWeegschaal=GETINI('Weeg','NieuweWeegschaal',0,'.\Voorraad.ini')
+Loc:AantalPogingen = GETINI('Weeg','AantalPogingen',5,'.\Voorraad.ini')
+
+LOC:PartijRoodkleurenNaDagen = GETINI('Voorraad','PartijRoodkleurenNaDagen',180,'.\Voorraad.ini')
+LOC:StandaardPalletverloopPeriode=GETINI('Voorraad','StandaardPalletverloopPeriode',60,'.\Voorraad.ini')
+LOC:StandaardVoorraadverloopPeriode=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,'.\Voorraad.ini')
+
+LOC:DefaultPalletbladLogo = GETINI('Palletblad','StandaardLogo','','.\Voorraad.ini')
+LOC:CountryCompanySSCCNVE = GETINI('Palletblad','CountryCompanyPrefix','870123456','.\Voorraad.ini')
+
+GLO:HidePlanningInstructie = GETINI('Voorraad','HidePlanningInstructie',0,'.\Voorraad.ini')
+
+Loc:ExportBestand= GETINI('Exact','ExportBestand','','.\Voorraad.ini')
+Loc:ExportBestandInvoice = GETINI('Exact','ExportBestandInvoice','','.\Voorraad.ini')
+Loc:ExportBestandPurchaseOrder= GETINI('Exact','ExportBestandPurchaseOrder','','.\Voorraad.ini')
+
+Loc:GewichtDoos= GETINI('ProForma','Loc:GewichtDoos',0.3,'.\Voorraad.ini')
+Loc:GewichtPallet= GETINI('ProForma','Loc:GewichtPallet',20,'.\Voorraad.ini')
+
+Loc:LocalPath= GETINI('AutoNet','LocalPath',,'.\Voorraad.ini')
+Loc:NetPath= GETINI('AutoNet','NetPath',,'.\Voorraad.ini')
+[END]
+[END]
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Close'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+PUTINI('Printer','PalletEtiket',Loc:PalletEtiketPrinter,'.\Voorraad.ini')
+PUTINI('Printer','CMR',Loc:CMRPrinter,'.\Voorraad.ini')
+PUTINI('Printer','CMR Kopie',Loc:CRMKopie,'.\Voorraad.ini')
+PUTINI('Printer','CMR-Vrieshuis',LOC:CMRVriesPrinter,'.\Voorraad.ini')
+PUTINI('Printer','CMR-Vrieshuis Lade',Loc:CRMVriesLade,'.\Voorraad.ini')
+PUTINI('Printer','CMR-Vrieshuis Kopie',Loc:CRMVriesKopie,'.\Voorraad.ini')
+
+PUTINI('Printer','DymoPrinter',LOC:DymoPrinter,'.\Voorraad.ini')
+PUTINI('Printer','Magazijn',Loc:MagazijnPrinter,'.\Voorraad.ini')
+PUTINI('Printer','Weeglijst',Loc:WeeglijstPrinter,'.\Voorraad.ini')
+PUTINI('Printer','Palletblad',LOC:PalletbladPrinter,'.\Voorraad.ini')
+PUTINI('Printer','LabelLength', LOC:LabelLength, '.\Voorraad.ini')
+PUTINI('Printer','LabelPositieZPL',LOC:LabelPositieZPL,'.\Voorraad.ini')
+PUTINI('Excel', 'MacroXLS', Loc:ExcelMacroDirectory,'.\Voorraad.ini')
+PUTINI('Excel', 'PageBreak', Loc:ExcelPageBreak,'.\Voorraad.ini')
+PUTINI('Weeg','PortKoord', LOC:PortKoord,'.\Voorraad.ini')
+PUTINI('Weeg','PortWeeg',LOC:PortWeeg,'.\Voorraad.ini')
+PUTINI('Weeg','NieuweWeegschaal',LOC:NieuweWeegschaal,'.\Voorraad.ini')
+PUTINI('Weeg','AantalPogingen',Loc:AantalPogingen,'.\Voorraad.ini')
+
+PUTINI('Voorraad','PartijRoodkleurenNaDagen',LOC:PartijRoodkleurenNaDagen,'.\Voorraad.ini')
+PUTINI('Voorraad','StandaardPalletverloopPeriode',LOC:StandaardPalletverloopPeriode,'.\Voorraad.ini')
+PUTINI('Voorraad','StandaardVoorraadverloopPeriode',LOC:StandaardVoorraadverloopPeriode,'.\Voorraad.ini')
+
+PUTINI('Palletblad','StandaardLogo',LOC:DefaultPalletbladLogo,'.\Voorraad.ini')
+PUTINI('Palletblad','CountryCompanyPrefix',LOC:CountryCompanySSCCNVE,'.\Voorraad.ini')
+
+PUTINI('Voorraad','HidePlanningInstructie',GLO:HidePlanningInstructie,'.\Voorraad.ini')
+PUTINI('Exact','ExportBestand',Loc:ExportBestand,'.\Voorraad.ini')
+PUTINI('Exact','ExportBestandInvoice',Loc:ExportBestandInvoice ,'.\Voorraad.ini')
+PUTINI('Exact','ExportBestandPurchaseOrder',Loc:ExportBestandPurchaseOrder,'.\Voorraad.ini')
+
+PUTINI('ProForma','Loc:GewichtDoos',Loc:GewichtDoos,'.\Voorraad.ini')
+PUTINI('ProForma','Loc:GewichtPallet',Loc:GewichtPallet,'.\Voorraad.ini')
+
+PUTINI('AutoNet','LocalPath',Loc:LocalPath,'.\Voorraad.ini')
+PUTINI('AutoNet','NetPath',Loc:NetPath,'.\Voorraad.ini')
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 4
+OWNER 4
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 3
+OWNER 2
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC CancelButton
+[INSTANCE]
+INSTANCE 1
+[ADDITION]
+NAME ABC CloseButton
+[INSTANCE]
+INSTANCE 2
+[ADDITION]
+NAME ABC DOSFileLookup
+[INSTANCE]
+INSTANCE 5
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('SelectFileClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
+
+%DOSFileDialogHeader DEFAULT  ('')
+%DOSFileField FIELD  (LOC:DefaultPalletbladLogo)
+%DOSInitialDirectory DEFAULT  ('')
+%DOSInitialFilename DEFAULT  ('')
+%ReturnToOriginalDir LONG  (0)
+%AllowLongFilenames LONG  (1)
+%DOSFileDialogType DEFAULT  ('Open')
+%AllowNoError LONG  (0)
+%DefaultOnCancel LONG  (0)
+%AllowMultiSelect LONG  (0)
+%ActionsToTake DEFAULT  ('')
+%AssignToImageControl LONG  (0)
+%ImageControl DEFAULT  ('')
+%ImageResize LONG  (1)
+%DOSVariableMask LONG  (0)
+%DOSMaskVariable DEFAULT  ('')
+%DOSMaskDesc DEFAULT  ('All Files')
+%DOSMask DEFAULT  ('*.*')
+%DOSMoreMasks MULTI LONG  ()
+%DOSMoreMaskDesc DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%DOSMoreMask DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%RedisplayWindow LONG  (1)
+%UpdateFields MULTI LONG  ()
+%UpdateFeq DEPEND %UpdateFields DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileLookup5')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[INSTANCE]
+INSTANCE 6
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('SelectFileClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
+
+%DOSFileDialogHeader DEFAULT  ('Kies de Map voor de Exact export')
+%DOSFileField FIELD  (Loc:ExportBestand)
+%DOSInitialDirectory DEFAULT  ('')
+%DOSInitialFilename DEFAULT  ('')
+%ReturnToOriginalDir LONG  (1)
+%AllowLongFilenames LONG  (1)
+%DOSFileDialogType DEFAULT  ('Save')
+%AllowNoError LONG  (0)
+%DefaultOnCancel LONG  (0)
+%AllowMultiSelect LONG  (0)
+%ActionsToTake DEFAULT  ('')
+%AssignToImageControl LONG  (0)
+%ImageControl DEFAULT  ('')
+%ImageResize LONG  (1)
+%DOSVariableMask LONG  (0)
+%DOSMaskVariable DEFAULT  ('')
+%DOSMaskDesc DEFAULT  ('XML')
+%DOSMask DEFAULT  ('*.XML')
+%DOSMoreMasks MULTI LONG  ()
+%DOSMoreMaskDesc DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%DOSMoreMask DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%RedisplayWindow LONG  (1)
+%UpdateFields MULTI LONG  ()
+%UpdateFeq DEPEND %UpdateFields DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileLookup6')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[INSTANCE]
+INSTANCE 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('SelectFileClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
+
+%DOSFileDialogHeader DEFAULT  ('')
+%DOSFileField FIELD  (Loc:ExportBestandInvoice)
+%DOSInitialDirectory DEFAULT  ('')
+%DOSInitialFilename DEFAULT  ('')
+%ReturnToOriginalDir LONG  (1)
+%AllowLongFilenames LONG  (1)
+%DOSFileDialogType DEFAULT  ('Save')
+%AllowNoError LONG  (0)
+%DefaultOnCancel LONG  (0)
+%AllowMultiSelect LONG  (0)
+%ActionsToTake DEFAULT  ('')
+%AssignToImageControl LONG  (0)
+%ImageControl DEFAULT  ('')
+%ImageResize LONG  (1)
+%DOSVariableMask LONG  (0)
+%DOSMaskVariable DEFAULT  ('')
+%DOSMaskDesc DEFAULT  ('All Files')
+%DOSMask DEFAULT  ('*.*')
+%DOSMoreMasks MULTI LONG  ()
+%DOSMoreMaskDesc DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%DOSMoreMask DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%RedisplayWindow LONG  (1)
+%UpdateFields MULTI LONG  ()
+%UpdateFeq DEPEND %UpdateFields DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileLookup7')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[INSTANCE]
+INSTANCE 8
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('SelectFileClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
+
+%DOSFileDialogHeader DEFAULT  ('')
+%DOSFileField FIELD  (Loc:ExportBestandPurchaseOrder)
+%DOSInitialDirectory DEFAULT  ('')
+%DOSInitialFilename DEFAULT  ('')
+%ReturnToOriginalDir LONG  (1)
+%AllowLongFilenames LONG  (1)
+%DOSFileDialogType DEFAULT  ('Save')
+%AllowNoError LONG  (0)
+%DefaultOnCancel LONG  (0)
+%AllowMultiSelect LONG  (0)
+%ActionsToTake DEFAULT  ('')
+%AssignToImageControl LONG  (0)
+%ImageControl DEFAULT  ('')
+%ImageResize LONG  (1)
+%DOSVariableMask LONG  (0)
+%DOSMaskVariable DEFAULT  ('')
+%DOSMaskDesc DEFAULT  ('All Files')
+%DOSMask DEFAULT  ('*.*')
+%DOSMoreMasks MULTI LONG  ()
+%DOSMoreMaskDesc DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%DOSMoreMask DEPEND %DOSMoreMasks DEFAULT TIMES 0
+
+%RedisplayWindow LONG  (1)
+%UpdateFields MULTI LONG  ()
+%UpdateFeq DEPEND %UpdateFields DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileLookup8')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[WINDOW]
+Window  WINDOW('Systeemgegevens'),AT(,,508,372),FONT('Microsoft Sans Serif',10,,,CHARSET:DEFAULT), |
+          GRAY
+          PROMPT('Pallet Etiket Printer:'),AT(4,1),USE(?Loc:PalletEtiketPrinter:Prompt),#ORDINAL(1)
+          ENTRY(@s198),AT(88,1,222,10),USE(Loc:PalletEtiketPrinter),#ORDINAL(2)
+          STRING('De benodigde macro die print op 1 x 1 pagina moet ''PrintOpPagina'' heten.'), |
+            AT(87,131),USE(?STRING1),#ORDINAL(3)
+          PROMPT('CMR-Printer (Receptie):'),AT(4,14),USE(?PROMPT1),#ORDINAL(4)
+          ENTRY(@s255),AT(88,14,180),USE(LOC:CMRPrinter),#ORDINAL(5)
+          PROMPT('Kopie:'),AT(272,15),USE(?Loc:CRMKopie:Prompt),#ORDINAL(6)
+          SPIN(@n1),AT(297,14,14,10),USE(Loc:CRMKopie),#ORDINAL(7)
+          PROMPT('Magazijn-Printer:'),AT(4,44),USE(?PROMPT2),#ORDINAL(8)
+          ENTRY(@s255),AT(88,44,222,10),USE(LOC:MagazijnPrinter),#ORDINAL(9)
+          PROMPT('CMR-Printer (Vrieshuis):'),AT(4,30),USE(?LOC:CMRVriesPrinter:Prompt),#ORDINAL(10)
+          PROMPT('Kopie:'),AT(273,30),USE(?Loc:CRMVriesKopie:Prompt),#ORDINAL(11)
+          ENTRY(@s198),AT(88,29,180,10),USE(LOC:CMRVriesPrinter),#ORDINAL(12)
+          PROMPT('Excel page break (rij):'),AT(4,144),USE(?LOC:ExcelPageBreak:Prompt),#ORDINAL(13)
+          SPIN(@n_10),AT(88,144,60,10),USE(LOC:ExcelPageBreak),RIGHT(1),#ORDINAL(14)
+          SPIN(@n1),AT(297,30,14,10),USE(Loc:CRMVriesKopie),#ORDINAL(15)
+          PROMPT('Label Lengte (mm):'),AT(4,158),USE(?LOC:LabelLength:Prompt),RIGHT,#ORDINAL(16)
+          ENTRY(@n_10),AT(88,158,60,10),USE(LOC:LabelLength),RIGHT(1),#ORDINAL(17)
+          STRING('Positionering ZPL-code:'),AT(4,186,76,12),USE(?STRING2),#ORDINAL(18)
+          ENTRY(@s50),AT(88,186,206),USE(LOC:LabelPositieZPL),#ORDINAL(19)
+          STRING('bijv. ^FO100,120^AFR,560,200^FD'),AT(299,185),USE(?STRING3),#ORDINAL(20)
+          STRING('^FO dots rechts, dots omloog (let op bij R=omhoog, Links)'),AT(299,195), |
+            USE(?STRING4),#ORDINAL(21)
+          STRING('^AFR,Font heigt,font width (Select font F, R= clockwise 90%)'),AT(299,207, |
+            182,10),USE(?STRING4:2),#ORDINAL(22)
+          STRING('^FD Einde regel'),AT(299,221),USE(?STRING5),#ORDINAL(23)
+          PROMPT('COM-port koord:'),AT(4,216),USE(?LOC:PortKoord:Prompt),#ORDINAL(24)
+          ENTRY(@s50),AT(88,214,206,12),USE(LOC:PortKoord),#ORDINAL(25)
+          PROMPT('COM-port weegschaal'),AT(4,230),USE(?LOC:PortWeeg:Prompt),#ORDINAL(26)
+          ENTRY(@s50),AT(88,228,206,12),USE(LOC:PortWeeg),#ORDINAL(27)
+          STRING('bv. ''Com1:9600,n,8,1'''),AT(307,230),USE(?STRING6),#ORDINAL(28)
+          STRING('ComX:baudrate (300/1200/2400/4800/9600/19200/38400/57600/115200),pari' & |
+            'ty (n/e/o), databits (7/8), stopbits(1/2)'),AT(4,242),USE(?STRING7),#ORDINAL(29)
+          ENTRY(@s255),AT(88,57,222,10),USE(LOC:WeeglijstPrinter),#ORDINAL(30)
+          STRING('Weeglijst-Printer:'),AT(4,58),USE(?STRING8),#ORDINAL(31)
+          PROMPT('Dymo Printer:'),AT(4,102),USE(?LOC:DymoPrinter:Prompt),#ORDINAL(32)
+          ENTRY(@s199),AT(88,101,222,10),USE(LOC:DymoPrinter),#ORDINAL(33)
+          PROMPT('Excel macro file:'),AT(4,117),USE(?Loc:ExcelMacroDirectory:Prompt),#ORDINAL(34)
+          ENTRY(@s255),AT(88,117,222,10),USE(Loc:ExcelMacroDirectory),#ORDINAL(35)
+          PROMPT('Lade:'),AT(315,44),USE(?Loc:CRMVriesLade:Prompt),HIDE,#ORDINAL(36)
+          LIST,AT(337,42,72,10),USE(Loc:CRMVriesLade),DROP(5),FROM('Upper|#1|Lower|#2|M' & |
+            'iddle|#3|Manual|#4'),HIDE,#ORDINAL(37)
+          CHECK('Nieuwe Weegschaal (COM-port zetten op (Com1: 2400,e,7,1)'),AT(89,253),USE(LOC:NieuweWeegschaal), |
+            VALUE('1','0'),#ORDINAL(38)
+          PROMPT('Standaard palletverloop periode:'),AT(172,144),USE(?PROMPT3),#ORDINAL(39)
+          PROMPT('Standaard voorraadverloop periode:'),AT(172,158),USE(?PROMPT4),#ORDINAL(40)
+          SPIN(@n_10),AT(290,158,60,10),USE(LOC:StandaardVoorraadverloopPeriode),RIGHT(1), |
+            #ORDINAL(41)
+          SPIN(@n_10),AT(290,144,60,10),USE(LOC:StandaardPalletverloopPeriode),RIGHT(1),#ORDINAL(42)
+          PROMPT('dagen'),AT(356,144,29,10),USE(?PROMPT5),#ORDINAL(43)
+          PROMPT('dagen'),AT(356,156,29,10),USE(?PROMPT5:2),#ORDINAL(44)
+          PROMPT('Partij (in partijvoorraad) rood na:'),AT(172,172),USE(?LOC:PartijRoodkleurenNaDagen:Prompt), |
+            RIGHT,#ORDINAL(45)
+          PROMPT('dagen'),AT(356,170),USE(?PROMPT6),#ORDINAL(46)
+          SPIN(@n_10),AT(290,172,60,10),USE(LOC:PartijRoodkleurenNaDagen,,?LOC:PartijRoodkleurenNaDagen:2), |
+            RIGHT(1),#ORDINAL(47)
+          STRING('Palletbladen-Printer:'),AT(4,70),USE(?STRING10),#ORDINAL(48)
+          ENTRY(@s255),AT(88,71,222,10),USE(LOC:PalletbladPrinter),#ORDINAL(49)
+          PROMPT('Standaard palletblad-logo:'),AT(312,70),USE(?LOC:DefaultPalletbladLogo:Prompt), |
+            #ORDINAL(50)
+          ENTRY(@s255),AT(392,71,98,10),USE(LOC:DefaultPalletbladLogo),#ORDINAL(51)
+          BUTTON('...'),AT(492,70,12,12),USE(?LookupFile),#ORIG(?LookupFile),#SEQ(5),#ORDINAL(52)
+          PROMPT('Beeldverhouding 1:3.333'),AT(383,100),USE(?LOC:DefaultPalletbladLogo:Prompt:2), |
+            FONT(,,,FONT:regular+FONT:italic),#ORDINAL(53)
+          CHECK('Toon geen instructies'),AT(383,117),USE(GLO:HidePlanningInstructie),VALUE('1', |
+            '0'),#ORDINAL(54)
+          PROMPT('SSCC / NVE prefix (palletbladen):'),AT(4,86),USE(?LOC:CountryCompanySSCCNVE:Prompt), |
+            #ORDINAL(55)
+          ENTRY(@n09),AT(128,86,40,10),USE(LOC:CountryCompanySSCCNVE),LEFT(1),#ORDINAL(56)
+          STRING('Country code (NL: 870 - 879)  + Company code (bv. 123456)'),AT(174,86,182, |
+            11),USE(?STRING11),#ORDINAL(57)
+          PROMPT('Aantal weegpogingen:'),AT(4,264),USE(?Loc:AantalPogingen:Prompt),#ORDINAL(58)
+          SPIN(@n-14),AT(89,264,60,10),USE(Loc:AantalPogingen),RIGHT(1),#ORDINAL(59)
+          PROMPT('Export Bestand Orders:'),AT(4,276),USE(?Loc:ExportDirectory:Prompt),#ORDINAL(60)
+          ENTRY(@s254),AT(89,276,280,10),USE(Loc:ExportBestand),#ORDINAL(61)
+          BUTTON('...'),AT(374,276,12,12),USE(?LookupFile:2),#ORIG(?LookupFile),#SEQ(6),#ORDINAL(62)
+          BUTTON('OK'),AT(419,352),USE(?Close),#ORIG(?Close),#SEQ(2),#ORDINAL(63)
+          BUTTON('Annuleren'),AT(455,352),USE(?Cancel),#ORIG(?Cancel),#SEQ(1),#ORDINAL(64)
+          PROMPT('Export Bestand Invoice:'),AT(4,289),USE(?Loc:ExportBestandInvoice:Prompt), |
+            #ORDINAL(65)
+          ENTRY(@s254),AT(89,289,280,10),USE(Loc:ExportBestandInvoice),#ORDINAL(66)
+          BUTTON('...'),AT(374,288,12,12),USE(?LookupFile:3),#ORIG(?LookupFile),#SEQ(7),#ORDINAL(67)
+          PROMPT('Exp. Best. Purchase Order:'),AT(4,302),USE(?Loc:ExportBestandPurchaseOrder:Prompt), |
+            #ORDINAL(68)
+          ENTRY(@s254),AT(89,302,280,10),USE(Loc:ExportBestandPurchaseOrder),#ORDINAL(69)
+          BUTTON('...'),AT(376,301,12,12),USE(?LookupFile:4),#ORIG(?LookupFile),#SEQ(8),#ORDINAL(70)
+          PROMPT('Gewicht Doos:'),AT(4,314),USE(?Loc:GewichtDoos:Prompt),#ORDINAL(71)
+          ENTRY(@n-10`3),AT(89,313,60,10),USE(Loc:GewichtDoos),RIGHT(2),#ORDINAL(72)
+          PROMPT('Gewicht Pallet:'),AT(4,326),USE(?Loc:GewichtPallet:Prompt),#ORDINAL(73)
+          ENTRY(@n-10`3),AT(89,325,60,10),USE(Loc:GewichtPallet),RIGHT(2),#ORDINAL(74)
+          STRING('kg'),AT(152,314),USE(?STRING12),#ORDINAL(75)
+          STRING('kg'),AT(152,324,8,10),USE(?STRING12:2),#ORDINAL(76)
+          PROMPT('Local Path:'),AT(4,340),USE(?Loc:LocalPath:Prompt),#ORDINAL(10000)
+          ENTRY(@s255),AT(89,339,174,10),USE(Loc:LocalPath),#ORDINAL(10001)
+          PROMPT('Net Path:'),AT(4,352),USE(?Loc:NetPath:Prompt),#ORDINAL(10002)
+          ENTRY(@s255),AT(89,352,174,10),USE(Loc:NetPath),#ORDINAL(10003)
+        END
+
+[END]

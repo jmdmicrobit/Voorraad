@@ -1,0 +1,234 @@
+globalclass.clw:! PROCEDURE:    GlobalClassSource
+globalclass.clw:! INC file:     GlobalClass.inc
+globalclass.clw:! CLW file:     GlobalClass.clw
+globalclass.clw:GlobalClass.InitWordOle     Procedure
+globalclass.clw:	db.DebugOut('GlobalClass.InitWordOle(1)')
+globalclass.clw:	db.DebugOut('GlobalClass.InitWordOle(2)')	
+globalclass.clw:	db.DebugOut('GlobalClass.InitWordOle(3)')	
+globalclass.clw:GlobalClass.MaakWord        Procedure(String Prm:Sjabloon)
+globalclass.clw:GlobalClass.OpenWord        Procedure(String Prm:Bestandsnaam)
+globalclass.clw:GlobalClass.InitExcelOle     Procedure
+globalclass.clw:GlobalClass.MaakExcel       Procedure(String Prm:Sjabloon)
+globalclass.clw:GlobalClass.OpenExcel       Procedure
+globalclass.clw:GlobalClass.InitMailOle Procedure
+globalclass.clw:GlobalClass.DataSource      Procedure(String PRM:SoortData )
+voorraad023.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad023.clw:GlobalClassObject    GlobalClass
+voorraad024.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad024.clw:GlobalClassObject    GlobalClass
+voorraad025.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad025.clw:GlobalClassObject    GlobalClass
+voorraad026.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad026.clw:GlobalClassObject    GlobalClass
+voorraad027.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad027.clw:GlobalClassObject    GlobalClass
+voorraad028.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad028.clw:GlobalClassObject    GlobalClass
+voorraad029.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad029.clw:GlobalClassObject    GlobalClass
+voorraad030.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad030.clw:GlobalClassObject    GlobalClass
+voorraad030.clw:    GlobalClassObject.InitExcelOle
+voorraad030.clw:	GlobalClassObject.MaakExcel('')
+voorraad031.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad031.clw:GlobalClassObject    GlobalClass
+voorraad032.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad032.clw:GlobalClassObject    GlobalClass
+voorraad033.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad033.clw:GlobalClassObject    GlobalClass
+voorraad034.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad034.clw:GlobalClassObject    GlobalClass
+voorraad035.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad035.clw:GlobalClassObject    GlobalClass
+voorraad036.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad036.clw:GlobalClassObject    GlobalClass
+voorraad037.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad037.clw:GlobalClassObject    GlobalClass
+voorraad038.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad038.clw:GlobalClassObject    GlobalClass
+voorraad039.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad039.clw:GlobalClassObject    GlobalClass
+voorraad040.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad040.clw:GlobalClassObject    GlobalClass
+voorraad041.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad041.clw:GlobalClassObject    GlobalClass
+voorraad042.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad042.clw:GlobalClassObject    GlobalClass
+voorraad043.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad043.clw:GlobalClassObject    GlobalClass
+voorraad044.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad044.clw:GlobalClassObject    GlobalClass
+voorraad045.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad045.clw:GlobalClassObject    GlobalClass
+voorraad046.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad046.clw:GlobalClassObject    GlobalClass
+voorraad047.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad047.clw:GlobalClassObject    GlobalClass
+voorraad048.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad048.clw:GlobalClassObject    GlobalClass
+voorraad049.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad049.clw:GlobalClassObject    GlobalClass
+voorraad050.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad050.clw:GlobalClassObject    GlobalClass
+voorraad051.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad051.clw:GlobalClassObject    GlobalClass
+voorraad052.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad052.clw:GlobalClassObject    GlobalClass
+voorraad053.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad053.clw:GlobalClassObject    GlobalClass
+voorraad054.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad054.clw:GlobalClassObject    GlobalClass
+voorraad055.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad055.clw:GlobalClassObject    GlobalClass
+voorraad056.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad056.clw:GlobalClassObject    GlobalClass
+voorraad057.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad057.clw:GlobalClassObject    GlobalClass
+voorraad058.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad058.clw:GlobalClassObject    GlobalClass
+voorraad059.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad059.clw:GlobalClassObject    GlobalClass
+voorraad060.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad060.clw:GlobalClassObject    GlobalClass
+voorraad061.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad061.clw:GlobalClassObject    GlobalClass
+voorraad062.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad062.clw:GlobalClassObject    GlobalClass
+voorraad063.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad063.clw:GlobalClassObject    GlobalClass
+voorraad064.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad064.clw:GlobalClassObject    GlobalClass
+voorraad065.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad065.clw:GlobalClassObject    GlobalClass
+voorraad066.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad066.clw:GlobalClassObject    GlobalClass
+voorraad067.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad067.clw:GlobalClassObject    GlobalClass
+voorraad068.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad068.clw:GlobalClassObject    GlobalClass
+voorraad069.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad069.clw:GlobalClassObject    GlobalClass
+voorraad070.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad070.clw:GlobalClassObject    GlobalClass
+voorraad071.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad071.clw:GlobalClassObject    GlobalClass
+voorraad072.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad072.clw:GlobalClassObject    GlobalClass
+voorraad073.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad073.clw:GlobalClassObject    GlobalClass
+voorraad074.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad074.clw:GlobalClassObject    GlobalClass
+voorraad075.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad075.clw:GlobalClassObject    GlobalClass
+voorraad076.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad076.clw:GlobalClassObject    GlobalClass
+voorraad077.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad077.clw:GlobalClassObject    GlobalClass
+voorraad078.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad078.clw:GlobalClassObject    GlobalClass
+voorraad079.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad079.clw:GlobalClassObject    GlobalClass
+voorraad080.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad080.clw:GlobalClassObject    GlobalClass
+voorraad081.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad081.clw:GlobalClassObject    GlobalClass
+voorraad082.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad082.clw:GlobalClassObject    GlobalClass
+voorraad083.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad083.clw:GlobalClassObject    GlobalClass
+voorraad084.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad084.clw:GlobalClassObject    GlobalClass
+voorraad085.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad085.clw:GlobalClassObject    GlobalClass
+voorraad086.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad086.clw:GlobalClassObject    GlobalClass
+voorraad087.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad087.clw:GlobalClassObject    GlobalClass
+voorraad088.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad088.clw:GlobalClassObject    GlobalClass
+voorraad089.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorraad089.clw:GlobalClassObject    GlobalClass
+voorraad089.clw:GlobalClassObject    GlobalClass
+voorraad089.clw:GlobalClassObject    GlobalClass
+voorraad089.clw:GlobalClassObject    GlobalClass
+voorraad089.clw:GlobalClassObject    GlobalClass
+voorraad089.clw:GlobalClassObject    GlobalClass
+voorraad_extname.clw:GlobalClass         Class
+voorraad_extname.clw:GlobalClass.InitWordOle     Procedure
+voorraad_extname.clw:GlobalClass.MaakWord        Procedure(String Prm:Sjabloon)
+voorraad_extname.clw:GlobalClass.OpenWord        Procedure(String Prm:Bestandsnaam)
+voorraad_extname.clw:GlobalClass.InitExcelOle     Procedure
+voorraad_extname.clw:GlobalClass.MaakExcel       Procedure(String Prm:Sjabloon)
+voorraad_extname.clw:GlobalClass.OpenExcel       Procedure
+voorraad_extname.clw:GlobalClass.InitMailOle Procedure
+voorraad_extname.clw:GlobalClass.DataSource      Procedure(String PRM:SoortData )
+voorrdct.clw:GlobalClass CLASS
+voorrdct.clw:GlobalClass.InitWordOle     Procedure
+voorrdct.clw:	db.DebugOut('GlobalClass.InitWordOle(1)')
+voorrdct.clw:	db.DebugOut('GlobalClass.InitWordOle(2)')	
+voorrdct.clw:	db.DebugOut('GlobalClass.InitWordOle(3)')	
+voorrdct.clw:GlobalClass.MaakWord        Procedure(String Prm:Sjabloon)
+voorrdct.clw:GlobalClass.OpenWord        Procedure(String Prm:Bestandsnaam)
+voorrdct.clw:GlobalClass.InitExcelOle     Procedure
+voorrdct.clw:GlobalClass.MaakExcel       Procedure(String Prm:Sjabloon)
+voorrdct.clw:GlobalClass.OpenExcel       Procedure
+voorrdct.clw:GlobalClass.InitMailOle Procedure
+voorrdct.clw:GlobalClass.DataSource      Procedure(String PRM:SoortData )
+voorrdct002.clw:  OMIT('_EndOfInclude_',_GlobalClass_)
+voorrdct002.clw:_GlobalClass_  EQUATE(1)
+voorrdct002.clw:! PROCEDURE:    GlobalClassSource
+voorrdct002.clw:! INC file:     GlobalClass.inc
+voorrdct002.clw:! GlobalClass
+voorrdct002.clw:GlobalClass          CLASS,TYPE,MODULE('VoorrDct002.clw')
+voorrdct002.clw:                     END ! CLASS: GlobalClass
+voorrdct002.clw:! PROCEDURE:    GlobalClassSource
+voorrdct002.clw:! INC file:     GlobalClass.inc
+voorrdct002.clw:GlobalClass.InitWordOle     Procedure
+voorrdct002.clw:	db.DebugOut('GlobalClass.InitWordOle(1)')
+voorrdct002.clw:	db.DebugOut('GlobalClass.InitWordOle(2)')	
+voorrdct002.clw:	db.DebugOut('GlobalClass.InitWordOle(3)')	
+voorrdct002.clw:GlobalClass.MaakWord        Procedure(String Prm:Sjabloon)
+voorrdct002.clw:GlobalClass.OpenWord        Procedure(String Prm:Bestandsnaam)
+voorrdct002.clw:GlobalClass.InitExcelOle     Procedure
+voorrdct002.clw:GlobalClass.MaakExcel       Procedure(String Prm:Sjabloon)
+voorrdct002.clw:GlobalClass.OpenExcel       Procedure
+voorrdct002.clw:GlobalClass.InitMailOle Procedure
+voorrdct002.clw:GlobalClass.DataSource      Procedure(String PRM:SoortData )
+voorrdct002.clw:GlobalClassSource Procedure  ! 
+voorrpln.clw:GlobalClass     CLASS, MODULE('VoorrDct.clw') ! Doet de MT-Maxtel Template ook, alleen zorgt deze voor crashes in 7
+voorrpln002.clw:    GlobalClass.InitExcelOle
+voorrpln002.clw:	GlobalClass.MaakExcel('')
+voorrpln004.clw:    GlobalClass.InitExcelOle()
+voorrpln004.clw:	GlobalClass.MaakExcel('')
+voorrpln008.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrpln008.clw:GlobalClassObject    GlobalClass
+voorrrpt.clw:GlobalClass     CLASS, MODULE('VoorrDct.clw') ! Doet de MT-Maxtel Template ook, alleen zorgt deze voor crashes in 7
+voorrrpt001.clw:      			GlobalClass.InitWordOle()
+voorrrpt001.clw:      			GlobalClass.MaakWord(Loc:SjabloonID)
+voorrrpt001.clw:      			'"'&GlobalClass.DataSource(Clip(Sja:SoortData))&'" )'}  ! 1= wdOpenFormatDocument
+voorrrpt001.clw:      			GlobalClass.InitExcelOle
+voorrrpt001.clw:      			GlobalClass.MaakExcel(Loc:SjabloonID)
+voorrrpt003.clw:	GlobalClass.InitExcelOle()
+voorrrpt003.clw:	GlobalClass.MaakExcel('')
+voorrrpt013.clw:         GlobalClass.InitWordOle
+voorrrpt013.clw:      	GlobalClass.OpenWord(SJA:Bestandsnaam)
+voorrrpt013.clw:      	Loc:Ole{'ActiveDocument.MailMerge.CreateDataSource("'&Loc:tempFile&'",,,'&GlobalClass.DataSource(Clip(Sja:SoortData))&'" )'}  ! 1= wdOpenFormatDocument
+voorrrpt014.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrrpt014.clw:GlobalClassObj       GlobalClass
+voorrrpt015.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrrpt015.clw:GlobalClassObj       GlobalClass
+voorrrpt016.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrrpt016.clw:GlobalClassObj       GlobalClass
+voorrrpt017.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrrpt017.clw:GlobalClassObj       GlobalClass
+voorrrpt018.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrrpt018.clw:GlobalClassObj       GlobalClass
+voorrrpt019.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrrpt019.clw:GlobalClassObj       GlobalClass
+voorrrpt020.clw:  INCLUDE('GlobalClass.inc'),ONCE
+voorrrpt020.clw:GlobalClassObj       GlobalClass
+voorrvrd.clw:GlobalClass     CLASS, MODULE('VoorrDct.clw') ! Doet de MT-Maxtel Template ook, alleen zorgt deze voor crashes in 7
+voorrvrd002.clw:    GlobalClass.InitExcelOle
+voorrvrd002.clw:	GlobalClass.MaakExcel('')
+voorrvrd006.clw:      GlobalClass.InitExcelOle
+voorrvrd006.clw:  	GlobalClass.MaakExcel('')

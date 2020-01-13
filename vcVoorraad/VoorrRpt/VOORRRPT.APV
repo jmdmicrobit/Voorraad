@@ -1,0 +1,105 @@
+[PROGRAM]
+[COMMON]
+FROM ABC ABC
+[EMBED]
+EMBED %GlobalMap
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 101
+PROPERTY:END
+  MODULE('win32')
+
+        OMIT('***',_WIDTH32_)
+      FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW
+        ***
+        COMPILE('***',_WIDTH32_)
+      FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW, NAME('FindWindowA')
+        ***
+
+      SetForegroundWindow(UNSIGNED), SIGNED, PROC, PASCAL
+
+  END
+
+!	IMPURLHandler(unsigned, STRING)
+
+	NetRefreshPlanningViews()
+
+	NetRefreshVoorraadViews()
+
+!    MODULE('ImpShell2')
+!         ShellExecuteM(UNSIGNED,LONG,*CSTRING,LONG,*CSTRING,SIGNED),UNSIGNED,PASCAL,RAW,NAME('SHELLEXECUTEA')
+!    END
+
+
+   INCLUDE('CWUTIL.INC'),ONCE
+!  INCLUDE('CLIB.CLW')
+!
+!  include('Ocx.CLW')
+
+!EventFunc procedure(*SHORT Reference,SIGNED OleControl,LONG CurrentEvent),LONG
+!PropChange PROCEDURE(SIGNED OleControl,STRING CurrentProp)
+!PropEdit   PROCEDURE(SIGNED OleControl,STRING CurrentProp),LONG
+[END]
+EMBED %ProgramProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+NetRefreshPlanningViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Planning|APlanning|AAPlanning|ViewPlanningPartij|ViewVoorraadPlanning|PlanningInkoop|PlanningVerkoop|PlanningOverboeking|APlanningInkoop|APlanningVerkoop|APlanningOverboeking|Inkoop|AInkoop|Verkoop|AVerkoop|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+NetRefreshVoorraadViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Partij|APartij|Mutatie|AMutatie|ViewVoorraadCelTotaal|AViewVoorraadCelTotaal|ViewVoorraadPartij|AViewVoorraadPartij|AAViewVoorraadPartij|AAAViewVoorraadPartij|AAAAViewVoorraadPartij|ViewVoorraadPlanning|VoorraadVerloop|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('GlobalClassSrc.inc')
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('ExcelExportClassSrc.inc')
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('ClassPackLijstSrc.inc')
+[END]
+EMBED %GlobalData
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+include('GlobalClassDef.inc')
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+include('ExcelExportClassDef.inc')
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3600
+PROPERTY:END
+include('ClassPackLijstDef.inc')
+[END]
+EMBED %BeforeGlobalIncludes
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+   INCLUDE('PRNPROP.CLW')
+[END]
+[END]
+[END]

@@ -1,0 +1,138 @@
+[PROGRAM]
+[COMMON]
+FROM ABC ABC
+[EMBED]
+EMBED %ProgramProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+NetRefreshPlanningViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Planning|APlanning|AAPlanning|ViewPlanningPartij|ViewVoorraadPlanning|PlanningInkoop|PlanningVerkoop|PlanningOverboeking|APlanningInkoop|APlanningVerkoop|APlanningOverboeking|Inkoop|AInkoop|Verkoop|AVerkoop|OverboekingRit|OverboekingRitRegel|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+NetRefreshVoorraadViews PROCEDURE
+	CODE
+		ThisNetRefresh.Send('|Partij|APartij|Mutatie|AMutatie|ViewVoorraadCelTotaal|AViewVoorraadCelTotaal|ViewVoorraadPartij|AViewVoorraadPartij|AAViewVoorraadPartij|AAAViewVoorraadPartij|AAAAViewVoorraadPartij|ViewVoorraadPlanning|VoorraadVerloop|') ! NetTalk (NetRefresh)
+	!END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('GlobalClassSrc.inc')
+include('VoorraadClassSrc.inc')
+include('CachingClassSrc.inc')
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+PartjCelLocatieCs.CheckPCLQ Procedure(LONG _partijid,LONG _celid,LONG _cellocatieid)
+
+_found                          BYTE
+CODE
+    _found = false
+!    Clear(VPCL:Record)
+!      VPCL:PartijID=_partijid
+!      VPCL:CelID=_celid
+!      VPCL:CelLocatieID=_cellocatieid
+!      if Access:ViewPartijCelLocaties.Fetch(VPCL:ViewPartijCelLocaties_PK)=Level:Benign
+!          _found = true
+!      END
+    IF RECORDS(PartijCelLocatiesQ)=0
+        Access:ViewPartijCelLocaties.Open()
+        Access:ViewPartijCelLocaties.UseFile()
+        Clear(VPCL:RECORD)
+        Set(VPCL:ViewPartijCelLocaties_PK,VPCL:ViewPartijCelLocaties_PK)
+        Loop Until Access:ViewPartijCelLocaties.Next()
+            PCLQ:PartijID=VPCL:PartijID
+            PCLQ:CelID=VPCL:CelID
+            PCLQ:CelLocatieID=VPCL:CelLocatieID
+            PCLQ:CelLocatienaam=VPCL:CelLocatienaam
+            PCLQ:KG=VPCL:KG
+            PCLQ:Pallet=VPCL:Pallet
+            Add(PartijCelLocatiesQ,+PCLQ:PartijID, +PCLQ:CelLocatieID)
+        END
+        Access:ViewPartijCelLocaties.Close()
+    END
+    PCLQ:PartijID=_partijid
+    PCLQ:CelLocatieID=_cellocatieid
+    GET(PartijCelLocatiesQ,+PCLQ:PartijID,+PCLQ:CelLocatieID)
+    IF NOT ERROR()
+        _found=TRUE
+    END
+
+    Return _found
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('ClassPackLijstSrc.inc')
+[END]
+EMBED %GlobalData
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('GlobalClassDef.inc')
+include('VoorraadClassDef.inc')
+include('CachingClassDef.inc')
+[END]
+EMBED %GlobalMap
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+	MODULE('win32')
+        OMIT('***',_WIDTH32_)
+      FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW
+        ***
+        COMPILE('***',_WIDTH32_)
+      FindWindow(LONG,*CSTRING), UNSIGNED, PASCAL, RAW, NAME('FindWindowA')
+        ***
+
+      SetForegroundWindow(UNSIGNED), SIGNED, PROC, PASCAL
+
+	END
+
+	NetRefreshPlanningViews()
+	NetRefreshVoorraadViews()
+[END]
+EMBED %AfterGlobalDataUser
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+PartijCelLocatiesQ  Queue,PRE(PCLQ)
+PartijID                LONG
+CelID                   LONG
+CelLocatieID            LONG
+CelLocatienaam          CString(51)
+KG                      LONG
+Pallet                  LONG
+                    END
+
+
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+PartjCelLocatieCs   CLASS
+CheckPCLQ               Procedure(LONG _partijid,LONG _celid,LONG _cellocatieid), BYTE
+                    END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+include('ClassPackLijstDef.inc')
+[END]
+[END]
+[END]

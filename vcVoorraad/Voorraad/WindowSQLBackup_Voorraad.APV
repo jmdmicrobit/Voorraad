@@ -1,0 +1,870 @@
+[MODULE]
+NAME 'WindowSQLBackup_Voorraad.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME WindowSQLBackup
+[COMMON]
+FROM ABC Window
+[DATA]
+[SCREENCONTROLS]
+! PROMPT('Loc : Connectie:'),USE(?Loc:Connectie:Prompt)
+! ENTRY(@s100),USE(Loc:Connectie)
+[REPORTCONTROLS]
+! STRING(@s100),USE(Loc:Connectie)
+Loc:Connectie            STRING(100)
+!!> GUID('01b2220c-4423-4c93-b9b1-d5b7dff43d12'),PROMPT('Loc : Connectie:'),HEADER('Loc : Connectie'),PICTURE(@s100),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Bestands Q:'),USE(?BestandsQ:Prompt)
+! ENTRY(@s20),USE(BestandsQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(BestandsQ)
+BestandsQ                QUEUE,PRE(BQ)
+!!> GUID('b93ab782-2e44-4b86-8d18-cf3f62f17e84'),PROMPT('Bestands Q:'),HEADER('Bestands Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Bestandsnaam:'),USE(?BQ:Bestandsnaam:Prompt)
+! ENTRY(@s50),USE(BQ:Bestandsnaam)
+[REPORTCONTROLS]
+! STRING(@s50),USE(BQ:Bestandsnaam)
+Bestandsnaam               CSTRING(51)
+!!> GUID('7755fb4c-73e4-408c-aa1f-ec3fc0c14202'),PROMPT('Bestandsnaam:'),HEADER('Bestandsnaam'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Records:'),USE(?BQ:Records:Prompt),CENTER
+! ENTRY(@n-14),USE(BQ:Records),DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(BQ:Records),DECIMAL
+Records                    LONG
+!!> GUID('7869517a-d6d8-4824-9cf1-b5488d3c4dd1'),PROMPT('Records:'),HEADER('Records'),PICTURE(@n-14),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Start:'),USE(?BQ:Start:Prompt)
+! ENTRY(@t4),USE(BQ:Start)
+[REPORTCONTROLS]
+! STRING(@t4),USE(BQ:Start)
+Start                      TIME
+!!> GUID('3070a1f7-df80-4336-adfe-19037a4e17c1'),PROMPT('Start:'),HEADER('Start'),PICTURE(@t4),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Download:'),USE(?BQ:Download:Prompt)
+! ENTRY(@t4),USE(BQ:Download)
+[REPORTCONTROLS]
+! STRING(@t4),USE(BQ:Download)
+Download                   TIME
+!!> GUID('6113f0e2-1d84-4655-9f52-7f5f9b4b30ba'),PROMPT('Download:'),HEADER('Download'),PICTURE(@t4),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Klaar:'),USE(?BQ:Klaar:Prompt)
+! ENTRY(@t4),USE(BQ:Klaar)
+[REPORTCONTROLS]
+! STRING(@t4),USE(BQ:Klaar)
+Klaar                      TIME
+!!> GUID('bbeb2307-6afd-4fc0-8b90-17ede443ea8d'),PROMPT('Klaar:'),HEADER('Klaar'),PICTURE(@t4),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Duur:'),USE(?BQ:Duur:Prompt),RIGHT
+! ENTRY(@n-14),USE(BQ:Duur),RIGHT
+[REPORTCONTROLS]
+! STRING(@n-14),USE(BQ:Duur),RIGHT
+Duur                       TIME
+!!> GUID('7315fc89-4a10-4d69-86b2-edb9573a0b2d'),PROMPT('Duur:'),HEADER('Duur'),PICTURE(@t4),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Gemiddeld:'),USE(?BQ:Gemiddeld:Prompt),RIGHT
+! ENTRY(@n-14),USE(BQ:Gemiddeld),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(BQ:Gemiddeld),RIGHT(1)
+Gemiddeld                  LONG
+!!> GUID('005fd190-1da5-4649-8ce2-bc30b6342b1b'),PROMPT('Gemiddeld:'),HEADER('Gemiddeld'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('18b5c071-0fbd-407b-b940-4717c1e2f276')
+[SCREENCONTROLS]
+! PROMPT('Loc : Conversie:'),USE(?Loc:Conversie:Prompt),RIGHT
+! ENTRY(@n-14),USE(Loc:Conversie),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:Conversie),RIGHT(1)
+Loc:Conversie            LONG
+!!> GUID('a97747af-f8d5-44de-98c8-b37f755c8da2'),PROMPT('Loc : Conversie:'),HEADER('Loc : Conversie'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! CHECK('Loc : Kleine Backup:'),USE(KleineBackup)
+[REPORTCONTROLS]
+! CHECK('Loc : Kleine Backup:'),USE(KleineBackup)
+Loc:KleineBackup         BYTE
+!!> GUID('2fe8111e-a844-46dc-8f2f-4c15abc0e00a'),VALID(BOOLEAN),PROMPT('Loc : Kleine Backup:'),HEADER('Loc : Kleine Backup'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Datum:'),USE(?Loc:Datum:Prompt)
+! ENTRY(@d17),USE(Loc:Datum)
+[REPORTCONTROLS]
+! STRING(@d17),USE(Loc:Datum)
+Loc:Datum                DATE
+!!> GUID('4c7438c7-ff0e-4b21-96fe-318f19c2a01b'),PROMPT('Loc : Datum:'),HEADER('Loc : Datum'),PICTURE(@d17),TYPEMODE(INS)
+[FILES]
+[OTHERS]
+Weging
+VoorraadVerloop
+Verpakking
+Transporteur
+RelatieAdres
+PalletSoort
+OverboekingRitRegel
+OverboekingRit
+CMR
+BulkOverboeking
+PlanningVerkoop
+PlanningOverboeking
+PlanningInkoop
+PalletVerloop
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 1
+WHEN  ('Default') (2, 3, 4, 5)
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 1
+WHEN  ('Default')TIMES 4
+WHEN  (2) ('VulField')
+WHEN  (3) ('Synchroniseer')
+WHEN  (4) ('KopieerFile2Remote')
+WHEN  (5) ('KopieerView2Remote')
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 1
+WHEN  ('Default')TIMES 4
+WHEN  (2) ('(*GROUP PRM:Group, LONG PRM:Veld), ANY')
+WHEN  (3) ('()')
+WHEN  (4) ('(FILE pFile)')
+WHEN  (5) ('(FILE pFile)')
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Default')
+WHEN  ('?List1') ('Default')
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('No Special Action')
+WHEN  ('?Connect') ('No Special Action')
+WHEN  ('?List1') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('25000')
+WHEN  ('?Connect') ('25000')
+WHEN  ('?List1') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('None')
+WHEN  ('?Connect') ('None')
+WHEN  ('?List1') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 3
+WHEN  ('') (1)
+WHEN  ('?List1') (1)
+WHEN  ('?Loc:Datum') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?List1')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?List1')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?List1')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?List1')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?List1')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?List1')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Loc:KleineBackup')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %NewMethodCodeSection
+[INSTANCES]
+WHEN ''
+[INSTANCES]
+WHEN 'Default'
+[INSTANCES]
+WHEN '2'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+    SQLField &= WHAT(PRM:Group,PRM:Veld)
+    DebugField"=SQLField
+    RETURN SQLField
+
+[END]
+WHEN '3'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+!Loc:Connectie='web2003.microbit.nl,BACKUP,sa,@lb@tr0s'
+!Loc:Connectie='ML110\ms$dpm2007$,BACKUP,sa,@lb@tr0s'
+Loc:Connectie='HAR-HP\SQLEXPRESS2008,[BACKUP],sa,@lb@tr0s'
+!Loc:Connectie='pbq716su8b.database.windows.net,BINK,jmd@pbq716su8b,@lb@tr0s'
+Execute Loc:Conversie
+	!ThisWindow.KopieerView2Remote(ArtikelOmschrijvingExtra)
+	!ThisWindow.KopieerView2Remote(ArtikelOmschrijvingExtraGroep)
+	ThisWindow.KopieerFile2Remote(BulkOverboeking)
+	ThisWindow.KopieerFile2Remote(Cel)
+	ThisWindow.KopieerFile2Remote(CelLocatie)
+	ThisWindow.KopieerFile2Remote(CMR)
+	ThisWindow.KopieerView2Remote(DubbeleInslagMutaties)
+	ThisWindow.KopieerFile2Remote(Inkoop)
+	ThisWindow.KopieerFile2Remote(Mutatie)
+	ThisWindow.KopieerFile2Remote(OverboekingRit)
+	ThisWindow.KopieerFile2Remote(OverboekingRitRegel)
+	ThisWindow.KopieerFile2Remote(PalletMutatie)
+	ThisWindow.KopieerFile2Remote(PalletSoort)
+	ThisWindow.KopieerView2Remote(PalletVerloop)
+	ThisWindow.KopieerFile2Remote(Partij)
+	ThisWindow.KopieerFile2Remote(Planning)
+	ThisWindow.KopieerView2Remote(PlanningINkoop)
+	ThisWindow.KopieerView2Remote(PlanningOverboeking)
+	ThisWindow.KopieerView2Remote(PlanningVerkoop)
+	ThisWindow.KopieerView2Remote(Relatie)
+	ThisWindow.KopieerView2Remote(Relatie_Exact)
+	ThisWindow.KopieerFile2Remote(RelatieAdres)
+	!ThisWindow.KopieerFile2Remote(Sjabloon)
+	ThisWindow.KopieerFile2Remote(Transporteur)
+	ThisWindow.KopieerFile2Remote(Verkoop)
+	ThisWindow.KopieerFile2Remote(Verpakking)
+	ThisWindow.KopieerFile2Remote(Versie)
+	ThisWindow.KopieerView2Remote(ViewArtikel)
+	!ThisWindow.KopieerFile2Remote(ViewArtkel_Exact)
+	ThisWindow.KopieerView2Remote(Voorraadverloop)
+	ThisWindow.KopieerFile2Remote(Weging)
+END
+[END]
+WHEN '4'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+  _record &= pFile{PROP:Record}
+
+  BQ:Bestandsnaam=pFile{Prop:Name}
+  BQ:Records=0
+  BQ:Start=Clock()
+  Clear(_sqlFilter)
+!  IF Loc:KleineBackup
+!     Case pFile{Prop:Name}
+!     of BestelClient{Prop:Name} orof Bestelling{Prop:Name} orof BezorgMut{Prop:Name}  orof ComponentMut{Prop:Name} |
+!     orof ImportMutatie{Prop:Name}
+!        _sqlFilter='Datum_DATETIME >= <39>'&Year(Loc:Datum)&'-'&Month(Loc:Datum)&'-'&Day(Loc:Datum)&' 00:00:00.000<39>'
+!     END
+!  END
+
+  OPEN(pFile)
+  IF ERROR() THEN Stop(Error()&' bij het openen van de pFile').
+  BUFFER(pFile,100)
+  IF ERROR() THEN Stop(Error()&' bij het bufferen van de pFile').
+  Clear(pFile)
+  Set(pFile)
+  IF _sqlFilter THEN   pFile{Prop:Where}=_sqlFilter.
+  Loop
+      Next(pFile)
+      IF ERROR() THEN BREAK.
+      _Queue.Rec = _record
+      Add(_Queue)
+      BQ:Records+=1
+   !   IF BQ:Records>2000 THEN break.
+	End
+  CLOSE(pFile)
+pFile{PROP:Disconnect}
+BQ:Download=Clock()
+
+
+
+
+
+  pFile{Prop:Create}=TRUE
+  !pFile{PROP:ConnectString}=Loc:Connectie		! ipv prop:owner
+	!GLO:OWNER=Loc:Connectie
+	pFile{PROP:OWNER}='HAR-HP\SQLEXPRESS2008,[BACKUP],sa,@lb@tr0s'
+!	Message(pFile{PROP:ConnectString})
+  pFile{Prop:DriverString}='/BUSYHANDLING=2'
+  Create(pFile)
+ !IF ERROR() THEN Stop(Error()&' bij de create van de pFile').
+  Open(pFile)
+  IF ERROR() THEN Stop(Error()&' bij het openen van de pFile').
+  LOGOUT(.1,pFile)
+  IF ERROR() THEN Stop(Error()&' bij het logout  van de pFile').
+  Loop i#=1 to BQ:Records
+    GET(_Queue,i#)
+    _record = _Queue.Rec
+    IF ERROR() THEN BREAK.
+
+    Add(pFile)
+    IF ERRORCODE()=90 THEN Stop(FILEERROR()).
+  END
+  COMMIT
+  IF ERROR() THEN Stop(Error()&' bij de commit van de pFile').
+  CLOSE(pFile)
+  IF ERROR() THEN Stop(Error()&' bij de close van de pFile').
+  FREE(_Queue)
+
+  BQ:Klaar=Clock()
+  BQ:Duur=BQ:Klaar-BQ:Start
+  IF BQ:Duur=0 THEN
+      BQ:Gemiddeld=0
+  ELSE
+     BQ:Gemiddeld=BQ:Records/(BQ:Duur/100)
+  END
+  Add(BestandsQ)
+  DISPLAY()
+[END]
+WHEN '5'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+  BQ:Bestandsnaam=pFile{Prop:Name}
+  BQ:Records=0
+  BQ:Start=Clock()
+
+
+_tabelnaam = pFile{Prop:Name}
+IF instring('dbo.',_tabelnaam,1,1)
+	_tabelnaam = Sub(pFile{Prop:Name},5,LEN(pFile{Prop:Name}) - 4)
+END	
+
+_file &= NEW(FILE)
+_file{PROP:Driver} = 'MSSQL'
+!_file{Prop:OWNER}=GLO:OWNER
+_file{Prop:ConnectString}=GLO:OWNER
+_file{Prop:SQL} = 'SELECT m.definition FROM sys.sql_modules m, sys.views v  WHERE m.object_id = v.object_id AND v.name = <39>'&_tabelnaam& '<39>'
+IF ERRORCODE()=90 THEN Stop(FILEERROR()).
+FIXFORMAT(_file)
+IF ERROR() THEN Stop(Error()&' bij de fixformat').
+Next(_file)
+IF ERROR() THEN Stop(Error()&' bij de Next').
+_memogrp = _file{Prop:Text,-1}	
+_sqlstring = Clip(_memogrp.Text)
+DISPOSE(_file)
+IF ERROR() THEN Stop(Error()&' bij de Dispose').
+
+SETCLIPBOARD(_sqlstring)
+
+_view &= NEW(FILE)
+_view{PROP:Driver} = 'MSSQL'
+_view{Prop:OWNER}='HAR-HP\SQLEXPRESS2008,[BACKUP],sa,@lb@tr0s'
+_view{Prop:ConnectString}=Loc:Connectie
+_view{Prop:SQL} = _sqlString
+IF ERRORCODE()=90 or ERRORCODE() = 80 THEN Stop(FILEERROR()).
+FIXFORMAT(_view)
+IF ERROR() THEN Stop(Error()&' bij de fixformat').
+!_record &= _view{Prop:Record}		
+Next(_view)
+IF ERROR() THEN Stop(Error()&' bij de Next').
+
+DISPOSE(_view)
+IF ERROR() THEN Stop(Error()&' bij de DISPOSE').
+
+  BQ:Klaar=Clock()
+  BQ:Duur=BQ:Klaar-BQ:Start
+  IF BQ:Duur=0 THEN
+      BQ:Gemiddeld=0
+  ELSE
+     BQ:Gemiddeld=BQ:Records/(BQ:Duur/100)
+  END
+  Add(BestandsQ)
+  DISPLAY()
+[END]
+[END]
+[END]
+[END]
+EMBED %NewMethodDataSection
+[INSTANCES]
+WHEN ''
+[INSTANCES]
+WHEN 'Default'
+[INSTANCES]
+WHEN '2'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+SQLField                                ANY
+
+[END]
+WHEN '4'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+_record             &GROUP
+
+_Queue              Queue,PRE(_que)
+rec                  String(4096)
+                   END
+
+_sqlFilter          String(255)
+[END]
+WHEN '5'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+_file				&FILE
+_view				&FILE
+
+_sqlstring          String(4096)
+_tabelnaam           CString(255)
+
+_memogrp 			GROUP
+Text  					STRING(4096)
+					END	
+[END]
+[END]
+[END]
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Connect'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+    Loc:Conversie=1
+    0{Prop:Timer}=1
+[END]
+[END]
+[END]
+EMBED %WindowEventHandling
+[INSTANCES]
+WHEN 'Timer'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+ 0{Prop:Timer}=0                ! timer uitschakelen totdat procedure klaar is
+ IF Loc:Conversie<>0 AND Loc:Conversie<29
+    SetCursor(Cursor:Wait)
+    ThisWindow.Synchroniseer()
+    Loc:Conversie+=1
+    SetCursor()
+    0{Prop:Timer}=1             ! timer weer aanzetten
+  END
+[END]
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 2
+OWNER 4
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 1
+OWNER 2
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[WINDOW]
+Window  WINDOW('SQL Backup'),AT(,,419,334),FONT('MS Sans Serif',8,,FONT:regular),RESIZE,GRAY, |
+          MDI,SYSTEM,TIMER(1)
+          CHECK('Kleine Backup'),AT(11,7),USE(Loc:KleineBackup),SKIP,#ORIG(Loc:KleineBackup), |
+            #ORDINAL(1)
+          PROMPT('vanaf :'),AT(74,8),USE(?Loc:Datum:Prompt),#LINK(?Loc:Datum),#ORIG(?Loc:Datum:Prompt), |
+            #ORDINAL(2)
+          ENTRY(@d17),AT(99,8,60,10),USE(Loc:Datum),#LINK(?Loc:Datum:Prompt),#ORIG(Loc:Datum), |
+            #ORDINAL(3)
+          BUTTON('Connect'),AT(165,5,45,14),USE(?Connect),#ORIG(?Button1),#ORDINAL(4)
+          LIST,AT(13,25,376,290),USE(?List1),VSCROLL,FORMAT('131L(2)|M~Bestandsnaam~@s5' & |
+            '0@44R(2)|M~Records~@n-14@32R(2)|M~Start~@t4@41R(2)|M~Download~@t4@32R(2)|M' & |
+            '~Klaar~@t4@32R(2)|M~Duur~@t4@56R(2)|M~Gemiddeld~@n-14@'),FROM(BestandsQ),#FIELDS(BQ:Bestandsnaam, |
+            BQ:Records,BQ:Start,BQ:Download,BQ:Klaar,BQ:Duur,BQ:Gemiddeld),#ORIG(?List1),#ORDINAL(5)
+        END
+
+[END]

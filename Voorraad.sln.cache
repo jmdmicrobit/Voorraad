@@ -1,0 +1,355 @@
+﻿<Project DefaultTargets="Build" ToolsVersion="4.0" InitialTargets="ValidateSolutionConfiguration;ValidateToolsVersions" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_SolutionProjectConfiguration>Release|Win32</_SolutionProjectConfiguration>
+    <_SolutionProjectToolsVersion>4.0</_SolutionProjectToolsVersion>
+    <_SolutionProjectCacheVersion>4.0</_SolutionProjectCacheVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <_SolutionProjectProjects Include="Voorraad.cwproj" />
+    <_SolutionProjectProjects Include="VoorrDct.cwproj" />
+    <_SolutionProjectProjects Include="VoorrPln.cwproj" />
+    <_SolutionProjectProjects Include="VoorrRpt.cwproj" />
+    <_SolutionProjectProjects Include="VoorrStm.cwproj" />
+    <_SolutionProjectProjects Include="VoorrVrd.cwproj" />
+  </ItemGroup>
+  <ItemGroup Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+    <BuildLevel2 Include="Voorraad.cwproj">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel2>
+    <BuildLevel2 Include="VoorrPln.cwproj">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel2>
+    <BuildLevel0 Include="VoorrDct.cwproj">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel0>
+    <BuildLevel1 Include="VoorrRpt.cwproj">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel1>
+    <BuildLevel1 Include="VoorrStm.cwproj">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel1>
+    <BuildLevel3 Include="VoorrVrd.cwproj">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel3>
+  </ItemGroup>
+  <ItemGroup Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+    <BuildLevel2 Include="Voorraad.cwproj">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel2>
+    <BuildLevel2 Include="VoorrPln.cwproj">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel2>
+    <BuildLevel0 Include="VoorrDct.cwproj">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel0>
+    <BuildLevel1 Include="VoorrRpt.cwproj">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel1>
+    <BuildLevel1 Include="VoorrStm.cwproj">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel1>
+    <BuildLevel3 Include="VoorrVrd.cwproj">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </BuildLevel3>
+  </ItemGroup>
+  <UsingTask TaskName="Microsoft.Build.Tasks.CreateTemporaryVCProject" AssemblyName="Microsoft.Build.Tasks.v3.5, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <UsingTask TaskName="Microsoft.Build.Tasks.ResolveVCProjectOutput" AssemblyName="Microsoft.Build.Tasks.v3.5, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <PropertyGroup Condition=" '$(Configuration)' == '' ">
+    <Configuration>Debug</Configuration>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == '' ">
+    <Platform>Win32</Platform>
+  </PropertyGroup>
+  <PropertyGroup Condition=" ('$(AspNetConfiguration)' == '') ">
+    <AspNetConfiguration>$(Configuration)</AspNetConfiguration>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SolutionDir>C:\maatwerk\C10\Voorraad\</SolutionDir>
+    <SolutionExt>.sln</SolutionExt>
+    <SolutionFileName>Voorraad.sln</SolutionFileName>
+    <SolutionName>Voorraad</SolutionName>
+    <SolutionPath>C:\maatwerk\C10\Voorraad\Voorraad.sln</SolutionPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == '' and '$(MSBuildToolsVersion)' == '2.0'">v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == '' and ('$(MSBuildToolsVersion)' == '3.5' or '$(MSBuildToolsVersion)' == '3.0')">v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion Condition="'$(TargetFrameworkVersion)' == '' and '$(MSBuildToolsVersion)' == '4.0'">v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+    <CurrentSolutionConfigurationContents>
+      <SolutionConfiguration xmlns="">
+        <ProjectConfiguration Project="{8C764373-77A4-4ABC-A801-F954205CAD84}">Debug|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{148B4D9D-7E61-422E-B76E-8034DAC73042}">Debug|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}">Debug|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}">Debug|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{9A0BC9CB-5F3D-411C-840C-EC207496F394}">Debug|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{53C4F69C-F6D0-4557-89A7-29D4CF499522}">Debug|Win32</ProjectConfiguration>
+      </SolutionConfiguration>
+    </CurrentSolutionConfigurationContents>
+  </PropertyGroup>
+  <PropertyGroup Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+    <CurrentSolutionConfigurationContents>
+      <SolutionConfiguration xmlns="">
+        <ProjectConfiguration Project="{8C764373-77A4-4ABC-A801-F954205CAD84}">Release|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{148B4D9D-7E61-422E-B76E-8034DAC73042}">Release|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}">Release|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}">Release|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{9A0BC9CB-5F3D-411C-840C-EC207496F394}">Release|Win32</ProjectConfiguration>
+        <ProjectConfiguration Project="{53C4F69C-F6D0-4557-89A7-29D4CF499522}">Release|Win32</ProjectConfiguration>
+      </SolutionConfiguration>
+    </CurrentSolutionConfigurationContents>
+  </PropertyGroup>
+  <Target Name="ValidateSolutionConfiguration">
+    <Error Text="de opgegeven oplossingsconfiguratie $(Configuration)|$(Platform) is ongeldig. Geef een geldige oplossingsconfiguratie op met behulp van de eigenschappen Configuration en Platform (bijvoorbeeld, MSBuild.exe Solution.sln /p:Configuration=Debug /p:Platform=&quot;Any CPU&quot;) of laat die eigenschappen leeg om de standaardoplossingsconfiguratie te gebruiken." Code="MSB4126" HelpKeyword="MSBuild.SolutionInvalidSolutionConfiguration" Condition="('$(CurrentSolutionConfigurationContents)' == '') and ('$(SkipInvalidConfigurations)' != 'true')" />
+    <Warning Text="de opgegeven oplossingsconfiguratie $(Configuration)|$(Platform) is ongeldig. Geef een geldige oplossingsconfiguratie op met behulp van de eigenschappen Configuration en Platform (bijvoorbeeld, MSBuild.exe Solution.sln /p:Configuration=Debug /p:Platform=&quot;Any CPU&quot;) of laat die eigenschappen leeg om de standaardoplossingsconfiguratie te gebruiken." Code="MSB4126" HelpKeyword="MSBuild.SolutionInvalidSolutionConfiguration" Condition="('$(CurrentSolutionConfigurationContents)' == '') and ('$(SkipInvalidConfigurations)' == 'true')" />
+    <Message Text="Oplossingsconfiguratie $(Configuration)|$(Platform) wordt opgebouwd." Condition="'$(CurrentSolutionConfigurationContents)' != ''" />
+  </Target>
+  <Target Name="ValidateToolsVersions">
+    <Error Text="de hulpprogrammaversie $(MSBuildToolsVersion) van de oplossing biedt geen ondersteuning voor het bouwen van projecten met een afwijkende hulpprogrammaversie." Code="MSB4149" HelpKeyword="MSBuild.SolutionToolsVersionDoesNotSupportProjectToolsVersion" Condition="'$(MSBuildToolsVersion)' == '2.0' and ('$(ProjectToolsVersion)' != '2.0' and '$(ProjectToolsVersion)' != '')" />
+  </Target>
+  <Target Name="Voorraad" DependsOnTargets="VoorrDct;VoorrRpt;VoorrStm" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorraadBuildOutput)">
+    <MSBuild Projects="Voorraad.cwproj" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorraadBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="Voorraad.cwproj" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorraadBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="Voorraad:Clean" DependsOnTargets="VoorrDct:Clean;VoorrRpt:Clean;VoorrStm:Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="Voorraad.cwproj" Targets="Clean" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="Voorraad.cwproj" Targets="Clean" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="Voorraad:Rebuild" DependsOnTargets="VoorrDct:Rebuild;VoorrRpt:Rebuild;VoorrStm:Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorraadBuildOutput)">
+    <MSBuild Projects="Voorraad.cwproj" Targets="Rebuild" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorraadBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="Voorraad.cwproj" Targets="Rebuild" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorraadBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="Voorraad:Publish" DependsOnTargets="VoorrDct:Publish;VoorrRpt:Publish;VoorrStm:Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="Voorraad.cwproj" Targets="Publish" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="Voorraad.cwproj" Targets="Publish" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrDct" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrDctBuildOutput)">
+    <MSBuild Projects="VoorrDct.cwproj" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrDctBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrDct.cwproj" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrDctBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrDct:Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrDct.cwproj" Targets="Clean" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrDct.cwproj" Targets="Clean" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrDct:Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrDctBuildOutput)">
+    <MSBuild Projects="VoorrDct.cwproj" Targets="Rebuild" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrDctBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrDct.cwproj" Targets="Rebuild" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrDctBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrDct:Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrDct.cwproj" Targets="Publish" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrDct.cwproj" Targets="Publish" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrStm" DependsOnTargets="VoorrDct" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrStmBuildOutput)">
+    <MSBuild Projects="VoorrStm.cwproj" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrStmBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrStm.cwproj" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrStmBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrStm:Clean" DependsOnTargets="VoorrDct:Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrStm.cwproj" Targets="Clean" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrStm.cwproj" Targets="Clean" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrStm:Rebuild" DependsOnTargets="VoorrDct:Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrStmBuildOutput)">
+    <MSBuild Projects="VoorrStm.cwproj" Targets="Rebuild" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrStmBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrStm.cwproj" Targets="Rebuild" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrStmBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrStm:Publish" DependsOnTargets="VoorrDct:Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrStm.cwproj" Targets="Publish" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrStm.cwproj" Targets="Publish" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrRpt" DependsOnTargets="VoorrDct" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrRptBuildOutput)">
+    <MSBuild Projects="VoorrRpt.cwproj" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrRptBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrRpt.cwproj" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrRptBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrRpt:Clean" DependsOnTargets="VoorrDct:Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrRpt.cwproj" Targets="Clean" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrRpt.cwproj" Targets="Clean" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrRpt:Rebuild" DependsOnTargets="VoorrDct:Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrRptBuildOutput)">
+    <MSBuild Projects="VoorrRpt.cwproj" Targets="Rebuild" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrRptBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrRpt.cwproj" Targets="Rebuild" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrRptBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrRpt:Publish" DependsOnTargets="VoorrDct:Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrRpt.cwproj" Targets="Publish" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrRpt.cwproj" Targets="Publish" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrPln" DependsOnTargets="VoorrDct;VoorrRpt;VoorrStm" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrPlnBuildOutput)">
+    <MSBuild Projects="VoorrPln.cwproj" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrPlnBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrPln.cwproj" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrPlnBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrPln:Clean" DependsOnTargets="VoorrDct:Clean;VoorrRpt:Clean;VoorrStm:Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrPln.cwproj" Targets="Clean" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrPln.cwproj" Targets="Clean" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrPln:Rebuild" DependsOnTargets="VoorrDct:Rebuild;VoorrRpt:Rebuild;VoorrStm:Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrPlnBuildOutput)">
+    <MSBuild Projects="VoorrPln.cwproj" Targets="Rebuild" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrPlnBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrPln.cwproj" Targets="Rebuild" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrPlnBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrPln:Publish" DependsOnTargets="VoorrDct:Publish;VoorrRpt:Publish;VoorrStm:Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrPln.cwproj" Targets="Publish" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrPln.cwproj" Targets="Publish" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrVrd" DependsOnTargets="VoorrDct;VoorrPln;VoorrRpt;VoorrStm" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrVrdBuildOutput)">
+    <MSBuild Projects="VoorrVrd.cwproj" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrVrdBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrVrd.cwproj" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrVrdBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrVrd:Clean" DependsOnTargets="VoorrDct:Clean;VoorrPln:Clean;VoorrRpt:Clean;VoorrStm:Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrVrd.cwproj" Targets="Clean" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrVrd.cwproj" Targets="Clean" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="VoorrVrd:Rebuild" DependsOnTargets="VoorrDct:Rebuild;VoorrPln:Rebuild;VoorrRpt:Rebuild;VoorrStm:Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(VoorrVrdBuildOutput)">
+    <MSBuild Projects="VoorrVrd.cwproj" Targets="Rebuild" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrVrdBuildOutput" />
+    </MSBuild>
+    <MSBuild Projects="VoorrVrd.cwproj" Targets="Rebuild" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') ">
+      <Output TaskParameter="TargetOutputs" ItemName="VoorrVrdBuildOutput" />
+    </MSBuild>
+  </Target>
+  <Target Name="VoorrVrd:Publish" DependsOnTargets="VoorrDct:Publish;VoorrPln:Publish;VoorrRpt:Publish;VoorrStm:Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Projects="VoorrVrd.cwproj" Targets="Publish" Properties="Configuration=Debug; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Debug') and ('$(Platform)' == 'Win32') " />
+    <MSBuild Projects="VoorrVrd.cwproj" Targets="Publish" Properties="Configuration=Release; Platform=Win32; BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" Condition=" ('$(Configuration)' == 'Release') and ('$(Platform)' == 'Win32') " />
+  </Target>
+  <Target Name="Build" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(CollectedBuildOutput)">
+    <MSBuild Condition="@(BuildLevel0) != ''" Projects="@(BuildLevel0)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel0.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel0) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel0.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel0) != ''" />
+    <CallTarget Targets="VoorrDct" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel1) != ''" Projects="@(BuildLevel1)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel1.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel1) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel1.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel1) != ''" />
+    <CallTarget Targets="VoorrRpt;VoorrStm" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel2) != ''" Projects="@(BuildLevel2)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel2.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel2) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel2.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel2) != ''" />
+    <CallTarget Targets="Voorraad;VoorrPln" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel3) != ''" Projects="@(BuildLevel3)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel3.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel3) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel3.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel3) != ''" />
+    <CallTarget Targets="VoorrVrd" RunEachTargetSeparately="true" />
+  </Target>
+  <Target Name="Clean" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Condition="@(BuildLevel0) != ''" Projects="@(BuildLevel0)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Clean" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel0.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel0) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel0.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel0) != ''" />
+    <CallTarget Targets="VoorrDct:Clean" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel1) != ''" Projects="@(BuildLevel1)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Clean" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel1.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel1) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel1.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel1) != ''" />
+    <CallTarget Targets="VoorrRpt:Clean;VoorrStm:Clean" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel2) != ''" Projects="@(BuildLevel2)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Clean" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel2.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel2) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel2.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel2) != ''" />
+    <CallTarget Targets="Voorraad:Clean;VoorrPln:Clean" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel3) != ''" Projects="@(BuildLevel3)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Clean" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel3.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel3) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel3.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel3) != ''" />
+    <CallTarget Targets="VoorrVrd:Clean" RunEachTargetSeparately="true" />
+    <Delete Files="Voorraad.sln.cache" />
+  </Target>
+  <Target Name="Rebuild" Condition="'$(CurrentSolutionConfigurationContents)' != ''" Outputs="@(CollectedBuildOutput)">
+    <MSBuild Condition="@(BuildLevel0) != ''" Projects="@(BuildLevel0)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Rebuild" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel0.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel0) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel0.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel0) != ''" />
+    <CallTarget Targets="VoorrDct:Rebuild" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel1) != ''" Projects="@(BuildLevel1)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Rebuild" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel1.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel1) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel1.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel1) != ''" />
+    <CallTarget Targets="VoorrRpt:Rebuild;VoorrStm:Rebuild" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel2) != ''" Projects="@(BuildLevel2)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Rebuild" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel2.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel2) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel2.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel2) != ''" />
+    <CallTarget Targets="Voorraad:Rebuild;VoorrPln:Rebuild" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel3) != ''" Projects="@(BuildLevel3)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Rebuild" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)">
+      <Output TaskParameter="TargetOutputs" ItemName="CollectedBuildOutput" />
+    </MSBuild>
+    <Message Text="Het project %(SkipLevel3.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel3) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel3.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel3) != ''" />
+    <CallTarget Targets="VoorrVrd:Rebuild" RunEachTargetSeparately="true" />
+  </Target>
+  <Target Name="Publish" Condition="'$(CurrentSolutionConfigurationContents)' != ''">
+    <MSBuild Condition="@(BuildLevel0) != ''" Projects="@(BuildLevel0)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Publish" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel0.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel0) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel0.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel0) != ''" />
+    <CallTarget Targets="VoorrDct:Publish" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel1) != ''" Projects="@(BuildLevel1)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Publish" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel1.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel1) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel1.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel1) != ''" />
+    <CallTarget Targets="VoorrRpt:Publish;VoorrStm:Publish" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel2) != ''" Projects="@(BuildLevel2)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Publish" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel2.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel2) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel2.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel2) != ''" />
+    <CallTarget Targets="Voorraad:Publish;VoorrPln:Publish" RunEachTargetSeparately="true" />
+    <MSBuild Condition="@(BuildLevel3) != ''" Projects="@(BuildLevel3)" Properties="Configuration=%(Configuration); Platform=%(Platform); BuildingSolutionFile=true; CurrentSolutionConfigurationContents=$(CurrentSolutionConfigurationContents); SolutionDir=$(SolutionDir); SolutionExt=$(SolutionExt); SolutionFileName=$(SolutionFileName); SolutionName=$(SolutionName); SolutionPath=$(SolutionPath)" Targets="Publish" ToolsVersion="$(ProjectToolsVersion)" BuildInParallel="true" UnloadProjectsOnCompletion="$(UnloadProjectsOnCompletion)" UseResultsCache="$(UseResultsCache)" />
+    <Message Text="Het project %(SkipLevel3.Identity) is niet geselecteerd voor opbouw in oplossingsconfiguratie $(Configuration)|$(Platform)." Condition="@(SkipLevel3) != ''" />
+    <Warning Text="de projectconfiguratie voor project %(MissingConfigLevel3.Identity) is niet opgegeven in het oplossingsbestand voor de oplossingsconfiguratie $(Configuration)|$(Platform)." Code="MSB4121" HelpKeyword="MSBuild.SolutionProjectConfigurationMissing" Condition="@(MissingConfigLevel3) != ''" />
+    <CallTarget Targets="VoorrVrd:Publish" RunEachTargetSeparately="true" />
+  </Target>
+</Project>

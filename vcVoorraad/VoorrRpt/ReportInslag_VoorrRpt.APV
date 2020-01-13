@@ -1,0 +1,2563 @@
+[MODULE]
+NAME 'ReportInslag_VoorrRpt.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME ReportInslag
+[COMMON]
+FROM ABC Report
+[DATA]
+Progress:Thermometer     BYTE
+!!> GUID('83386a95-bd77-4f91-bb56-4550de9428df')
+[SCREENCONTROLS]
+! PROMPT('LOC : Inslag QAT ransportmiddel Schoon:'),USE(?LOC:InslagQATransportmiddelSchoon:Prompt)
+! ENTRY(@s5),USE(LOC:InslagQATransportmiddelSchoon)
+[REPORTCONTROLS]
+! STRING(@s5),USE(LOC:InslagQATransportmiddelSchoon)
+LOC:InslagQATransportmiddelSchoon STRING(5)
+!!> GUID('cc6d0af5-a21e-4861-9d45-8096de287f1d'),PROMPT('LOC : Inslag QAT ransportmiddel Schoon:'),HEADER('LOC : Inslag QAT ransportmiddel Schoon'),PICTURE(@s5),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Inslag QAV erpakking Schoon Gesloten:'),USE(?LOC:InslagQAVerpakkingSchoonGesloten:Prompt)
+! ENTRY(@s5),USE(LOC:InslagQAVerpakkingSchoonGesloten)
+[REPORTCONTROLS]
+! STRING(@s5),USE(LOC:InslagQAVerpakkingSchoonGesloten)
+LOC:InslagQAVerpakkingSchoonGesloten STRING(5)
+!!> GUID('2cbbb069-7fa4-4f0c-a827-3f2cf6b6f7e1'),PROMPT('LOC : Inslag QAV erpakking Schoon Gesloten:'),HEADER('LOC : Inslag QAV erpakking Schoon Gesloten'),PICTURE(@s5),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Inslag QAI dentificatie Merken Verpakking:'),USE(?LOC:InslagQAIdentificatieMerkenVerpakking:Prompt)
+! ENTRY(@s5),USE(LOC:InslagQAIdentificatieMerkenVerpakking)
+[REPORTCONTROLS]
+! STRING(@s5),USE(LOC:InslagQAIdentificatieMerkenVerpakking)
+LOC:InslagQAIdentificatieMerkenVerpakking STRING(5)
+!!> GUID('2b409dba-f3d7-4e4b-95c9-285e2d13df8e'),PROMPT('LOC : Inslag QAI dentificatie Merken Verpakking:'),HEADER('LOC : Inslag QAI dentificatie Merken Verpakking'),PICTURE(@s5),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Inslag QA isgeurkleuproducteigen:'),USE(?Loc:InslagQAisgeurkleuproducteigen:Prompt)
+! ENTRY(@s5),USE(Loc:InslagQAisgeurkleuproducteigen)
+[REPORTCONTROLS]
+! STRING(@s5),USE(Loc:InslagQAisgeurkleuproducteigen)
+Loc:InslagQAisgeurkleuproducteigen STRING(5)
+!!> GUID('ea9fef07-8e1e-47c2-95a2-f5f321f58853'),PROMPT('Loc : Inslag QA isgeurkleuproducteigen:'),HEADER('Loc : Inslag QA isgeurkleuproducteigen'),PICTURE(@s5),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Inslag QAG een Glasbreuk:'),USE(?Loc:InslagQAGeenGlasbreuk:Prompt)
+! ENTRY(@s5),USE(Loc:InslagQAGeenGlasbreuk)
+[REPORTCONTROLS]
+! STRING(@s5),USE(Loc:InslagQAGeenGlasbreuk)
+Loc:InslagQAGeenGlasbreuk STRING(5)
+!!> GUID('31c898bf-9e81-41df-8377-f4ec85eaeb2a'),PROMPT('Loc : Inslag QAG een Glasbreuk:'),HEADER('Loc : Inslag QAG een Glasbreuk'),PICTURE(@s5),TYPEMODE(INS)
+Loc:SavePath             STRING(255)
+!!> GUID('c2232b3a-3d7c-424a-93cf-edaf8c11110e')
+Loc:TMPDirectory         STRING(255)
+!!> GUID('9a2f859d-254f-4d30-afb9-4d4ae9a5cc42')
+Loc:Commando             CSTRING(10000)
+!!> GUID('60e0816a-2cff-40b3-afe1-d7ede8f22621')
+Loc:TmpAtt               STRING(255)
+!!> GUID('4fe506b7-7b16-4b8c-a105-2b6516509e51')
+Loc:Landscape            BYTE
+!!> GUID('9df1bf49-49ad-4bb9-848d-195ef4dc0fdf')
+Loc:LandscapeOverride    BYTE
+!!> GUID('6b3535e8-cf8a-4819-8d17-c893cd0c97fb')
+Loc:MailButtonID         LONG
+!!> GUID('b8e1d15d-7a89-4807-a82e-44ec7670bd4d')
+[FILES]
+[PRIMARY]
+Partij
+[INSTANCE]
+0
+[KEY]
+Par:Partij_PK
+[SECONDARY]
+Verpakking Partij
+Relatie Partij
+Cel Partij
+ViewArtikel Partij
+[OTHERS]
+ACel
+Mutatie
+[PROMPTS]
+%RangeLimitType DEFAULT  ('Current Value')
+%ClassItem UNIQUE DEFAULT  ('BreakMgr', 'Default', 'Previewer', 'Process', 'ProgressMgr', |
+  'TargetSelector', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakManagerClass')
+WHEN  ('Default') ('ReportManager')
+WHEN  ('Previewer') ('PrintPreviewClass')
+WHEN  ('Process') ('ProcessClass')
+WHEN  ('ProgressMgr') ('StepClass')
+WHEN  ('TargetSelector') ('ReportTargetSelectorClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('')
+WHEN  ('Default') ('')
+WHEN  ('Previewer') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('StepLongClass')
+WHEN  ('TargetSelector') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 3
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Init {19}PROCEDURE(ProcessClass PC,<<REPORT R>,<<PrintPreviewClass PV>)', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'OpenReport {13}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+WHEN  ('Previewer') ('Open {19}PROCEDURE(),DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED')
+WHEN  ('Process') ('TakeRecord {13}PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('NO')
+WHEN  ('Default') ('NO')
+WHEN  ('Previewer') ('NO')
+WHEN  ('Process') ('NO')
+WHEN  ('ProgressMgr') ('NO')
+WHEN  ('TargetSelector') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 6
+WHEN  ('BreakMgr') ('BreakMgr')
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('Previewer') ('Previewer')
+WHEN  ('Process') ('ThisReport')
+WHEN  ('ProgressMgr') ('ProgressMgr')
+WHEN  ('TargetSelector') ('TargetSelector')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (1)
+WHEN  ('Default') (1)
+WHEN  ('Previewer') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('TargetSelector') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 7
+WHEN  ('BreakMgr') ('ADOBlob')
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('Previewer') ('ADOBlob')
+WHEN  ('Process') ('ADOBlob')
+WHEN  ('ProgressMgr') ('ADOBlob')
+WHEN  ('TargetSelector') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 7
+WHEN  ('BreakMgr') (0)
+WHEN  ('Default') (0)
+WHEN  ('Previewer') (0)
+WHEN  ('Process') (0)
+WHEN  ('ProgressMgr') (0)
+WHEN  ('TargetSelector') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 3
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 3
+WHEN  ('BreakMgr')TIMES 0
+WHEN  ('Previewer')TIMES 0
+WHEN  ('TargetSelector')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%WindowMessage DEFAULT  ('')
+%ReportTargetList MULTI LONG  (1)
+%ReportTargetListName DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDF')
+
+%ReportTargetListClass DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDFReportGenerator')
+
+%ReportTargetListObject DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('PDFReporter')
+
+%ReportTargetListCondition DEPEND %ReportTargetList DEFAULT TIMES 1
+WHEN  (1) ('')
+
+%ReportTargetHiddenControls MULTI LONG  ()
+%ReportTargetHiddenControl DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%ReportTargetHiddenControlTemplate DEPEND %ReportTargetHiddenControls DEFAULT TIMES 0
+
+%EnablePrintPreview LONG  (1)
+%ReportDataSource DEFAULT  ('File')
+%MDIProgressWindow LONG  (0)
+%ProgressInterval DEFAULT  ('10')
+%EnableQuickScan LONG  (1)
+%RecordFilter DEFAULT  ('')
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%AddConditionalSort MULTI LONG  ()
+%AddConditionalSortCondition DEPEND %AddConditionalSort DEFAULT TIMES 0
+
+%AddConditionalSortFieldsAssisted DEPEND %AddConditionalSort MULTI LONG TIMES 0
+
+%AddConditionalSortFieldAssisted DEPEND %AddConditionalSortFieldsAssisted FIELD TIMES 0
+
+%AddConditionalSortFieldAssistedOrder DEPEND %AddConditionalSortFieldsAssisted DEFAULT TIMES 0
+
+%AddSortDynamicNamed MULTI LONG  ()
+%AddSortFieldDinNameDescription DEPEND %AddSortDynamicNamed DEFAULT TIMES 0
+
+%AddSortFieldsDinName DEPEND %AddSortDynamicNamed MULTI LONG TIMES 0
+
+%AddSortFieldDinName DEPEND %AddSortFieldsDinName FIELD TIMES 0
+
+%AddSortFieldDinNameOrder DEPEND %AddSortFieldsDinName DEFAULT TIMES 0
+
+%AddSortFieldsDinSort MULTI LONG  ()
+%AddSortFieldDinSortDescription DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AddSortFieldDinSort DEPEND %AddSortFieldsDinSort FIELD TIMES 0
+
+%AddSortFieldDinSortOrder DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AdditionalSortWindowTitle DEFAULT  ('Select the Order')
+%AdditionalSortWindowMessage DEFAULT  ('Select the order to process the data.')
+%AdditionalSortWindowOkButtonText DEFAULT  ('&OK')
+%AdditionalSortWindowOkButtonIcon DEFAULT  ('SOK.ICO')
+%AdditionalSortWindowOkButtonCursor DEFAULT  ('')
+%AdditionalSortWindowOkButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowOkButtonMsg DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonTip DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonFlat LONG  (1)
+%AdditionalSortWindowOkButtonSkip LONG  (0)
+%AdditionalSortWindowOkButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowCancelButtonText DEFAULT  ('&Cancel')
+%AdditionalSortWindowCancelButtonIcon DEFAULT  ('SCANCEL.ICO')
+%AdditionalSortWindowCancelButtonCursor DEFAULT  ('')
+%AdditionalSortWindowCancelButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowCancelButtonMsg DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonTip DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonFlat LONG  (1)
+%AdditionalSortWindowCancelButtonSkip LONG  (0)
+%AdditionalSortWindowCancelButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowUpButtonText DEFAULT  ('')
+%AdditionalSortWindowUpButtonIcon DEFAULT  ('SUP.ICO')
+%AdditionalSortWindowUpButtonCursor DEFAULT  ('')
+%AdditionalSortWindowUpButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowUpButtonMsg DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonTip DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonFlat LONG  (1)
+%AdditionalSortWindowUpButtonSkip LONG  (0)
+%AdditionalSortWindowUpButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowDownButtonText DEFAULT  ('')
+%AdditionalSortWindowDownButtonIcon DEFAULT  ('SDOWN.ICO')
+%AdditionalSortWindowDownButtonCursor DEFAULT  ('')
+%AdditionalSortWindowDownButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowDownButtonMsg DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonTip DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonFlat LONG  (1)
+%AdditionalSortWindowDownButtonSkip LONG  (0)
+%AdditionalSortWindowDownButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowChOrdButtonText DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonIcon DEFAULT  ('SCH-ORD.ICO')
+%AdditionalSortWindowChOrdButtonCursor DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonMsg DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonTip DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonFlat LONG  (1)
+%AdditionalSortWindowChOrdButtonSkip LONG  (0)
+%AdditionalSortWindowChOrdButtonJustification DEFAULT  ('Left')
+%ApproxRecordCount DEFAULT  ('')
+%ManuallySetProgressLimits LONG  (0)
+%LowLimit DEFAULT  ('')
+%HighLimit DEFAULT  ('')
+%ReportDataSourceQueueName DEFAULT  ('')
+%UseMRP LONG  (1)
+%ReportTargetOutput DEFAULT  ('Printer')
+%ReportTargetAskWithPrint LONG  (1)
+%ReportTargetOtherOutput DEFAULT  ('')
+%RangeField COMPONENT  (Par:PartijID)
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%RuntimeSkipPreview DEFAULT  ('False')
+%InitialZoom DEFAULT  ('No Zoom')
+%AllowUserZooms LONG  (1)
+%InitWindowPosition LONG  (0)
+%WinXPos DEFAULT  ('')
+%WinYPos DEFAULT  ('')
+%WinWidth DEFAULT  ('315')
+%WinHeight DEFAULT  ('200')
+%MaximizePreviewWindow LONG  (0)
+%MDIPreviewer LONG  (0)
+%ProcessBreaks MULTI LONG  ()
+%BreakName DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakLevelCero DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevelBreakNumber DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakLevel DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakFields DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakField DEPEND %BreakFields FIELD TIMES 0
+
+%BreakTotals DEPEND %ProcessBreaks MULTI LONG TIMES 0
+
+%BreakTotalTarget DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalType DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalField DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalFieldWeight DEPEND %BreakTotals FIELD TIMES 0
+
+%BreakTotalBasedOn DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalCondition DEPEND %BreakTotals DEFAULT TIMES 0
+
+%BreakTotalReset DEPEND %BreakTotals LONG TIMES 0
+
+%BreakReportHeaderYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportHeader DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%BreakReportFooterYes DEPEND %ProcessBreaks LONG TIMES 0
+
+%BreakReportFooter DEPEND %ProcessBreaks DEFAULT TIMES 0
+
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldRestoreOnBreak DEPEND %HotFields LONG TIMES 0
+
+%DetailFilter DEPEND %ReportControl DEFAULT TIMES 0
+
+%DetailFilterExclusive DEPEND %ReportControl LONG TIMES 0
+
+%DetailFilterExternal DEPEND %ReportControl DEFAULT TIMES 66
+WHEN  ('') ('')
+WHEN  ('?ACel:CelOms') ('')
+WHEN  ('?Art:ArtikelID') ('')
+WHEN  ('?Art:ArtikelOms') ('')
+WHEN  ('?DETAIL1') ('')
+WHEN  ('?DETAIL2') ('')
+WHEN  ('?DETAIL3') ('')
+WHEN  ('?DETAIL4') ('')
+WHEN  ('?DETAIL5') ('')
+WHEN  ('?Detail') ('')
+WHEN  ('?Footer') ('')
+WHEN  ('?Form') ('')
+WHEN  ('?Header') ('')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('')
+WHEN  ('?Mut:InslagKG:2') ('')
+WHEN  ('?Mut:InslagPallet:3') ('')
+WHEN  ('?Par:AanmaakDatum_DATE') ('')
+WHEN  ('?Par:AanmaakDatum_TIME') ('')
+WHEN  ('?Par:Afgehandeld') ('')
+WHEN  ('?Par:CorrectieveMaatregel') ('')
+WHEN  ('?Par:CorrigerendeMaatregel') ('')
+WHEN  ('?Par:ExternPartijnr') ('')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('')
+WHEN  ('?Par:InslagQATemperatuur1') ('')
+WHEN  ('?Par:InslagQATemperatuur2') ('')
+WHEN  ('?Par:InslagQATemperatuur3') ('')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('')
+WHEN  ('?Par:KG') ('')
+WHEN  ('?Par:Pallets') ('')
+WHEN  ('?Par:PartijID') ('')
+WHEN  ('?Par:Referentie') ('')
+WHEN  ('?Rel:FirmaNaam') ('')
+WHEN  ('?ReportDatePrompt') ('')
+WHEN  ('?ReportDateStamp') ('')
+WHEN  ('?ReportTimeStamp') ('')
+WHEN  ('?STRING1') ('')
+WHEN  ('?STRING10') ('')
+WHEN  ('?STRING11') ('')
+WHEN  ('?STRING12') ('')
+WHEN  ('?STRING13') ('')
+WHEN  ('?STRING14') ('')
+WHEN  ('?STRING15') ('')
+WHEN  ('?STRING15:2') ('')
+WHEN  ('?STRING15:3') ('')
+WHEN  ('?STRING15:4') ('')
+WHEN  ('?STRING15:5') ('')
+WHEN  ('?STRING15:6') ('')
+WHEN  ('?STRING16') ('')
+WHEN  ('?STRING16:2') ('')
+WHEN  ('?STRING16:3') ('')
+WHEN  ('?STRING17') ('')
+WHEN  ('?STRING2') ('')
+WHEN  ('?STRING3') ('')
+WHEN  ('?STRING4') ('')
+WHEN  ('?STRING5') ('')
+WHEN  ('?STRING5:2') ('')
+WHEN  ('?STRING6') ('')
+WHEN  ('?STRING7') ('')
+WHEN  ('?STRING8') ('')
+WHEN  ('?STRING9') ('')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('')
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Default')
+WHEN  ('?Progress:Cancel') ('Default')
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('No Special Action')
+WHEN  ('?Progress:Cancel') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('25000')
+WHEN  ('?Progress:Cancel') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('None')
+WHEN  ('?Progress:Cancel') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 2
+WHEN  ('') (1)
+WHEN  ('?Progress:Cancel') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FirstPage DEFAULT  ('')
+%ReportTargetOpen LONG  (0)
+%HideOutputProgress LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Progress:Thermometer')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %ProcessManagerMethodCodeSection
+[INSTANCES]
+WHEN 'TakeRecord'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5500
+PROPERTY:END
+IF false THEN
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8000
+PROPERTY:END
+END
+
+PRINT(RPT:Detail)
+
+Clear(Mut:Record)
+Mut:PartijID = Par:PartijID
+SET(Mut:Mutatie_FK01, Mut:Mutatie_FK01)
+LOOP
+    db.DebugOut('ReportInslag:' & Mut:PartijID & '-' & Mut:SoortMutatie)
+    IF NOT(Access:Mutatie.TryNext() = Level:Benign) THEN BREAK.
+    IF NOT(Mut:PartijID = Par:PartijID) THEN BREAK.
+
+    IF Mut:SoortMutatie = 'IN' THEN
+        CLEAR(ACel:Record)
+        ACel:CelID = Mut:CelID
+        Access:ACel.TryFetch(ACel.CEL_PK)
+
+        PRINT(RPT:MutatieDetail)
+    .
+.
+
+IF Par:InslagQATransportmiddelSchoon THEN
+    LOC:InslagQATransportmiddelSchoon = 'JA'
+ELSE
+    LOC:InslagQATransportmiddelSchoon = 'NEE'
+END
+
+IF Par:InslagQAVerpakkingSchoonGesloten THEN
+    LOC:InslagQAVerpakkingSchoonGesloten = 'JA'
+ELSE
+    LOC:InslagQAVerpakkingSchoonGesloten = 'NEE'
+END
+
+IF Par:InslagQAIdentificatieMerkenVerpakking THEN
+    LOC:InslagQAIdentificatieMerkenVerpakking = 'JA'
+ELSE
+    LOC:InslagQAIdentificatieMerkenVerpakking = 'NEE'
+END
+
+IF Par:InslagQAIsGeurKleurProductEigen THEN
+    Loc:InslagQAisgeurkleuproducteigen = 'JA'
+ELSE
+    Loc:InslagQAisgeurkleuproducteigen = 'NEE'
+END
+
+IF Par:InslagQAGeenGlasbreuk THEN
+    Loc:InslagQAGeenGlasbreuk = 'JA'
+ELSE
+    Loc:InslagQAGeenGlasbreuk = 'NEE'
+END
+
+PRINT(RPT:KwaliteitDetail)
+PRINT(RPT:detailAfgehandeld)
+PRINT(RPT:detailcorrigerendemaatregel)
+PRINT(RPT:detailCorrectievemaatregel)
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME SVReportToPDFSupport SVReportToPDF
+[INSTANCE]
+INSTANCE 4
+OWNER 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('PDFReporter')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReportGenerator')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('SetUp {18}PROCEDURE(),DERIVED')
+
+%Populate DEFAULT  ('Always')
+%PopulateCondition DEFAULT  ('')
+%OutputNameType DEFAULT  ('Runtime')
+%OutputNameFixed DEFAULT  ('')
+%OutputNameVariable DEFAULT  ('')
+%DocumentTitle DEFAULT  ('CW Report')
+%ApplicationName DEFAULT  ('VoorrRpt')
+%ProgramName DEFAULT  ('ReportInslag')
+%PDFSubject DEFAULT  ('ReportInslag')
+%PDFAuthor DEFAULT  ('')
+%PDFKeywords DEFAULT  ('')
+%PagesAsParentBookmark LONG  (0)
+%UseScanCopyMode LONG  (0)
+%ScanCopyModeRes DEFAULT  ('Original')
+%CompressText LONG  (1)
+%CompressImages LONG  (1)
+%Encryptdoc DEFAULT  ('Never')
+%EncryptDocCondition DEFAULT  ('')
+%PDFPassword DEFAULT  ('')
+%PDFUseVariableAccess LONG  (0)
+%PDFVariableAccess DEFAULT  ('')
+%PDFAccessPrint LONG  (1)
+%PDFAccessModifyContent LONG  (1)
+%PDFAccessCopy LONG  (1)
+%PDFAccessModifyAnnotations LONG  (1)
+%PDFTempControlInstance DEFAULT  ('65')
+%PDFTempReportControl DEFAULT  ('?Form')
+%PDFHideControl DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFSkipControl DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFHideControlOnPDF DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFPossibleTextOrigin DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelID') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Footer') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Form') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Header') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Mut:InslagKG:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Mut:InslagPallet:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:AanmaakDatum_DATE') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:AanmaakDatum_TIME') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:Afgehandeld') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:CorrectieveMaatregel') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:CorrigerendeMaatregel') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:ExternPartijnr') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuur1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuur2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuur3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:PartijID') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:Referentie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Rel:FirmaNaam') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ReportDatePrompt') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ReportDateStamp') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ReportTimeStamp') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING12') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING13') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING14') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING16') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING16:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING16:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING17') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING5:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFPossibleBookmarkTextOrigin DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelID') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Art:ArtikelOms') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?DETAIL5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Detail') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Footer') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Form') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Header') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Mut:InslagKG:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Mut:InslagPallet:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:AanmaakDatum_DATE') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:AanmaakDatum_TIME') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:Afgehandeld') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:CorrectieveMaatregel') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:CorrigerendeMaatregel') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:ExternPartijnr') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuur1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuur2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuur3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:KG') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:Pallets') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:PartijID') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Par:Referentie') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Rel:FirmaNaam') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ReportDatePrompt') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ReportDateStamp') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?ReportTimeStamp') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING1') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING10') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING11') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING12') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING13') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING14') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING15:6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING16') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING16:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING16:3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING17') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING3') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING4') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING5') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING5:2') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING6') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING7') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING8') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?STRING9') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Control Text[Text]|HardCoded[HardCoded]|Dynamic[Dynamic]')
+
+%PDFFieldAction DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFFieldActionType DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('Hyperlink')
+WHEN  ('?Art:ArtikelID') ('Hyperlink')
+WHEN  ('?Art:ArtikelOms') ('Hyperlink')
+WHEN  ('?DETAIL1') ('Hyperlink')
+WHEN  ('?DETAIL2') ('Hyperlink')
+WHEN  ('?DETAIL3') ('Hyperlink')
+WHEN  ('?DETAIL4') ('Hyperlink')
+WHEN  ('?DETAIL5') ('Hyperlink')
+WHEN  ('?Detail') ('Hyperlink')
+WHEN  ('?Footer') ('Hyperlink')
+WHEN  ('?Form') ('Hyperlink')
+WHEN  ('?Header') ('Hyperlink')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('Hyperlink')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('Hyperlink')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('Hyperlink')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('Hyperlink')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('Hyperlink')
+WHEN  ('?Mut:InslagKG:2') ('Hyperlink')
+WHEN  ('?Mut:InslagPallet:3') ('Hyperlink')
+WHEN  ('?Par:AanmaakDatum_DATE') ('Hyperlink')
+WHEN  ('?Par:AanmaakDatum_TIME') ('Hyperlink')
+WHEN  ('?Par:Afgehandeld') ('Hyperlink')
+WHEN  ('?Par:CorrectieveMaatregel') ('Hyperlink')
+WHEN  ('?Par:CorrigerendeMaatregel') ('Hyperlink')
+WHEN  ('?Par:ExternPartijnr') ('Hyperlink')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('Hyperlink')
+WHEN  ('?Par:InslagQATemperatuur1') ('Hyperlink')
+WHEN  ('?Par:InslagQATemperatuur2') ('Hyperlink')
+WHEN  ('?Par:InslagQATemperatuur3') ('Hyperlink')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('Hyperlink')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('Hyperlink')
+WHEN  ('?Par:KG') ('Hyperlink')
+WHEN  ('?Par:Pallets') ('Hyperlink')
+WHEN  ('?Par:PartijID') ('Hyperlink')
+WHEN  ('?Par:Referentie') ('Hyperlink')
+WHEN  ('?Rel:FirmaNaam') ('Hyperlink')
+WHEN  ('?ReportDatePrompt') ('Hyperlink')
+WHEN  ('?ReportDateStamp') ('Hyperlink')
+WHEN  ('?ReportTimeStamp') ('Hyperlink')
+WHEN  ('?STRING1') ('Hyperlink')
+WHEN  ('?STRING10') ('Hyperlink')
+WHEN  ('?STRING11') ('Hyperlink')
+WHEN  ('?STRING12') ('Hyperlink')
+WHEN  ('?STRING13') ('Hyperlink')
+WHEN  ('?STRING14') ('Hyperlink')
+WHEN  ('?STRING15') ('Hyperlink')
+WHEN  ('?STRING15:2') ('Hyperlink')
+WHEN  ('?STRING15:3') ('Hyperlink')
+WHEN  ('?STRING15:4') ('Hyperlink')
+WHEN  ('?STRING15:5') ('Hyperlink')
+WHEN  ('?STRING15:6') ('Hyperlink')
+WHEN  ('?STRING16') ('Hyperlink')
+WHEN  ('?STRING16:2') ('Hyperlink')
+WHEN  ('?STRING16:3') ('Hyperlink')
+WHEN  ('?STRING17') ('Hyperlink')
+WHEN  ('?STRING2') ('Hyperlink')
+WHEN  ('?STRING3') ('Hyperlink')
+WHEN  ('?STRING4') ('Hyperlink')
+WHEN  ('?STRING5') ('Hyperlink')
+WHEN  ('?STRING5:2') ('Hyperlink')
+WHEN  ('?STRING6') ('Hyperlink')
+WHEN  ('?STRING7') ('Hyperlink')
+WHEN  ('?STRING8') ('Hyperlink')
+WHEN  ('?STRING9') ('Hyperlink')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Hyperlink')
+
+%PDFAnnotationOrigin DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('Text')
+WHEN  ('?Art:ArtikelID') ('Text')
+WHEN  ('?Art:ArtikelOms') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?DETAIL2') ('Text')
+WHEN  ('?DETAIL3') ('Text')
+WHEN  ('?DETAIL4') ('Text')
+WHEN  ('?DETAIL5') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Form') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('Text')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('Text')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('Text')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('Text')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('Text')
+WHEN  ('?Mut:InslagKG:2') ('Text')
+WHEN  ('?Mut:InslagPallet:3') ('Text')
+WHEN  ('?Par:AanmaakDatum_DATE') ('Text')
+WHEN  ('?Par:AanmaakDatum_TIME') ('Text')
+WHEN  ('?Par:Afgehandeld') ('Text')
+WHEN  ('?Par:CorrectieveMaatregel') ('Text')
+WHEN  ('?Par:CorrigerendeMaatregel') ('Text')
+WHEN  ('?Par:ExternPartijnr') ('Text')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('Text')
+WHEN  ('?Par:InslagQATemperatuur1') ('Text')
+WHEN  ('?Par:InslagQATemperatuur2') ('Text')
+WHEN  ('?Par:InslagQATemperatuur3') ('Text')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('Text')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('Text')
+WHEN  ('?Par:KG') ('Text')
+WHEN  ('?Par:Pallets') ('Text')
+WHEN  ('?Par:PartijID') ('Text')
+WHEN  ('?Par:Referentie') ('Text')
+WHEN  ('?Rel:FirmaNaam') ('Text')
+WHEN  ('?ReportDatePrompt') ('Text')
+WHEN  ('?ReportDateStamp') ('Text')
+WHEN  ('?ReportTimeStamp') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING10') ('Text')
+WHEN  ('?STRING11') ('Text')
+WHEN  ('?STRING12') ('Text')
+WHEN  ('?STRING13') ('Text')
+WHEN  ('?STRING14') ('Text')
+WHEN  ('?STRING15') ('Text')
+WHEN  ('?STRING15:2') ('Text')
+WHEN  ('?STRING15:3') ('Text')
+WHEN  ('?STRING15:4') ('Text')
+WHEN  ('?STRING15:5') ('Text')
+WHEN  ('?STRING15:6') ('Text')
+WHEN  ('?STRING16') ('Text')
+WHEN  ('?STRING16:2') ('Text')
+WHEN  ('?STRING16:3') ('Text')
+WHEN  ('?STRING17') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING3') ('Text')
+WHEN  ('?STRING4') ('Text')
+WHEN  ('?STRING5') ('Text')
+WHEN  ('?STRING5:2') ('Text')
+WHEN  ('?STRING6') ('Text')
+WHEN  ('?STRING7') ('Text')
+WHEN  ('?STRING8') ('Text')
+WHEN  ('?STRING9') ('Text')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Text')
+
+%PDFAnnotationHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFAnnotationDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFPageAction DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('NEXT')
+WHEN  ('?Art:ArtikelID') ('NEXT')
+WHEN  ('?Art:ArtikelOms') ('NEXT')
+WHEN  ('?DETAIL1') ('NEXT')
+WHEN  ('?DETAIL2') ('NEXT')
+WHEN  ('?DETAIL3') ('NEXT')
+WHEN  ('?DETAIL4') ('NEXT')
+WHEN  ('?DETAIL5') ('NEXT')
+WHEN  ('?Detail') ('NEXT')
+WHEN  ('?Footer') ('NEXT')
+WHEN  ('?Form') ('NEXT')
+WHEN  ('?Header') ('NEXT')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('NEXT')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('NEXT')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('NEXT')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('NEXT')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('NEXT')
+WHEN  ('?Mut:InslagKG:2') ('NEXT')
+WHEN  ('?Mut:InslagPallet:3') ('NEXT')
+WHEN  ('?Par:AanmaakDatum_DATE') ('NEXT')
+WHEN  ('?Par:AanmaakDatum_TIME') ('NEXT')
+WHEN  ('?Par:Afgehandeld') ('NEXT')
+WHEN  ('?Par:CorrectieveMaatregel') ('NEXT')
+WHEN  ('?Par:CorrigerendeMaatregel') ('NEXT')
+WHEN  ('?Par:ExternPartijnr') ('NEXT')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('NEXT')
+WHEN  ('?Par:InslagQATemperatuur1') ('NEXT')
+WHEN  ('?Par:InslagQATemperatuur2') ('NEXT')
+WHEN  ('?Par:InslagQATemperatuur3') ('NEXT')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('NEXT')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('NEXT')
+WHEN  ('?Par:KG') ('NEXT')
+WHEN  ('?Par:Pallets') ('NEXT')
+WHEN  ('?Par:PartijID') ('NEXT')
+WHEN  ('?Par:Referentie') ('NEXT')
+WHEN  ('?Rel:FirmaNaam') ('NEXT')
+WHEN  ('?ReportDatePrompt') ('NEXT')
+WHEN  ('?ReportDateStamp') ('NEXT')
+WHEN  ('?ReportTimeStamp') ('NEXT')
+WHEN  ('?STRING1') ('NEXT')
+WHEN  ('?STRING10') ('NEXT')
+WHEN  ('?STRING11') ('NEXT')
+WHEN  ('?STRING12') ('NEXT')
+WHEN  ('?STRING13') ('NEXT')
+WHEN  ('?STRING14') ('NEXT')
+WHEN  ('?STRING15') ('NEXT')
+WHEN  ('?STRING15:2') ('NEXT')
+WHEN  ('?STRING15:3') ('NEXT')
+WHEN  ('?STRING15:4') ('NEXT')
+WHEN  ('?STRING15:5') ('NEXT')
+WHEN  ('?STRING15:6') ('NEXT')
+WHEN  ('?STRING16') ('NEXT')
+WHEN  ('?STRING16:2') ('NEXT')
+WHEN  ('?STRING16:3') ('NEXT')
+WHEN  ('?STRING17') ('NEXT')
+WHEN  ('?STRING2') ('NEXT')
+WHEN  ('?STRING3') ('NEXT')
+WHEN  ('?STRING4') ('NEXT')
+WHEN  ('?STRING5') ('NEXT')
+WHEN  ('?STRING5:2') ('NEXT')
+WHEN  ('?STRING6') ('NEXT')
+WHEN  ('?STRING7') ('NEXT')
+WHEN  ('?STRING8') ('NEXT')
+WHEN  ('?STRING9') ('NEXT')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('NEXT')
+
+%PDFTargetCommand DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('notepad.exe')
+WHEN  ('?Art:ArtikelID') ('notepad.exe')
+WHEN  ('?Art:ArtikelOms') ('notepad.exe')
+WHEN  ('?DETAIL1') ('notepad.exe')
+WHEN  ('?DETAIL2') ('notepad.exe')
+WHEN  ('?DETAIL3') ('notepad.exe')
+WHEN  ('?DETAIL4') ('notepad.exe')
+WHEN  ('?DETAIL5') ('notepad.exe')
+WHEN  ('?Detail') ('notepad.exe')
+WHEN  ('?Footer') ('notepad.exe')
+WHEN  ('?Form') ('notepad.exe')
+WHEN  ('?Header') ('notepad.exe')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('notepad.exe')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('notepad.exe')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('notepad.exe')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('notepad.exe')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('notepad.exe')
+WHEN  ('?Mut:InslagKG:2') ('notepad.exe')
+WHEN  ('?Mut:InslagPallet:3') ('notepad.exe')
+WHEN  ('?Par:AanmaakDatum_DATE') ('notepad.exe')
+WHEN  ('?Par:AanmaakDatum_TIME') ('notepad.exe')
+WHEN  ('?Par:Afgehandeld') ('notepad.exe')
+WHEN  ('?Par:CorrectieveMaatregel') ('notepad.exe')
+WHEN  ('?Par:CorrigerendeMaatregel') ('notepad.exe')
+WHEN  ('?Par:ExternPartijnr') ('notepad.exe')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('notepad.exe')
+WHEN  ('?Par:InslagQATemperatuur1') ('notepad.exe')
+WHEN  ('?Par:InslagQATemperatuur2') ('notepad.exe')
+WHEN  ('?Par:InslagQATemperatuur3') ('notepad.exe')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('notepad.exe')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('notepad.exe')
+WHEN  ('?Par:KG') ('notepad.exe')
+WHEN  ('?Par:Pallets') ('notepad.exe')
+WHEN  ('?Par:PartijID') ('notepad.exe')
+WHEN  ('?Par:Referentie') ('notepad.exe')
+WHEN  ('?Rel:FirmaNaam') ('notepad.exe')
+WHEN  ('?ReportDatePrompt') ('notepad.exe')
+WHEN  ('?ReportDateStamp') ('notepad.exe')
+WHEN  ('?ReportTimeStamp') ('notepad.exe')
+WHEN  ('?STRING1') ('notepad.exe')
+WHEN  ('?STRING10') ('notepad.exe')
+WHEN  ('?STRING11') ('notepad.exe')
+WHEN  ('?STRING12') ('notepad.exe')
+WHEN  ('?STRING13') ('notepad.exe')
+WHEN  ('?STRING14') ('notepad.exe')
+WHEN  ('?STRING15') ('notepad.exe')
+WHEN  ('?STRING15:2') ('notepad.exe')
+WHEN  ('?STRING15:3') ('notepad.exe')
+WHEN  ('?STRING15:4') ('notepad.exe')
+WHEN  ('?STRING15:5') ('notepad.exe')
+WHEN  ('?STRING15:6') ('notepad.exe')
+WHEN  ('?STRING16') ('notepad.exe')
+WHEN  ('?STRING16:2') ('notepad.exe')
+WHEN  ('?STRING16:3') ('notepad.exe')
+WHEN  ('?STRING17') ('notepad.exe')
+WHEN  ('?STRING2') ('notepad.exe')
+WHEN  ('?STRING3') ('notepad.exe')
+WHEN  ('?STRING4') ('notepad.exe')
+WHEN  ('?STRING5') ('notepad.exe')
+WHEN  ('?STRING5:2') ('notepad.exe')
+WHEN  ('?STRING6') ('notepad.exe')
+WHEN  ('?STRING7') ('notepad.exe')
+WHEN  ('?STRING8') ('notepad.exe')
+WHEN  ('?STRING9') ('notepad.exe')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('notepad.exe')
+
+%PDFTargetParameters DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('note.txt')
+WHEN  ('?Art:ArtikelID') ('note.txt')
+WHEN  ('?Art:ArtikelOms') ('note.txt')
+WHEN  ('?DETAIL1') ('note.txt')
+WHEN  ('?DETAIL2') ('note.txt')
+WHEN  ('?DETAIL3') ('note.txt')
+WHEN  ('?DETAIL4') ('note.txt')
+WHEN  ('?DETAIL5') ('note.txt')
+WHEN  ('?Detail') ('note.txt')
+WHEN  ('?Footer') ('note.txt')
+WHEN  ('?Form') ('note.txt')
+WHEN  ('?Header') ('note.txt')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('note.txt')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('note.txt')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('note.txt')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('note.txt')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('note.txt')
+WHEN  ('?Mut:InslagKG:2') ('note.txt')
+WHEN  ('?Mut:InslagPallet:3') ('note.txt')
+WHEN  ('?Par:AanmaakDatum_DATE') ('note.txt')
+WHEN  ('?Par:AanmaakDatum_TIME') ('note.txt')
+WHEN  ('?Par:Afgehandeld') ('note.txt')
+WHEN  ('?Par:CorrectieveMaatregel') ('note.txt')
+WHEN  ('?Par:CorrigerendeMaatregel') ('note.txt')
+WHEN  ('?Par:ExternPartijnr') ('note.txt')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('note.txt')
+WHEN  ('?Par:InslagQATemperatuur1') ('note.txt')
+WHEN  ('?Par:InslagQATemperatuur2') ('note.txt')
+WHEN  ('?Par:InslagQATemperatuur3') ('note.txt')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('note.txt')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('note.txt')
+WHEN  ('?Par:KG') ('note.txt')
+WHEN  ('?Par:Pallets') ('note.txt')
+WHEN  ('?Par:PartijID') ('note.txt')
+WHEN  ('?Par:Referentie') ('note.txt')
+WHEN  ('?Rel:FirmaNaam') ('note.txt')
+WHEN  ('?ReportDatePrompt') ('note.txt')
+WHEN  ('?ReportDateStamp') ('note.txt')
+WHEN  ('?ReportTimeStamp') ('note.txt')
+WHEN  ('?STRING1') ('note.txt')
+WHEN  ('?STRING10') ('note.txt')
+WHEN  ('?STRING11') ('note.txt')
+WHEN  ('?STRING12') ('note.txt')
+WHEN  ('?STRING13') ('note.txt')
+WHEN  ('?STRING14') ('note.txt')
+WHEN  ('?STRING15') ('note.txt')
+WHEN  ('?STRING15:2') ('note.txt')
+WHEN  ('?STRING15:3') ('note.txt')
+WHEN  ('?STRING15:4') ('note.txt')
+WHEN  ('?STRING15:5') ('note.txt')
+WHEN  ('?STRING15:6') ('note.txt')
+WHEN  ('?STRING16') ('note.txt')
+WHEN  ('?STRING16:2') ('note.txt')
+WHEN  ('?STRING16:3') ('note.txt')
+WHEN  ('?STRING17') ('note.txt')
+WHEN  ('?STRING2') ('note.txt')
+WHEN  ('?STRING3') ('note.txt')
+WHEN  ('?STRING4') ('note.txt')
+WHEN  ('?STRING5') ('note.txt')
+WHEN  ('?STRING5:2') ('note.txt')
+WHEN  ('?STRING6') ('note.txt')
+WHEN  ('?STRING7') ('note.txt')
+WHEN  ('?STRING8') ('note.txt')
+WHEN  ('?STRING9') ('note.txt')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('note.txt')
+
+%PDFTargetOrigin DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('Text')
+WHEN  ('?Art:ArtikelID') ('Text')
+WHEN  ('?Art:ArtikelOms') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?DETAIL2') ('Text')
+WHEN  ('?DETAIL3') ('Text')
+WHEN  ('?DETAIL4') ('Text')
+WHEN  ('?DETAIL5') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Form') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('Text')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('Text')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('Text')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('Text')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('Text')
+WHEN  ('?Mut:InslagKG:2') ('Text')
+WHEN  ('?Mut:InslagPallet:3') ('Text')
+WHEN  ('?Par:AanmaakDatum_DATE') ('Text')
+WHEN  ('?Par:AanmaakDatum_TIME') ('Text')
+WHEN  ('?Par:Afgehandeld') ('Text')
+WHEN  ('?Par:CorrectieveMaatregel') ('Text')
+WHEN  ('?Par:CorrigerendeMaatregel') ('Text')
+WHEN  ('?Par:ExternPartijnr') ('Text')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('Text')
+WHEN  ('?Par:InslagQATemperatuur1') ('Text')
+WHEN  ('?Par:InslagQATemperatuur2') ('Text')
+WHEN  ('?Par:InslagQATemperatuur3') ('Text')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('Text')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('Text')
+WHEN  ('?Par:KG') ('Text')
+WHEN  ('?Par:Pallets') ('Text')
+WHEN  ('?Par:PartijID') ('Text')
+WHEN  ('?Par:Referentie') ('Text')
+WHEN  ('?Rel:FirmaNaam') ('Text')
+WHEN  ('?ReportDatePrompt') ('Text')
+WHEN  ('?ReportDateStamp') ('Text')
+WHEN  ('?ReportTimeStamp') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING10') ('Text')
+WHEN  ('?STRING11') ('Text')
+WHEN  ('?STRING12') ('Text')
+WHEN  ('?STRING13') ('Text')
+WHEN  ('?STRING14') ('Text')
+WHEN  ('?STRING15') ('Text')
+WHEN  ('?STRING15:2') ('Text')
+WHEN  ('?STRING15:3') ('Text')
+WHEN  ('?STRING15:4') ('Text')
+WHEN  ('?STRING15:5') ('Text')
+WHEN  ('?STRING15:6') ('Text')
+WHEN  ('?STRING16') ('Text')
+WHEN  ('?STRING16:2') ('Text')
+WHEN  ('?STRING16:3') ('Text')
+WHEN  ('?STRING17') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING3') ('Text')
+WHEN  ('?STRING4') ('Text')
+WHEN  ('?STRING5') ('Text')
+WHEN  ('?STRING5:2') ('Text')
+WHEN  ('?STRING6') ('Text')
+WHEN  ('?STRING7') ('Text')
+WHEN  ('?STRING8') ('Text')
+WHEN  ('?STRING9') ('Text')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Text')
+
+%PDFTargetHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFTargetDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkType DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('None')
+WHEN  ('?Art:ArtikelID') ('None')
+WHEN  ('?Art:ArtikelOms') ('None')
+WHEN  ('?DETAIL1') ('None')
+WHEN  ('?DETAIL2') ('None')
+WHEN  ('?DETAIL3') ('None')
+WHEN  ('?DETAIL4') ('None')
+WHEN  ('?DETAIL5') ('None')
+WHEN  ('?Detail') ('None')
+WHEN  ('?Footer') ('None')
+WHEN  ('?Form') ('None')
+WHEN  ('?Header') ('None')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('None')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('None')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('None')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('None')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('None')
+WHEN  ('?Mut:InslagKG:2') ('None')
+WHEN  ('?Mut:InslagPallet:3') ('None')
+WHEN  ('?Par:AanmaakDatum_DATE') ('None')
+WHEN  ('?Par:AanmaakDatum_TIME') ('None')
+WHEN  ('?Par:Afgehandeld') ('None')
+WHEN  ('?Par:CorrectieveMaatregel') ('None')
+WHEN  ('?Par:CorrigerendeMaatregel') ('None')
+WHEN  ('?Par:ExternPartijnr') ('None')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('None')
+WHEN  ('?Par:InslagQATemperatuur1') ('None')
+WHEN  ('?Par:InslagQATemperatuur2') ('None')
+WHEN  ('?Par:InslagQATemperatuur3') ('None')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('None')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('None')
+WHEN  ('?Par:KG') ('None')
+WHEN  ('?Par:Pallets') ('None')
+WHEN  ('?Par:PartijID') ('None')
+WHEN  ('?Par:Referentie') ('None')
+WHEN  ('?Rel:FirmaNaam') ('None')
+WHEN  ('?ReportDatePrompt') ('None')
+WHEN  ('?ReportDateStamp') ('None')
+WHEN  ('?ReportTimeStamp') ('None')
+WHEN  ('?STRING1') ('None')
+WHEN  ('?STRING10') ('None')
+WHEN  ('?STRING11') ('None')
+WHEN  ('?STRING12') ('None')
+WHEN  ('?STRING13') ('None')
+WHEN  ('?STRING14') ('None')
+WHEN  ('?STRING15') ('None')
+WHEN  ('?STRING15:2') ('None')
+WHEN  ('?STRING15:3') ('None')
+WHEN  ('?STRING15:4') ('None')
+WHEN  ('?STRING15:5') ('None')
+WHEN  ('?STRING15:6') ('None')
+WHEN  ('?STRING16') ('None')
+WHEN  ('?STRING16:2') ('None')
+WHEN  ('?STRING16:3') ('None')
+WHEN  ('?STRING17') ('None')
+WHEN  ('?STRING2') ('None')
+WHEN  ('?STRING3') ('None')
+WHEN  ('?STRING4') ('None')
+WHEN  ('?STRING5') ('None')
+WHEN  ('?STRING5:2') ('None')
+WHEN  ('?STRING6') ('None')
+WHEN  ('?STRING7') ('None')
+WHEN  ('?STRING8') ('None')
+WHEN  ('?STRING9') ('None')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('None')
+
+%PDFHyperlinkTypeOther DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperlinkTypeOtherDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFHyperLinkBoxed DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFHyperLinkBoxColor DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (255)
+WHEN  ('?Art:ArtikelID') (255)
+WHEN  ('?Art:ArtikelOms') (255)
+WHEN  ('?DETAIL1') (255)
+WHEN  ('?DETAIL2') (255)
+WHEN  ('?DETAIL3') (255)
+WHEN  ('?DETAIL4') (255)
+WHEN  ('?DETAIL5') (255)
+WHEN  ('?Detail') (255)
+WHEN  ('?Footer') (255)
+WHEN  ('?Form') (255)
+WHEN  ('?Header') (255)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (255)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (255)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (255)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (255)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (255)
+WHEN  ('?Mut:InslagKG:2') (255)
+WHEN  ('?Mut:InslagPallet:3') (255)
+WHEN  ('?Par:AanmaakDatum_DATE') (255)
+WHEN  ('?Par:AanmaakDatum_TIME') (255)
+WHEN  ('?Par:Afgehandeld') (255)
+WHEN  ('?Par:CorrectieveMaatregel') (255)
+WHEN  ('?Par:CorrigerendeMaatregel') (255)
+WHEN  ('?Par:ExternPartijnr') (255)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (255)
+WHEN  ('?Par:InslagQATemperatuur1') (255)
+WHEN  ('?Par:InslagQATemperatuur2') (255)
+WHEN  ('?Par:InslagQATemperatuur3') (255)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (255)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (255)
+WHEN  ('?Par:KG') (255)
+WHEN  ('?Par:Pallets') (255)
+WHEN  ('?Par:PartijID') (255)
+WHEN  ('?Par:Referentie') (255)
+WHEN  ('?Rel:FirmaNaam') (255)
+WHEN  ('?ReportDatePrompt') (255)
+WHEN  ('?ReportDateStamp') (255)
+WHEN  ('?ReportTimeStamp') (255)
+WHEN  ('?STRING1') (255)
+WHEN  ('?STRING10') (255)
+WHEN  ('?STRING11') (255)
+WHEN  ('?STRING12') (255)
+WHEN  ('?STRING13') (255)
+WHEN  ('?STRING14') (255)
+WHEN  ('?STRING15') (255)
+WHEN  ('?STRING15:2') (255)
+WHEN  ('?STRING15:3') (255)
+WHEN  ('?STRING15:4') (255)
+WHEN  ('?STRING15:5') (255)
+WHEN  ('?STRING15:6') (255)
+WHEN  ('?STRING16') (255)
+WHEN  ('?STRING16:2') (255)
+WHEN  ('?STRING16:3') (255)
+WHEN  ('?STRING17') (255)
+WHEN  ('?STRING2') (255)
+WHEN  ('?STRING3') (255)
+WHEN  ('?STRING4') (255)
+WHEN  ('?STRING5') (255)
+WHEN  ('?STRING5:2') (255)
+WHEN  ('?STRING6') (255)
+WHEN  ('?STRING7') (255)
+WHEN  ('?STRING8') (255)
+WHEN  ('?STRING9') (255)
+WHEN  ('?Ver:VerpakkingOmschrijving') (255)
+
+%PDFBookmark DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFBookmarkOrigin DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('Text')
+WHEN  ('?Art:ArtikelID') ('Text')
+WHEN  ('?Art:ArtikelOms') ('Text')
+WHEN  ('?DETAIL1') ('Text')
+WHEN  ('?DETAIL2') ('Text')
+WHEN  ('?DETAIL3') ('Text')
+WHEN  ('?DETAIL4') ('Text')
+WHEN  ('?DETAIL5') ('Text')
+WHEN  ('?Detail') ('Text')
+WHEN  ('?Footer') ('Text')
+WHEN  ('?Form') ('Text')
+WHEN  ('?Header') ('Text')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('Text')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('Text')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('Text')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('Text')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('Text')
+WHEN  ('?Mut:InslagKG:2') ('Text')
+WHEN  ('?Mut:InslagPallet:3') ('Text')
+WHEN  ('?Par:AanmaakDatum_DATE') ('Text')
+WHEN  ('?Par:AanmaakDatum_TIME') ('Text')
+WHEN  ('?Par:Afgehandeld') ('HardCoded')
+WHEN  ('?Par:CorrectieveMaatregel') ('HardCoded')
+WHEN  ('?Par:CorrigerendeMaatregel') ('HardCoded')
+WHEN  ('?Par:ExternPartijnr') ('Text')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('HardCoded')
+WHEN  ('?Par:InslagQATemperatuur1') ('Text')
+WHEN  ('?Par:InslagQATemperatuur2') ('Text')
+WHEN  ('?Par:InslagQATemperatuur3') ('Text')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('Text')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('Text')
+WHEN  ('?Par:KG') ('Text')
+WHEN  ('?Par:Pallets') ('Text')
+WHEN  ('?Par:PartijID') ('Text')
+WHEN  ('?Par:Referentie') ('Text')
+WHEN  ('?Rel:FirmaNaam') ('Text')
+WHEN  ('?ReportDatePrompt') ('Text')
+WHEN  ('?ReportDateStamp') ('Text')
+WHEN  ('?ReportTimeStamp') ('Text')
+WHEN  ('?STRING1') ('Text')
+WHEN  ('?STRING10') ('Text')
+WHEN  ('?STRING11') ('Text')
+WHEN  ('?STRING12') ('Text')
+WHEN  ('?STRING13') ('Text')
+WHEN  ('?STRING14') ('Text')
+WHEN  ('?STRING15') ('Text')
+WHEN  ('?STRING15:2') ('Text')
+WHEN  ('?STRING15:3') ('Text')
+WHEN  ('?STRING15:4') ('Text')
+WHEN  ('?STRING15:5') ('Text')
+WHEN  ('?STRING15:6') ('Text')
+WHEN  ('?STRING16') ('Text')
+WHEN  ('?STRING16:2') ('Text')
+WHEN  ('?STRING16:3') ('Text')
+WHEN  ('?STRING17') ('Text')
+WHEN  ('?STRING2') ('Text')
+WHEN  ('?STRING3') ('Text')
+WHEN  ('?STRING4') ('Text')
+WHEN  ('?STRING5') ('Text')
+WHEN  ('?STRING5:2') ('Text')
+WHEN  ('?STRING6') ('Text')
+WHEN  ('?STRING7') ('Text')
+WHEN  ('?STRING8') ('Text')
+WHEN  ('?STRING9') ('Text')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Text')
+
+%PDFBookmarkHardCoded DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkDynamic DEPEND %ReportControl DEFAULT TIMES 0
+
+%PDFBookmarkParent DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFParentBookmark DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('?Header')
+WHEN  ('?Art:ArtikelID') ('?Header')
+WHEN  ('?Art:ArtikelOms') ('?Header')
+WHEN  ('?DETAIL1') ('?Header')
+WHEN  ('?DETAIL2') ('?Header')
+WHEN  ('?DETAIL3') ('?Header')
+WHEN  ('?DETAIL4') ('?Header')
+WHEN  ('?DETAIL5') ('?Header')
+WHEN  ('?Detail') ('?Header')
+WHEN  ('?Footer') ('?Header')
+WHEN  ('?Form') ('?Header')
+WHEN  ('?Header') ('?Header')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('?Header')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('?Header')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('?Header')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('?Header')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('?Header')
+WHEN  ('?Mut:InslagKG:2') ('?Header')
+WHEN  ('?Mut:InslagPallet:3') ('?Header')
+WHEN  ('?Par:AanmaakDatum_DATE') ('?Header')
+WHEN  ('?Par:AanmaakDatum_TIME') ('?Header')
+WHEN  ('?Par:Afgehandeld') ('?Header')
+WHEN  ('?Par:CorrectieveMaatregel') ('?Header')
+WHEN  ('?Par:CorrigerendeMaatregel') ('?Header')
+WHEN  ('?Par:ExternPartijnr') ('?Header')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('?Header')
+WHEN  ('?Par:InslagQATemperatuur1') ('?Header')
+WHEN  ('?Par:InslagQATemperatuur2') ('?Header')
+WHEN  ('?Par:InslagQATemperatuur3') ('?Header')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('?Header')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('?Header')
+WHEN  ('?Par:KG') ('?Header')
+WHEN  ('?Par:Pallets') ('?Header')
+WHEN  ('?Par:PartijID') ('?Header')
+WHEN  ('?Par:Referentie') ('?Header')
+WHEN  ('?Rel:FirmaNaam') ('?Header')
+WHEN  ('?ReportDatePrompt') ('?Header')
+WHEN  ('?ReportDateStamp') ('?Header')
+WHEN  ('?ReportTimeStamp') ('?Header')
+WHEN  ('?STRING1') ('?Header')
+WHEN  ('?STRING10') ('?Header')
+WHEN  ('?STRING11') ('?Header')
+WHEN  ('?STRING12') ('?Header')
+WHEN  ('?STRING13') ('?Header')
+WHEN  ('?STRING14') ('?Header')
+WHEN  ('?STRING15') ('?Header')
+WHEN  ('?STRING15:2') ('?Header')
+WHEN  ('?STRING15:3') ('?Header')
+WHEN  ('?STRING15:4') ('?Header')
+WHEN  ('?STRING15:5') ('?Header')
+WHEN  ('?STRING15:6') ('?Header')
+WHEN  ('?STRING16') ('?Header')
+WHEN  ('?STRING16:2') ('?Header')
+WHEN  ('?STRING16:3') ('?Header')
+WHEN  ('?STRING17') ('?Header')
+WHEN  ('?STRING2') ('?Header')
+WHEN  ('?STRING3') ('?Header')
+WHEN  ('?STRING4') ('?Header')
+WHEN  ('?STRING5') ('?Header')
+WHEN  ('?STRING5:2') ('?Header')
+WHEN  ('?STRING6') ('?Header')
+WHEN  ('?STRING7') ('?Header')
+WHEN  ('?STRING8') ('?Header')
+WHEN  ('?STRING9') ('?Header')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('?Header')
+
+%PDFUsePDFFont DEPEND %ReportControl LONG TIMES 65
+WHEN  ('?ACel:CelOms') (0)
+WHEN  ('?Art:ArtikelID') (0)
+WHEN  ('?Art:ArtikelOms') (0)
+WHEN  ('?DETAIL1') (0)
+WHEN  ('?DETAIL2') (0)
+WHEN  ('?DETAIL3') (0)
+WHEN  ('?DETAIL4') (0)
+WHEN  ('?DETAIL5') (0)
+WHEN  ('?Detail') (0)
+WHEN  ('?Footer') (0)
+WHEN  ('?Form') (0)
+WHEN  ('?Header') (0)
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') (0)
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') (0)
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') (0)
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') (0)
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') (0)
+WHEN  ('?Mut:InslagKG:2') (0)
+WHEN  ('?Mut:InslagPallet:3') (0)
+WHEN  ('?Par:AanmaakDatum_DATE') (0)
+WHEN  ('?Par:AanmaakDatum_TIME') (0)
+WHEN  ('?Par:Afgehandeld') (0)
+WHEN  ('?Par:CorrectieveMaatregel') (0)
+WHEN  ('?Par:CorrigerendeMaatregel') (0)
+WHEN  ('?Par:ExternPartijnr') (0)
+WHEN  ('?Par:InslagQAActieAfwijkingen') (0)
+WHEN  ('?Par:InslagQATemperatuur1') (0)
+WHEN  ('?Par:InslagQATemperatuur2') (0)
+WHEN  ('?Par:InslagQATemperatuur3') (0)
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') (0)
+WHEN  ('?Par:InslagQAUitgevoerdDoor') (0)
+WHEN  ('?Par:KG') (0)
+WHEN  ('?Par:Pallets') (0)
+WHEN  ('?Par:PartijID') (0)
+WHEN  ('?Par:Referentie') (0)
+WHEN  ('?Rel:FirmaNaam') (0)
+WHEN  ('?ReportDatePrompt') (0)
+WHEN  ('?ReportDateStamp') (0)
+WHEN  ('?ReportTimeStamp') (0)
+WHEN  ('?STRING1') (0)
+WHEN  ('?STRING10') (0)
+WHEN  ('?STRING11') (0)
+WHEN  ('?STRING12') (0)
+WHEN  ('?STRING13') (0)
+WHEN  ('?STRING14') (0)
+WHEN  ('?STRING15') (0)
+WHEN  ('?STRING15:2') (0)
+WHEN  ('?STRING15:3') (0)
+WHEN  ('?STRING15:4') (0)
+WHEN  ('?STRING15:5') (0)
+WHEN  ('?STRING15:6') (0)
+WHEN  ('?STRING16') (0)
+WHEN  ('?STRING16:2') (0)
+WHEN  ('?STRING16:3') (0)
+WHEN  ('?STRING17') (0)
+WHEN  ('?STRING2') (0)
+WHEN  ('?STRING3') (0)
+WHEN  ('?STRING4') (0)
+WHEN  ('?STRING5') (0)
+WHEN  ('?STRING5:2') (0)
+WHEN  ('?STRING6') (0)
+WHEN  ('?STRING7') (0)
+WHEN  ('?STRING8') (0)
+WHEN  ('?STRING9') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving') (0)
+
+%PDFOriginalFont DEPEND %ReportControl DEFAULT TIMES 65
+WHEN  ('?ACel:CelOms') ('HELVETICA')
+WHEN  ('?Art:ArtikelID') ('HELVETICA')
+WHEN  ('?Art:ArtikelOms') ('HELVETICA')
+WHEN  ('?DETAIL1') ('HELVETICA')
+WHEN  ('?DETAIL2') ('HELVETICA')
+WHEN  ('?DETAIL3') ('HELVETICA')
+WHEN  ('?DETAIL4') ('HELVETICA')
+WHEN  ('?DETAIL5') ('HELVETICA')
+WHEN  ('?Detail') ('HELVETICA')
+WHEN  ('?Footer') ('HELVETICA')
+WHEN  ('?Form') ('HELVETICA')
+WHEN  ('?Header') ('HELVETICA')
+WHEN  ('?LOC:InslagQAIdentificatieMerkenVerpakking') ('HELVETICA')
+WHEN  ('?LOC:InslagQATransportmiddelSchoon') ('HELVETICA')
+WHEN  ('?LOC:InslagQAVerpakkingSchoonGesloten') ('HELVETICA')
+WHEN  ('?Loc:InslagQAGeenGlasbreuk') ('HELVETICA')
+WHEN  ('?Loc:InslagQAisgeurkleuproducteigen') ('HELVETICA')
+WHEN  ('?Mut:InslagKG:2') ('HELVETICA')
+WHEN  ('?Mut:InslagPallet:3') ('HELVETICA')
+WHEN  ('?Par:AanmaakDatum_DATE') ('HELVETICA')
+WHEN  ('?Par:AanmaakDatum_TIME') ('HELVETICA')
+WHEN  ('?Par:Afgehandeld') ('HELVETICA')
+WHEN  ('?Par:CorrectieveMaatregel') ('HELVETICA')
+WHEN  ('?Par:CorrigerendeMaatregel') ('HELVETICA')
+WHEN  ('?Par:ExternPartijnr') ('HELVETICA')
+WHEN  ('?Par:InslagQAActieAfwijkingen') ('HELVETICA')
+WHEN  ('?Par:InslagQATemperatuur1') ('HELVETICA')
+WHEN  ('?Par:InslagQATemperatuur2') ('HELVETICA')
+WHEN  ('?Par:InslagQATemperatuur3') ('HELVETICA')
+WHEN  ('?Par:InslagQATemperatuurVervoermiddel') ('HELVETICA')
+WHEN  ('?Par:InslagQAUitgevoerdDoor') ('HELVETICA')
+WHEN  ('?Par:KG') ('HELVETICA')
+WHEN  ('?Par:Pallets') ('HELVETICA')
+WHEN  ('?Par:PartijID') ('HELVETICA')
+WHEN  ('?Par:Referentie') ('HELVETICA')
+WHEN  ('?Rel:FirmaNaam') ('HELVETICA')
+WHEN  ('?ReportDatePrompt') ('HELVETICA')
+WHEN  ('?ReportDateStamp') ('HELVETICA')
+WHEN  ('?ReportTimeStamp') ('HELVETICA')
+WHEN  ('?STRING1') ('HELVETICA')
+WHEN  ('?STRING10') ('HELVETICA')
+WHEN  ('?STRING11') ('HELVETICA')
+WHEN  ('?STRING12') ('HELVETICA')
+WHEN  ('?STRING13') ('HELVETICA')
+WHEN  ('?STRING14') ('HELVETICA')
+WHEN  ('?STRING15') ('HELVETICA')
+WHEN  ('?STRING15:2') ('HELVETICA')
+WHEN  ('?STRING15:3') ('HELVETICA')
+WHEN  ('?STRING15:4') ('HELVETICA')
+WHEN  ('?STRING15:5') ('HELVETICA')
+WHEN  ('?STRING15:6') ('HELVETICA')
+WHEN  ('?STRING16') ('HELVETICA')
+WHEN  ('?STRING16:2') ('HELVETICA')
+WHEN  ('?STRING16:3') ('HELVETICA')
+WHEN  ('?STRING17') ('HELVETICA')
+WHEN  ('?STRING2') ('HELVETICA')
+WHEN  ('?STRING3') ('HELVETICA')
+WHEN  ('?STRING4') ('HELVETICA')
+WHEN  ('?STRING5') ('HELVETICA')
+WHEN  ('?STRING5:2') ('HELVETICA')
+WHEN  ('?STRING6') ('HELVETICA')
+WHEN  ('?STRING7') ('HELVETICA')
+WHEN  ('?STRING8') ('HELVETICA')
+WHEN  ('?STRING9') ('HELVETICA')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('HELVETICA')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('PDFReporter')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('PDFReporter') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('PDFReporter') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('PDFReporter')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 6
+OWNER 5
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 5
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC ReportDateStamp
+[INSTANCE]
+INSTANCE 1
+[PROMPTS]
+%DateStampFormat DEFAULT  ('@D17')
+%UseSystemDate LONG  (1)
+%DateValueToUse FIELD  ()
+[ADDITION]
+NAME ABC ReportTimeStamp
+[INSTANCE]
+INSTANCE 2
+[PROMPTS]
+%TimeStampFormat DEFAULT  ('@T7')
+%UseSystemTime LONG  (1)
+%TimeValueToUse FIELD  ()
+[ADDITION]
+NAME JMDTemplates JMDMAIL
+[INSTANCE]
+INSTANCE 3
+[PROMPTS]
+%RAPPORTNAAM DEFAULT  ('Inslag')
+[WINDOW]
+ProgressWindow WINDOW('Progress...'),AT(,,142,59),DOUBLE,CENTER,GRAY,TIMER(1)
+          PROGRESS,AT(15,15,111,12),USE(Progress:Thermometer),RANGE(0,100),#ORIG(Progress:Thermometer)
+          STRING(''),AT(0,3,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString)
+          STRING(''),AT(0,30,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText)
+          BUTTON('Cancel'),AT(45,42,50,15),USE(?Progress:Cancel),#ORIG(?Progress:Cancel)
+        END
+
+[REPORT]
+Report  REPORT,AT(1000,2000,6250,7688),PRE(RPT),PAPER(PAPER:A4),FONT('Arial',10,,,CHARSET:ANSI), |
+          THOUS
+          HEADER,AT(1000,1000,6250,1000),USE(?Header),#ORDINAL(1)
+            STRING('Inslagrapport'),AT(240,354),USE(?STRING1),FONT(,20,,,CHARSET:DEFAULT), |
+              #ORDINAL(2)
+            STRING('Rapportagedatum:'),AT(2427,354),USE(?ReportDatePrompt),TRN,#ORIG(?ReportDatePrompt), |
+              #SEQ(1),#ORDINAL(3)
+            STRING('<<-- Date Stamp -->'),AT(3656,354),USE(?ReportDateStamp),TRN,#ORIG(?ReportDateStamp), |
+              #REQ,#SEQ(1),#ORDINAL(4)
+            STRING('<<-- Time Stamp -->'),AT(4927,354),USE(?ReportTimeStamp),TRN,#ORIG(?ReportTimeStamp), |
+              #REQ,#SEQ(2),#ORDINAL(5)
+          END
+Detail    DETAIL,AT(0,0,6250,2635),USE(?Detail),#ORDINAL(6)
+            STRING(@n_10),AT(1625,354),USE(Par:PartijID),#ORDINAL(7)
+            STRING('Partij:'),AT(240,354),USE(?STRING2),#ORDINAL(8)
+            STRING('Inslagdatum:'),AT(240,615),USE(?STRING3),#ORDINAL(9)
+            STRING(@d17),AT(1625,615),USE(Par:AanmaakDatum_DATE),#ORDINAL(10)
+            STRING('Hoeveelheid:'),AT(3771,2073),USE(?STRING4),#ORDINAL(11)
+            STRING(@n-14`2~ KG~),AT(3406,2333),USE(Par:KG),RIGHT,#ORDINAL(12)
+            STRING('Pallets: '),AT(5583,2073),USE(?STRING5),#ORDINAL(13)
+            STRING(@n-14`),AT(4948,2333),USE(Par:Pallets),RIGHT,#ORDINAL(14)
+            STRING('Verpakking:'),AT(240,896),USE(?STRING6),#ORDINAL(15)
+            STRING(@s50),AT(1625,896,3771),USE(Ver:VerpakkingOmschrijving),#ORDINAL(16)
+            STRING('Leverancier:'),AT(240,1187),USE(?STRING7),#ORDINAL(17)
+            STRING(@s50),AT(1625,1187,3750),USE(Rel:FirmaNaam),LEFT,#ORDINAL(18)
+            STRING('Artikel:'),AT(240,94),USE(?STRING9),#ORDINAL(19)
+            STRING(@s30),AT(1625,94,1000),USE(Art:ArtikelID),#ORDINAL(20)
+            STRING(@s60),AT(2760,94,3323),USE(Art:ArtikelOms),#ORDINAL(21)
+            STRING('Referentie:'),AT(240,1490),USE(?STRING11),#ORDINAL(22)
+            STRING(@s50),AT(1625,1458,3750),USE(Par:Referentie),#ORDINAL(23)
+            STRING('Extern partijnummer:'),AT(240,1771),USE(?STRING13),#ORDINAL(24)
+            STRING(@s20),AT(1625,1771),USE(Par:ExternPartijnr),LEFT(1),#ORDINAL(25)
+            STRING(@t7),AT(2427,615),USE(Par:AanmaakDatum_TIME),#ORDINAL(26)
+          END
+detailAfgehandeld DETAIL,AT(0,0,6250,562),USE(?DETAIL5),#ORDINAL(27)
+            TEXT,AT(240,292,5958,208),USE(Par:Afgehandeld),RESIZE,#ORDINAL(28)
+            STRING('Afgehandeld:'),AT(240,31,1437,198),USE(?STRING15:6),FONT(,,,FONT:regular), |
+              #ORDINAL(29)
+          END
+detailcorrigerendemaatregel DETAIL,AT(0,0,6250,552),USE(?DETAIL4),#ORDINAL(30)
+            TEXT,AT(240,292,5958,208),USE(Par:CorrigerendeMaatregel),RESIZE,#ORDINAL(31)
+            STRING('Corrigerende maatregel:'),AT(240,31,1437,198),USE(?STRING15:5),FONT(,, |
+              ,FONT:regular),#ORDINAL(32)
+          END
+detailCorrectievemaatregel DETAIL,AT(0,0,6250,604),USE(?DETAIL3),#ORDINAL(33)
+            TEXT,AT(240,292,5958,208),USE(Par:CorrectieveMaatregel),RESIZE,#ORDINAL(34)
+            STRING('Correctieve maatregel:'),AT(240,31,1437,198),USE(?STRING15:4),FONT(,,, |
+              FONT:regular),#ORDINAL(35)
+          END
+KwaliteitDetail DETAIL,AT(0,0,6250,2750),USE(?DETAIL2),#ORDINAL(36)
+            STRING(@s40),AT(1281,2000,4885),USE(Par:InslagQAUitgevoerdDoor),#ORDINAL(37)
+            STRING(@s20),AT(240,719),USE(Par:InslagQATemperatuur2),#ORDINAL(38)
+            STRING(@s20),AT(240,979),USE(Par:InslagQATemperatuur3),#ORDINAL(39)
+            TEXT,AT(240,2448,5958,208),USE(Par:InslagQAActieAfwijkingen),RESIZE,#ORDINAL(40)
+            STRING('Kwaliteit'),AT(240,31),USE(?STRING5:2),FONT(,,,FONT:bold+FONT:underline), |
+              #ORDINAL(41)
+            STRING('Gemeten temperaturen:'),AT(240,250),USE(?STRING15),FONT(,,,FONT:regular), |
+              #ORDINAL(42)
+            STRING('Normale temperatuur moet -18°C zijn. Producten hoger als -15°C kunn' & |
+              'en niet geaccepteerd worden.'),AT(240,1792,6062,198),USE(?STRING15:2),FONT(, |
+              10,,FONT:regular+FONT:italic,CHARSET:DEFAULT),#ORDINAL(43)
+            STRING('Afwijking:'),AT(240,2219,1437,198),USE(?STRING15:3),FONT(,,,FONT:regular), |
+              #ORDINAL(44)
+            STRING(@s20),AT(240,479),USE(Par:InslagQATemperatuur1),#ORDINAL(45)
+            STRING('Uitgevoerd door:'),AT(240,2000),USE(?STRING10),#ORDINAL(46)
+            STRING(@s5),AT(5396,479),USE(LOC:InslagQATransportmiddelSchoon),#ORDINAL(47)
+            STRING(@s5),AT(5396,719),USE(LOC:InslagQAVerpakkingSchoonGesloten),#ORDINAL(48)
+            STRING(@s5),AT(5396,979),USE(LOC:InslagQAIdentificatieMerkenVerpakking),#ORDINAL(49)
+            STRING('Is transportmiddel schoon?'),AT(2375,479),USE(?STRING12),#ORDINAL(50)
+            STRING('Verpakking schoon en gesloten?'),AT(2375,719),USE(?STRING14),#ORDINAL(51)
+            STRING('Identificatie merken aanwezig op verpakkingen?'),AT(2375,979),USE(?STRING16), |
+              #ORDINAL(52)
+            STRING('Is kleur/geur producteigen?'),AT(2375,1240,2865,198),USE(?STRING16:2), |
+              #ORDINAL(53)
+            STRING('Geen glasbreuk?'),AT(2375,1500,2865,198),USE(?STRING16:3),#ORDINAL(54)
+            STRING(@s5),AT(5396,1240,510,198),USE(Loc:InslagQAisgeurkleuproducteigen),#ORDINAL(55)
+            STRING(@s5),AT(5396,1500,510,198),USE(Loc:InslagQAGeenGlasbreuk),#ORDINAL(56)
+            STRING(@s20),AT(240,1521,1531),USE(Par:InslagQATemperatuurVervoermiddel),#ORDINAL(10000)
+            STRING('Temperatuur vervoermiddel'),AT(240,1229),USE(?STRING17),#ORDINAL(10001)
+          END
+MutatieDetail DETAIL,AT(0,0,6250,354),USE(?DETAIL1),#ORDINAL(57)
+            STRING('Cel:'),AT(240,52),USE(?STRING8),#ORDINAL(58)
+            STRING(@s50),AT(698,52,2604),USE(ACel:CelOms),LEFT,#ORDINAL(59)
+            STRING(@n-14`2~ KG~),AT(3406,52),USE(Mut:InslagKG,,?Mut:InslagKG:2),RIGHT,#ORDINAL(60)
+            STRING(@n-14`),AT(4948,52),USE(Mut:InslagPallet,,?Mut:InslagPallet:3),RIGHT,#ORDINAL(61)
+          END
+          FOOTER,AT(1000,9688,6250,1000),USE(?Footer),#ORDINAL(62)
+          END
+          FORM,AT(1000,1000,6250,9688),USE(?Form),#ORDINAL(63)
+          END
+        END
+
+[END]
