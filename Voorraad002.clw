@@ -30,6 +30,9 @@
                        INCLUDE('VOORRAAD025.INC'),ONCE        !Req'd for module callout resolution
                        INCLUDE('VOORRAAD028.INC'),ONCE        !Req'd for module callout resolution
                        INCLUDE('VOORRAAD029.INC'),ONCE        !Req'd for module callout resolution
+                       INCLUDE('VOORRAAD030.INC'),ONCE        !Req'd for module callout resolution
+                       INCLUDE('VOORRAAD032.INC'),ONCE        !Req'd for module callout resolution
+                       INCLUDE('VOORRAAD033.INC'),ONCE        !Req'd for module callout resolution
                      END
 
 
@@ -338,7 +341,7 @@ Menu::MENU2 ROUTINE                                        ! Code for menu items
 ThisWindow.Ask PROCEDURE
 
   CODE
-  0{Prop:Text}='JMD Voorraad '&CLIP(GLO:Versie)
+  0{Prop:Text}=GETINI('SYSTEEM','Titel','JMD Voorraad','.\Voorraad.ini')&' '&CLIP(GLO:Versie)&' '&GV.GetVersion()
   Comma#=Instring(',',GLO:Owner,1,1)
   
   0{PROP:StatusText,3}=SUB(Glo:OWner,1,Comma#-1)
@@ -346,6 +349,7 @@ ThisWindow.Ask PROCEDURE
   
   TweedeComma#=Instring(',',GLO:Owner,1,Comma#+1)
   0{PROP:StatusText,2}=SUB(Glo:OWner,Comma#+1,TweedeComma#-Comma#-1)
+  0{PROP:Background}=GETINI('SYSTEEM','Achtergond',Color:None,'.\Voorraad.ini')
   PARENT.Ask
 
 

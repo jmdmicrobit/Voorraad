@@ -14,6 +14,7 @@
     <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bStringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0%3b_NetTalkDllMode_=&gt;1%3b_NetTalkLinkMode_=&gt;0%3b_TBARDllMode_=&gt;1%3b_TBARLinkMode_=&gt;0%3b_svDllMode_=&gt;1%3b_svLinkMode_=&gt;0%3b_MSSQLDateTime_=&gt;1%3b_ORACLEDateTime_=&gt;0</DefineConstants>
     <StartArguments>/Debuger</StartArguments>
     <StartWorkingDirectory>werk</StartWorkingDirectory>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
@@ -85,6 +86,7 @@
     <Library Include="CLAWE.Lib" />
     <Library Include="Voorraad.EXE.manifest" />
     <Library Include="Voorraad.Version" />
+    <Library Include="Win32Ext.LIB" />
     <None Include="caroot.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generated>True</Generated>
@@ -117,4 +119,7 @@
     </None>
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /as /fd sha256 /f "H:\Certificates\info@microbit_nl\info@microbit_nl.p12" /tr http://timestamp.digicert.com /td sha256 $(SolutionDir)werk\Voorraad.EXE</PostBuildEvent>
+  </PropertyGroup>
 </Project>

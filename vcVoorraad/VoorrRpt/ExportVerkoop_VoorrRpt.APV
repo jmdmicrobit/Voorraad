@@ -1,0 +1,1055 @@
+[MODULE]
+NAME 'ExportVerkoop_VoorrRpt.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME ExportVerkoop
+PROTOTYPE '(LONG, LONG)'
+PARAMETERS '(LONG __currentTab,LONG __relatieid)'
+[COMMON]
+FROM ABC Process
+[DATA]
+Progress:Thermometer     BYTE
+!!> GUID('1070b88b-5dde-4468-8ff6-aae80eb1e5f0')
+[SCREENCONTROLS]
+! PROMPT('Loc : Soort:'),USE(?Loc:Soort:Prompt)
+! LIST,USE(Loc:Soort),DROP(7),FROM('Onverwerkte verkopen|#1|Onverwerkte verkopen zonder datum|#2|Onverwerkte verkopen op planning|#3|Onverwerkt per Klant|#4|Verwerkt|#5|Verwerk per Klant|#6|Gefactureerd|#7|Gefactureerd per Klant|#8')
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:Soort),RIGHT(1)
+Loc:Soort                LONG
+!!> GUID('e090f786-85c0-4398-8dae-d44c74079e45'),VALID(INLIST('Onverwerkte verkopen|Onverwerkte verkopen zonder datum|Onverwerkte verkopen op planning|Onverwerkt per Klant|Verwerkt|Verwerk per Klant|Gefactureerd|Gefactureerd per Klant')),PROMPT('Loc : Soort:'),HEADER('Loc : Soort'),PICTURE(@n-14),TYPEMODE(INS),VALUES('1|2|3|4|5|6|7|8')
+[SCREENCONTROLS]
+! PROMPT('Loc : Vanaf Datum:'),USE(?Loc:VanafDatum:Prompt)
+! ENTRY(@D6),USE(Loc:VanafDatum)
+[REPORTCONTROLS]
+! STRING(@D6),USE(Loc:VanafDatum)
+Loc:VanafDatum           DATE
+!!> GUID('aeb3621e-a75d-4c16-a9ef-206628851341'),PROMPT('Loc : Vanaf Datum:'),HEADER('Loc : Vanaf Datum'),PICTURE(@D6),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : TMD atum:'),USE(?Loc:TMDatum:Prompt)
+! ENTRY(@d6),USE(Loc:TMDatum)
+[REPORTCONTROLS]
+! STRING(@d6),USE(Loc:TMDatum)
+Loc:TMDatum              DATE
+!!> GUID('a12d5531-d98f-4497-a1de-cbb1a519967b'),PROMPT('Loc : TMD atum:'),HEADER('Loc : TMD atum'),PICTURE(@d6),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Extrakosten:'),USE(?Loc:Extrakosten:Prompt)
+! ENTRY(@n-10.2),USE(Loc:Extrakosten),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10.2),USE(Loc:Extrakosten),DECIMAL(12)
+Loc:Extrakosten          DECIMAL(7,2)
+!!> GUID('a52d1025-91a8-4d2b-b1b2-58ed00fd4b29'),PROMPT('Loc : Extrakosten:'),HEADER('Loc : Extrakosten'),PICTURE(@n-10.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Loc : Verkoop ID:'),USE(?Loc:VerkoopID:Prompt)
+! ENTRY(@n-14),USE(Loc:VerkoopID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:VerkoopID),RIGHT(1)
+Loc:VerkoopID            LONG
+!!> GUID('9f839355-6566-479a-9ebc-d7f6262f6e81'),PROMPT('Loc : Verkoop ID:'),HEADER('Loc : Verkoop ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Totaal KG:'),USE(?Loc:TotaalKG:Prompt)
+! ENTRY(@n-10.2),USE(Loc:TotaalKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10.2),USE(Loc:TotaalKG),DECIMAL(12)
+Loc:TotaalKG             DECIMAL(7,2)
+!!> GUID('bd936f8a-e415-4bda-b8fc-c37778db7707'),PROMPT('Loc : Totaal KG:'),HEADER('Loc : Totaal KG'),PICTURE(@n-10.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Loc : Totaal Extrakosten:'),USE(?Loc:TotaalExtrakosten:Prompt)
+! ENTRY(@n-10.2),USE(Loc:TotaalExtrakosten),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10.2),USE(Loc:TotaalExtrakosten),DECIMAL(12)
+Loc:TotaalExtrakosten    DECIMAL(7,2)
+!!> GUID('d9a6b70b-5a02-4483-97f0-27a10d6679a5'),PROMPT('Loc : Totaal Extrakosten:'),HEADER('Loc : Totaal Extrakosten'),PICTURE(@n-10.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Loc : Extra Kosten Q:'),USE(?Loc:ExtraKostenQ:Prompt)
+! ENTRY(@s20),USE(Loc:ExtraKostenQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:ExtraKostenQ)
+Loc:ExtraKostenQ         QUEUE,PRE(LEQ)
+!!> GUID('c58c8127-3aae-4337-86c0-0e3966440f68'),PROMPT('Loc : Extra Kosten Q:'),HEADER('Loc : Extra Kosten Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Planning ID:'),USE(?LEQ:PlanningID:Prompt)
+! ENTRY(@n-14),USE(LEQ:PlanningID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LEQ:PlanningID),RIGHT(1)
+PlanningID                 LONG
+!!> GUID('280977ed-b4b8-40a6-8167-5292086d7634'),PROMPT('Planning ID:'),HEADER('Planning ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?LEQ:KG:Prompt)
+! ENTRY(@n-10.2),USE(LEQ:KG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10.2),USE(LEQ:KG),DECIMAL(12)
+KG                         DECIMAL(7,2)
+!!> GUID('812fbc29-c5e8-4c95-b41e-02aba685f535'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-10.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Extra Kosten:'),USE(?LEQ:ExtraKosten:Prompt)
+! ENTRY(@n-10.2),USE(LEQ:ExtraKosten),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10.2),USE(LEQ:ExtraKosten),DECIMAL(12)
+ExtraKosten                DECIMAL(7,2)
+!!> GUID('ca2c64bb-49c9-4607-a5d3-6ab5b887917a'),PROMPT('Extra Kosten:'),HEADER('Extra Kosten'),PICTURE(@n-10.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+                         END
+!!> GUID('6c101e63-7a3e-4ac0-8fe9-065f0e421ac8')
+[FILES]
+[PRIMARY]
+Verkoop
+[INSTANCE]
+0
+[KEY]
+Ver2:PK_Verkoop
+[SECONDARY]
+ARelatie Verkoop
+[OTHERS]
+Relatie
+ExtraKosten
+Gebruiker
+Partij
+ViewArtikel
+APlanning
+Planning
+[PROMPTS]
+%RangeLimitType DEFAULT  ('Current Value')
+%ClassItem UNIQUE DEFAULT  ('Default', 'Process', 'ProgressMgr', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 3
+WHEN  ('Default') ('ReportManager')
+WHEN  ('Process') ('ProcessClass')
+WHEN  ('ProgressMgr') ('StepClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 3
+WHEN  ('Default') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('StepLongClass')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 2
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Init {19}PROCEDURE(ProcessClass PC,<<REPORT R>,<<PrintPreviewClass PV>)', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Paused {17}BYTE', 'Timer {18}LONG', |
+  'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+WHEN  ('Process') ('TakeRecord {13}PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%ProcedureOneInstance LONG  (0)
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 4
+WHEN  ('Default') ('NO')
+WHEN  ('Process') ('NO')
+WHEN  ('ProgressMgr') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 3
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('Process') ('ThisProcess')
+WHEN  ('ProgressMgr') ('ProgressMgr')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('Default') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('Default') (1)
+WHEN  ('Process') (1)
+WHEN  ('ProgressMgr') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 4
+WHEN  ('Default') ('')
+WHEN  ('Process') ('')
+WHEN  ('ProgressMgr') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 4
+WHEN  ('Default') (0)
+WHEN  ('Process') (0)
+WHEN  ('ProgressMgr') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('ProgressMgr')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('ProgressMgr')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  (1, 2, 3, 4, 5, 6)
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 6
+WHEN  (1) ('Ver2:Verwerkt')
+WHEN  (2) ('Ver2:Planning')
+WHEN  (3) ('Ver2:Exported')
+WHEN  (4) ('Ver2:GebruikerID')
+WHEN  (5) ('Ver2:Valuta')
+WHEN  (6) ('Ver2:Koersverschil')
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 6
+WHEN  (1) ('Process')
+WHEN  (2) ('Process')
+WHEN  (3) ('Process')
+WHEN  (4) ('Process')
+WHEN  (5) ('Process')
+WHEN  (6) ('Process')
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ReportDataSource DEFAULT  ('File')
+%WindowMessage DEFAULT  ('')
+%ProcessAction DEFAULT  ('No record action')
+%UseProcessActionToTitle LONG  (1)
+%RIProcessAction LONG  (0)
+%UseMRP LONG  (1)
+%QueryDelete LONG  (0)
+%MDIProgressWindow LONG  (0)
+%ProgressInterval DEFAULT  ('10')
+%EnableQuickScan LONG  (1)
+%RecordFilter DEFAULT  ('')
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%AddConditionalSort MULTI LONG  ()
+%AddConditionalSortCondition DEPEND %AddConditionalSort DEFAULT TIMES 0
+
+%AddConditionalSortFieldsAssisted DEPEND %AddConditionalSort MULTI LONG TIMES 0
+
+%AddConditionalSortFieldAssisted DEPEND %AddConditionalSortFieldsAssisted FIELD TIMES 0
+
+%AddConditionalSortFieldAssistedOrder DEPEND %AddConditionalSortFieldsAssisted DEFAULT TIMES 0
+
+%AddSortDynamicNamed MULTI LONG  ()
+%AddSortFieldDinNameDescription DEPEND %AddSortDynamicNamed DEFAULT TIMES 0
+
+%AddSortFieldsDinName DEPEND %AddSortDynamicNamed MULTI LONG TIMES 0
+
+%AddSortFieldDinName DEPEND %AddSortFieldsDinName FIELD TIMES 0
+
+%AddSortFieldDinNameOrder DEPEND %AddSortFieldsDinName DEFAULT TIMES 0
+
+%AddSortFieldsDinSort MULTI LONG  ()
+%AddSortFieldDinSortDescription DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AddSortFieldDinSort DEPEND %AddSortFieldsDinSort FIELD TIMES 0
+
+%AddSortFieldDinSortOrder DEPEND %AddSortFieldsDinSort DEFAULT TIMES 0
+
+%AdditionalSortWindowTitle DEFAULT  ('Select the Order')
+%AdditionalSortWindowMessage DEFAULT  ('Select the order to process the data.')
+%AdditionalSortWindowOkButtonText DEFAULT  ('&OK')
+%AdditionalSortWindowOkButtonIcon DEFAULT  ('SOK.ICO')
+%AdditionalSortWindowOkButtonCursor DEFAULT  ('')
+%AdditionalSortWindowOkButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowOkButtonMsg DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonTip DEFAULT  ('Accept data and close the window')
+%AdditionalSortWindowOkButtonFlat LONG  (1)
+%AdditionalSortWindowOkButtonSkip LONG  (0)
+%AdditionalSortWindowOkButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowCancelButtonText DEFAULT  ('&Cancel')
+%AdditionalSortWindowCancelButtonIcon DEFAULT  ('SCANCEL.ICO')
+%AdditionalSortWindowCancelButtonCursor DEFAULT  ('')
+%AdditionalSortWindowCancelButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowCancelButtonMsg DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonTip DEFAULT  ('Cancel operation')
+%AdditionalSortWindowCancelButtonFlat LONG  (1)
+%AdditionalSortWindowCancelButtonSkip LONG  (0)
+%AdditionalSortWindowCancelButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowUpButtonText DEFAULT  ('')
+%AdditionalSortWindowUpButtonIcon DEFAULT  ('SUP.ICO')
+%AdditionalSortWindowUpButtonCursor DEFAULT  ('')
+%AdditionalSortWindowUpButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowUpButtonMsg DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonTip DEFAULT  ('Move field up')
+%AdditionalSortWindowUpButtonFlat LONG  (1)
+%AdditionalSortWindowUpButtonSkip LONG  (0)
+%AdditionalSortWindowUpButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowDownButtonText DEFAULT  ('')
+%AdditionalSortWindowDownButtonIcon DEFAULT  ('SDOWN.ICO')
+%AdditionalSortWindowDownButtonCursor DEFAULT  ('')
+%AdditionalSortWindowDownButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowDownButtonMsg DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonTip DEFAULT  ('Move field down')
+%AdditionalSortWindowDownButtonFlat LONG  (1)
+%AdditionalSortWindowDownButtonSkip LONG  (0)
+%AdditionalSortWindowDownButtonJustification DEFAULT  ('Left')
+%AdditionalSortWindowChOrdButtonText DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonIcon DEFAULT  ('SCH-ORD.ICO')
+%AdditionalSortWindowChOrdButtonCursor DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonKeyCode DEFAULT  ('')
+%AdditionalSortWindowChOrdButtonMsg DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonTip DEFAULT  ('Change Order')
+%AdditionalSortWindowChOrdButtonFlat LONG  (1)
+%AdditionalSortWindowChOrdButtonSkip LONG  (0)
+%AdditionalSortWindowChOrdButtonJustification DEFAULT  ('Left')
+%ApproxRecordCount DEFAULT  ('')
+%ManuallySetProgressLimits LONG  (0)
+%LowLimit DEFAULT  ('')
+%HighLimit DEFAULT  ('')
+%RangeField COMPONENT  ()
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%HotFields MULTI LONG  (1, 2, 3, 4, 5, 6)
+%HotField DEPEND %HotFields FIELD TIMES 6
+WHEN  (1) (Ver2:Verwerkt)
+WHEN  (2) (Ver2:Planning)
+WHEN  (3) (Ver2:Exported)
+WHEN  (4) (Ver2:GebruikerID)
+WHEN  (5) (Ver2:Valuta)
+WHEN  (6) (Ver2:Koersverschil)
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 6
+WHEN  (1) (1)
+WHEN  (2) (1)
+WHEN  (3) (1)
+WHEN  (4) (1)
+WHEN  (5) (1)
+WHEN  (6) (1)
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Default')
+WHEN  ('?Loc:Soort:2') ('Default')
+WHEN  ('?Pause') ('Default')
+WHEN  ('?Progress:Cancel') ('Default')
+
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Off')
+WHEN  ('?Loc:Soort:2') ('Off')
+WHEN  ('?Pause') ('Off')
+WHEN  ('?Progress:Cancel') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('')
+WHEN  ('?Loc:Soort:2') ('')
+WHEN  ('?Pause') ('')
+WHEN  ('?Progress:Cancel') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Loc:Soort:2') (0)
+WHEN  ('?Pause') (0)
+WHEN  ('?Progress:Cancel') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
+WHEN  ('?Loc:Soort:2') (-1)
+WHEN  ('?Pause') (-1)
+WHEN  ('?Progress:Cancel') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Loc:Soort:2') (0)
+WHEN  ('?Pause') (0)
+WHEN  ('?Progress:Cancel') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
+WHEN  ('?Loc:Soort:2') (-1)
+WHEN  ('?Pause') (-1)
+WHEN  ('?Progress:Cancel') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Loc:Soort:2') (0)
+WHEN  ('?Pause') (0)
+WHEN  ('?Progress:Cancel') (0)
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('No Special Action')
+WHEN  ('?Loc:Soort:2') ('No Special Action')
+WHEN  ('?Pause') ('No Special Action')
+WHEN  ('?Progress:Cancel') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 1
+WHEN  ('?Pause') ()
+
+%ButtonThread DEPEND %Control LONG TIMES 1
+WHEN  ('?Pause') (0)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('25000')
+WHEN  ('?Loc:Soort:2') ('25000')
+WHEN  ('?Pause') ('25000')
+WHEN  ('?Progress:Cancel') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?Pause') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 1
+WHEN  ('?Pause') (0)
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('None')
+WHEN  ('?Loc:Soort:2') ('None')
+WHEN  ('?Pause') ('None')
+WHEN  ('?Progress:Cancel') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?Pause') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?Pause') ()
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 6
+WHEN  ('') (1)
+WHEN  ('?Loc:Soort:2') (1)
+WHEN  ('?Loc:TMDatum') (1)
+WHEN  ('?Loc:VanafDatum') (1)
+WHEN  ('?Pause') (1)
+WHEN  ('?Progress:Cancel') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:Soort:2')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:Soort:2')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:Soort:2')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:Soort:2')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:Soort:2')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:Soort:2')TIMES 0
+WHEN  ('?Pause')TIMES 0
+WHEN  ('?Progress:Cancel')TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('AIBtn0')
+WHEN  ('?Loc:Soort:2') ('AIBtn7')
+WHEN  ('?Pause') ('AIBtn5')
+WHEN  ('?Progress:Cancel') ('AIBtn11')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 4
+WHEN  ('') (1)
+WHEN  ('?Loc:Soort:2') (1)
+WHEN  ('?Pause') (1)
+WHEN  ('?Progress:Cancel') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('?Progress:Thermometer')
+WHEN  ('?Loc:Soort:2') ('?Progress:Thermometer')
+WHEN  ('?Pause') ('?Progress:Thermometer')
+WHEN  ('?Progress:Cancel') ('?Progress:Thermometer')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Loc:Soort:2') (0)
+WHEN  ('?Pause') (0)
+WHEN  ('?Progress:Cancel') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Loc:Soort:2') (0)
+WHEN  ('?Pause') (0)
+WHEN  ('?Progress:Cancel') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Loc:Soort:2') (0)
+WHEN  ('?Pause') (0)
+WHEN  ('?Progress:Cancel') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Loc:Soort:2') (0)
+WHEN  ('?Pause') (0)
+WHEN  ('?Progress:Cancel') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8001
+PROPERTY:END
+Loc:Soort=__currentTab
+Loc:VanafDatum=Date(1,1,Year(TODAY()))
+Loc:TMDatum=TODAY()
+IF Loc:Soort<=6      ! verwerkte verkoop
+  HIDE(?Loc:TMDatum)
+  HIDE(?Loc:TMDatum:Prompt)
+  HIDE(?Loc:VanafDatum)
+  HIDE(?Loc:VanafDatum:Prompt)
+ELSE
+  UNHIDE(?Loc:TMDatum)
+  UNHIDE(?Loc:TMDatum:Prompt)
+  UNHIDE(?Loc:VanafDatum)
+  UNHIDE(?Loc:VanafDatum:Prompt)
+END
+[END]
+[END]
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Pause'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+    ! sortering of selectie opgelev
+IF Loc:Soort=1      ! onverwerkte verkoop
+  ThisProcess.SetFilter('Ver2:Verwerkt = 0')
+ELSIF Loc:Soort=2      ! onverwerkte verkoop zonder Datum
+  ThisProcess.SetFilter('Ver2:Verwerkt = 0 AND NULL(Ver2:Planning)')
+ELSIF Loc:Soort=3      ! onverwerkte verkoop + sorteren
+  ThisProcess.AddSortOrder(Ver2:Verkoop_FK01)
+  ThisProcess.SetFilter('Ver2:Verwerkt = 0')
+ELSIF Loc:Soort=4      ! onverwerkte verkoop + per klant
+  ThisProcess.SetFilter('Ver2:Verwerkt = 0 AND Ver2:Klant = '&__RelatieID)
+ELSIF Loc:Soort=5      ! verwerkte verkoop
+  ThisProcess.SetFilter('Ver2:Verwerkt = 1 AND Ver2:Exported = 0')
+ELSIF Loc:Soort=6      ! verwerkte verkoop
+  ThisProcess.SetFilter('Ver2:Verwerkt = 1 AND Ver2:Exported = 0 AND Ver2:Klant = '&__RelatieID)
+ELSIF Loc:Soort=7      ! verwerkte verkoop
+  ThisProcess.SetFilter('Ver2:Verwerkt = 1 AND Ver2:Exported = 1 AND Ver2:Planning >= <39>'&Format(Loc:VanafDatum,@D10-)&' 00:00<39> AND Ver2:Planning <= <39>'&Format(Loc:TMDatum,@D10-)&' 23:59<39>')
+ELSIF Loc:Soort=8      ! verwerkte verkoop
+  ThisProcess.SetFilter('Ver2:Verwerkt = 1 AND Ver2:Exported = 1 AND Ver2:Klant = '&__RelatieID&' AND Ver2:Planning >= <39>'&Format(Loc:VanafDatum,@D10-)&' 00:00<39> AND Ver2:Planning <= <39>'&Format(Loc:TMDatum,@D10-)&' 23:59<39>')
+END
+[END]
+[END]
+[END]
+EMBED %ProcessManagerMethodCodeSection
+[INSTANCES]
+WHEN 'TakeRecord'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+    ! exporteren die handel
+IF Loc:OleInit=FALSE
+    Loc:OleInit=TRUE
+    ExcelClass.InitOle()
+    ExcelClass.MaakExcel()
+    Loc:Rij=1
+    LocalClass.CurrentKolom=0
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Verkoop')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'DebCode')
+    Loc:Ole{'Columns("'&ExcelClass.BepaalKolom(LocalClass.CurrentKolom)&':'&ExcelClass.BepaalKolom(LocalClass.CurrentKolom)&'").ColumnWidth'} = 20
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Klant')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Vertegenwoordiger')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Planning')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Tijdstip')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Verwerkt')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Gefactureerd')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Artikel')
+    Loc:Ole{'Columns("'&ExcelClass.BepaalKolom(LocalClass.CurrentKolom)&':'&ExcelClass.BepaalKolom(LocalClass.CurrentKolom)&'").ColumnWidth'} = 30
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'ArtikelOmschrijving')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'KG')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Partij')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Aanmaakdatum')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Leverancier')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Inkoopprijs')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Verkoopprijs')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Extra orderkosten')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Extra regelkosten')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Valuta')
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Koersverschil')
+END
+Clear(Pla:Record)
+Pla:VerkoopID=Ver2:VerkoopID
+Set(Pla:Planning_FK02,Pla:Planning_FK02)
+Loop until access:Planning.Next()
+    IF NOT Pla:VerkoopID=Ver2:VerkoopID then Break.
+    Loc:Rij+=1
+    LocalClass.CurrentKolom=0
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Ver2:VerkoopID)
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,AREL:Code)
+    IF AREL:FirmaNaam=''
+        ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'Onbekende klantid: '&Ver2:Klant)
+    ELSE
+        ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,AREL:FirmaNaam)
+    END
+    Clear(Geb:Record)
+    Geb:ID=Ver2:GebruikerID
+    IF Access:Gebruiker.Fetch(Geb:PK_Gebruiker)=Level:Benign
+    END
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Geb:VolledigeNaam)
+
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Ver2:Planning_DATE,@D10-))
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Ver2:Planning_TIME,@T04))
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Ver2:Verwerkt)
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Ver2:Exported)
+
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Pla:ArtikelID)
+    Clear(Art:Record)
+    Art:ArtikelID=Pla:ArtikelID
+    if Access:ViewArtikel.Fetch(Art:Artikel_PK)=Level:Benign
+        ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Art:ArtikelOms)
+    ELSE
+        ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'ArtikelOmschrijving onbekend')
+    END
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Pla:KG)
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Pla:PartijID)
+    IF Pla:PartijID<>0
+        Clear(Par:Record)
+        Par:PartijID=Pla:PartijID
+        IF Access:Partij.Fetch(Par:Partij_PK)=Level:Benign
+            ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Par:AanmaakDatum_DATE,@D10-))
+            Clear(Rel:Record)
+            Rel:RelatieID=Par:Leverancier
+            if Access:Relatie.Fetch(Rel:Relatie_PK)=Level:Benign
+            END
+            ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Rel:FirmaNaam)
+            ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Par:InkoopKGPrijs,@N-7`3))
+        ELSE
+            ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'')
+            ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'')
+            ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Pla:InkoopKGPrijs,@N-7`3))
+        END
+    ELSE
+        ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'')
+        ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,'')
+        ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Pla:InkoopKGPrijs,@N-7`3))
+    END
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Pla:VerkoopKGPrijs,@N-7`3))
+
+    IF Loc:VerkoopID<>PLA:VerkoopID        ! deze maar 1 keer per verkoop  bepalen
+        Loc:VerkoopID=PLA:VerkoopID
+        Clear(Loc:TotaalKG)
+        Clear(Loc:TotaalExtrakosten)
+        FREE(Loc:ExtraKostenQ)
+        Clear(Ext:Record)
+        Ext:VerkoopID=PLA:VerkoopID
+        Set(Ext:FK1_ExtraKosten,Ext:FK1_ExtraKosten)
+        Loop Until Access:ExtraKosten.Next()
+            IF not Ext:VerkoopID=PLA:VerkoopID THEN Break.
+            Loc:TotaalExtrakosten+=Ext:ExtraKosten
+        END
+        IF Loc:TotaalExtrakosten<>0
+            Clear(APla:Record)
+            APla:VerkoopID=PLA:VerkoopID
+            Set(APla:Planning_FK02,APla:Planning_FK02)
+            Loop until access:APlanning.Next()
+            IF NOT APla:VerkoopID=PLA:VerkoopID then Break.
+                LEQ:PlanningID=APla:PlanningID
+                LEQ:KG=APla:KG
+                Add(Loc:ExtraKostenQ,+LEQ:PlanningID)
+                Loc:TotaalKG+=APla:KG
+                db.DebugOut('LEQ toegevoegd Totaalkosten '&Loc:TotaalExtrakosten&' Planning '&LEQ:PlanningID&' kg '&LEQ:KG)
+            END
+        END
+    END
+    IF Records(Loc:ExtraKostenQ)=0 OR Loc:TotaalKG=0 OR Loc:TotaalExtrakosten=0
+        Clear(Loc:Extrakosten)
+    ELSE
+        LEQ:PlanningID=Pla:PlanningID
+        GET(Loc:ExtraKostenQ,+LEQ:PlanningID)
+        IF NOT ERROR() AND LEQ:KG<>0
+            Loc:Extrakosten = Loc:TotaalExtrakosten*LEQ:KG/Loc:TotaalKG
+        END
+    END
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(CHOOSE(Pla:KG=0,0,Loc:Extrakosten/Pla:KG),@N-7`3))
+    Clear(Loc:Extrakosten)
+    Clear(Ext:Record)
+    Ext:PlanningID=Pla:PlanningID
+    Set(Ext:FK3_ExtraKosten,Ext:FK3_ExtraKosten)
+    Loop Until Access:ExtraKosten.Next()
+        IF not Ext:PlanningID=Pla:PlanningID THEN Break.
+        Loc:Extrakosten+=Ext:ExtraKosten
+    END
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(CHOOSE(Pla:KG=0,0,Loc:Extrakosten/Pla:KG),@N-7`3))
+
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Ver2:Valuta)
+    ExcelClass.SchrijfExcel(LocalClass.NextKolom(),Loc:Rij,Format(Ver2:Koersverschil,@N-7`2))
+
+END
+[END]
+[END]
+[END]
+EMBED %LocalProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.NextKolom        Procedure()
+
+CODE
+    SELF.CurrentKolom+=1
+    RETURN ExcelClass.BepaalKolom(SELF.CurrentKolom)
+
+[END]
+EMBED %LocalDataAfterClasses
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass          CLASS
+NextKolom            Procedure(),String
+
+CurrentKolom        LONG
+                    END
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 2
+OWNER 5
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%CheckForCantCloseNowSetHere LONG  (1)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%WindowsVisibleAfterOpen LONG  (1)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (1)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%locCloseDownWhenWindowClosesSet LONG  (1)
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 1
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC PauseButton
+[INSTANCE]
+INSTANCE 3
+[PROMPTS]
+%PauseText DEFAULT  ('Pause')
+%RestartText DEFAULT  ('Restart')
+%DeferOpen LONG  (1)
+%StartText DEFAULT  ('Start')
+%MultiStart LONG  (0)
+[ADDITION]
+NAME JMDTemplates JMDEXCEL
+[INSTANCE]
+INSTANCE 4
+[WINDOW]
+ProgressWindow WINDOW('Progress...'),AT(,,142,109),DOUBLE,CENTER,GRAY,TIMER(1)
+          PROGRESS,AT(15,15,111,12),USE(Progress:Thermometer),RANGE(0,100),#ORIG(Progress:Thermometer), |
+            #ORDINAL(1)
+          STRING(''),AT(0,3,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString), |
+            #ORDINAL(2)
+          STRING(''),AT(0,30,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText), |
+            #ORDINAL(3)
+          PROMPT('Soort:'),AT(5,49),USE(?Loc:Soort:Prompt),#ORDINAL(6)
+          LIST,AT(26,48,114,12),USE(Loc:Soort,,?Loc:Soort:2),DROP(7),FROM('Onverwerkte ' & |
+            'verkopen|#1|Onverwerkte verkopen zonder datum|#2|Onverwerkte verkopen op p' & |
+            'lanning|#3|Onverwerkt per Klant|#4|Verwerkt|#5|Verwerk per Klant|#6|Gefact' & |
+            'ureerd|#7|Gefactureerd per Klant|#8'),#ORDINAL(7)
+          PROMPT('Vanaf:'),AT(5,63),USE(?Loc:VanafDatum:Prompt),#ORDINAL(10000)
+          ENTRY(@D6),AT(80,64,60,10),USE(Loc:VanafDatum),#ORDINAL(10001)
+          PROMPT('Tot en met:'),AT(5,77),USE(?Loc:TMDatum:Prompt),#ORDINAL(10002)
+          ENTRY(@d6),AT(80,78,60,10),USE(Loc:TMDatum),#ORDINAL(10003)
+          BUTTON('Pause'),AT(15,90),USE(?Pause),#ORIG(?Pause),#SEQ(3),#ORDINAL(5)
+          BUTTON('Cancel'),AT(76,90,50,15),USE(?Progress:Cancel),#ORIG(?Progress:Cancel),#ORDINAL(4)
+        END
+
+[END]

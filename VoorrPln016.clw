@@ -55,6 +55,7 @@ LOC:VerkoopPallets2  LONG                                  !
 LOC:VerkoopPallets3  LONG                                  ! 
 LOC:ActiviteitTabColor LONG                                ! 
 LOC:VerkoopCelOms    CSTRING(51)                           ! 
+Loc:KwaliteitKnopVerbergen BYTE                            ! 
 BRW6::View:Browse    VIEW(PlanningInkoop)
                        PROJECT(Pla2:ArtikelID)
                        PROJECT(Pla2:ArtikelOms)
@@ -472,6 +473,7 @@ BRW3::View:Browse    VIEW(APlanningInkoop)
                        PROJECT(APla2:MutatieKG)
                        PROJECT(APla2:MutatiePallets)
                        PROJECT(APla2:Pallets)
+                       PROJECT(APla2:PartijID)
                        PROJECT(APla2:Planning)
                      END
 Queue:Browse:3       QUEUE                            !Queue declaration for browse/combo box using ?InkoopList2
@@ -570,6 +572,7 @@ APla2:KG               LIKE(APla2:KG)                 !Browse hot field - type d
 APla2:MutatieKG        LIKE(APla2:MutatieKG)          !Browse hot field - type derived from field
 APla2:MutatiePallets   LIKE(APla2:MutatiePallets)     !Browse hot field - type derived from field
 APla2:Pallets          LIKE(APla2:Pallets)            !Browse hot field - type derived from field
+APla2:PartijID         LIKE(APla2:PartijID)           !Browse hot field - type derived from field
 APla2:Planning         LIKE(APla2:Planning)           !Browse key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
@@ -1098,15 +1101,16 @@ QuickWindow          WINDOW('Planning'),AT(,,851,396),FONT('MS Sans Serif',8,,,C
   '~C(0)@p p@[30L(2)|M*~Cel~C(0)@s50@30L(2)|M*~Locatie~C(0)@s50@]|M~Cel~86L(2)|M*~Trans' & |
   'port~C(0)@s100@50R(2)|M*~Planning-ID~C(2)@n_10@'),FROM(Queue:Browse:3),IMM
                            BUTTON('Verwerkt'),AT(131,356,43,14),USE(?InkoopVerwerk2),COLOR(00EBCE87h)
-                           BUTTON('Palletstickers'),AT(303,357,57,14),USE(?InkoopPrint2),COLOR(0000D7FFh)
+                           BUTTON('Palletstickers'),AT(365,357,57,14),USE(?InkoopPrint2),COLOR(0000D7FFh)
                            BUTTON('Inslag'),AT(5,356,53,14),USE(?InkoopInslag2),COLOR(00EBCE87h)
                            BUTTON('Transfers'),AT(796,357,50,14),USE(?TransferButton2),COLOR(00CBC0FFh)
                            BUTTON('Handmatig verwerken'),AT(680,34,85,14),USE(?InkoopHVerwerkt2),COLOR(00EBCE87h)
                            BUTTON('Inslag via weging'),AT(61,356,65),USE(?InslagWeging2),COLOR(00EBCE87h)
-                           BUTTON('Weeglijst'),AT(629,357,44,14),USE(?Weeglijst2),COLOR(00DDA0DDh)
-                           BUTTON('Weeglijst (Excel)'),AT(677,357,69,14),USE(?WeeglijstExcel2),COLOR(00DDA0DDh)
-                           BUTTON('Inslag-rapport'),AT(240,357),USE(?InslagRapportButton2),COLOR(0000D7FFh)
-                           BUTTON('Terugdraaien'),AT(178,356),USE(?InkoopTerugdraaien2),COLOR(00EBCE87h)
+                           BUTTON('Weeglijst'),AT(629,356,44,14),USE(?Weeglijst2),COLOR(00DDA0DDh)
+                           BUTTON('Weeglijst (Excel)'),AT(677,356,69,14),USE(?WeeglijstExcel2),COLOR(00DDA0DDh)
+                           BUTTON('Inslag-rapport'),AT(302,357),USE(?InslagRapportButton2),COLOR(0000D7FFh)
+                           BUTTON('Terugdraaien'),AT(178,357),USE(?InkoopTerugdraaien2),COLOR(00EBCE87h)
+                           BUTTON('Kwaliteit'),AT(240,357,58,14),USE(?InkoopKwaliteit),COLOR(00EBCE87h)
                          END
                          TAB('Overboeken'),USE(?TAB2)
                            LIST,AT(5,36,840,320),USE(?OverboekList2),HVSCROLL,FORMAT('[30L(2)|M*~ID~C(0)@s30@70L(2' & |
@@ -1134,20 +1138,21 @@ QuickWindow          WINDOW('Planning'),AT(,,851,396),FONT('MS Sans Serif',8,,,C
   '@30C(2)|M*I~Verwerkt~C(0)@p p@30C(2)|M*I~Gewogen~C(0)@p p@[20L(2)|M*@s50@40L(2)|M*@s' & |
   '50@]|M~Cel~50L(2)|M*~Herkomst Cel~C(0)@s50@50L(2)|M*~Leverancier~C(0)@s50@50L(2)|M*P' & |
   '~Transport~C(0)@s100@60L(2)|M*P~Planning ID~L(0)@n-14@'),FROM(Queue:Browse:5),IMM
-                           BUTTON('Sjabloon'),AT(539,358,43,14),USE(?VerkoopSjabloon4),COLOR(0000D7FFh)
+                           BUTTON('Sjabloon'),AT(545,358,39,14),USE(?VerkoopSjabloon4),COLOR(0000D7FFh)
                            BUTTON('Uitslag'),AT(3,358,41,14),USE(?VerkoopUitslag4),COLOR(00EBCE87h)
-                           BUTTON('Print CMR'),AT(360,358,48,14),USE(?VerkoopPrintCMR4),COLOR(0000D7FFh)
-                           BUTTON('Verwerkt'),AT(121,358,43,14),USE(?VerkoopVerwerkt4),COLOR(00EBCE87h)
+                           BUTTON('Print CMR'),AT(377,358,40,14),USE(?VerkoopPrintCMR4),COLOR(0000D7FFh)
+                           BUTTON('Verwerkt'),AT(121,358,34,14),USE(?VerkoopVerwerkt4),COLOR(00EBCE87h)
                            BUTTON('Handmatig verwerken'),AT(767,35,76,14),USE(?VerkoopHVerwerkt4),COLOR(00EBCE87h)
                            BUTTON('Uitslag via weging'),AT(45,358),USE(?VerkoopUitslagWeging4),COLOR(00EBCE87h)
                            BUTTON('Weeglijst'),AT(631,358,44,14),USE(?Weeglijst4),COLOR(00DDA0DDh)
                            BUTTON('Weeglijst (Excel)'),AT(678,358,69,14),USE(?WeeglijstExcel4),COLOR(00DDA0DDh)
-                           BUTTON('Uitslag-rapport'),AT(229,358),USE(?UitslagRapport4),COLOR(0000D7FFh)
-                           BUTTON('Terugdraaien'),AT(168,358),USE(?VerkoopTerugdraaienButton4),COLOR(00EBCE87h)
+                           BUTTON('Uitslag-rapport'),AT(265,358,55),USE(?UitslagRapport4),COLOR(0000D7FFh)
+                           BUTTON('Terugdraaien'),AT(159,358,47),USE(?VerkoopTerugdraaienButton4),COLOR(00EBCE87h)
                            BUTTON('Rapport'),AT(586,358),USE(?VerkoopRapport4),COLOR(0000D7FFh)
-                           BUTTON('Palletbladen'),AT(411,358,48,14),USE(?VerkoopPrintPalletblad:2),COLOR(0000D7FFh)
-                           BUTTON('Palletstickers'),AT(296,358,63,14),USE(?PrintVerkoopStickers:2),COLOR(0000D7FFh)
-                           BUTTON('Palletbladen (Export)'),AT(463,358,73,14),USE(?VerkoopPalletbladExport2),COLOR(0000D7FFh)
+                           BUTTON('Palletbladen'),AT(419,358,48,14),USE(?VerkoopPrintPalletblad:2),COLOR(0000D7FFh)
+                           BUTTON('Palletstickers'),AT(321,358,53,14),USE(?PrintVerkoopStickers:2),COLOR(0000D7FFh)
+                           BUTTON('Palletbladen (Export)'),AT(470,358,72,14),USE(?VerkoopPalletbladExport2),COLOR(0000D7FFh)
+                           BUTTON('Kwaliteit'),AT(209,359,47,14),USE(?VerkoopKwaliteit),COLOR(00EBCE87h)
                          END
                          TAB('Activiteiten'),USE(?ActiviteitTab)
                            LIST,AT(6,39,759,312),USE(?List),HVSCROLL,FORMAT('[63L(2)|M*~Datum~C(0)@d6-@40L(2)|M*~T' & |
@@ -1690,9 +1695,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:VerkoopPallets3',LOC:VerkoopPallets3)          ! Added by: BrowseBox(ABC)
   BIND('LOC:Locatienaam3',LOC:Locatienaam3)                ! Added by: BrowseBox(ABC)
   BIND('ACT:ActiviteitID',ACT:ActiviteitID)                ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -1778,6 +1783,10 @@ ReturnValue          BYTE,AUTO
       ?OverboekList{PROPLIST:Width, 7} = 0
       ?OverboekList2{PROPLIST:Width, 7} = 0    
   END
+  
+  Loc:KwaliteitKnopVerbergen=GETINI('SYSTEEM','KwaliteitKnopVerbergen',True,'.\Voorraad.ini')
+  ?InkoopKwaliteit{Prop:Hide}=Loc:KwaliteitKnopVerbergen
+  ?VerkoopKwaliteit{Prop:Hide}=Loc:KwaliteitKnopVerbergen
   WinAlertMouseZoom()
   Do DefineListboxStyle
   BRW6.Q &= Queue:Browse
@@ -1902,6 +1911,7 @@ ReturnValue          BYTE,AUTO
   BRW3.AddField(APla2:MutatieKG,BRW3.Q.APla2:MutatieKG)    ! Field APla2:MutatieKG is a hot field or requires assignment from browse
   BRW3.AddField(APla2:MutatiePallets,BRW3.Q.APla2:MutatiePallets) ! Field APla2:MutatiePallets is a hot field or requires assignment from browse
   BRW3.AddField(APla2:Pallets,BRW3.Q.APla2:Pallets)        ! Field APla2:Pallets is a hot field or requires assignment from browse
+  BRW3.AddField(APla2:PartijID,BRW3.Q.APla2:PartijID)      ! Field APla2:PartijID is a hot field or requires assignment from browse
   BRW3.AddField(APla2:Planning,BRW3.Q.APla2:Planning)      ! Field APla2:Planning is a hot field or requires assignment from browse
   BRW9.Q &= Queue:Browse:4
   BRW9.FileLoaded = 1                                      ! This is a 'file loaded' browse
@@ -2004,7 +2014,7 @@ ReturnValue          BYTE,AUTO
   BRW11.AddField(ACT:DatumTijd,BRW11.Q.ACT:DatumTijd)      ! Field ACT:DatumTijd is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Resize,Resize:SetMinSize)       ! Controls will change size as the window gets bigger
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
-  BRW11.AskProcedure = 14                                  ! Will call: UpdateActiviteit((LOC:DatumNu))
+  BRW11.AskProcedure = 6                                   ! Will call: UpdateActiviteit((LOC:DatumNu))
   BRW12.AddToolbarTarget(Toolbar)                          ! Browse accepts toolbar control
   BRW11.AddToolbarTarget(Toolbar)                          ! Browse accepts toolbar control
   SELF.SetAlerts()
@@ -2083,14 +2093,6 @@ ReturnValue          BYTE,AUTO
   ELSE
     GlobalRequest = Request
     EXECUTE Number
-      UpdateActiviteit((LOC:DatumNu))
-      UpdateActiviteit((LOC:DatumNu))
-      UpdateActiviteit((LOC:DatumNu))
-      UpdateActiviteit((LOC:DatumNu))
-      UpdateActiviteit((LOC:DatumNu))
-      UpdateActiviteit((LOC:DatumNu))
-      UpdateActiviteit((LOC:DatumNu))
-      UpdateActiviteit((LOC:DatumNu))
       UpdateActiviteit((LOC:DatumNu))
       UpdateActiviteit((LOC:DatumNu))
       UpdateActiviteit((LOC:DatumNu))
@@ -3566,6 +3568,18 @@ Looped BYTE
       
       GLO:GebruikerLogHandelingOpmerking = ''
       DO RefreshWindow      
+    OF ?InkoopKwaliteit
+      ThisWindow.Update()
+      Get(BRW3.Q,Choice(?InkoopList2))
+      IF ERROR() THEN CYCLE.
+      ! de goede Partij vinden
+      Clear(Mut:Record)
+      Par:PartijID=BRW3.Q.APla2:PartijID
+      IF Access:Partij.Fetch(Par:Partij_PK)=Level:Benign
+          GlobalRequest=ChangeRecord
+          UpdatePartijKwaliteit()
+      END
+      
     OF ?OverboekPrintStickers3
       ThisWindow.Update()
       ! Planningrecord inlezen
@@ -3870,6 +3884,22 @@ Looped BYTE
       IF NOT(ERROR()) THEN
           ThisWindow.GetMutatie(Brw12.Q.APla3:PlanningID,'UitslagWeging_PalletBlad_Export')
       END
+    OF ?VerkoopKwaliteit
+      ThisWindow.Update()
+      Get(BRW12.Q,Choice(?VerkoopList:2))
+      IF ERROR() THEN CYCLE.
+      ! de gode mutatie vinden
+      Clear(Mut:Record)
+      Mut:PlanningID=BRW12.Q.APla3:PlanningID
+      Set(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+      Loop Until Access:Mutatie.Next()
+          IF NOT Mut:PlanningID=BRW12.Q.APla3:PlanningID THEN BREAK.
+          IF Mut:SoortMutatie='UIT'
+              GlobalRequest=ChangeRecord
+              UpdateMutatieKwaliteit()
+          END
+      END
+      
     OF ?Gister
       ThisWindow.Update()
       Loc:DatumNu -= 1
@@ -4223,6 +4253,8 @@ ThisWindow.UitslagReport PROCEDURE(LONG PRM:PlanningID)
 
 ThisWindow.HandleButton PROCEDURE(STRING PRM:Functie, STRING PRM:InkOvrVer, BOOL PRM:LosseTab)
 
+stmessage           StringTheory
+
   CODE
   IF NOT(PRM:LosseTab) THEN
   	! Tabblad Planning
@@ -4276,7 +4308,20 @@ ThisWindow.HandleButton PROCEDURE(STRING PRM:Functie, STRING PRM:InkOvrVer, BOOL
   
   IF CLIP(PRM:Functie) = 'Terugdraaien'
   	!IF NOT(SELF.RegelVerwerkt())
-  		IF MESSAGE('Mutaties terugdraaien? De bijbehorende mutaties en mogelijke wegingen worden verwijderd.', 'Planning-regel terugdraaien', ICON:Exclamation, BUTTON:Yes+BUTTON:No, BUTTON:No) =  BUTTON:Yes THEN
+        stmessage.SetValue('Mutaties terugdraaien? De bijbehorende mutaties en mogelijke wegingen worden verwijderd.')
+        ! Inkoop terugdraaien 
+        IF PRM:InkOvrVer = 'INK'
+            stmessage.SetValue('Wilt u de Mutaties terugdraaien van artikelID ')
+            stmessage.Append(CLIP(Pla:ArtikelID))
+            stmessage.Append('Planning :',,'|')
+            stmessage.Append(CLIP(Pla:KG)&' kg ',,' ')
+            stmessage.Append(CLIP(Pla:Pallets)&' pallets ',,' ')
+            stmessage.Append('Mutatie :',,'|')
+            stmessage.Append(CLIP(Pla:MutatieKG)&' kg ',,' ')
+            stmessage.Append(CLIP(Pla:MutatiePallets)&' pallets ',,' ')
+            stmessage.Append('De bijbehorende mutaties en mogelijke wegingen worden verwijderd!',,'|')
+        END    
+  		IF MESSAGE(stmessage.Str(), 'Planning-regel ('&Pla:PlanningID&') terugdraaien', ICON:Exclamation, BUTTON:Yes+BUTTON:No, BUTTON:No) =  BUTTON:Yes THEN
   			IF VoorraadClass.VerwijderPlanningMutaties(Pla:PlanningID)
   				DO RefreshWindow
   			END
@@ -6015,4 +6060,6 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   SELF.SetStrategy(?OverboekList2, Resize:FixLeft+Resize:FixTop, Resize:ConstantRight+Resize:ConstantBottom) ! Override strategy for ?OverboekList2
   SELF.SetStrategy(?VerkoopPalletbladExport2, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?VerkoopPalletbladExport2
   SELF.SetStrategy(?VerkoopPalletbladExport, Resize:FixLeft, Resize:LockSize) ! Override strategy for ?VerkoopPalletbladExport
+  SELF.SetStrategy(?VerkoopKwaliteit, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?VerkoopKwaliteit
+  SELF.SetStrategy(?InkoopKwaliteit, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?InkoopKwaliteit
 

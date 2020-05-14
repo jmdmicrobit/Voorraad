@@ -115,16 +115,16 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Ext:ExtraKostenID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:ExtraKosten)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Ext:Record,History::Ext:Record)
   SELF.AddHistoryField(?Ext:ExtraKostenID,1)
   SELF.AddHistoryField(?Ext:Aantal,6)
   SELF.AddHistoryField(?Ext:Prijs,7)
   SELF.AddHistoryField(?Ext:ExtraKosten,8)
-  SELF.AddUpdateFile(Access:ExtraKosten)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:ExtraKosten.Open                                  ! File ExtraKosten used by this procedure, so make sure it's RelationManager is open
   Relate:KostenStamgeg.Open                                ! File KostenStamgeg used by this procedure, so make sure it's RelationManager is open

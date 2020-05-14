@@ -70,7 +70,8 @@ FDCB7::View:FileDropCombo VIEW(ViewVoorraadPlanning)
                        PROJECT(VVP:InslagPallets)
                        PROJECT(VVP:UitslagKG)
                        PROJECT(VVP:UitslagPallets)
-                       JOIN(Art:Artikel_PK)
+                       JOIN(Art:Artikel_PK,VVP:ArtikelID)
+                         PROJECT(Art:ArtikelID)
                        END
                      END
 FDCB4::View:FileDropCombo VIEW(ViewVoorraadPartij)
@@ -125,11 +126,9 @@ FDCB12::View:FileDropCombo VIEW(AAAViewVoorraadPartij)
                        PROJECT(AAAVVPar:VoorraadPallets)
                        PROJECT(AAAVVPar:CelID)
                      END
-FDCB13::View:FileDropCombo VIEW(ViewPartijCelLocaties)
-                       PROJECT(VPCL:CelLocatienaam)
-                       PROJECT(VPCL:PartijID)
-                       PROJECT(VPCL:CelID)
-                       PROJECT(VPCL:CelLocatieID)
+FDCB13::View:FileDropCombo VIEW(CelLocatie)
+                       PROJECT(CL:Locatienaam)
+                       PROJECT(CL:CelLocatieID)
                      END
 FDCB14::View:FileDropCombo VIEW(ACelLocatie)
                        PROJECT(ACL:Locatienaam)
@@ -152,6 +151,7 @@ VVP:InslagKG           LIKE(VVP:InslagKG)             !Browse hot field - type d
 VVP:InslagPallets      LIKE(VVP:InslagPallets)        !Browse hot field - type derived from field
 VVP:UitslagKG          LIKE(VVP:UitslagKG)            !Browse hot field - type derived from field
 VVP:UitslagPallets     LIKE(VVP:UitslagPallets)       !Browse hot field - type derived from field
+Art:ArtikelID          LIKE(Art:ArtikelID)            !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -224,10 +224,8 @@ Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
 Queue:FileDropCombo:5 QUEUE                           !
-VPCL:CelLocatienaam    LIKE(VPCL:CelLocatienaam)      !List box control field - type derived from field
-VPCL:PartijID          LIKE(VPCL:PartijID)            !Primary key field - type derived from field
-VPCL:CelID             LIKE(VPCL:CelID)               !Primary key field - type derived from field
-VPCL:CelLocatieID      LIKE(VPCL:CelLocatieID)        !Primary key field - type derived from field
+CL:Locatienaam         LIKE(CL:Locatienaam)           !List box control field - type derived from field
+CL:CelLocatieID        LIKE(CL:CelLocatieID)          !Primary key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -285,8 +283,8 @@ QuickWindow          WINDOW('Form Mutatie'),AT(,,684,434),FONT('MS Sans Serif',8
                        PROMPT('Cel:'),AT(81,160),USE(?PROMPT3)
                        ENTRY(@n12_`2),AT(365,126,54,10),USE(Mut:UitslagKG),RIGHT
                        ENTRY(@n11.),AT(432,126,60,10),USE(Mut:UitslagPallet),RIGHT
-                       COMBO(@s50),AT(126,170,227,10),USE(VPCL:CelLocatienaam),DROP(5),FORMAT('200L(2)|M~Locat' & |
-  'ienaam~L(0)@s50@'),FROM(Queue:FileDropCombo:5),IMM
+                       COMBO(@s50),AT(126,170,227,10),USE(CL:Locatienaam),DROP(5),FORMAT('200L(2)|M~Locatienaam~@s50@'), |
+  FROM(Queue:FileDropCombo:5),IMM
                        PROMPT('Leverancier:'),AT(80,138),USE(?PROMPT4)
                        PROMPT('Verpakking:'),AT(80,149),USE(?PROMPT5)
                        STRING(@s50),AT(125,138,233),USE(VVPar:LeverancierFirmanaam)
@@ -365,22 +363,26 @@ QuickWindow          WINDOW('Form Mutatie'),AT(,,684,434),FONT('MS Sans Serif',8
   VALUE('1','0')
                          PROMPT('Uitgevoerd Door:'),AT(507,69),USE(?Mut:UitslagQAUitgevoerdDoor:Prompt)
                          ENTRY(@s40),AT(563,69,109,10),USE(Mut:UitslagQAUitgevoerdDoor)
-                         PROMPT('Gemeten temperaturen:'),AT(506,85),USE(?Mut:UitslagQATemperatuur1:Prompt)
-                         ENTRY(@s20),AT(507,96,50,10),USE(Mut:UitslagQATemperatuur1)
-                         ENTRY(@s20),AT(563,96,50,10),USE(Mut:UitslagQATemperatuur2)
-                         ENTRY(@s20),AT(622,96,50,10),USE(Mut:UitslagQATemperatuur3)
-                         ENTRY(@s20),AT(613,108,60,10),USE(Mut:UitslagQATemperatuurVervoermiddel)
-                         PROMPT('Afwijking:'),AT(506,120),USE(?Mut:UitslagQAActieAfwijkingen:Prompt)
-                         TEXT,AT(508,133,165,68),USE(Mut:UitslagQAActieAfwijkingen),HVSCROLL
-                         PROMPT('Corrigerende Maatregel:'),AT(507,298),USE(?Mut:CorrigerendeMaatregel:Prompt)
-                         PROMPT('Afgehandeld:'),AT(507,366),USE(?Mut:Afgehandeld:Prompt)
-                         TEXT,AT(508,220,165,74),USE(Mut:CorrectieveMaatregel,,?Mut:CorrectieveMaatregel:2),HVSCROLL
-                         TEXT,AT(508,313,165,48),USE(Mut:CorrigerendeMaatregel,,?Mut:CorrigerendeMaatregel:2)
-                         TEXT,AT(508,379,165,48),USE(Mut:Afgehandeld,,?Mut:Afgehandeld:2)
+                         PROMPT('Gemeten temperaturen:'),AT(506,79),USE(?Mut:UitslagQATemperatuur1:Prompt)
+                         ENTRY(@s20),AT(507,90,50,10),USE(Mut:UitslagQATemperatuur1)
+                         ENTRY(@s20),AT(563,90,50,10),USE(Mut:UitslagQATemperatuur2)
+                         ENTRY(@s20),AT(622,90,50,10),USE(Mut:UitslagQATemperatuur3)
+                         ENTRY(@s20),AT(613,102,60,10),USE(Mut:UitslagQATemperatuurVervoermiddel)
+                         PROMPT('Afwijking:'),AT(506,111),USE(?Mut:UitslagQAActieAfwijkingen:Prompt)
+                         TEXT,AT(508,122,165,38),USE(Mut:UitslagQAActieAfwijkingen),VSCROLL
+                         PROMPT('Corrigerende Maatregel / voorkomen:'),AT(506,326),USE(?Mut:CorrigerendeMaatregel:Prompt)
+                         PROMPT('Afgehandeld:'),AT(506,380),USE(?Mut:Afgehandeld:Prompt)
+                         PROMPT('Oorzaak:'),AT(506,161),USE(?Mut:Oorzaak:Prompt)
+                         TEXT,AT(508,172,165,38),USE(Mut:Oorzaak),VSCROLL
+                         PROMPT('Transport Bedrijf:'),AT(506,215),USE(?Mut:Oorzaak:Prompt:2)
+                         TEXT,AT(508,228,165,38),USE(Mut:TransportBedrijf),VSCROLL
+                         TEXT,AT(508,284,165,38),USE(Mut:CorrectieveMaatregel,,?Mut:CorrectieveMaatregel:2),HVSCROLL
+                         TEXT,AT(508,337,165,38),USE(Mut:CorrigerendeMaatregel,,?Mut:CorrigerendeMaatregel:2),VSCROLL
+                         TEXT,AT(508,389,165,38),USE(Mut:Afgehandeld,,?Mut:Afgehandeld:2),VSCROLL
                          CHECK('Is geur/kleur producteigen?'),AT(506,46),USE(Mut:UitslagQAIsGeurKleurProductEigen)
                          CHECK('Geen glasbreuk?'),AT(506,57),USE(Mut:UitslagQAGeenGlasbreuk)
-                         PROMPT('CorrectieveMaatregel'),AT(507,206),USE(?Mut:CorrectieveMaatregel:Prompt)
-                         PROMPT('Temperatuur Vervoermiddel:'),AT(506,108),USE(?Mut:UitslagQATemperatuurVervoermiddel:Prompt)
+                         PROMPT('CorrectieveMaatregel / Direct actie'),AT(506,271),USE(?Mut:CorrectieveMaatregel:Prompt)
+                         PROMPT('Temperatuur Vervoermiddel:'),AT(506,102),USE(?Mut:UitslagQATemperatuurVervoermiddel:Prompt)
                        END
                        BUTTON('Neem Voorraad'),AT(363,138,131,23),USE(?NeemVoorraaadButton)
                        BUTTON('Neem Voorraad'),AT(364,196,129,25),USE(?NeemVoorraaadButton:2)
@@ -448,7 +450,6 @@ ValidateRecord         PROCEDURE(),BYTE,DERIVED
 
 FDCB13               CLASS(FileDropComboClass)             ! File drop combo manager
 Q                      &Queue:FileDropCombo:5         !Reference to browse queue type
-ApplyRange             PROCEDURE(),BYTE,PROC,DERIVED
 ValidateRecord         PROCEDURE(),BYTE,DERIVED
                      END
 
@@ -609,9 +610,10 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:PartijCelID4',LOC:PartijCelID4)                ! Added by: FileDropCombo(ABC)
   BIND('LOC:ArtikelVoorraadKG',LOC:ArtikelVoorraadKG)      ! Added by: FileDropCombo(ABC)
   BIND('LOC:ArtikelVoorraadPallet',LOC:ArtikelVoorraadPallet) ! Added by: FileDropCombo(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:DatumTijd_DATE,4)
@@ -628,12 +630,13 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Mut:UitslagQATemperatuur3,25)
   SELF.AddHistoryField(?Mut:UitslagQATemperatuurVervoermiddel,51)
   SELF.AddHistoryField(?Mut:UitslagQAActieAfwijkingen,26)
+  SELF.AddHistoryField(?Mut:Oorzaak,60)
+  SELF.AddHistoryField(?Mut:TransportBedrijf,61)
   SELF.AddHistoryField(?Mut:CorrectieveMaatregel:2,50)
   SELF.AddHistoryField(?Mut:CorrigerendeMaatregel:2,46)
   SELF.AddHistoryField(?Mut:Afgehandeld:2,47)
   SELF.AddHistoryField(?Mut:UitslagQAIsGeurKleurProductEigen,48)
   SELF.AddHistoryField(?Mut:UitslagQAGeenGlasbreuk,49)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAAAViewVoorraadPartij.Open                       ! File AAAAViewVoorraadPartij used by this procedure, so make sure it's RelationManager is open
   Relate:AAACelLocatie.Open                                ! File AAACelLocatie used by this procedure, so make sure it's RelationManager is open
@@ -646,6 +649,8 @@ ReturnValue          BYTE,AUTO
   Relate:ARelatie.Open                                     ! File ARelatie used by this procedure, so make sure it's RelationManager is open
   Relate:AVerkoop.Open                                     ! File AVerkoop used by this procedure, so make sure it's RelationManager is open
   Relate:AViewVoorraadPartij.Open                          ! File AViewVoorraadPartij used by this procedure, so make sure it's RelationManager is open
+  Relate:CelLocatie.SetOpenRelated()
+  Relate:CelLocatie.Open                                   ! File CelLocatie used by this procedure, so make sure it's RelationManager is open
   Relate:Mutatie.Open                                      ! File Mutatie used by this procedure, so make sure it's RelationManager is open
   Relate:Planning.SetOpenRelated()
   Relate:Planning.Open                                     ! File Planning used by this procedure, so make sure it's RelationManager is open
@@ -878,7 +883,7 @@ ReturnValue          BYTE,AUTO
     DISABLE(?VVPar:PartijCelID)
     ?Mut:UitslagKG{PROP:ReadOnly} = True
     ?Mut:UitslagPallet{PROP:ReadOnly} = True
-    DISABLE(?VPCL:CelLocatienaam)
+    DISABLE(?CL:Locatienaam)
     DISABLE(?AVVPar:PartijCelID)
     ?LOC:UitslagKG2{PROP:ReadOnly} = True
     ?LOC:UitslagPallet2{PROP:ReadOnly} = True
@@ -919,6 +924,7 @@ ReturnValue          BYTE,AUTO
   FDCB7.AddField(VVP:InslagPallets,FDCB7.Q.VVP:InslagPallets) !Browse hot field - type derived from field
   FDCB7.AddField(VVP:UitslagKG,FDCB7.Q.VVP:UitslagKG) !Browse hot field - type derived from field
   FDCB7.AddField(VVP:UitslagPallets,FDCB7.Q.VVP:UitslagPallets) !Browse hot field - type derived from field
+  FDCB7.AddField(Art:ArtikelID,FDCB7.Q.Art:ArtikelID) !Related join file key field - type derived from field
   FDCB7.AddUpdateField(VVP:ArtikelID,Mut:ArtikelID)
   ThisWindow.AddItem(FDCB7.WindowComponent)
   FDCB7.DefaultFill = 0
@@ -1004,16 +1010,14 @@ ReturnValue          BYTE,AUTO
   FDCB12.AddUpdateField(AAAVVPar:PartijCelID,LOC:PartijCelID4)
   ThisWindow.AddItem(FDCB12.WindowComponent)
   FDCB12.DefaultFill = 0
-  FDCB13.Init(VPCL:CelLocatienaam,?VPCL:CelLocatienaam,Queue:FileDropCombo:5.ViewPosition,FDCB13::View:FileDropCombo,Queue:FileDropCombo:5,Relate:ViewPartijCelLocaties,ThisWindow,GlobalErrors,0,1,0)
+  FDCB13.Init(CL:Locatienaam,?CL:Locatienaam,Queue:FileDropCombo:5.ViewPosition,FDCB13::View:FileDropCombo,Queue:FileDropCombo:5,Relate:CelLocatie,ThisWindow,GlobalErrors,0,1,0)
   FDCB13.Q &= Queue:FileDropCombo:5
-  FDCB13.AddSortOrder(VPCL:ViewPartijCelLocaties_PK)
-  FDCB13.AddRange(VPCL:CelID,VVPar:CelID)
+  FDCB13.AddSortOrder(CL:FK_CelLocatie)
+  FDCB13.AddRange(CL:CelID,VVPar:CelID)
   FDCB13.SetFilter('LOC:PartijCelID<<>''''')
-  FDCB13.AddField(VPCL:CelLocatienaam,FDCB13.Q.VPCL:CelLocatienaam) !List box control field - type derived from field
-  FDCB13.AddField(VPCL:PartijID,FDCB13.Q.VPCL:PartijID) !Primary key field - type derived from field
-  FDCB13.AddField(VPCL:CelID,FDCB13.Q.VPCL:CelID) !Primary key field - type derived from field
-  FDCB13.AddField(VPCL:CelLocatieID,FDCB13.Q.VPCL:CelLocatieID) !Primary key field - type derived from field
-  FDCB13.AddUpdateField(VPCL:CelLocatieID,Loc:CelLocatie1)
+  FDCB13.AddField(CL:Locatienaam,FDCB13.Q.CL:Locatienaam) !List box control field - type derived from field
+  FDCB13.AddField(CL:CelLocatieID,FDCB13.Q.CL:CelLocatieID) !Primary key field - type derived from field
+  FDCB13.AddUpdateField(CL:CelLocatieID,Loc:CelLocatie1)
   ThisWindow.AddItem(FDCB13.WindowComponent)
   FDCB13.DefaultFill = 0
   FDCB14.Init(ACL:Locatienaam,?ACL:Locatienaam,Queue:FileDropCombo:6.ViewPosition,FDCB14::View:FileDropCombo,Queue:FileDropCombo:6,Relate:ACelLocatie,ThisWindow,GlobalErrors,0,1,0)
@@ -1072,6 +1076,7 @@ ReturnValue          BYTE,AUTO
     Relate:ARelatie.Close
     Relate:AVerkoop.Close
     Relate:AViewVoorraadPartij.Close
+    Relate:CelLocatie.Close
     Relate:Mutatie.Close
     Relate:Planning.Close
     Relate:RelatieArtikelOmschrijving.Close
@@ -1237,8 +1242,10 @@ Looped BYTE
       	DO BerekenTotaal
       .
       IF 0{PROP:AcceptAll}=FALSE
-          FDCB13.ResetQueue(false)
-          Select(?VPCL:CelLocatienaam,1)
+      !    db.Debugout('Locatie browse opnieuw opbouwen :'&LOC:PartijCelID)
+          FDCB13.ResetQueue(true)
+      !    db.Debugout('Locatie browse opnieuw opbouwen klaar')
+          Select(?CL:Locatienaam,1)
       END
     OF ?Mut:UitslagKG
       IF LOC:UitslagKG2 = 0
@@ -2148,37 +2155,44 @@ ReturnValue          BYTE,AUTO
   RETURN ReturnValue
 
 
-FDCB13.ApplyRange PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  GET(SELF.Order.RangeList.List,1)
-  SELF.Order.RangeList.List.Right = VVPar:PartijID ! VPCL:PartijID
-  ReturnValue = PARENT.ApplyRange()
-  RETURN ReturnValue
-
-
 FDCB13.ValidateRecord PROCEDURE
 
 ReturnValue          BYTE,AUTO
 
   CODE
-        IF LOC:PartijCelID=''
-            Return Record:OutOfRange
-  !        ELSE
-  !             IF PartjCelLocatieCs.CheckPCLQ(SUB(LOC:PartijCelID,1,6),SUB(LOC:PartijCelID,7,20),CL:CelLocatieID)=FALSE
-  !          Return Record:Filtered
-        END
-  !      Clear(VPCL:Record)
-  !      VPCL:PartijID=SUB(LOC:PartijCelID,1,6)
-  !      VPCL:CelID=SUB(LOC:PartijCelID,7,20)
-  !      VPCL:CelLocatieID=CL:CelLocatieID
+  !b.Debugout(LOC:PartijCelID&'|'&CL:CelLocatieID)
+  
+  IF LOC:PartijCelID=''
+      Return Record:OutOfRange
+  ELSE
+      IF PartjCelLocatieCs.CheckPCLQ(SUB(LOC:PartijCelID,1,6),SUB(LOC:PartijCelID,7,20),CL:CelLocatieID)=FALSE
+          Return Record:Filtered
+      END            
+  !    Clear(VPCL:Record)
+  !      VPCL:PartijID=SUB(LOC:PartijCelID2,1,6)
+  !      VPCL:CelID=SUB(LOC:PartijCelID2,7,20)
+  !      VPCL:CelLocatieID=ACL:CelLocatieID
   !      if Access:ViewPartijCelLocaties.Fetch(VPCL:ViewPartijCelLocaties_PK)<>Level:Benign 
   !          Return Record:Filtered
   !      END
-        !ND
+  END
       
+            
+  !        IF LOC:PartijCelID='' OR VVPar:PartijID=0 OR VVPar:CelID=0
+  !            Return Record:OutOfRange
+  !  !        ELSE
+  !  !             IF PartjCelLocatieCs.CheckPCLQ(SUB(LOC:PartijCelID,1,6),SUB(LOC:PartijCelID,7,20),CL:CelLocatieID)=FALSE
+  !  !          Return Record:Filtered
+  !        END
+  !  !      Clear(VPCL:Record)
+  !  !      VPCL:PartijID=SUB(LOC:PartijCelID,1,6)
+  !  !      VPCL:CelID=SUB(LOC:PartijCelID,7,20)
+  !  !      VPCL:CelLocatieID=CL:CelLocatieID
+  !  !      if Access:ViewPartijCelLocaties.Fetch(VPCL:ViewPartijCelLocaties_PK)<>Level:Benign 
+  !  !          Return Record:Filtered
+  !  !      END
+  !        !ND
+  !      
             
   ReturnValue = PARENT.ValidateRecord()
   RETURN ReturnValue

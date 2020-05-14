@@ -1142,8 +1142,8 @@ OWNER 2
 
 [PROCEDURE]
 NAME ReportPackLijst
-PROTOTYPE '(LONG)'
-PARAMETERS '(LONG __p1)'
+PROTOTYPE '(LONG pVerkoopID,LONG pWelk,String pLayout,<<Byte pExcel>)'
+PARAMETERS '(LONG __p1,LONG pWelk,String pLayout,<<Byte pExcel>)'
 NOEXPORT
 [COMMON]
 FROM ABC External

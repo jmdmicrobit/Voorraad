@@ -16,6 +16,7 @@
 !!! </summary>
 ReportDymoStickers PROCEDURE (PRM:Bron, PRM:ID)
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 LOC:EenKeer          LONG                                  ! 
 LOC:Weging1          STRING(50)                            ! 
@@ -113,6 +114,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ReportDymoStickers','VoorrRpt009.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+             
   GlobalErrors.SetProcedureName('ReportDymoStickers')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -131,6 +134,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportDymoStickers',ProgressWindow)        ! Restore window settings from non-volatile store
   ProgressMgr.Init(ScrollSort:AllowNumeric,)
   ThisReport.Init(Process:View, Relate:Versie, ?Progress:PctText, Progress:Thermometer, ProgressMgr, VRS:Versie)
@@ -169,6 +173,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ReportDymoStickers',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:19AM')  
+    
+  END
   RETURN ReturnValue
 
 

@@ -5060,6 +5060,18 @@ EXPORTS
   ADDITEM@F17CSTRANSLATORCLASSsbsb                        @?
   NUMBEROFITEMS@F17CSTRANSLATORCLASS                      @?
   TRYFETCH@F17CSTRANSLATORCLASSRsbRsb                     @?
+  VMT$CTFIELDQ                                            @?
+  TYPE$CTFIELDQ                                           @?
+  ADD@F8CTFIELDQRu                                        @?
+  ADDFIELDSINGROUP@F8CTFIELDQRg                           @?
+  CONSTRUCT@F8CTFIELDQ                                    @?
+  DESTRUCT@F8CTFIELDQ                                     @?
+  DELETE@F8CTFIELDQ                                       @?
+  FREE@F8CTFIELDQ                                         @?
+  GETROW@F8CTFIELDQl                                      @?
+  ODS@F8CTFIELDQsb                                        @?
+  RECORDS@F8CTFIELDQ                                      @?
+  SETORIGFIELD@F8CTFIELDQlu                               @?
   CONNECTTOS3@FsbsbPsb                                    @?
   CREATEEMAILLIST@F16EMAILADDRESSLIST17SYSTEMSTRINGCLASS  @?
   EXECUTESQL@FsbOsbBf10ERRORCLASS                         @?

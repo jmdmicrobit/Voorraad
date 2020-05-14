@@ -1,3 +1,3 @@
   MODULE('VOORRAAD033.CLW')
-FixEPlanning           PROCEDURE                      !Process the Planning File
+ProcessGebruikerLogTerugzetten PROCEDURE              !Uit GebruikerLog File Partij, Verkoop en Planning terughalen
   END

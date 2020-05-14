@@ -55,7 +55,7 @@ WindowPalletbladExport PROCEDURE,DLL                       !
 ReportVerkoopBevestiging PROCEDURE(LONG),DLL               ! 
 ReportInkoopBevestiging PROCEDURE(LONG),DLL                ! 
 ExportVerkoop          PROCEDURE(LONG, LONG),DLL           ! 
-ReportPackLijst        PROCEDURE(LONG),DLL                 ! 
+ReportPackLijst        PROCEDURE(LONG pVerkoopID,LONG pWelk,String pLayout,<Byte pExcel>),DLL ! 
     END
     MODULE('VOORRSTM.DLL')
 SelectArelatie         PROCEDURE(String),DLL               ! 
@@ -69,49 +69,123 @@ ExportInvoiceXML       PROCEDURE(<VER:Record>, <Ink:Record>, String),DLL !
 !--- Application Global and Exported Procedure Definitions --------------------------------------------
      MODULE('VOORRPLN001.CLW')
 WindowCelLocaties      PROCEDURE   !
-MainPlanning           PROCEDURE   !
-UpdateOverboekPlanningVanuitVV PROCEDURE   !Form Mutatie
-UpdateEUitslagMutatie  PROCEDURE   !Form Mutatie
-UpdateEInslagMutatie   PROCEDURE   !Form Mutatie
-BrowseVerkoop          PROCEDURE   !Browse the Verkoop file
-WindowBoekRetourRegel  PROCEDURE(LONG, *DECIMAL, *LONG,*LONG, *LONG)   !
-WindowRedenRetour      FUNCTION(string, Long, *CString, *Date),Byte   !
-UpdateVerkoop          PROCEDURE(LONG = 0)   !Form Verkoop
-UpdateExtraKosten      PROCEDURE   !Form ExtraKosten
      END
      MODULE('VOORRPLN002.CLW')
-UpdatePlanningVerkoop  PROCEDURE   !Form Planning
-UpdateAOverboeking     PROCEDURE(BYTE, <STRING>,<STRING>,<LONG>,<LONG>, <REAL>)   !Form Planning
-UpdateActiviteit       PROCEDURE(LONG)   !Form Activiteit
-BrowseSSOPRegistratie  PROCEDURE   !
-BrowsePlanning         PROCEDURE   !Planning
-WindowInslagWeging     PROCEDURE   !
-WeegWindow             PROCEDURE   !
-UpdateUitslagMutatieWegingQueue PROCEDURE   !Window
-WindowInslag           PROCEDURE   !
-UpdateUitslagMutatieQueueWeging PROCEDURE(STRING, LONG)   !Window
+MainPlanning           PROCEDURE   !
      END
      MODULE('VOORRPLN003.CLW')
-UpdateUitslagMutatieWeging PROCEDURE   !Uitslage via Weging
-CheckISOCountries      PROCEDURE(String)   !
-UpdateUitslagMutatieQueue PROCEDURE(STRING)   !Window
-UpdateUitslagMutatie   PROCEDURE   !Handmatige uitslag
-UpdateOverboekMutatieEnkel PROCEDURE   !Form Mutatie
-UpdateOverboekingMutatieQueue PROCEDURE   !
-UpdateOverboekMutatie  PROCEDURE   !Form Mutatie
-BulkOverboekMutatieWijzigen PROCEDURE   !Form Mutatie
-BulkOverboekMutatieMaken PROCEDURE   !Form Mutatie
-UpdateTransfers        PROCEDURE(<DATE>)   !Form OverboekingRit
+UpdateOverboekPlanningVanuitVV PROCEDURE   !Form Mutatie
      END
      MODULE('VOORRPLN005.CLW')
+UpdateEUitslagMutatie  PROCEDURE   !Form Mutatie
+     END
+     MODULE('VOORRPLN006.CLW')
+UpdateEInslagMutatie   PROCEDURE   !Form Mutatie
+     END
+     MODULE('VOORRPLN007.CLW')
+BrowseVerkoop          PROCEDURE   !Browse the Verkoop file
+     END
+     MODULE('VOORRPLN008.CLW')
+WindowBoekRetourRegel  PROCEDURE(LONG, *DECIMAL, *LONG,*LONG, *LONG)   !
+     END
+     MODULE('VOORRPLN009.CLW')
+WindowRedenRetour      FUNCTION(string, Long, *CString, *Date),Byte   !
+     END
+     MODULE('VOORRPLN010.CLW')
+UpdateVerkoop          PROCEDURE(LONG = 0)   !Form Verkoop
+     END
+     MODULE('VOORRPLN011.CLW')
+UpdateExtraKosten      PROCEDURE   !Form ExtraKosten
+     END
+     MODULE('VOORRPLN012.CLW')
+UpdatePlanningVerkoop  PROCEDURE   !Form Planning
+     END
+     MODULE('VOORRPLN013.CLW')
+UpdateAOverboeking     PROCEDURE(BYTE, <STRING>,<STRING>,<LONG>,<LONG>, <REAL>)   !Form Planning
+     END
+     MODULE('VOORRPLN014.CLW')
+UpdateActiviteit       PROCEDURE(LONG)   !Form Activiteit
+     END
+     MODULE('VOORRPLN015.CLW')
+BrowseSSOPRegistratie  PROCEDURE   !
+     END
+     MODULE('VOORRPLN016.CLW')
+BrowsePlanning         PROCEDURE   !Planning
+     END
+     MODULE('VOORRPLN017.CLW')
+WindowInslagWeging     PROCEDURE   !
+     END
+     MODULE('VOORRPLN018.CLW')
+WeegWindow             PROCEDURE   !
+     END
+     MODULE('VOORRPLN019.CLW')
+UpdateUitslagMutatieWegingQueue PROCEDURE   !Window
+     END
+     MODULE('VOORRPLN020.CLW')
+WindowInslag           PROCEDURE   !
+     END
+     MODULE('VOORRPLN021.CLW')
+UpdateUitslagMutatieQueueWeging PROCEDURE(STRING, LONG)   !Window
+     END
+     MODULE('VOORRPLN022.CLW')
+UpdateUitslagMutatieWeging PROCEDURE   !Uitslage via Weging
+     END
+     MODULE('VOORRPLN023.CLW')
+CheckISOCountries      PROCEDURE(String)   !
+     END
+     MODULE('VOORRPLN024.CLW')
+UpdateUitslagMutatieQueue PROCEDURE(STRING)   !Window
+     END
+     MODULE('VOORRPLN025.CLW')
+UpdateUitslagMutatie   PROCEDURE   !Handmatige uitslag
+     END
+     MODULE('VOORRPLN026.CLW')
+UpdateOverboekMutatieEnkel PROCEDURE   !Form Mutatie
+     END
+     MODULE('VOORRPLN027.CLW')
+UpdateOverboekingMutatieQueue PROCEDURE   !
+     END
+     MODULE('VOORRPLN028.CLW')
+UpdateOverboekMutatie  PROCEDURE   !Form Mutatie
+     END
+     MODULE('VOORRPLN029.CLW')
+BulkOverboekMutatieWijzigen PROCEDURE   !Form Mutatie
+     END
+     MODULE('VOORRPLN030.CLW')
+BulkOverboekMutatieMaken PROCEDURE   !Form Mutatie
+     END
+     MODULE('VOORRPLN031.CLW')
+UpdateTransfers        PROCEDURE(<DATE>)   !Form OverboekingRit
+     END
+     MODULE('VOORRPLN032.CLW')
 BrowseTransfers        PROCEDURE(<DATE>)   !Browse the OverboekingRit file
+     END
+     MODULE('VOORRPLN033.CLW')
 UpdateOverboeking      PROCEDURE(<STRING>,<STRING>,<LONG>,<LONG>, <REAL>)   !Form Planning
+     END
+     MODULE('VOORRPLN034.CLW')
 BrowseOverboeking      PROCEDURE   !Browse the Planning file
+     END
+     MODULE('VOORRPLN035.CLW')
 BrowseInkoop           PROCEDURE   !Browse the Inkoop file
+     END
+     MODULE('VOORRPLN036.CLW')
 UpdateInkoop           PROCEDURE(LONG = 0)   !Form Inkoop
+     END
+     MODULE('VOORRPLN037.CLW')
 UpdatePlanningInkoop   PROCEDURE   !Form Planning
+     END
+     MODULE('VOORRPLN038.CLW')
 BrowseActiviteit       PROCEDURE   !Browse the Activiteit file
+     END
+     MODULE('VOORRPLN039.CLW')
 UpdateVerkoopExport    PROCEDURE   !Packlijst gegevens, uitbreiding van verkoop
+     END
+     MODULE('VOORRPLN040.CLW')
+UpdateMutatieKwaliteit PROCEDURE   !Form Mutatie
+     END
+     MODULE('VOORRPLN041.CLW')
+UpdatePartijKwaliteit  PROCEDURE   !Form Partij
      END
      include('eventmap.clw')
      	MODULE('win32')
@@ -306,6 +380,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -450,6 +526,8 @@ UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate70
 UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
 UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
                             END                            !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -580,6 +658,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1418,6 +1501,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1756,6 +1844,8 @@ UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate70
 UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
 UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
                             END                            !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -1876,6 +1966,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -2016,6 +2108,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -2066,6 +2163,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 

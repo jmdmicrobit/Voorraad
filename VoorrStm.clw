@@ -94,30 +94,68 @@ BrowseRelatie          PROCEDURE   !Browse the Relatie file
      END
      MODULE('VOORRSTM020.CLW')
 SelectAAARelatie       PROCEDURE(String)   !Browse the AAARelatie file
-BrowsePalletBladSjabloon PROCEDURE   !Browse the PalletBladSjabloon file
-UpdatePalletBladSjabloon PROCEDURE   !Form PalletBladSjabloon
-UpdatePalletBladSjabloonCountry PROCEDURE   !Form PalletBladSjabloonCountry
-UpdateRelatieArtikelOmschrijving PROCEDURE   !Form RelatieArtikelOmschrijving
-BrowseKostenStam       PROCEDURE   !Browse the KostenStamgeg file
-UpdateKostenStamgeg    PROCEDURE   !Form KostenStamgeg
-BrowseDeliveryTerms    PROCEDURE   !Browse the DeliveryTerms file
-UpdateDeliveryTerms    PROCEDURE   !Form DeliveryTerms
-BrowseISOCountries     PROCEDURE   !Browse the ISOCountries file
      END
      MODULE('VOORRSTM021.CLW')
-UpdateISOCountries     PROCEDURE   !Form ISOCountries
-BrowseSSOPCategorie    PROCEDURE   !Browse the SSOPCategorie file
-UpdateSSOPCategorie    PROCEDURE   !Form SSOPCategorie
-UpdateSSOPObject       PROCEDURE   !Form SSOPObject
-BrowseGNCode           PROCEDURE   !Browse the GNCode file
-UpdateGNCode           PROCEDURE   !Form GNCode
-UpdateGNCodeArtikel    PROCEDURE   !Form GNCodeArtikelen
-BrowseHavens           PROCEDURE   !Browse the Havens file
-UpdateHavens           PROCEDURE   !Form Havens
-BrowseRapporten        PROCEDURE   !Browse the Rapporten file
+BrowsePalletBladSjabloon PROCEDURE   !Browse the PalletBladSjabloon file
      END
      MODULE('VOORRSTM022.CLW')
+UpdatePalletBladSjabloon PROCEDURE   !Form PalletBladSjabloon
+     END
+     MODULE('VOORRSTM023.CLW')
+UpdatePalletBladSjabloonCountry PROCEDURE   !Form PalletBladSjabloonCountry
+     END
+     MODULE('VOORRSTM024.CLW')
+UpdateRelatieArtikelOmschrijving PROCEDURE   !Form RelatieArtikelOmschrijving
+     END
+     MODULE('VOORRSTM025.CLW')
+BrowseKostenStam       PROCEDURE   !Browse the KostenStamgeg file
+     END
+     MODULE('VOORRSTM026.CLW')
+UpdateKostenStamgeg    PROCEDURE   !Form KostenStamgeg
+     END
+     MODULE('VOORRSTM027.CLW')
+BrowseDeliveryTerms    PROCEDURE   !Browse the DeliveryTerms file
+     END
+     MODULE('VOORRSTM028.CLW')
+UpdateDeliveryTerms    PROCEDURE   !Form DeliveryTerms
+     END
+     MODULE('VOORRSTM029.CLW')
+BrowseISOCountries     PROCEDURE   !Browse the ISOCountries file
+     END
+     MODULE('VOORRSTM030.CLW')
+UpdateISOCountries     PROCEDURE   !Form ISOCountries
+     END
+     MODULE('VOORRSTM031.CLW')
+BrowseSSOPCategorie    PROCEDURE   !Browse the SSOPCategorie file
+     END
+     MODULE('VOORRSTM032.CLW')
+UpdateSSOPCategorie    PROCEDURE   !Form SSOPCategorie
+     END
+     MODULE('VOORRSTM033.CLW')
+UpdateSSOPObject       PROCEDURE   !Form SSOPObject
+     END
+     MODULE('VOORRSTM034.CLW')
+BrowseGNCode           PROCEDURE   !Browse the GNCode file
+     END
+     MODULE('VOORRSTM035.CLW')
+UpdateGNCode           PROCEDURE   !Form GNCode
+     END
+     MODULE('VOORRSTM036.CLW')
+UpdateGNCodeArtikel    PROCEDURE   !Form GNCodeArtikelen
+     END
+     MODULE('VOORRSTM037.CLW')
+BrowseHavens           PROCEDURE   !Browse the Havens file
+     END
+     MODULE('VOORRSTM038.CLW')
+UpdateHavens           PROCEDURE   !Form Havens
+     END
+     MODULE('VOORRSTM039.CLW')
+BrowseRapporten        PROCEDURE   !Browse the Rapporten file
+     END
+     MODULE('VOORRSTM040.CLW')
 UpdateRapporten        PROCEDURE   !Form Rapporten
+     END
+     MODULE('VOORRSTM041.CLW')
 WindowVerpakkingSamenvoegen PROCEDURE   !
      END
      include('eventmap.clw')
@@ -286,6 +324,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -469,6 +509,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 

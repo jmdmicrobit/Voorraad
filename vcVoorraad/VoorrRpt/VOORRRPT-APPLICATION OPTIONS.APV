@@ -4250,7 +4250,7 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80004')
+%dClassVersion DEFAULT  ('80127')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
@@ -4263,9 +4263,82 @@ INSTANCE 7
 %lTargetName DEFAULT  ('PDF')
 %lTargetObjectName DEFAULT  ('PDFReporter')
 %lTargetObjectClass DEFAULT  ('PDFReportGenerator')
+[ADDITION]
+NAME UltimateVersion UltimateVersionResource
+[INSTANCE]
+INSTANCE 8
+[PROMPTS]
+%verCoName DEFAULT  ('JMD Microbit Automatisering')
+%verCopyright DEFAULT  ('Copyright (c) 2020')
+%verTrademarks DEFAULT  ('')
+%verComments DEFAULT  ('')
+%includegetversionclass LONG  (0)
+%getversionclassobjectname DEFAULT  ('gv')
+%verMakeVariables LONG  (0)
+%verExtProdVersion LONG  (1)
+%verSourceFile DEFAULT  ('Voorraad.Version')
+%verProdName DEFAULT  ('')
+%AutoGenVersion LONG  (0)
+%verUseVerFile LONG  (0)
+%verVerFileName DEFAULT  ('')
+%verProdMajVer DEFAULT  ('0')
+%verProdMinVer DEFAULT  ('0')
+%verProdSubVer DEFAULT  ('0')
+%verProdGenBuildNo LONG  (1)
+%verProdBuildNo DEFAULT  ('0')
+%verDesc DEFAULT  ('')
+%verFileAsProdVersion LONG  (1)
+%verIntName DEFAULT  ('')
+%verFileMajVer DEFAULT  ('0')
+%verFileMinVer DEFAULT  ('0')
+%verFileSubVer DEFAULT  ('0')
+%verFileGenBuildNo LONG  (1)
+%verFileBuildNo DEFAULT  ('0')
+%verFilePreRelease LONG  (0)
+%verSelLangID DEFAULT  ('Dutch')
+%verSelCPID DEFAULT  ('Multilingual')
+%verIncludeCW LONG  (1)
+%verClarionVersion DEFAULT  ('10000')
+%verTemplateFamily DEFAULT  ('ABC')
+%verTemplateVersion DEFAULT  ('v10.0')
+%verUserLabel1 DEFAULT  ('')
+%verUserValue1 DEFAULT  ('')
+%verUserLabel2 DEFAULT  ('')
+%verUserValue2 DEFAULT  ('')
+%verUserLabel3 DEFAULT  ('')
+%verUserValue3 DEFAULT  ('')
+%verUserLabel4 DEFAULT  ('')
+%verUserValue4 DEFAULT  ('')
+[ADDITION]
+NAME UltimateDebug UltimateDebugGlobal
+[INSTANCE]
+INSTANCE 9
+[PROMPTS]
+%CLSkelAppDisable LONG  (0)
+%gDumpTpl LONG  (0)
+%zDumpTpl LONG  (0)
+%gDumpVar LONG  (0)
+%zDumpVar LONG  (0)
+%LineWrap DEFAULT  ('0')
+%DisableProcedureDebug LONG  (0)
+%UDProcAlert DEFAULT  ('CtrlShiftP')
+%UDReportKeyState DEFAULT  ('KeyStateUD:Shift')
+%UDEntryExit LONG  (1)
+%CLSkelClass DEFAULT  ('UD')
+%CLSkelMultiDLL LONG  (0)
+%CLSkelMultiDLLData DEFAULT  ('0')
+%CLDebugPrefix DEFAULT  ('!')
+%DebugOffVariable DEFAULT  ('0')
+%SaveToFileVariable DEFAULT  ('0')
+%CLLogFileName DEFAULT  ('DebugLog.txt')
+%SaveToJSONFileVariable DEFAULT  ('0')
+%CLJSONLogFileName DEFAULT  ('JSONDebugLog.txt')
+%DoNotSplitLines LONG  (1)
+%SendWithoutFormatting LONG  (0)
+%CLSkelFamily DEFAULT  ('ABC')
 [PERSIST]
 %SaveCreateLocalMap DEFAULT  ('1')
-%GenerationCompleted DEPEND %Module DEFAULT TIMES 23
+%GenerationCompleted DEPEND %Module DEFAULT TIMES 32
 WHEN  ('VoorrRpt.clw') ('1')
 WHEN  ('VoorrRpt001.clw') ('1')
 WHEN  ('VoorrRpt002.clw') ('1')
@@ -4289,6 +4362,15 @@ WHEN  ('VoorrRpt019.clw') ('1')
 WHEN  ('VoorrRpt020.clw') ('1')
 WHEN  ('VoorrRpt021.clw') ('1')
 WHEN  ('VoorrRpt022.clw') ('1')
+WHEN  ('VoorrRpt023.clw') ('1')
+WHEN  ('VoorrRpt024.clw') ('1')
+WHEN  ('VoorrRpt025.clw') ('1')
+WHEN  ('VoorrRpt026.clw') ('1')
+WHEN  ('VoorrRpt027.clw') ('1')
+WHEN  ('VoorrRpt028.clw') ('1')
+WHEN  ('VoorrRpt029.clw') ('1')
+WHEN  ('VoorrRpt030.clw') ('1')
+WHEN  ('VoorrRpt031.clw') ('1')
 
 %LastTarget32 DEFAULT  ('1')
 %LastProgramExtension DEFAULT  ('DLL')
@@ -4298,7 +4380,17 @@ WHEN  ('VoorrRpt022.clw') ('1')
 -- NAMESPACE VoorrRpt
 #system win32 dll
 #model clarion dll
-#pragma debug(vid=>off)
+#pragma define(NETTALKLOG=>1) -- GENERATED
+#pragma define(_ODDJOB_=>0) -- GENERATED
+#pragma define(_CRYPTONITE_=>0) -- GENERATED
+#pragma define(StringTheoryLinkMode=>0) -- GENERATED
+#pragma define(StringTheoryDllMode=>1) -- GENERATED
+#pragma define(_ABCDllMode_=>1) -- GENERATED
+#pragma define(_ABCLinkMode_=>0) -- GENERATED
+#pragma define(_NetTalkDllMode_=>1) -- GENERATED
+#pragma define(_NetTalkLinkMode_=>0) -- GENERATED
+#pragma define(_TBARDllMode_=>1) -- GENERATED
+#pragma define(_TBARLinkMode_=>0) -- GENERATED
 #compile "VoorrRpt.clw" -- GENERATED
 #compile "VoorrRpt001.clw" -- GENERATED
 #compile "VoorrRpt002.clw" -- GENERATED
@@ -4322,4 +4414,15 @@ WHEN  ('VoorrRpt022.clw') ('1')
 #compile "VoorrRpt020.clw" -- GENERATED
 #compile "VoorrRpt021.clw" -- GENERATED
 #compile "VoorrRpt022.clw" -- GENERATED
+#compile "VoorrRpt023.clw" -- GENERATED
+#compile "VoorrRpt024.clw" -- GENERATED
+#compile "VoorrRpt025.clw" -- GENERATED
+#compile "VoorrRpt026.clw" -- GENERATED
+#compile "VoorrRpt027.clw" -- GENERATED
+#compile "VoorrRpt028.clw" -- GENERATED
+#compile "VoorrRpt029.clw" -- GENERATED
+#compile "VoorrRpt030.clw" -- GENERATED
+#compile "VoorrRpt031.clw" -- GENERATED
+#compile "EFOCUS.CLW" -- GENERATED
+#pragma link("C%V%dos%X%%L%.lib") -- GENERATED
 #link "VoorrRpt.DLL"

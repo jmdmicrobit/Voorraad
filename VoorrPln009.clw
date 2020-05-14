@@ -95,9 +95,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Loc:RedenRetour
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   Relate:Inkoop.SetOpenRelated()
   Relate:Inkoop.Open                                       ! File Inkoop used by this procedure, so make sure it's RelationManager is open
   Relate:ViewArtikel.Open                                  ! File ViewArtikel used by this procedure, so make sure it's RelationManager is open
@@ -338,7 +338,7 @@ CODE
 !            Add(Loc:ListQ)
 !        END    
         END 
-    ELSE 
+    ELSE            ! Inkoop dus
     !   Loc:RedenRetour=Ink:RedenRetour
         Clear(Pla:Record)
         Pla:InkoopID=pID
@@ -352,6 +352,50 @@ CODE
         
     RETURN
     
+LocalClass.AddQ     PROCEDURE()
+CODE
+    !MS(20180606): De regels zijn niet zichtbaar omdat het veld PlanningIDParent in de database de waarde 0 heeft en niet NULL, 
+    !              maar ik zie ook regels waarbij dit veld wel NULL is. Daarom controle of beide
+    IF NULL(Pla:PlanningIDParent) OR Pla:PlanningIDParent = 0 THEN
+        LQ:ArtikelID=Pla:ArtikelID
+        Clear(Art:Record)
+        Art:ArtikelID=Pla:ArtikelID
+        IF Access:ViewArtikel.Fetch(Art:Artikel_PK) = Level:Benign
+            LQ:ArtikelOmschrijving=Art:ArtikelOms
+        ELSE
+            LQ:ArtikelOmschrijving='Onbekend artikelid'&Pla:ArtikelID
+        END
+        LQ:KG=Pla:KG
+        LQ:Pallets=Pla:Pallets
+        LQ:KGRetour=0
+        LQ:PalletsRetour=0
+        LQ:CelID=Pla:CelID
+        LQ:CelLocatieID=Pla:CelLocatieID
+        IF NOT pVerkoopInkoop='Verkoop'
+            IF Pla:CelID=0
+                Clear(Mut:Record)
+                Mut:PlanningID=Pla:PlanningID
+                Set(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+                Loop Until Access:Mutatie.Next()
+                IF NOT (Mut:PlanningID=Pla:PlanningID) THEN BREAK.
+                    LQ:CelID=Mut:CelID
+                    LQ:CelLocatieID=Mut:CelLocatieID
+                END
+            END
+        END    
+        LQ:PlanningID=Pla:PlanningID
+        IF Pla:PlanningIDRetour<>0
+            APla:PlanningID=Pla:PlanningIDRetour
+            IF Access:APlanning.Fetch(APla:PK_Planning)=Level:Benign
+                LQ:KGRetour=-APla:KG
+                LQ:PalletsRetour=-APla:Pallets
+                LQ:CelID=APla:CelID
+                LQ:CelLocatieID=APla:CelLocatieID
+            END
+        END
+        Add(Loc:ListQ)
+    END    
+    Return
 LocalClass.Verwerk  Procedure
 CODE
     Loop i#=1 TO Records(Loc:ListQ) 
@@ -435,6 +479,12 @@ CODE
                 APla:MutatieKG=-LQ:KGRetour
                 APla:MutatiePallets=-LQ:PalletsRetour
                 Access:APlanning.Update()
+            ELSE 
+                ! weghalen 
+                Pla:PlanningIDRetour=0
+                Access:Planning.Update()
+                Message('Let op de Retour Planningsregel '&Pla:PlanningIDRetour&' kan niet gevonden worden','Planning Retour bekend',ICON:Cross)
+               
             END
             
             !mutatie(s) aanpassen
@@ -501,35 +551,3 @@ CODE
     
     RETURN
     
-LocalClass.AddQ     PROCEDURE()
-CODE
-    !MS(20180606): De regels zijn niet zichtbaar omdat het veld PlanningIDParent in de database de waarde 0 heeft en niet NULL, 
-    !              maar ik zie ook regels waarbij dit veld wel NULL is. Daarom controle of beide
-    IF NULL(Pla:PlanningIDParent) OR Pla:PlanningIDParent = 0 THEN
-        LQ:ArtikelID=Pla:ArtikelID
-        Clear(Art:Record)
-        Art:ArtikelID=Pla:ArtikelID
-        IF Access:ViewArtikel.Fetch(Art:Artikel_PK) = Level:Benign
-            LQ:ArtikelOmschrijving=Art:ArtikelOms
-        ELSE
-            LQ:ArtikelOmschrijving='Onbekend artikelid'&Pla:ArtikelID
-        END
-        LQ:KG=Pla:KG
-        LQ:Pallets=Pla:Pallets
-        LQ:KGRetour=0
-        LQ:PalletsRetour=0
-        LQ:CelID=Pla:CelID
-        LQ:CelLocatieID=Pla:CelLocatieID
-        LQ:PlanningID=Pla:PlanningID
-        IF Pla:PlanningIDRetour<>0
-            APla:PlanningID=Pla:PlanningIDRetour
-            IF Access:APlanning.Fetch(APla:PK_Planning)=Level:Benign
-                LQ:KGRetour=-APla:KG
-                LQ:PalletsRetour=-APla:Pallets
-                LQ:CelID=APla:CelID
-                LQ:CelLocatieID=APla:CelLocatieID
-            END
-        END
-        Add(Loc:ListQ)
-    END    
-    Return

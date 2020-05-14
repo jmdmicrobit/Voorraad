@@ -110,7 +110,8 @@ FDCB7::View:FileDropCombo VIEW(ViewVoorraadPlanning)
                        PROJECT(VVP:InslagPallets)
                        PROJECT(VVP:UitslagKG)
                        PROJECT(VVP:UitslagPallets)
-                       JOIN(Art:Artikel_PK)
+                       JOIN(Art:Artikel_PK,VVP:ArtikelID)
+                         PROJECT(Art:ArtikelID)
                        END
                      END
 FDCB4::View:FileDropCombo VIEW(ViewVoorraadPartij)
@@ -190,6 +191,7 @@ VVP:InslagKG           LIKE(VVP:InslagKG)             !Browse hot field - type d
 VVP:InslagPallets      LIKE(VVP:InslagPallets)        !Browse hot field - type derived from field
 VVP:UitslagKG          LIKE(VVP:UitslagKG)            !Browse hot field - type derived from field
 VVP:UitslagPallets     LIKE(VVP:UitslagPallets)       !Browse hot field - type derived from field
+Art:ArtikelID          LIKE(Art:ArtikelID)            !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -288,7 +290,7 @@ ViewPosition           STRING(1024)                   !Entry's view position
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 History::Mut:Record  LIKE(Mut:RECORD),THREAD
-QuickWindow          WINDOW('Uitslag Weging'),AT(,,784,417),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),DOUBLE,CENTER, |
+QuickWindow          WINDOW('Uitslag Weging'),AT(,,784,424),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),DOUBLE,CENTER, |
   GRAY,IMM,MDI,HLP('UpdateUitslagMutatie'),SYSTEM
                        PROMPT('Invoerdatum:'),AT(7,14),USE(?Mut:DatumTijd_DATE:Prompt),TRN
                        ENTRY(@d6-),AT(82,15,64,10),USE(Mut:DatumTijd_DATE),SKIP
@@ -443,35 +445,41 @@ QuickWindow          WINDOW('Uitslag Weging'),AT(,,784,417),FONT('MS Sans Serif'
                          ENTRY(@s20),AT(614,126,50,10),USE(Mut:UitslagQATemperatuur1)
                          ENTRY(@s20),AT(670,126,50,10),USE(Mut:UitslagQATemperatuur2)
                          ENTRY(@s20),AT(729,126,50,10),USE(Mut:UitslagQATemperatuur3)
-                         PROMPT('Afwijking:'),AT(613,150),USE(?Mut:UitslagQAActieAfwijkingen:Prompt)
+                         PROMPT('Afwijking:'),AT(613,148),USE(?Mut:UitslagQAActieAfwijkingen:Prompt)
                          ENTRY(@s20),AT(705,138,60,10),USE(Mut:UitslagQATemperatuurVervoermiddel)
-                         TEXT,AT(614,162,165,27),USE(Mut:UitslagQAActieAfwijkingen),HVSCROLL
-                         PROMPT('Corrigerende Maatregel:'),AT(613,226),USE(?Mut:CorrigerendeMaatregel:Prompt)
-                         PROMPT('Afgehandeld:'),AT(613,270),USE(?Mut:Afgehandeld:Prompt)
-                         TEXT,AT(614,200,165,25),USE(Mut:CorrectieveMaatregel,,?Mut:CorrectieveMaatregel:2)
-                         TEXT,AT(614,238,165,30),USE(Mut:CorrigerendeMaatregel,,?Mut:CorrigerendeMaatregel:2)
-                         TEXT,AT(614,280,165,25),USE(Mut:Afgehandeld,,?Mut:Afgehandeld:2)
-                         PROMPT('CorrectieveMaatregel'),AT(613,190),USE(?Mut:CorrectieveMaatregel:Prompt)
+                         TEXT,AT(614,156,165,20),USE(Mut:UitslagQAActieAfwijkingen),VSCROLL
+                         PROMPT('Corrigerende Maatregel / voorkomen:'),AT(613,255),USE(?Mut:CorrigerendeMaatregel:Prompt)
+                         PROMPT('Afgehandeld:'),AT(613,279),USE(?Mut:Afgehandeld:Prompt)
+                         PROMPT('Oorzaak'),AT(613,176),USE(?Mut:oorzaak:Prompt)
+                         TEXT,AT(614,186,165,15),USE(Mut:Oorzaak),VSCROLL
+                         PROMPT('Transport Bedrijf'),AT(615,203),USE(?Mut:Transportbedrijf:Prompt)
+                         TEXT,AT(614,215,165,15),USE(Mut:TransportBedrijf),VSCROLL
+                         TEXT,AT(614,239,165,15),USE(Mut:CorrectieveMaatregel,,?Mut:CorrectieveMaatregel:2),VSCROLL
+                         TEXT,AT(614,264,165,15),USE(Mut:CorrigerendeMaatregel,,?Mut:CorrigerendeMaatregel:2),VSCROLL
+                         TEXT,AT(614,289,165,15),USE(Mut:Afgehandeld,,?Mut:Afgehandeld:2),VSCROLL
+                         PROMPT('CorrectieveMaatregel / Direct actie'),AT(613,229),USE(?Mut:CorrectieveMaatregel:Prompt)
                          PROMPT('Temperatuur Vervoermiddel:'),AT(613,139),USE(?Mut:UitslagQATemperatuurVervoermiddel:Prompt)
                        END
-                       GROUP('Palletblad-rapport'),AT(609,306,172,109),USE(?GROUP2),BOXED
+                       GROUP('Palletblad-rapport'),AT(609,306,172,116),USE(?GROUP2),BOXED
                          PROMPT('Afleverdatum (12):'),AT(615,316),USE(?Mut:UitslagPalletbladDueDate12_DATE:Prompt)
                          ENTRY(@D6-B),AT(696,318,46,10),USE(Mut:UitslagPalletbladDueDate12_DATE)
                          PROMPT('Productiedatum (11):'),AT(615,328),USE(?Mut:UitslagPalletbladProductionDate11_DATE:Prompt)
                          ENTRY(@d6-B),AT(696,329,46,10),USE(Mut:UitslagPalletbladProductionDate11_DATE)
                          PROMPT('THT (15):'),AT(615,341),USE(?Mut:UitslagPalletbladSellByDate15_DATE:Prompt)
                          ENTRY(@d6-B),AT(696,341,46,10),USE(Mut:UitslagPalletbladSellByDate15_DATE)
-                         ENTRY(@s50),AT(696,362,82,10),USE(GLO:UitslagPalletbladExternVerkoopID),FONT('Microsoft ' & |
+                         ENTRY(@s50),AT(696,375,82,10),USE(GLO:UitslagPalletbladExternVerkoopID),FONT('Microsoft ' & |
   'Sans Serif',,,FONT:regular)
-                         PROMPT('Extern Verkoop-ID:'),AT(615,362),USE(?LOC:ExternVerkoopID:Prompt)
-                         STRING(@n_10),AT(695,351,49,10),USE(Ver2:VerkoopID),LEFT
-                         STRING('Verkoop-ID:'),AT(615,351,44,10),USE(?STRING3:2)
-                         PROMPT('Origin Live Bird:'),AT(615,374),USE(?Mut:UitslagPalletbladOriginLiveBird:Prompt)
-                         ENTRY(@s50),AT(696,374,82,10),USE(Mut:UitslagPalletbladOriginLiveBird)
-                         PROMPT('Origin Slauther House:'),AT(615,386),USE(?Mut:UitslagPalletbladOriginSlautherHouse:Prompt)
-                         ENTRY(@s50),AT(696,386,82,10),USE(Mut:UitslagPalletbladOriginSlautherHouse)
-                         PROMPT('Origin Processing:'),AT(615,398),USE(?Mut:UitslagPalletbladOriginProcessing:Prompt)
-                         ENTRY(@s50),AT(696,398,82,10),USE(Mut:UitslagPalletbladOriginProcessing)
+                         PROMPT('Harvast Date 7007:'),AT(616,352),USE(?Mut:UitslagPalletbladHarvastDate7007_DATE:Prompt)
+                         ENTRY(@d6-B),AT(696,353,47,10),USE(Mut:UitslagPalletbladHarvastDate7007_DATE)
+                         PROMPT('Extern Verkoop-ID:'),AT(615,375),USE(?LOC:ExternVerkoopID:Prompt)
+                         STRING(@n_10),AT(695,364,49,10),USE(Ver2:VerkoopID),LEFT
+                         STRING('Verkoop-ID:'),AT(615,364,44,10),USE(?STRING3:2)
+                         PROMPT('Origin Live Bird:'),AT(615,387),USE(?Mut:UitslagPalletbladOriginLiveBird:Prompt)
+                         ENTRY(@s50),AT(696,387,82,10),USE(Mut:UitslagPalletbladOriginLiveBird)
+                         PROMPT('Origin Slauther House:'),AT(615,399),USE(?Mut:UitslagPalletbladOriginSlautherHouse:Prompt)
+                         ENTRY(@s50),AT(696,399,82,10),USE(Mut:UitslagPalletbladOriginSlautherHouse)
+                         PROMPT('Origin Processing:'),AT(615,411),USE(?Mut:UitslagPalletbladOriginProcessing:Prompt)
+                         ENTRY(@s50),AT(696,411,82,10),USE(Mut:UitslagPalletbladOriginProcessing)
                          PROMPT('Origin Packing:'),AT(615,430),USE(?Mut:UitslagPalletbladOriginPacking:Prompt)
                          ENTRY(@s50),AT(696,430,82,10),USE(Mut:UitslagPalletbladOriginPacking)
                        END
@@ -749,6 +757,7 @@ VulPalletBladDatums ROUTINE
     GLO:UitslagPalletbladDueDate12 = Mut:UitslagPalletbladDueDate12_DATE
     GLO:UitslagPalletbladProductionDate11 = Mut:UitslagPalletbladProductionDate11_DATE 
     GLO:UitslagPalletbladSellByDate15 = Mut:UitslagPalletbladSellByDate15_DATE
+    GLO:UitslagPalletbladHarvastDate7007 = Mut:UitslagPalletbladHarvastDate7007_DATE
     
     GLO:UitslagPalletbladOriginLiveBird=Mut:UitslagPalletbladOriginLiveBird
     GLO:UitslagPalletbladOriginSlautherHouse=Mut:UitslagPalletbladOriginSlautherHouse
@@ -790,9 +799,10 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:ArtikelVoorraadKG',LOC:ArtikelVoorraadKG)      ! Added by: FileDropCombo(ABC)
   BIND('LOC:ArtikelVoorraadPallet',LOC:ArtikelVoorraadPallet) ! Added by: FileDropCombo(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:DatumTijd_DATE,4)
@@ -811,17 +821,19 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Mut:UitslagQATemperatuur3,25)
   SELF.AddHistoryField(?Mut:UitslagQATemperatuurVervoermiddel,51)
   SELF.AddHistoryField(?Mut:UitslagQAActieAfwijkingen,26)
+  SELF.AddHistoryField(?Mut:Oorzaak,60)
+  SELF.AddHistoryField(?Mut:TransportBedrijf,61)
   SELF.AddHistoryField(?Mut:CorrectieveMaatregel:2,50)
   SELF.AddHistoryField(?Mut:CorrigerendeMaatregel:2,46)
   SELF.AddHistoryField(?Mut:Afgehandeld:2,47)
   SELF.AddHistoryField(?Mut:UitslagPalletbladDueDate12_DATE,30)
   SELF.AddHistoryField(?Mut:UitslagPalletbladProductionDate11_DATE,34)
   SELF.AddHistoryField(?Mut:UitslagPalletbladSellByDate15_DATE,38)
+  SELF.AddHistoryField(?Mut:UitslagPalletbladHarvastDate7007_DATE,58)
   SELF.AddHistoryField(?Mut:UitslagPalletbladOriginLiveBird,42)
   SELF.AddHistoryField(?Mut:UitslagPalletbladOriginSlautherHouse,43)
   SELF.AddHistoryField(?Mut:UitslagPalletbladOriginProcessing,44)
   SELF.AddHistoryField(?Mut:UitslagPalletbladOriginPacking,45)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAAAViewVoorraadPartij.Open                       ! File AAAAViewVoorraadPartij used by this procedure, so make sure it's RelationManager is open
   Relate:AAACelLocatie.Open                                ! File AAACelLocatie used by this procedure, so make sure it's RelationManager is open
@@ -1162,6 +1174,7 @@ ReturnValue          BYTE,AUTO
           Mut:UitslagPalletbladDueDate12_DATE = Pla:UitslagPalletbladDueDate12_DATE
           Mut:UitslagPalletbladProductionDate11_DATE = Pla:UitslagPalletbladProductionDate11_DATE
           Mut:UitslagPalletbladSellByDate15_DATE = Pla:UitslagPalletbladSellByDate15_DATE
+          Mut:UitslagPalletbladHarvastDate7007_DATE = Pla:UitslagPalletbladHarvastDate7007_DATE
           
           Mut:UitslagPalletbladOriginLiveBird = Pla:UitslagPalletbladOriginLiveBird
           Mut:UitslagPalletbladOriginSlautherHouse = Pla:UitslagPalletbladOriginSlautherHouse
@@ -1250,6 +1263,7 @@ ReturnValue          BYTE,AUTO
     DISABLE(?Mut:UitslagQATemperatuur3)
     ?Mut:UitslagQATemperatuurVervoermiddel{PROP:ReadOnly} = True
     DISABLE(?Mut:UitslagQAActieAfwijkingen)
+    ?Mut:UitslagPalletbladHarvastDate7007_DATE{PROP:ReadOnly} = True
     DISABLE(?Ver2:VerkoopID)
     ?ViewUMQButton{Prop:Hide} = FALSE
     ?PrintPalletbladButton{Prop:Hide} = False
@@ -1269,6 +1283,7 @@ ReturnValue          BYTE,AUTO
   FDCB7.AddField(VVP:InslagPallets,FDCB7.Q.VVP:InslagPallets) !Browse hot field - type derived from field
   FDCB7.AddField(VVP:UitslagKG,FDCB7.Q.VVP:UitslagKG) !Browse hot field - type derived from field
   FDCB7.AddField(VVP:UitslagPallets,FDCB7.Q.VVP:UitslagPallets) !Browse hot field - type derived from field
+  FDCB7.AddField(Art:ArtikelID,FDCB7.Q.Art:ArtikelID) !Related join file key field - type derived from field
   FDCB7.AddUpdateField(VVP:ArtikelID,Mut:ArtikelID)
   ThisWindow.AddItem(FDCB7.WindowComponent)
   FDCB7.DefaultFill = 0

@@ -1,0 +1,2422 @@
+[MODULE]
+NAME 'BrowseVoorraadVerloopPerPartij_VoorrVrd.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME BrowseVoorraadVerloopPerPartij
+PROTOTYPE '(STRING, LONG)'
+PARAMETERS '(ArtikelID, PartijID)'
+[COMMON]
+DESCRIPTION 'Browse the VoorraadVerloop file'
+FROM ABC Window
+CATEGORY 'Browse'
+[DATA]
+[SCREENCONTROLS]
+! PROMPT('Artikel ID:'),USE(?LOC:ArtikelID:Prompt)
+! ENTRY(@s30),USE(LOC:ArtikelID),REQ
+[REPORTCONTROLS]
+! STRING(@s30),USE(LOC:ArtikelID)
+LOC:ArtikelID            CSTRING(31)
+!!> GUID('7d570488-a7a1-4da3-8d3e-111253104b03'),VALID(NONZERO),PROMPT('Artikel ID:'),HEADER('Artikel ID'),PICTURE(@s30),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Leverancier ID:'),USE(?LOC:LeverancierID:Prompt),CENTER
+! ENTRY(@n-14),USE(LOC:LeverancierID),REQ,DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:LeverancierID),DECIMAL
+LOC:LeverancierID        LONG
+!!> GUID('29dd2127-f3a0-474c-b9b5-4aab7913b84a'),VALID(NONZERO),PROMPT('LOC : Leverancier ID:'),HEADER('LOC : Leverancier ID'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Klant:'),USE(?LOC:Klant:Prompt)
+! ENTRY(@s40),USE(LOC:Klant)
+[REPORTCONTROLS]
+! STRING(@s40),USE(LOC:Klant)
+LOC:Klant                STRING(40)
+!!> GUID('1d9d5d8d-f1f3-485b-95c0-297c0ad2bacb'),PROMPT('LOC : Klant:'),HEADER('LOC : Klant'),PICTURE(@s40),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : EINF ilter:'),USE(?LOC:EINFilter:Prompt)
+! ENTRY(@s10),USE(LOC:EINFilter)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:EINFilter)
+LOC:EINFilter            STRING(10)
+!!> GUID('0150974e-cb3c-4798-81a8-53f8b2fd535c'),PROMPT('LOC : EINF ilter:'),HEADER('LOC : EINF ilter'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : EOUTF ilter:'),USE(?LOC:EOUTFilter:Prompt)
+! ENTRY(@s10),USE(LOC:EOUTFilter)
+[REPORTCONTROLS]
+! STRING(@s10),USE(LOC:EOUTFilter)
+LOC:EOUTFilter           STRING(10)
+!!> GUID('03ae3742-dc67-4b4d-866a-6a9b419d798e'),PROMPT('LOC : EOUTF ilter:'),HEADER('LOC : EOUTF ilter'),PICTURE(@s10),TYPEMODE(INS)
+[SCREENCONTROLS]
+! CHECK('LOC : Handmatig Tonen:'),USE(LOC:HandmatigTonen),VALUE('1','0')
+[REPORTCONTROLS]
+! CHECK('LOC : Handmatig Tonen:'),USE(LOC:HandmatigTonen),VALUE('1','0')
+LOC:HandmatigTonen       BYTE
+!!> GUID('425b0b8e-2c49-4641-b373-b6600db824f8'),VALID(BOOLEAN),PROMPT('LOC : Handmatig Tonen:'),HEADER('LOC : Handmatig Tonen'),PICTURE(@n3),TYPEMODE(INS),TRUEVALUE('1'),FALSEVALUE('0')
+[SCREENCONTROLS]
+! PROMPT('Partij ID:'),USE(?LOC:PartijID:Prompt),CENTER
+! ENTRY(@n-14),USE(LOC:PartijID),REQ,DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:PartijID),DECIMAL
+LOC:PartijID             LONG
+!!> GUID('be88c242-170c-4578-b448-d95d565562b4'),VALID(NONZERO),PROMPT('Partij ID:'),HEADER('Partij ID'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Inkoop Relatie:'),USE(?LOC:Leverancier:Prompt)
+! ENTRY(@s50),USE(LOC:Leverancier)
+[REPORTCONTROLS]
+! STRING(@s50),USE(LOC:Leverancier)
+LOC:Leverancier          STRING(50)
+!!> GUID('8d227938-644b-4dd8-a9b2-b37c84fd6d97'),PROMPT('Inkoop Relatie:'),HEADER('Inkoop Relatie'),PICTURE(@s50),TYPEMODE(INS),FREEZE
+CurrentTab               STRING(80)
+!!> GUID('27edc4db-0716-46ae-a399-bda11c15ceb8')
+[SCREENCONTROLS]
+! PROMPT('LOC : Totaal KG:'),USE(?LOC:TotaalKG:Prompt)
+! ENTRY(@n10`2),USE(LOC:TotaalKG),DECIMAL(14)
+[REPORTCONTROLS]
+! STRING(@n10`2),USE(LOC:TotaalKG),DECIMAL(14)
+LOC:TotaalKG             REAL
+!!> GUID('f624d572-4cd6-43e1-9306-b2d973b9edc2'),PROMPT('LOC : Totaal KG:'),HEADER('LOC : Totaal KG'),PICTURE(@n10`2),TYPEMODE(INS),JUSTIFY(DECIMAL,14)
+[SCREENCONTROLS]
+! PROMPT('LOC : Totaal Pallets:'),USE(?LOC:TotaalPallets:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:TotaalPallets),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:TotaalPallets),RIGHT(1)
+LOC:TotaalPallets        LONG
+!!> GUID('89aebc3d-bbe2-4d78-923e-7cb6a0bfb526'),PROMPT('LOC : Totaal Pallets:'),HEADER('LOC : Totaal Pallets'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Verpakking Omschrijving:'),USE(?LOC:VerpakkingOmschrijving:Prompt)
+! ENTRY(@s30),USE(LOC:VerpakkingOmschrijving)
+[REPORTCONTROLS]
+! STRING(@s30),USE(LOC:VerpakkingOmschrijving)
+LOC:VerpakkingOmschrijving STRING(30)
+!!> GUID('d1c87461-3c6c-4f17-a23a-eaf3b40cbe92'),PROMPT('LOC : Verpakking Omschrijving:'),HEADER('LOC : Verpakking Omschrijving'),PICTURE(@s30),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('LOC : Soort Mutatie Filter:'),USE(?LOC:SoortMutatieFilter:Prompt)
+! LIST,USE(LOC:SoortMutatieFilter),DROP(3,50),RIGHT(1),FROM('Alle|#1|Inslag|#2|Uitslag|#3')
+[REPORTCONTROLS]
+! OPTION('LOC : Soort Mutatie Filter:'),USE(LOC:SoortMutatieFilter),BOXED
+! RADIO('Alle'),USE(?LOC:SoortMutatieFilter:Radio0)
+! RADIO('Inslag'),USE(?LOC:SoortMutatieFilter:Radio1)
+! RADIO('Uitslag'),USE(?LOC:SoortMutatieFilter:Radio2)
+! END
+LOC:SoortMutatieFilter   LONG
+!!> GUID('8996c77b-4f09-46e1-98aa-6668dcfecfbb'),VALID(INLIST('Alle|Inslag|Uitslag')),PROMPT('LOC : Soort Mutatie Filter:'),HEADER('LOC : Soort Mutatie Filter'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1),VALUES('1|2|3')
+[SCREENCONTROLS]
+! PROMPT('LOC : Totaal Inslag KG:'),USE(?LOC:TotaalInslagKG:Prompt)
+! ENTRY(@n-17.2),USE(LOC:TotaalInslagKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-17.2),USE(LOC:TotaalInslagKG),DECIMAL(12)
+LOC:TotaalInslagKG       DECIMAL(12,2)
+!!> GUID('4af50a98-e861-4aa4-bc2d-a93f99b576ff'),PROMPT('LOC : Totaal Inslag KG:'),HEADER('LOC : Totaal Inslag KG'),PICTURE(@n-17.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('LOC : Totaal Uitslag KG:'),USE(?LOC:TotaalUitslagKG:Prompt)
+! ENTRY(@n-17.2),USE(LOC:TotaalUitslagKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-17.2),USE(LOC:TotaalUitslagKG),DECIMAL(12)
+LOC:TotaalUitslagKG      DECIMAL(12,2)
+!!> GUID('df3e80fe-bc47-443b-91e5-5019c3c592af'),PROMPT('LOC : Totaal Uitslag KG:'),HEADER('LOC : Totaal Uitslag KG'),PICTURE(@n-17.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('LOC : Leverancier Saldo Queue:'),USE(?LOC:LeverancierSaldoQueue:Prompt)
+! ENTRY(@s20),USE(LOC:LeverancierSaldoQueue)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:LeverancierSaldoQueue)
+LOC:LeverancierSaldoQueue QUEUE,PRE(LSD)
+!!> GUID('8bcc63c4-5ce2-4e73-a644-43b80b02c24b'),PROMPT('LOC : Leverancier Saldo Queue:'),HEADER('LOC : Leverancier Saldo Queue'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Mutatie ID:'),USE(?LSD:MutatieID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LSD:MutatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LSD:MutatieID),RIGHT(1)
+MutatieID                  LONG
+!!> GUID('3df9da9d-f6ed-4009-9f6c-c198c1417b4e'),PROMPT('Mutatie ID:'),HEADER('Mutatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?KG:Prompt)
+! ENTRY(@n-13.2),USE(KG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13.2),USE(KG),DECIMAL(12)
+KG                         DECIMAL(9,2)
+!!> GUID('eb824d1d-b344-446b-96cf-468f00c30068'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-13.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Pallets:'),USE(?Pallets:Prompt),RIGHT
+! ENTRY(@n_10),USE(Pallets),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(Pallets),RIGHT(1)
+Pallets                    LONG
+!!> GUID('2c4bcef1-d287-49b6-a62b-5051a391e706'),PROMPT('Pallets:'),HEADER('Pallets'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('5fe315dd-cca6-47b6-9d31-467954621565')
+[SCREENCONTROLS]
+! PROMPT('LOC : Saldo Queue:'),USE(?LOC:SaldoQueue:Prompt)
+! ENTRY(@s20),USE(LOC:SaldoQueue)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:SaldoQueue)
+LOC:SaldoQueue           QUEUE,PRE(SLD)
+!!> GUID('235c1d96-362f-4025-9ecc-36d24ada3160'),PROMPT('LOC : Saldo Queue:'),HEADER('LOC : Saldo Queue'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Mutatie ID:'),USE(?SLD:MutatieID:Prompt),CENTER
+! ENTRY(@n-14),USE(SLD:MutatieID),REQ,DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(SLD:MutatieID),DECIMAL
+MutatieID                  LONG
+!!> GUID('5ae3c424-aa06-46b6-950b-e52a1df4f703'),VALID(NONZERO),PROMPT('Mutatie ID:'),HEADER('Mutatie ID'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?SLD:KG:Prompt)
+! ENTRY(@n-15.2),USE(SLD:KG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-15.2),USE(SLD:KG),DECIMAL(12)
+KG                         DECIMAL(11,2)
+!!> GUID('4d2113ef-3886-439b-a94b-6b690cf86935'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-15.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Pallets:'),USE(?SLD:Pallets:Prompt),RIGHT
+! ENTRY(@n-14.),USE(SLD:Pallets),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14.),USE(SLD:Pallets),RIGHT(1)
+Pallets                    LONG
+!!> GUID('f04d1a60-8b2b-40b3-9f37-12e2dc7cb41c'),PROMPT('Pallets:'),HEADER('Pallets'),PICTURE(@n-14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('dcfb02e9-6fb9-4b6f-a3c1-8fdbb85fb17a')
+[SCREENCONTROLS]
+! PROMPT('LOC : HS aldo Queue:'),USE(?LOC:HSaldoQueue:Prompt)
+! ENTRY(@s20),USE(LOC:HSaldoQueue)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:HSaldoQueue)
+LOC:HSaldoQueue          QUEUE,PRE(HSLD)
+!!> GUID('b298d16c-ab6b-4631-9af0-2f38d8be7c6c'),PROMPT('LOC : HS aldo Queue:'),HEADER('LOC : HS aldo Queue'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Mutatie ID:'),USE(?HSLD:MutatieID:Prompt),RIGHT
+! ENTRY(@n_10),USE(HSLD:MutatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(HSLD:MutatieID),RIGHT(1)
+MutatieID                  LONG
+!!> GUID('83d3913d-b455-44fd-b781-a63ec6060098'),PROMPT('Mutatie ID:'),HEADER('Mutatie ID'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?HSLD:KG:Prompt)
+! ENTRY(@n-15.2),USE(HSLD:KG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-15.2),USE(HSLD:KG),DECIMAL(12)
+KG                         DECIMAL(11,2)
+!!> GUID('ba9c37e3-defc-4a4d-a103-45930c169685'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-15.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Pallets:'),USE(?HSLD:Pallets:Prompt),RIGHT
+! ENTRY(@n-14),USE(HSLD:Pallets),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(HSLD:Pallets),RIGHT(1)
+Pallets                    LONG
+!!> GUID('f2dfdb6a-5a6a-4fb5-973b-97a42e868224'),PROMPT('Pallets:'),HEADER('Pallets'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('454f659e-dc0c-45b2-850e-90cd77cd5a08')
+[SCREENCONTROLS]
+! PROMPT('LOC : Partij Saldo Queue:'),USE(?LOC:PartijSaldoQueue:Prompt)
+! ENTRY(@s20),USE(LOC:PartijSaldoQueue)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LOC:PartijSaldoQueue)
+LOC:PartijSaldoQueue     QUEUE,PRE(PSLD)
+!!> GUID('d265abbf-4526-4022-8457-4b08fb6fcb81'),PROMPT('LOC : Partij Saldo Queue:'),HEADER('LOC : Partij Saldo Queue'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Mutatie ID:'),USE(?PSLD:MutatieID:Prompt),CENTER
+! ENTRY(@n-14),USE(PSLD:MutatieID),REQ,DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(PSLD:MutatieID),DECIMAL
+MutatieID                  LONG
+!!> GUID('a01b98e0-8e1e-4927-aec7-ddf578070c4a'),VALID(NONZERO),PROMPT('Mutatie ID:'),HEADER('Mutatie ID'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?PSLD:KG:Prompt),CENTER
+! ENTRY(@n-15.2),USE(PSLD:KG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-15.2),USE(PSLD:KG),DECIMAL(12)
+KG                         DECIMAL(11,2)
+!!> GUID('320edb18-c073-40f4-8476-287f92da91a4'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-15.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Pallets:'),USE(?PSLD:Pallets:Prompt),RIGHT
+! ENTRY(@n-14.),USE(PSLD:Pallets),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14.),USE(PSLD:Pallets),RIGHT(1)
+Pallets                    LONG
+!!> GUID('bd7fde17-c4b7-4203-9d45-80bfcd5b7c14'),PROMPT('Pallets:'),HEADER('Pallets'),PICTURE(@n-14.),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('c412909d-a572-4635-9e78-5b7e9d44869b')
+[SCREENCONTROLS]
+! PROMPT('LOC : Prijs KG:'),USE(?LOC:PrijsKG:Prompt)
+! ENTRY(@n-14`3),USE(LOC:PrijsKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-14`3),USE(LOC:PrijsKG),DECIMAL(12)
+LOC:PrijsKG              DECIMAL(10,3)
+!!> GUID('1967800d-1c87-4ec3-9cf7-702529a45c4e'),PROMPT('LOC : Prijs KG:'),HEADER('LOC : Prijs KG'),PICTURE(@n-14`3),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[FILES]
+[PRIMARY]
+VoorraadVerloop
+[INSTANCE]
+1
+[KEY]
+VVL:ArtikelID_PartijID_DatumTijdD_MutatieID_K
+[SECONDARY]
+Cel VoorraadVerloop
+[OTHERS]
+AVoorraadVerloop
+Relatie
+Inkoop
+Verpakking
+ARelatie
+Planning
+Mutatie
+ViewArtikel
+[PROMPTS]
+%ButtonAction DEPEND %Control DEFAULT TIMES 6
+WHEN  ('') ('No Special Action')
+WHEN  ('?Browse:1') ('No Special Action')
+WHEN  ('?Close') ('No Special Action')
+WHEN  ('?HandmatigeCorrectie') ('No Special Action')
+WHEN  ('?LOC:SoortMutatieFilter:2') ('No Special Action')
+WHEN  ('?Overboeken') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?HandmatigeCorrectie') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?HandmatigeCorrectie') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 1
+WHEN  ('?HandmatigeCorrectie') ()
+
+%ButtonThread DEPEND %Control LONG TIMES 1
+WHEN  ('?HandmatigeCorrectie') (0)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 6
+WHEN  ('') ('25000')
+WHEN  ('?Browse:1') ('25000')
+WHEN  ('?Close') ('25000')
+WHEN  ('?HandmatigeCorrectie') ('25000')
+WHEN  ('?LOC:SoortMutatieFilter:2') ('25000')
+WHEN  ('?Overboeken') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?HandmatigeCorrectie') ('')
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 6
+WHEN  ('') ('None')
+WHEN  ('?Browse:1') ('None')
+WHEN  ('?Close') ('None')
+WHEN  ('?HandmatigeCorrectie') ('None')
+WHEN  ('?LOC:SoortMutatieFilter:2') ('None')
+WHEN  ('?Overboeken') ('None')
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Reset {18}PROCEDURE(BYTE Force=0),DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  (1, 2, 3, 4, 5, 6, 7)
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 7
+WHEN  (1) ('LOC:SoortMutatieFilter')
+WHEN  (2) ('VVL:SoortMutatie')
+WHEN  (3) ('LOC:Klant')
+WHEN  (4) ('LOC:Leverancier')
+WHEN  (5) ('LOC:VerpakkingOmschrijving')
+WHEN  (6) ('LOC:TotaalKG')
+WHEN  (7) ('LOC:TotaalPallets')
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 7
+WHEN  (1) ('BrowseBox(ABC)')
+WHEN  (2) ('BrowseBox(ABC)')
+WHEN  (3) ('BrowseBox(ABC)')
+WHEN  (4) ('BrowseBox(ABC)')
+WHEN  (5) ('BrowseBox(ABC)')
+WHEN  (6) ('BrowseBox(ABC)')
+WHEN  (7) ('BrowseBox(ABC)')
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 6
+WHEN  ('') ('Default')
+WHEN  ('?Browse:1') ('Default')
+WHEN  ('?CurrentTab') ('Default')
+WHEN  ('?HandmatigeCorrectie') ('Default')
+WHEN  ('?LOC:SoortMutatieFilter:2') ('Default')
+WHEN  ('?Overboeken') ('Default')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?HandmatigeCorrectie') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 1
+WHEN  ('?HandmatigeCorrectie') (0)
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?HandmatigeCorrectie') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?HandmatigeCorrectie') ()
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 6
+WHEN  ('') (1)
+WHEN  ('?Browse:1') (1)
+WHEN  ('?HandmatigeCorrectie') (1)
+WHEN  ('?LOC:ArtikelID') (1)
+WHEN  ('?LOC:SoortMutatieFilter:2') (1)
+WHEN  ('?Overboeken') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 5
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+WHEN  ('?Overboeken')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 5
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+WHEN  ('?Overboeken')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 5
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+WHEN  ('?Overboeken')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 5
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+WHEN  ('?Overboeken')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 5
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+WHEN  ('?Overboeken')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 5
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+WHEN  ('?Overboeken')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?Browse:1')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+BUFFER(AVoorraadVerloop, 100)
+BUFFER(VoorraadVerloop, 100)
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+LOC:ArtikelID = ArtikelID
+LOC:PartijID = PartijID
+LOC:LeverancierID = 0
+
+CLEAR(Art:Record)
+Art:ArtikelID = LOC:ArtikelID
+Access:ViewArtikel.TryFetch(Art:Artikel_PK)
+
+LOC:SoortMutatieFilter = 0
+
+Do RefreshQueues
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8001
+PROPERTY:END
+IF IGB:BekijkenPrijzen <> 1 THEN
+	! Prijzen niet tonen, format string wijzigen 60R(2)|M*~KG-Prijs~C(0) naar 0R(2)|M*~KG-Prijs~C(0)
+    SearchString = 'KG-Prijs'
+    startidx# = INSTRING(CLIP(SearchString), CLIP(?Browse:1{PROP:Format}), 1, 1)
+    IF (startidx# - LEN(CLIP(SearchString)) > 0)
+        ! Gevonden
+        TempFormat = ?Browse:1{PROP:Format}
+        ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+    END
+
+    SearchString = 'KG Prijs'
+    startidx# = INSTRING(CLIP(SearchString), CLIP(?Browse:1{PROP:Format}), 1, 1)
+    IF (startidx# - LEN(SearchString) > 0)
+    !    ! Gevonden
+        TempFormat = ?Browse:1{PROP:Format}
+        ?Browse:1{PROP:Format} = SUB(TempFormat, 1, startidx# - 11) & '0' & CLIP(SUB(TempFormat, startidx# - 8, LEN(TempFormat)))
+    END
+END
+[END]
+[END]
+WHEN 'Kill'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+FLUSH(AVoorraadVerloop)
+FLUSH(VoorraadVerloop)
+[END]
+[END]
+[END]
+EMBED %BrowserMethodCodeSection
+[INSTANCES]
+WHEN '1'
+[INSTANCES]
+WHEN 'SetQueueRecord'
+[INSTANCES]
+WHEN '()'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+	!db.DebugOut('VoorraadVerloop1:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+	LOC:Leverancier = VVL:PartijRelatie
+	LOC:Klant = ''
+	LOC:VerpakkingOmschrijving = VVL:VerpakkingOmschrijving
+	!db.DebugOut('VoorraadVerloop2:'&VVL:MutatieID&',' & VVL:PartijRelatie)
+
+	IF CLIP(VVL:SoortMutatie) = 'UIT'
+		LOC:Klant = VVL:VerkoopRelatie
+	.
+
+	! Tijdelijk voor EIN
+	IF CLIP(VVL:SoortMutatie) = 'EIN'
+		CLEAR(Pla:Record)
+		Pla:PlanningID = VVL:PlanningID
+		db.DebugOut('VoorraadVerloop E1:'&VVL:PlanningID)
+		Access:Planning.TryFetch(Pla:PK_Planning)
+		db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+
+		!LOC:Leverancier = VVL:InkoopRelatie
+		CLEAR(Rel:Record)
+		Rel:RelatieID = Pla:Leverancier
+		Access:Relatie.TryFetch(Rel:Relatie_PK)
+		LOC:Leverancier = Rel:FirmaNaam
+		
+		CLEAR(Ver:Record)
+		Ver:VerpakkingID=Pla:VerpakkingID
+		Access:Verpakking.TryFetch(Ver:Verpakking_PK)
+		LOC:VerpakkingOmschrijving = Ver:VerpakkingOmschrijving
+	.
+
+	IF CLIP(VVL:SoortMutatie) = 'EUIT' THEN
+		CLEAR(Pla:Record)
+		Pla:PlanningID = VVL:PlanningID
+		!db.DebugOut('VoorraadVerloop E1:'&VVL:PlanningID)
+		Access:Planning.TryFetch(Pla:PK_Planning)
+		!db.DebugOut('VoorraadVerloop E2:'&Pla:PlanningID&','&Pla:Leverancier&','&Pla:VerpakkingID)
+
+		LOC:Klant = VVL:VerkoopRelatie
+		
+		IF LOC:Leverancier = ''
+			CLEAR(Rel:Record)
+			Rel:RelatieID = Pla:Leverancier
+			Access:Relatie.TryFetch(Rel:Relatie_PK)
+			LOC:Leverancier = Rel:FirmaNaam
+		.
+		
+		IF LOC:VerpakkingOmschrijving = ''
+			CLEAR(Ver:Record)
+			Ver:VerpakkingID=Pla:VerpakkingID
+			Access:Verpakking.TryFetch(Ver:Verpakking_PK)
+			LOC:VerpakkingOmschrijving = Ver:VerpakkingOmschrijving
+		.
+	.
+
+	CLEAR(LOC:PartijSaldoQueue)
+	PSLD:MutatieID = VVL:MutatieID
+	GET(LOC:PartijSaldoQueue, +PSLD:MutatieID)
+	IF NOT(ERROR())
+		LOC:TotaalKG = PSLD:KG
+		LOC:TotaalPallets = PSLD:Pallets
+	ELSE
+		LOC:TotaalKG = 0
+		LOC:TotaalPallets = 0
+	.
+[END]
+[END]
+[END]
+[END]
+EMBED %ProcedureRoutines
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3240
+PROPERTY:END
+RefreshQueues ROUTINE
+	DO VulPartijSaldoQueue
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VulPartijSaldoQueue ROUTINE
+	LOC:TotaalKG = 0
+	LOC:TotaalPallets = 0;
+	
+	FREE(LOC:PartijSaldoQueue)
+	
+	!CLEAR(AVVL:Record)
+	!AVVL:ArtikelID = LOC:ArtikelID
+	!AVVL:PartijID = LOC:PartijID
+	!CLEAR(AVVL:DatumTijd_DATE,-1)
+	!CLEAR(AVVL:DatumTijd_TIME,-1)
+	!CLEAR(AVVL:MutatieID,1)
+    !SET(AVVL:ArtikelID_PartijID_DatumTijdD_MutatieID_K, AVVL:ArtikelID_PartijID_DatumTijdD_MutatieID_K)
+    AVoorraadVerloop{PROP:SQL} = 'SELECT * FROM VoorraadVerloop ' &|
+        'WHERE ArtikelID = ''' & CLIP(LOC:ArtikelID) & ''' AND PartijID = ' & CLIP(FORMAT(LOC:PartijID, @N_10)) & ' ORDER BY DatumTijd, MutatieID DESC'
+
+	LOOP UNTIL Access:AVoorraadVerloop.Next()
+		!IF AVVL:ArtikelID <> LOC:ArtikelID OR AVVL:PartijID <> LOC:PartijID THEN BREAK.
+
+		IF CLIP(AVVL:SoortMutatie) = 'IN' OR CLIP(AVVL:SoortMutatie) = 'EIN' OR CLIP(AVVL:SoortMutatie) = 'OIN'
+			LOC:TotaalKG += AVVL:InslagKG
+			LOC:TotaalPallets += AVVL:InslagPallet
+		ELSIF CLIP(AVVL:SoortMutatie) = 'UIT' OR CLIP(AVVL:SoortMutatie) = 'EUIT' OR CLIP(AVVL:SoortMutatie) = 'OUIT'
+			LOC:TotaalKG -= AVVL:UitslagKG
+			LOC:TotaalPallets -= AVVL:UitslagPallet
+		.
+		
+		PSLD:MutatieID = AVVL:MutatieID
+		PSLD:KG = LOC:TotaalKG
+		PSLD:Pallets = LOC:TotaalPallets
+		ADD(LOC:PartijSaldoQueue, +PSLD:MutatieID)
+	.
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Overboeken'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+Get(BRW1.Q ,Choice(?Browse:1))
+If Not Error()
+	IF (BRW1.Q.VVL:SoortMutatie = 'IN' OR BRW1.Q.VVL:SoortMutatie = 'OIN')
+		CLEAR(Mut:Record)
+		Mut:MutatieID=BRW1.Q.VVL:MutatieID
+		IF (Access:Mutatie.TryFetch(Mut:Mutatie_PK) = Level:Benign)
+			GlobalRequest = ChangeRecord
+			UpdateOverboekPlanningVanuitVV
+		END
+	ELSE
+		Message('Geselecteerde mutatie is geen inslag.')
+	END
+END
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+	NOTIFY(2, GLO:Overboeking_ThreadID)
+	NOTIFY(2, GLO:Planning_ThreadID)
+[END]
+[END]
+WHEN '?HandmatigeCorrectie'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+Get(BRW1.Q ,Choice(?Browse:1))
+If Not Error()
+	CLEAR(Mut:Record)
+	Mut:MutatieID=BRW1.Q.VVL:MutatieID
+	IF (Access:Mutatie.TryFetch(Mut:Mutatie_PK) = Level:Benign)
+		db.DebugOut('UpdateMutatie:'&Mut:MutatieID& ', ' & Mut:SoortMutatie)
+		CASE Mut:SoortMutatie
+		OF 'UIT'
+			GlobalRequest = ChangeRecord
+			UpdateUitslagMutatie()
+		OF 'EUIT'
+			GlobalRequest = ChangeRecord
+			UpdateEUitslagMutatie()
+		OF 'IN'
+			CLEAR(Par:Record)
+			Par:PartijID = VVL:PartijID
+
+			IF Access:Partij.TryFetch(Par:Partij_PK) = Level:Benign
+				GlobalRequest = ChangeRecord
+				WindowInslag()
+			ELSE
+				MESSAGE('Inslag heeft geen bekend partijnummer', '', ICON:Hand)
+			.
+		OF 'EIN'
+			GlobalRequest = ChangeRecord
+			UpdateEInslagMutatie()
+		OF 'OIN' OROF 'OUIT'
+			IF Mut:SoortMutatie = 'OIN'
+				! Ophalen bijbehorende OUIT-mutatie
+				planningID# = Mut:PlanningID
+				CLEAR(Mut:MutatieID, -1)
+				SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
+				LOOP
+					Access:Mutatie.Next()
+					IF ERROR() THEN BREAK.
+					IF planningID# <> Mut:PlanningID THEN BREAK.
+					
+					IF Mut:SoortMutatie = 'OUIT'
+						GlobalRequest = ChangeRecord
+						UpdateOverboekMutatie()
+						BREAK
+					END
+				END
+			ELSE
+				GlobalRequest = ChangeRecord
+				UpdateOverboekMutatie()
+			.
+		.
+	End
+End
+
+DO RefreshQueues
+BRW1.ResetQueue(0)
+ThisWindow.Reset(True)
+[END]
+[END]
+[END]
+EMBED %WindowEventHandling
+[INSTANCES]
+WHEN 'Notify'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+	!NOTIFICATION(NotifyCode#)
+	!db.DebugOut('BrowseVoorraadVerloop.Notify('&NotifyCode#&')')
+	!IF NotifyCode# = 1
+	!	0{Prop:Active}=TRUE
+	!ELSIF NotifyCode# = 2
+	!	DO RefreshQueues
+	!	ThisWindow.Reset(True)
+	!.
+[END]
+[END]
+EMBED %WindowManagerMethodDataSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+TempFormat          CSTRING(10000)
+SearchString CSTRING(1000)
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 8
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 7
+OWNER 3
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME ABC BrowseBox
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%AcceptToolBarControl LONG  (0)
+%EnableQuickScan LONG  (0)
+%LocatorType DEFAULT  ('None')
+%OverrideDefaultLocator LONG  (0)
+%OverrideLocator DEFAULT  ('')
+%RecordFilter DEFAULT  ('(LOC:SoortMutatieFilter = 0 OR (LOC:SoortMutatieFilter = 1 AND (VVL:SoortMutatie = ''IN'' OR VVL:SoortMutatie = ''EIN'' OR VVL:SoortMutatie = ''OIN'')) OR (LOC:SoortMutatieFilter = 2 AND VVL:SoortMutatie = ''IN'') OR (LOC:SoortMutatieFilter = 3 AND (VVL:SoortMutatie = ''UIT'' OR VVL:SoortMutatie = ''EUIT'' OR VVL:SoortMutatie = ''OUIT'')) OR (LOC:SoortMutatieFilter = 4 AND VVL:SoortMutatie = ''UIT''))')
+%RangeField COMPONENT  (VVL:PartijID)
+%RangeLimitType DEFAULT  ('Single Value')
+%RangeLimit FIELD  (LOC:PartijID)
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%ScrollBehavior DEFAULT  ('Fixed Thumb')
+%SortOrder MULTI LONG  ()
+%SortCondition DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortKey DEPEND %SortOrder KEY TIMES 0
+
+%SortLocatorType DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortOverrideDefaultLocator DEPEND %SortOrder LONG TIMES 0
+
+%SortOverrideLocator DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortRecordFilter DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortRangeField DEPEND %SortOrder COMPONENT TIMES 0
+
+%SortRangeLimit DEPEND %SortOrder FIELD TIMES 0
+
+%SortRangeLow DEPEND %SortOrder FIELD TIMES 0
+
+%SortRangeHigh DEPEND %SortOrder FIELD TIMES 0
+
+%SortRangeFile DEPEND %SortOrder FILE TIMES 0
+
+%SortRangeLimitType DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortScrollBehavior DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortScrollKeyDistribution DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortCustomKeyDistribution DEPEND %SortOrder MULTI LONG TIMES 0
+
+%SortKeyDistributionValue DEPEND %SortCustomKeyDistribution DEFAULT TIMES 0
+
+%SortScrollAlpha DEPEND %SortOrder LONG TIMES 0
+
+%SortScrollNumeric DEPEND %SortOrder LONG TIMES 0
+
+%SortScrollAlt DEPEND %SortOrder LONG TIMES 0
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'Locator', 'Locator0', 'Locator1', 'Locator2', |
+  'Locator3', 'Step', 'Step0', 'Step1', 'Step2', 'Step3')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 5
+WHEN  ('Default') ('BrowseClass')
+WHEN  ('Locator0') ('StepLocatorClass')
+WHEN  ('Locator1') ('StepLocatorClass')
+WHEN  ('Locator2') ('StepLocatorClass')
+WHEN  ('Locator3') ('StepLocatorClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 5
+WHEN  ('Default') ('')
+WHEN  ('Locator0') ('')
+WHEN  ('Locator1') ('')
+WHEN  ('Locator2') ('')
+WHEN  ('Locator3') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:Browse:1 {16}!Reference to browse queue', 'ApplyRange {13}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Fetch {18}PROCEDURE(BYTE Direction),DERIVED', 'ResetFromView {10}PROCEDURE(),DERIVED', |
+  'SetQueueRecord {9}PROCEDURE(),DERIVED')
+
+%SQLViewFields MULTI DEFAULT  ('VVL:DatumTijd_DATE', 'VVL:DatumTijd_TIME', 'LOC:Klant', |
+  'LOC:Leverancier', 'LOC:VerpakkingOmschrijving', 'VVL:CelOms', 'VVL:Locatienaam', |
+  'VVL:SoortMutatie', 'VVL:PartijID', 'VVL:ExternPartijnr', 'VVL:InslagKG', 'VVL:BerekendeInkoopKGPrijs', |
+  'VVL:UitslagKG', 'VVL:VerkoopKGPrijs', 'LOC:TotaalKG', 'VVL:PlanningID', 'VVL:InkoopID', |
+  'VVL:VerkoopID', 'VVL:MutatieID', 'LOC:TotaalPallets', 'VVL:VerkoopRelatie', 'VVL:InkoopRelatie', |
+  'VVL:VerpakkingOmschrijving', 'VVL:PartijRelatie', 'VVL:PartijLeverancier')
+%TableSchematicsDescription DEFAULT  ('')
+%LoadMethod DEFAULT  ('File')
+%InterLine DEFAULT  ('0')
+%FindDefaultAnywhere LONG  (0)
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 9
+WHEN  ('Default') ('NO')
+WHEN  ('Locator0') ('NO')
+WHEN  ('Locator1') ('NO')
+WHEN  ('Locator2') ('NO')
+WHEN  ('Locator3') ('NO')
+WHEN  ('Step0') ('NO')
+WHEN  ('Step1') ('NO')
+WHEN  ('Step2') ('NO')
+WHEN  ('Step3') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 5
+WHEN  ('Default') ('BRW1')
+WHEN  ('Locator0') ('BRW1::Sort0:Locator')
+WHEN  ('Locator1') ('BRW1::Sort1:Locator')
+WHEN  ('Locator2') ('BRW1::Sort2:Locator')
+WHEN  ('Locator3') ('BRW1::Sort3:Locator')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 9
+WHEN  ('Default') (1)
+WHEN  ('Locator0') (1)
+WHEN  ('Locator1') (1)
+WHEN  ('Locator2') (1)
+WHEN  ('Locator3') (1)
+WHEN  ('Step0') (1)
+WHEN  ('Step1') (1)
+WHEN  ('Step2') (1)
+WHEN  ('Step3') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 9
+WHEN  ('Default') (1)
+WHEN  ('Locator0') (1)
+WHEN  ('Locator1') (1)
+WHEN  ('Locator2') (1)
+WHEN  ('Locator3') (1)
+WHEN  ('Step0') (1)
+WHEN  ('Step1') (1)
+WHEN  ('Step2') (1)
+WHEN  ('Step3') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 9
+WHEN  ('Default') ('')
+WHEN  ('Locator0') ('ADOBlob')
+WHEN  ('Locator1') ('ADOBlob')
+WHEN  ('Locator2') ('ADOBlob')
+WHEN  ('Locator3') ('ADOBlob')
+WHEN  ('Step0') ('ADOBlob')
+WHEN  ('Step1') ('ADOBlob')
+WHEN  ('Step2') ('ADOBlob')
+WHEN  ('Step3') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 9
+WHEN  ('Default') (0)
+WHEN  ('Locator0') (0)
+WHEN  ('Locator1') (0)
+WHEN  ('Locator2') (0)
+WHEN  ('Locator3') (0)
+WHEN  ('Step0') (0)
+WHEN  ('Step1') (0)
+WHEN  ('Step2') (0)
+WHEN  ('Step3') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 5
+WHEN  ('Default')TIMES 0
+WHEN  ('Locator0')TIMES 0
+WHEN  ('Locator1')TIMES 0
+WHEN  ('Locator2')TIMES 0
+WHEN  ('Step1')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 5
+WHEN  ('Default')TIMES 0
+WHEN  ('Locator0')TIMES 0
+WHEN  ('Locator1')TIMES 0
+WHEN  ('Locator2')TIMES 0
+WHEN  ('Step1')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%HigherKeys MULTI LONG  (1)
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 1
+WHEN  (1) (VVL:ArtikelID)
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 1
+WHEN  (1) (VVL:ArtikelID)
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 1
+WHEN  (1) ('2')
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 1
+WHEN  (1) (LOC:ArtikelID)
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 1
+WHEN  (1) ('')
+
+%AdditionalSortType DEFAULT  ('Manual')
+%AddSortFields DEFAULT  ('')
+%AddSortFieldsAssisted MULTI LONG  ()
+%AddSortFieldAssisted DEPEND %AddSortFieldsAssisted FIELD TIMES 0
+
+%AddSortFieldAssistedOrder DEPEND %AddSortFieldsAssisted DEFAULT TIMES 0
+
+%ResetFields MULTI LONG  (1)
+%ResetField DEPEND %ResetFields FIELD TIMES 1
+WHEN  (1) (LOC:SoortMutatieFilter)
+
+%ScrollKeyDistribution DEFAULT  ('Alpha')
+%CustomKeyDistribution MULTI LONG  ()
+%KeyDistributionValue DEPEND %CustomKeyDistribution DEFAULT TIMES 0
+
+%ScrollAlpha LONG  (1)
+%ScrollNumeric LONG  (0)
+%ScrollAlt LONG  (0)
+%SortFindAnywhere DEPEND %SortOrder LONG TIMES 0
+
+%SortHigherKeys DEPEND %SortOrder MULTI LONG TIMES 0
+
+%SortHigherKey DEPEND %SortHigherKeys COMPONENT TIMES 0
+
+%SortHigherKeyField DEPEND %SortOrder DEPEND %SortHigherKeys FIELD TIMES 0
+
+%SortHigherKeyValueType DEPEND %SortOrder DEPEND %SortHigherKeys DEFAULT TIMES 0
+
+%SortHigherKeyValueVariable DEPEND %SortOrder DEPEND %SortHigherKeys FIELD TIMES 0
+
+%SortHigherKeyValueFixed DEPEND %SortOrder DEPEND %SortHigherKeys DEFAULT TIMES 0
+
+%SortAdditionalSortType DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortAddSortFields DEPEND %SortOrder DEFAULT TIMES 0
+
+%SortAddSortFieldsAssisted DEPEND %SortOrder MULTI LONG TIMES 0
+
+%SortAddSortFieldAssisted DEPEND %SortAddSortFieldsAssisted FIELD TIMES 0
+
+%SortAddSortFieldAssistedOrder DEPEND %SortAddSortFieldsAssisted DEFAULT TIMES 0
+
+%SortResetFields DEPEND %SortOrder MULTI LONG TIMES 0
+
+%SortResetField DEPEND %SortResetFields FIELD TIMES 0
+
+%HotFields MULTI LONG  (9, 1, 6, 5, 10, 2, 3, 4, 7, 8, 11, 12)
+%HotField DEPEND %HotFields FIELD TIMES 12
+WHEN  (1) (LOC:Leverancier)
+WHEN  (2) (VVL:VerkoopRelatie)
+WHEN  (3) (VVL:InkoopRelatie)
+WHEN  (4) (VVL:MutatieID)
+WHEN  (5) (LOC:TotaalKG)
+WHEN  (6) (LOC:TotaalPallets)
+WHEN  (7) (VVL:VerpakkingOmschrijving)
+WHEN  (8) (VVL:PlanningID)
+WHEN  (9) (LOC:Klant)
+WHEN  (10) (LOC:VerpakkingOmschrijving)
+WHEN  (11) (VVL:PartijRelatie)
+WHEN  (12) (VVL:PartijLeverancier)
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 12
+WHEN  (1) (1)
+WHEN  (2) (1)
+WHEN  (3) (1)
+WHEN  (4) (1)
+WHEN  (5) (0)
+WHEN  (6) (0)
+WHEN  (7) (1)
+WHEN  (8) (1)
+WHEN  (9) (1)
+WHEN  (10) (1)
+WHEN  (11) (1)
+WHEN  (12) (1)
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 3
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+
+%UseSameColorForAll LONG  (1)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (0)
+WHEN  ('LOC:Leverancier') (0)
+WHEN  ('LOC:TotaalKG') (0)
+WHEN  ('LOC:VerpakkingOmschrijving') (0)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (0)
+WHEN  ('VVL:CelOms') (0)
+WHEN  ('VVL:DatumTijd_DATE') (0)
+WHEN  ('VVL:DatumTijd_TIME') (0)
+WHEN  ('VVL:ExternPartijnr') (0)
+WHEN  ('VVL:InkoopID') (0)
+WHEN  ('VVL:InslagKG') (0)
+WHEN  ('VVL:Locatienaam') (0)
+WHEN  ('VVL:MutatieID') (0)
+WHEN  ('VVL:PartijID') (0)
+WHEN  ('VVL:PlanningID') (0)
+WHEN  ('VVL:SoortMutatie') (0)
+WHEN  ('VVL:UitslagKG') (0)
+WHEN  ('VVL:VerkoopID') (0)
+WHEN  ('VVL:VerkoopKGPrijs') (0)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (-1)
+WHEN  ('LOC:Leverancier') (-1)
+WHEN  ('LOC:TotaalKG') (-1)
+WHEN  ('LOC:VerpakkingOmschrijving') (-1)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (-1)
+WHEN  ('VVL:CelOms') (-1)
+WHEN  ('VVL:DatumTijd_DATE') (-1)
+WHEN  ('VVL:DatumTijd_TIME') (-1)
+WHEN  ('VVL:ExternPartijnr') (-1)
+WHEN  ('VVL:InkoopID') (-1)
+WHEN  ('VVL:InslagKG') (-1)
+WHEN  ('VVL:Locatienaam') (-1)
+WHEN  ('VVL:MutatieID') (-1)
+WHEN  ('VVL:PartijID') (-1)
+WHEN  ('VVL:PlanningID') (-1)
+WHEN  ('VVL:SoortMutatie') (-1)
+WHEN  ('VVL:UitslagKG') (-1)
+WHEN  ('VVL:VerkoopID') (-1)
+WHEN  ('VVL:VerkoopKGPrijs') (-1)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%AllControlGreenBarColor LONG  (1)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (8454143)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (0)
+WHEN  ('LOC:Leverancier') (0)
+WHEN  ('LOC:TotaalKG') (0)
+WHEN  ('LOC:VerpakkingOmschrijving') (0)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (0)
+WHEN  ('VVL:CelOms') (0)
+WHEN  ('VVL:DatumTijd_DATE') (0)
+WHEN  ('VVL:DatumTijd_TIME') (0)
+WHEN  ('VVL:ExternPartijnr') (0)
+WHEN  ('VVL:InkoopID') (0)
+WHEN  ('VVL:InslagKG') (0)
+WHEN  ('VVL:Locatienaam') (0)
+WHEN  ('VVL:MutatieID') (0)
+WHEN  ('VVL:PartijID') (0)
+WHEN  ('VVL:PlanningID') (0)
+WHEN  ('VVL:SoortMutatie') (0)
+WHEN  ('VVL:UitslagKG') (0)
+WHEN  ('VVL:VerkoopID') (0)
+WHEN  ('VVL:VerkoopKGPrijs') (0)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') ('Local List')
+WHEN  ('LOC:Leverancier') ('Local List')
+WHEN  ('LOC:TotaalKG') ('Local List')
+WHEN  ('LOC:VerpakkingOmschrijving') ('Local List')
+WHEN  ('VVL:BerekendeInkoopKGPrijs') ('Local List')
+WHEN  ('VVL:CelOms') ('Local List')
+WHEN  ('VVL:DatumTijd_DATE') ('Local List')
+WHEN  ('VVL:DatumTijd_TIME') ('Local List')
+WHEN  ('VVL:ExternPartijnr') ('Local List')
+WHEN  ('VVL:InkoopID') ('Local List')
+WHEN  ('VVL:InslagKG') ('Local List')
+WHEN  ('VVL:Locatienaam') ('Local List')
+WHEN  ('VVL:MutatieID') ('Local List')
+WHEN  ('VVL:PartijID') ('Local List')
+WHEN  ('VVL:PlanningID') ('Local List')
+WHEN  ('VVL:SoortMutatie') ('Local List')
+WHEN  ('VVL:UitslagKG') ('Local List')
+WHEN  ('VVL:VerkoopID') ('Local List')
+WHEN  ('VVL:VerkoopKGPrijs') ('Local List')
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') ('')
+WHEN  ('LOC:Leverancier') ('')
+WHEN  ('LOC:TotaalKG') ('')
+WHEN  ('LOC:VerpakkingOmschrijving') ('')
+WHEN  ('VVL:BerekendeInkoopKGPrijs') ('')
+WHEN  ('VVL:CelOms') ('')
+WHEN  ('VVL:DatumTijd_DATE') ('')
+WHEN  ('VVL:DatumTijd_TIME') ('')
+WHEN  ('VVL:ExternPartijnr') ('')
+WHEN  ('VVL:InkoopID') ('')
+WHEN  ('VVL:InslagKG') ('')
+WHEN  ('VVL:Locatienaam') ('')
+WHEN  ('VVL:MutatieID') ('')
+WHEN  ('VVL:PartijID') ('')
+WHEN  ('VVL:PlanningID') ('')
+WHEN  ('VVL:SoortMutatie') ('')
+WHEN  ('VVL:UitslagKG') ('')
+WHEN  ('VVL:VerkoopID') ('')
+WHEN  ('VVL:VerkoopKGPrijs') ('')
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') ('Local List')
+WHEN  ('LOC:Leverancier') ('Local List')
+WHEN  ('LOC:TotaalKG') ('Local List')
+WHEN  ('LOC:VerpakkingOmschrijving') ('Local List')
+WHEN  ('VVL:BerekendeInkoopKGPrijs') ('Local List')
+WHEN  ('VVL:CelOms') ('Local List')
+WHEN  ('VVL:DatumTijd_DATE') ('Local List')
+WHEN  ('VVL:DatumTijd_TIME') ('Local List')
+WHEN  ('VVL:ExternPartijnr') ('Local List')
+WHEN  ('VVL:InkoopID') ('Local List')
+WHEN  ('VVL:InslagKG') ('Local List')
+WHEN  ('VVL:Locatienaam') ('Local List')
+WHEN  ('VVL:MutatieID') ('Local List')
+WHEN  ('VVL:PartijID') ('Local List')
+WHEN  ('VVL:PlanningID') ('Local List')
+WHEN  ('VVL:SoortMutatie') ('Local List')
+WHEN  ('VVL:UitslagKG') ('Local List')
+WHEN  ('VVL:VerkoopID') ('Local List')
+WHEN  ('VVL:VerkoopKGPrijs') ('Local List')
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') ('')
+WHEN  ('LOC:Leverancier') ('')
+WHEN  ('LOC:TotaalKG') ('')
+WHEN  ('LOC:VerpakkingOmschrijving') ('')
+WHEN  ('VVL:BerekendeInkoopKGPrijs') ('')
+WHEN  ('VVL:CelOms') ('')
+WHEN  ('VVL:DatumTijd_DATE') ('')
+WHEN  ('VVL:DatumTijd_TIME') ('')
+WHEN  ('VVL:ExternPartijnr') ('')
+WHEN  ('VVL:InkoopID') ('')
+WHEN  ('VVL:InslagKG') ('')
+WHEN  ('VVL:Locatienaam') ('')
+WHEN  ('VVL:MutatieID') ('')
+WHEN  ('VVL:PartijID') ('')
+WHEN  ('VVL:PlanningID') ('')
+WHEN  ('VVL:SoortMutatie') ('')
+WHEN  ('VVL:UitslagKG') ('')
+WHEN  ('VVL:VerkoopID') ('')
+WHEN  ('VVL:VerkoopKGPrijs') ('')
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') ('Local List')
+WHEN  ('LOC:Leverancier') ('Local List')
+WHEN  ('LOC:TotaalKG') ('Local List')
+WHEN  ('LOC:VerpakkingOmschrijving') ('Local List')
+WHEN  ('VVL:BerekendeInkoopKGPrijs') ('Local List')
+WHEN  ('VVL:CelOms') ('Local List')
+WHEN  ('VVL:DatumTijd_DATE') ('Local List')
+WHEN  ('VVL:DatumTijd_TIME') ('Local List')
+WHEN  ('VVL:ExternPartijnr') ('Local List')
+WHEN  ('VVL:InkoopID') ('Local List')
+WHEN  ('VVL:InslagKG') ('Local List')
+WHEN  ('VVL:Locatienaam') ('Local List')
+WHEN  ('VVL:MutatieID') ('Local List')
+WHEN  ('VVL:PartijID') ('Local List')
+WHEN  ('VVL:PlanningID') ('Local List')
+WHEN  ('VVL:SoortMutatie') ('Local List')
+WHEN  ('VVL:UitslagKG') ('Local List')
+WHEN  ('VVL:VerkoopID') ('Local List')
+WHEN  ('VVL:VerkoopKGPrijs') ('Local List')
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') ('')
+WHEN  ('LOC:Leverancier') ('')
+WHEN  ('LOC:TotaalKG') ('')
+WHEN  ('LOC:VerpakkingOmschrijving') ('')
+WHEN  ('VVL:BerekendeInkoopKGPrijs') ('')
+WHEN  ('VVL:CelOms') ('')
+WHEN  ('VVL:DatumTijd_DATE') ('')
+WHEN  ('VVL:DatumTijd_TIME') ('')
+WHEN  ('VVL:ExternPartijnr') ('')
+WHEN  ('VVL:InkoopID') ('')
+WHEN  ('VVL:InslagKG') ('')
+WHEN  ('VVL:Locatienaam') ('')
+WHEN  ('VVL:MutatieID') ('')
+WHEN  ('VVL:PartijID') ('')
+WHEN  ('VVL:PlanningID') ('')
+WHEN  ('VVL:SoortMutatie') ('')
+WHEN  ('VVL:UitslagKG') ('')
+WHEN  ('VVL:VerkoopID') ('')
+WHEN  ('VVL:VerkoopKGPrijs') ('')
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%BrowseAllTotalOnOff LONG  (1)
+%BrowseAllTotalOnOffCondition DEFAULT  ('')
+%BrowseTotals MULTI LONG  (1, 2)
+%BrowseTotalTarget DEPEND %BrowseTotals FIELD TIMES 2
+WHEN  (1) (LOC:TotaalInslagKG)
+WHEN  (2) (LOC:TotaalUitslagKG)
+
+%BrowseTotalType DEPEND %BrowseTotals DEFAULT TIMES 2
+WHEN  (1) ('Sum')
+WHEN  (2) ('Sum')
+
+%BrowseTotalField DEPEND %BrowseTotals DEFAULT TIMES 2
+WHEN  (1) ('VVL:InslagKG')
+WHEN  (2) ('VVL:UitslagKG')
+
+%BrowseTotalBasedOn DEPEND %BrowseTotals DEFAULT TIMES 2
+WHEN  (1) ('Each Record Read')
+WHEN  (2) ('Each Record Read')
+
+%BrowseTotalCondition DEPEND %BrowseTotals DEFAULT TIMES 2
+WHEN  (1) ('')
+WHEN  (2) ('')
+
+%BrowseBoxDoNotIncludePrimaryKey LONG  (0)
+%DisableUsePopup LONG  (0)
+%EnableSortHeader LONG  (0)
+%ControlFieldSortHeaderSave LONG  (0)
+%ControlFieldSortHeaderMulti LONG  (1)
+%ControlFieldSortHeaderOnlyAsc DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (0)
+WHEN  ('LOC:Leverancier') (0)
+WHEN  ('LOC:TotaalKG') (0)
+WHEN  ('LOC:VerpakkingOmschrijving') (0)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (0)
+WHEN  ('VVL:CelOms') (0)
+WHEN  ('VVL:DatumTijd_DATE') (0)
+WHEN  ('VVL:DatumTijd_TIME') (0)
+WHEN  ('VVL:ExternPartijnr') (0)
+WHEN  ('VVL:InkoopID') (0)
+WHEN  ('VVL:InslagKG') (0)
+WHEN  ('VVL:Locatienaam') (0)
+WHEN  ('VVL:MutatieID') (0)
+WHEN  ('VVL:PartijID') (0)
+WHEN  ('VVL:PlanningID') (0)
+WHEN  ('VVL:SoortMutatie') (0)
+WHEN  ('VVL:UitslagKG') (0)
+WHEN  ('VVL:VerkoopID') (0)
+WHEN  ('VVL:VerkoopKGPrijs') (0)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldSortHeaderOverride DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (0)
+WHEN  ('LOC:Leverancier') (0)
+WHEN  ('LOC:TotaalKG') (0)
+WHEN  ('LOC:VerpakkingOmschrijving') (0)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (0)
+WHEN  ('VVL:CelOms') (0)
+WHEN  ('VVL:DatumTijd_DATE') (0)
+WHEN  ('VVL:DatumTijd_TIME') (0)
+WHEN  ('VVL:ExternPartijnr') (0)
+WHEN  ('VVL:InkoopID') (0)
+WHEN  ('VVL:InslagKG') (0)
+WHEN  ('VVL:Locatienaam') (0)
+WHEN  ('VVL:MutatieID') (0)
+WHEN  ('VVL:PartijID') (0)
+WHEN  ('VVL:PlanningID') (0)
+WHEN  ('VVL:SoortMutatie') (0)
+WHEN  ('VVL:UitslagKG') (0)
+WHEN  ('VVL:VerkoopID') (0)
+WHEN  ('VVL:VerkoopKGPrijs') (0)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldSortHeaderDisableColumn DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Browse:1')TIMES 19
+WHEN  ('LOC:Klant') (0)
+WHEN  ('LOC:Leverancier') (0)
+WHEN  ('LOC:TotaalKG') (0)
+WHEN  ('LOC:VerpakkingOmschrijving') (0)
+WHEN  ('VVL:BerekendeInkoopKGPrijs') (0)
+WHEN  ('VVL:CelOms') (0)
+WHEN  ('VVL:DatumTijd_DATE') (0)
+WHEN  ('VVL:DatumTijd_TIME') (0)
+WHEN  ('VVL:ExternPartijnr') (0)
+WHEN  ('VVL:InkoopID') (0)
+WHEN  ('VVL:InslagKG') (0)
+WHEN  ('VVL:Locatienaam') (0)
+WHEN  ('VVL:MutatieID') (0)
+WHEN  ('VVL:PartijID') (0)
+WHEN  ('VVL:PlanningID') (0)
+WHEN  ('VVL:SoortMutatie') (0)
+WHEN  ('VVL:UitslagKG') (0)
+WHEN  ('VVL:VerkoopID') (0)
+WHEN  ('VVL:VerkoopKGPrijs') (0)
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldSortHeaderFields DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ControlFieldSortHeaderField DEPEND %ControlFieldSortHeaderFields FIELD TIMES 0
+
+%ControlFieldSortHeaderFieldOrder DEPEND %ControlFieldSortHeaderFields DEFAULT TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%ControlFieldSortHeaderFieldCase DEPEND %ControlFieldSortHeaderFields LONG TIMES 4
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Browse:1')TIMES 0
+WHEN  ('?HandmatigeCorrectie')TIMES 0
+WHEN  ('?LOC:SoortMutatieFilter:2')TIMES 0
+
+%DisableAutoSizeColumn LONG  (0)
+%DisableListFormatManager LONG  (0)
+%ListFormatManagerAllowPopupInEmptyList DEFAULT  ('Enable')
+%ListFormatManagerCheckType DEFAULT  ('Icon')
+%ListFormatManagerItemsSortBy DEFAULT  ('Alpha')
+%ListFormatManagerUseIdentificationTip DEFAULT  ('Enable')
+%ListFormatManagerSaveWindowPosition DEFAULT  ('Enable')
+%ListFormatManagerSortOrder LONG  (1)
+%ListFormatManagerMenuAppendSortOrder LONG  (1)
+%ListFormatManagerSave LONG  (1)
+%UseMRP LONG  (1)
+%AddPopUp MULTI LONG  ()
+%AddPopUpChoice DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpControl DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpAction DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpProcedure DEPEND %AddPopUp PROCEDURE TIMES 0
+
+%AddPopUpThreadProcedure DEPEND %AddPopUp LONG TIMES 0
+
+%AddPopUpThreadStack DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpText DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpIcon DEPEND %AddPopUp DEFAULT TIMES 0
+
+%TypeAddPopupIcon DEPEND %AddPopUp DEFAULT TIMES 0
+
+%OtherPopupIcon DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpDisable DEPEND %AddPopUp DEFAULT TIMES 0
+
+%AddPopUpSeparate DEPEND %AddPopUp LONG TIMES 0
+
+%SQLAssignments MULTI LONG  ()
+%SQLViewField DEPEND %SQLAssignments DEFAULT TIMES 0
+
+%SQLViewFieldAssignment DEPEND %SQLAssignments DEFAULT TIMES 0
+
+%SQLHasGroupBy LONG  (0)
+%SQLGrouping DEFAULT  ('')
+%SQLHasHaving LONG  (0)
+%SQLHas DEFAULT  ('')
+%SortHeaderColumnsUseColor LONG  (0)
+%SortHeaderColorBkHdrAsc LONG  (10526303)
+%SortHeaderColorBkColAsc LONG  (15128749)
+%SortHeaderColorBkHdrDec LONG  (10526303)
+%SortHeaderColorBkColDec LONG  (15128749)
+%DefaultEnableOnEmpty LONG  (0)
+%SortEnableOnEmpty DEPEND %SortOrder LONG TIMES 0
+
+[ADDITION]
+NAME ABC CloseButton
+[INSTANCE]
+INSTANCE 2
+[ADDITION]
+NAME ABC WindowResize
+[FIELDPROMPT]
+%ResizeAnchorTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorBottom DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowBottom DEPEND %Control LONG TIMES 0
+
+[INSTANCE]
+INSTANCE 4
+[PROMPTS]
+%UseAppStrategy DEFAULT  ('1')
+%AppStrategy DEFAULT  ('Surface')
+%RestrictMinSize LONG  (1)
+%WindowMinWidth DEFAULT  ('0')
+%WindowMaxWidth DEFAULT  ('0')
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('WindowResizeClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)')
+
+%WindowMinHeight DEFAULT  ('')
+%RestrictMaxSize LONG  (0)
+%WindowMaxHeight DEFAULT  ('')
+%AutoFindParents DEFAULT  ('Default')
+%DeferMoves DEFAULT  ('Default')
+%OverrideControls MULTI LONG  (1, 2, 3, 4)
+%OverrideControl DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('?LOC:TotaalInslagKG:Prompt')
+WHEN  (2) ('?LOC:TotaalInslagKG:2')
+WHEN  (3) ('?LOC:TotaalUitslagKG:Prompt')
+WHEN  (4) ('?LOC:TotaalUitslagKG:2')
+
+%DisableResize DEPEND %OverrideControls LONG TIMES 4
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+
+%HorizResize DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Lock Width')
+WHEN  (2) ('Lock Width')
+WHEN  (3) ('Lock Width')
+WHEN  (4) ('Lock Width')
+
+%VertResize DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Lock Height')
+WHEN  (2) ('Lock Height')
+WHEN  (3) ('Lock Height')
+WHEN  (4) ('Lock Height')
+
+%HorizPositional DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Fix Right')
+WHEN  (2) ('Fix Right')
+WHEN  (3) ('Fix Right')
+WHEN  (4) ('Fix Right')
+
+%VertPositional DEPEND %OverrideControls DEFAULT TIMES 4
+WHEN  (1) ('Fix Bottom')
+WHEN  (2) ('Fix Bottom')
+WHEN  (3) ('Fix Bottom')
+WHEN  (4) ('Fix Bottom')
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Resizer')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[CALLS]
+UpdateEInslagMutatie
+UpdateEUitslagMutatie
+UpdateOverboekMutatie
+UpdateOverboekPlanningVanuitVV
+UpdateUitslagMutatie
+WindowInslag
+[WINDOW]
+QuickWindow WINDOW('Partij voorraad-verloop'),AT(,,586,306),FONT('MS Sans Serif',8,,FONT:regular, |
+          CHARSET:DEFAULT),RESIZE,CENTER,GRAY,IMM,MAX,MDI,HLP('BrowseVoorraadVerloop'),SYSTEM
+          LIST,AT(9,37,570,229),USE(?Browse:1),HVSCROLL,FORMAT('[50R(2)|M*@d6-@80R(2)|M' & |
+            '*@t7@](75)|~Datum~81L|M*~Klant~C(0)@s40@75L(2)|M*~Leverancier~C(0)@s50@79L' & |
+            '(2)|M*~Verpakking~C(0)@s30@[30L(2)|M*~Cel~C(0)@s50@30L(2)|M*~Locatie~C(0)@' & |
+            's50@]|~Cel~24C|M*~Type~@s4@[39R(2)|M*~Intern~C(0)@n-_14@60R(2)|M*~Extern~C' & |
+            '(0)@s20@](82)|~Partijnummer~[56R(2)|M*~KG~C(0)@n-15`2B@60R(2)|M*~KG-Prijs~' & |
+            'C(0)@n13`3B@/](110)|~Inslag~[55R(2)|M*~KG~C(0)@n-15`2B@60R(2)|M*~KG Prijs~' & |
+            'C(0)@n-14`3B@](108)|~Uitslag~[50R(2)|M*Y~KG~C(0)@n-13`2@](52)|~Saldo~50R(2' & |
+            ')|M*~Planning-ID~C(0)@n_10B@50R(2)|M*~Inkoop-ID~C(0)@n_10B@50R(2)|M*~Verko' & |
+            'op-ID~C(0)@n_10B@60R(2)|M*~Mutatie ID~C(0)@n_10B@'),FROM(Queue:Browse:1),IMM, |
+            MSG('Browsing the VoorraadVerloop file'),#FIELDS(VVL:DatumTijd_DATE,VVL:DatumTijd_TIME, |
+            LOC:Klant,LOC:Leverancier,LOC:VerpakkingOmschrijving,VVL:CelOms,VVL:Locatienaam, |
+            VVL:SoortMutatie,VVL:PartijID,VVL:ExternPartijnr,VVL:InslagKG,VVL:BerekendeInkoopKGPrijs, |
+            VVL:UitslagKG,VVL:VerkoopKGPrijs,LOC:TotaalKG,VVL:PlanningID,VVL:InkoopID,VVL:VerkoopID, |
+            VVL:MutatieID),#ORIG(?List),#SEQ(1),#ORDINAL(1)
+          SHEET,AT(4,18,580,265),USE(?CurrentTab),#ORIG(CurrentTab),#ORDINAL(2)
+            TAB('&1) Alle'),USE(?Tab:2),#ORDINAL(3)
+              PROMPT('Totaal Inslag (KG):'),AT(335,269),USE(?LOC:TotaalInslagKG:Prompt),#ORDINAL(4)
+              PROMPT('Totaal Uitslag (KG)'),AT(459,269),USE(?LOC:TotaalUitslagKG:Prompt),#ORDINAL(5)
+              STRING(@N-15`2),AT(522,269),USE(LOC:TotaalUitslagKG,,?LOC:TotaalUitslagKG:2), |
+                RIGHT,#ORDINAL(6)
+              STRING(@N-15`2),AT(394,269),USE(LOC:TotaalInslagKG,,?LOC:TotaalInslagKG:2),RIGHT, |
+                #ORDINAL(7)
+            END
+          END
+          BUTTON('&Close'),AT(533,284,49,14),USE(?Close),LEFT,ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'), |
+            TIP('Close Window'),#ORIG(?Close),#SEQ(2),#ORDINAL(8)
+          ENTRY(@s30),AT(37,2,122,10),USE(LOC:ArtikelID),DISABLE,REQ,#ORDINAL(9)
+          PROMPT('Artikel:'),AT(7,1,26,13),USE(?ArtikelPrompt),#ORDINAL(10)
+          BUTTON('Overboeking plannen'),AT(5,286,92),USE(?Overboeken),#ORDINAL(11)
+          STRING(@S50),AT(167,3,236),USE(Art:ArtikelOms),FONT('Microsoft Sans Serif',,,FONT:bold, |
+            CHARSET:ANSI),#ORDINAL(12)
+          BUTTON('Handmatige correctie'),AT(101,286,83),USE(?HandmatigeCorrectie),#ORDINAL(13)
+          PROMPT('Filter:'),AT(472,6),USE(?LOC:SoortMutatieFilter:Prompt),#ORDINAL(14)
+          LIST,AT(493,4,78,12),USE(LOC:SoortMutatieFilter,,?LOC:SoortMutatieFilter:2),RIGHT(1), |
+            DROP(5),FROM('Alle|#0|Inslag|#1|IN|#2|Uitslag|#3|UIT|#4'),#ORDINAL(15)
+        END
+
+[END]

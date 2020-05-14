@@ -49,7 +49,8 @@ FDCB7::View:FileDropCombo VIEW(ViewVoorraadPlanning)
                        PROJECT(VVP:InslagPallets)
                        PROJECT(VVP:UitslagKG)
                        PROJECT(VVP:UitslagPallets)
-                       JOIN(Art:Artikel_PK)
+                       JOIN(Art:Artikel_PK,VVP:ArtikelID)
+                         PROJECT(Art:ArtikelID)
                        END
                      END
 FDCB4::View:FileDropCombo VIEW(ViewVoorraadPartij)
@@ -58,20 +59,23 @@ FDCB4::View:FileDropCombo VIEW(ViewVoorraadPartij)
                        PROJECT(VVPar:CelID)
                        PROJECT(VVPar:VoorraadKG)
                        PROJECT(VVPar:VoorraadPallets)
-                       JOIN(Par:Partij_PK)
+                       JOIN(Par:Partij_PK,VVPar:PartijID)
                          PROJECT(Par:PartijID)
                          PROJECT(Par:ExternPartijnr)
                          PROJECT(Par:VerpakkingID)
                          PROJECT(Par:ArtikelID)
-                         JOIN(Ver:Verpakking_PK)
+                         PROJECT(Par:Leverancier)
+                         JOIN(Ver:Verpakking_PK,Par:VerpakkingID)
                            PROJECT(Ver:VerpakkingOmschrijving)
+                           PROJECT(Ver:VerpakkingID)
                          END
-                         JOIN(Rel:Relatie_PK)
+                         JOIN(Rel:Relatie_PK,Par:Leverancier)
                            PROJECT(Rel:FirmaNaam)
                          END
                        END
-                       JOIN(ACel:CEL_PK)
+                       JOIN(ACel:CEL_PK,VVPar:CelID)
                          PROJECT(ACel:CelOms)
+                         PROJECT(ACel:CelID)
                        END
                      END
 FDCB8::View:FileDropCombo VIEW(Cel)
@@ -99,6 +103,7 @@ VVP:InslagKG           LIKE(VVP:InslagKG)             !Browse hot field - type d
 VVP:InslagPallets      LIKE(VVP:InslagPallets)        !Browse hot field - type derived from field
 VVP:UitslagKG          LIKE(VVP:UitslagKG)            !Browse hot field - type derived from field
 VVP:UitslagPallets     LIKE(VVP:UitslagPallets)       !Browse hot field - type derived from field
+Art:ArtikelID          LIKE(Art:ArtikelID)            !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -116,6 +121,8 @@ VVPar:PartijID         LIKE(VVPar:PartijID)           !Browse hot field - type d
 VVPar:CelID            LIKE(VVPar:CelID)              !Browse hot field - type derived from field
 VVPar:VoorraadKG       LIKE(VVPar:VoorraadKG)         !Browse hot field - type derived from field
 VVPar:VoorraadPallets  LIKE(VVPar:VoorraadPallets)    !Browse hot field - type derived from field
+Ver:VerpakkingID       LIKE(Ver:VerpakkingID)         !Related join file key field - type derived from field
+ACel:CelID             LIKE(ACel:CelID)               !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -263,16 +270,16 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:ArtikelVoorraadKG',LOC:ArtikelVoorraadKG)      ! Added by: FileDropCombo(ABC)
   BIND('LOC:ArtikelVoorraadPallet',LOC:ArtikelVoorraadPallet) ! Added by: FileDropCombo(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:DatumTijd_DATE,4)
   SELF.AddHistoryField(?Mut:DatumTijd_TIME,5)
   SELF.AddHistoryField(?Mut:UitslagKG,10)
   SELF.AddHistoryField(?Mut:UitslagPallet,11)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAAACelLocatie.Open                               ! File AAAACelLocatie used by this procedure, so make sure it's RelationManager is open
   Relate:AMutatie.Open                                     ! File AMutatie used by this procedure, so make sure it's RelationManager is open
@@ -409,6 +416,7 @@ ReturnValue          BYTE,AUTO
   FDCB7.AddField(VVP:InslagPallets,FDCB7.Q.VVP:InslagPallets) !Browse hot field - type derived from field
   FDCB7.AddField(VVP:UitslagKG,FDCB7.Q.VVP:UitslagKG) !Browse hot field - type derived from field
   FDCB7.AddField(VVP:UitslagPallets,FDCB7.Q.VVP:UitslagPallets) !Browse hot field - type derived from field
+  FDCB7.AddField(Art:ArtikelID,FDCB7.Q.Art:ArtikelID) !Related join file key field - type derived from field
   FDCB7.AddUpdateField(VVP:ArtikelID,Mut:ArtikelID)
   ThisWindow.AddItem(FDCB7.WindowComponent)
   FDCB7.DefaultFill = 0
@@ -429,6 +437,8 @@ ReturnValue          BYTE,AUTO
   FDCB4.AddField(VVPar:CelID,FDCB4.Q.VVPar:CelID) !Browse hot field - type derived from field
   FDCB4.AddField(VVPar:VoorraadKG,FDCB4.Q.VVPar:VoorraadKG) !Browse hot field - type derived from field
   FDCB4.AddField(VVPar:VoorraadPallets,FDCB4.Q.VVPar:VoorraadPallets) !Browse hot field - type derived from field
+  FDCB4.AddField(Ver:VerpakkingID,FDCB4.Q.Ver:VerpakkingID) !Related join file key field - type derived from field
+  FDCB4.AddField(ACel:CelID,FDCB4.Q.ACel:CelID) !Related join file key field - type derived from field
   FDCB4.AddUpdateField(VVPar:PartijCelID,LOC:PartijCelID)
   FDCB4.AddUpdateField(Par:Leverancier,Loc:RelatieID)
   FDCB4.AddUpdateField(VVPar:PartijID,Mut:PartijID)

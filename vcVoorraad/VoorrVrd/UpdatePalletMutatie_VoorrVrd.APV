@@ -1,0 +1,2702 @@
+[MODULE]
+NAME 'UpdatePalletMutatie_VoorrVrd.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME UpdatePalletMutatie
+PROTOTYPE '(LONG, LONG, LONG, LONG, LONG)'
+PARAMETERS '(LONG PalletSoortID, LONG RelatieSoort, LONG KlantID, LONG LeverancierID, LONG TransporteurID)'
+[COMMON]
+DESCRIPTION 'Form PalletMutatie'
+FROM ABC Window
+CATEGORY 'Form'
+[DATA]
+CurrentTab               STRING(80)
+!!> GUID('57685b64-c5af-4aa4-b197-6a2e5e7c7fbd')
+ActionMessage            CSTRING(40)
+!!> GUID('196884b9-d46e-4574-9dbb-cf1ba8686b95')
+[SCREENCONTROLS]
+! PROMPT('LOC : Transporteur ID:'),USE(?LOC:TransporteurID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:TransporteurID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:TransporteurID),RIGHT(1)
+LOC:TransporteurID       LONG
+!!> GUID('82403354-adb9-4e28-bac1-845d7f3e9cf9'),PROMPT('LOC : Transporteur ID:'),HEADER('LOC : Transporteur ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Relatie ID:'),USE(?LOC:RelatieID:Prompt),RIGHT
+! ENTRY(@n_10),USE(LOC:RelatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n_10),USE(LOC:RelatieID),RIGHT(1)
+LOC:RelatieID            LONG
+!!> GUID('18cb3d28-6059-420a-80ee-04c838a2303c'),PROMPT('LOC : Relatie ID:'),HEADER('LOC : Relatie ID'),PICTURE(@n_10),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Type:'),USE(?LOC:Type:Prompt)
+! ENTRY(@s1),USE(LOC:Type)
+[REPORTCONTROLS]
+! STRING(@s1),USE(LOC:Type)
+LOC:Type                 STRING(1)
+!!> GUID('ad77bcd1-b57c-4672-afc5-74d55eaea256'),PROMPT('LOC : Type:'),HEADER('LOC : Type'),PICTURE(@s1),TYPEMODE(INS)
+[SCREENCONTROLS]
+! CHECK('Loc : Overboeken Transporteur:'),USE(Loc:OverboekenTransporteur)
+[REPORTCONTROLS]
+! CHECK('Loc : Overboeken Transporteur:'),USE(Loc:OverboekenTransporteur)
+Loc:OverboekenTransporteur BYTE
+!!> GUID('2f3b11ad-9e07-458d-a187-27072c6f1e62'),VALID(BOOLEAN),PROMPT('Loc : Overboeken Transporteur:'),HEADER('Loc : Overboeken Transporteur'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Transporteur Relatie ID:'),USE(?Loc:TransporteurRelatieID:Prompt)
+! ENTRY(@n-14),USE(Loc:TransporteurRelatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:TransporteurRelatieID),RIGHT(1)
+Loc:TransporteurRelatieID LONG
+!!> GUID('db8c91fc-5437-4abf-b26f-7dd3c4ea3f73'),PROMPT('Loc : Transporteur Relatie ID:'),HEADER('Loc : Transporteur Relatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Transporteur Inkomend:'),USE(?Loc:TransporteurInkomend:Prompt)
+! ENTRY(@n-14),USE(Loc:TransporteurInkomend),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:TransporteurInkomend),RIGHT(1)
+Loc:TransporteurInkomend LONG
+!!> GUID('c41d44eb-6d3a-4f9f-a8f4-e56b5484e892'),PROMPT('Loc : Transporteur Inkomend:'),HEADER('Loc : Transporteur Inkomend'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Transporteur Uitgaand:'),USE(?Loc:TransporteurUitgaand:Prompt)
+! ENTRY(@n-14),USE(Loc:TransporteurUitgaand),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:TransporteurUitgaand),RIGHT(1)
+Loc:TransporteurUitgaand LONG
+!!> GUID('2a1c94d6-6695-408f-ba0b-d0ff9daabdb3'),PROMPT('Loc : Transporteur Uitgaand:'),HEADER('Loc : Transporteur Uitgaand'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[FILES]
+[PRIMARY]
+AAViewTransporteur
+[INSTANCE]
+9
+[KEY]
+AAVTRA:ViewTransporteur_FK1
+[PRIMARY]
+ARelatie
+[INSTANCE]
+4
+[KEY]
+AREL:Relatie_FK01
+[PRIMARY]
+AViewTransporteur
+[INSTANCE]
+7
+[KEY]
+AVTRA:ViewTransporteur_FK1
+[PRIMARY]
+PalletMutatie
+[INSTANCE]
+2
+[OTHERS]
+AAARelatie
+APalletMutatie
+[PROMPTS]
+%ButtonAction DEPEND %Control DEFAULT TIMES 10
+WHEN  ('') ('No Special Action')
+WHEN  ('?AAVTRA:FirmaNaam') ('No Special Action')
+WHEN  ('?AREL:FirmaNaam') ('No Special Action')
+WHEN  ('?AVTRA:FirmaNaam') ('No Special Action')
+WHEN  ('?BUTTON1') ('Call a Procedure')
+WHEN  ('?Cancel') ('No Special Action')
+WHEN  ('?Loc:OverboekenTransporteur') ('No Special Action')
+WHEN  ('?OK') ('No Special Action')
+WHEN  ('?STRING1') ('No Special Action')
+WHEN  ('?STRING2') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?BUTTON1') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?BUTTON1') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 1
+WHEN  ('?BUTTON1') (SelectARelatie)
+
+%ButtonThread DEPEND %Control LONG TIMES 1
+WHEN  ('?BUTTON1') (0)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 10
+WHEN  ('') ('25000')
+WHEN  ('?AAVTRA:FirmaNaam') ('25000')
+WHEN  ('?AREL:FirmaNaam') ('25000')
+WHEN  ('?AVTRA:FirmaNaam') ('25000')
+WHEN  ('?BUTTON1') ('25000')
+WHEN  ('?Cancel') ('25000')
+WHEN  ('?Loc:OverboekenTransporteur') ('25000')
+WHEN  ('?OK') ('25000')
+WHEN  ('?STRING1') ('25000')
+WHEN  ('?STRING2') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?BUTTON1') ('(LOC:Type)')
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 10
+WHEN  ('') ('None')
+WHEN  ('?AAVTRA:FirmaNaam') ('None')
+WHEN  ('?AREL:FirmaNaam') ('None')
+WHEN  ('?AVTRA:FirmaNaam') ('None')
+WHEN  ('?BUTTON1') ('Select')
+WHEN  ('?Cancel') ('None')
+WHEN  ('?Loc:OverboekenTransporteur') ('None')
+WHEN  ('?OK') ('None')
+WHEN  ('?STRING1') ('None')
+WHEN  ('?STRING2') ('None')
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Ask {20}PROCEDURE(),DERIVED', 'Init {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'PrimeUpdate {12}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Run {20}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeCompleted {10}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  (1, 2)
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 2
+WHEN  (1) ('ARel:Type')
+WHEN  (2) ('LOC:Type')
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 2
+WHEN  (1) ('FileDropCombo(ABC)')
+WHEN  (2) ('FileDropCombo(ABC)')
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 9
+WHEN  ('') ('Default')
+WHEN  ('?AAVTRA:FirmaNaam') ('Default')
+WHEN  ('?AREL:FirmaNaam') ('Default')
+WHEN  ('?AVTRA:FirmaNaam') ('Default')
+WHEN  ('?BUTTON1') ('Default')
+WHEN  ('?Cancel') ('Default')
+WHEN  ('?Loc:OverboekenTransporteur') ('Default')
+WHEN  ('?STRING1') ('Default')
+WHEN  ('?STRING2') ('Default')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?BUTTON1') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 1
+WHEN  ('?BUTTON1') (0)
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?BUTTON1') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?BUTTON1') ()
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 16
+WHEN  ('') (1)
+WHEN  ('?AAVTRA:FirmaNaam') (1)
+WHEN  ('?AREL:FirmaNaam') (1)
+WHEN  ('?AVTRA:FirmaNaam') (1)
+WHEN  ('?BUTTON1') (1)
+WHEN  ('?Cancel') (1)
+WHEN  ('?Loc:OverboekenTransporteur') (1)
+WHEN  ('?Loc:TransporteurInkomend') (1)
+WHEN  ('?Loc:TransporteurUitgaand') (1)
+WHEN  ('?Pal:DatumTijd_DATE') (1)
+WHEN  ('?Pal:DatumTijd_TIME') (1)
+WHEN  ('?Pal:Inkomend') (1)
+WHEN  ('?Pal:Opmerking') (1)
+WHEN  ('?Pal:Uitgaand') (1)
+WHEN  ('?STRING1') (1)
+WHEN  ('?STRING2') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur') ()
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 0
+WHEN  ('?BUTTON1')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur') (1)
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 1
+WHEN  (1) ('?GROUPTransporteur')
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 0
+WHEN  ('?BUTTON1')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 1
+WHEN  (1) ('Enable')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur') ()
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 0
+WHEN  ('?BUTTON1')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur') (1)
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 1
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 1
+WHEN  (1) ('?GROUPTransporteur')
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 0
+WHEN  ('?BUTTON1')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 1
+WHEN  (1) ('Disable')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 0
+WHEN  ('?BUTTON1')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 9
+WHEN  ('')TIMES 0
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 0
+WHEN  ('?BUTTON1')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Loc:OverboekenTransporteur')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('Off')
+WHEN  ('?AAVTRA:FirmaNaam') ('Off')
+WHEN  ('?AVTRA:FirmaNaam') ('Off')
+WHEN  ('?BUTTON1') ('Off')
+WHEN  ('?Loc:OverboekenTransporteur') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('')
+WHEN  ('?AAVTRA:FirmaNaam') ('')
+WHEN  ('?AVTRA:FirmaNaam') ('')
+WHEN  ('?BUTTON1') ('')
+WHEN  ('?Loc:OverboekenTransporteur') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 5
+WHEN  ('') (0)
+WHEN  ('?AAVTRA:FirmaNaam') (0)
+WHEN  ('?AVTRA:FirmaNaam') (0)
+WHEN  ('?BUTTON1') (0)
+WHEN  ('?Loc:OverboekenTransporteur') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 5
+WHEN  ('') (-1)
+WHEN  ('?AAVTRA:FirmaNaam') (-1)
+WHEN  ('?AVTRA:FirmaNaam') (-1)
+WHEN  ('?BUTTON1') (-1)
+WHEN  ('?Loc:OverboekenTransporteur') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 5
+WHEN  ('') (0)
+WHEN  ('?AAVTRA:FirmaNaam') (0)
+WHEN  ('?AVTRA:FirmaNaam') (0)
+WHEN  ('?BUTTON1') (0)
+WHEN  ('?Loc:OverboekenTransporteur') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 5
+WHEN  ('') (-1)
+WHEN  ('?AAVTRA:FirmaNaam') (-1)
+WHEN  ('?AVTRA:FirmaNaam') (-1)
+WHEN  ('?BUTTON1') (-1)
+WHEN  ('?Loc:OverboekenTransporteur') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 5
+WHEN  ('') (0)
+WHEN  ('?AAVTRA:FirmaNaam') (0)
+WHEN  ('?AVTRA:FirmaNaam') (0)
+WHEN  ('?BUTTON1') (0)
+WHEN  ('?Loc:OverboekenTransporteur') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('AIBtn0')
+WHEN  ('?AAVTRA:FirmaNaam') ('AIBtn21')
+WHEN  ('?AVTRA:FirmaNaam') ('AIBtn2')
+WHEN  ('?BUTTON1') ('AIBtn6')
+WHEN  ('?Loc:OverboekenTransporteur') ('AIBtn15')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 5
+WHEN  ('') (1)
+WHEN  ('?AAVTRA:FirmaNaam') (1)
+WHEN  ('?AVTRA:FirmaNaam') (1)
+WHEN  ('?BUTTON1') (1)
+WHEN  ('?Loc:OverboekenTransporteur') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('?PROMPT1')
+WHEN  ('?AAVTRA:FirmaNaam') ('?PROMPT1')
+WHEN  ('?AVTRA:FirmaNaam') ('?PROMPT1')
+WHEN  ('?BUTTON1') ('?PROMPT1')
+WHEN  ('?Loc:OverboekenTransporteur') ('?PROMPT1')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 5
+WHEN  ('') (0)
+WHEN  ('?AAVTRA:FirmaNaam') (0)
+WHEN  ('?AVTRA:FirmaNaam') (0)
+WHEN  ('?BUTTON1') (0)
+WHEN  ('?Loc:OverboekenTransporteur') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 5
+WHEN  ('') (0)
+WHEN  ('?AAVTRA:FirmaNaam') (0)
+WHEN  ('?AVTRA:FirmaNaam') (0)
+WHEN  ('?BUTTON1') (0)
+WHEN  ('?Loc:OverboekenTransporteur') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 5
+WHEN  ('') (0)
+WHEN  ('?AAVTRA:FirmaNaam') (0)
+WHEN  ('?AVTRA:FirmaNaam') (0)
+WHEN  ('?BUTTON1') (0)
+WHEN  ('?Loc:OverboekenTransporteur') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 5
+WHEN  ('') (0)
+WHEN  ('?AAVTRA:FirmaNaam') (0)
+WHEN  ('?AVTRA:FirmaNaam') (0)
+WHEN  ('?BUTTON1') (0)
+WHEN  ('?Loc:OverboekenTransporteur') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8376
+PROPERTY:END
+Clear(AAVTRA:RECORD)
+If Loc:OverboekenTransporteur AND Loc:TransporteurRelatieID Then
+    AAVTRA:RelatieID=Loc:TransporteurRelatieID
+    If Access:AAViewTransporteur.Fetch(AAVTRA:ViewTransporteur_FK1) = Level:Benign Then
+        DISPLAY(?AAVTRA:FirmaNaam)
+    End
+End
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8001
+PROPERTY:END
+IF ThisWindow.Request = InsertRecord THEN
+    Pal:DatumTijd_DATE=TODAY()
+    Pal:DatumTijd_TIME=CLOCK()
+
+    Pal:PalletSoortID = PalletSoortID
+
+    LOC:TransporteurID = 0
+    AVTRA:FirmaNaam = ''
+    LOC:RelatieID = 0
+    AREL:FirmaNaam = ''
+
+    IF RelatieSoort = 1 OR RelatieSoort = 2 OR RelatieSoort = 4 THEN
+        Pal:Transporteur = 0
+        HIDE(?PROMPT1)
+        HIDE(?AVTRA:FirmaNaam)
+
+        IF RelatieSoort = 2 THEN
+            LOC:RelatieID = LeverancierID
+            LOC:Type='S'
+            HIDE(?STRING1)
+        ELSE
+            LOC:RelatieID = KlantID
+            LOC:Type='C'
+            HIDE(?STRING2)
+        .
+    ELSE
+        Pal:Transporteur = 1
+        LOC:TransporteurID = TransporteurID
+        HIDE(?STRING1)
+        HIDE(?STRING2)
+        HIDE(?AREL:FirmaNaam)
+        HIDE(?BUTTON1)
+    .
+ELSE
+    db.DebugOut('ChangeRecord:' & Pal:PlanningID & ',' & FORMAT(Pal:DatumTijd_DATE, @d6-))
+    If Pal:PlanningID > 0  THEN
+        HIDE(?PROMPT1)
+        HIDE(?AVTRA:FirmaNaam)
+
+        HIDE(?STRING1)
+        HIDE(?STRING2)
+        HIDE(?AREL:FirmaNaam)
+        HIDE(?BUTTON1)
+
+        HIDE(?PROMPT2)
+        HIDE(?Pal:DatumTijd_DATE)
+        HIDE(?Pal:DatumTijd_TIME)
+    ELSE
+        IF Pal:Transporteur
+            LOC:TransporteurID = Pal:RelatieID
+            HIDE(?STRING1)
+            HIDE(?STRING2)
+            HIDE(?AREL:FirmaNaam)
+            HIDE(?BUTTON1)
+            HIDE(?Loc:OverboekenTransporteur)
+        ELSE
+            LOC:RelatieID = Pal:RelatieID
+            CLEAR(AAARel:Record)
+            AAARel:RelatieID = Pal:RelatieID
+            Access:AAARelatie.TryFetch(AAARel:Relatie_PK)
+
+            IF AAARel:Type = 'S' THEN
+                LOC:Type='S'
+                HIDE(?STRING1)
+            ELSE
+                LOC:Type='C'
+                HIDE(?STRING2)
+            .
+
+            HIDE(?PROMPT1)
+            HIDE(?AVTRA:FirmaNaam)
+        .
+    .
+    ! herstel de oude palletmutaties voor 2018-6-20 daar wordt de PalletMutatieID niet weggeschreven
+    ! dus de bijbehorende pallet mutatie zoeken via
+    IF NOT Pal:Transporteur
+        IF Pal:TransporteurPalletMutatieID=0 AND Pal:VerkoopID <>0 THEN
+            Clear(APM:Record)
+            APM:VerkoopID=Pal:VerkoopID
+            APM:PalletSoortID=PAL:PalletSoortID
+            APM:Transporteur=1
+            IF Access:APalletMutatie.Fetch(APM:PalletMutatie_FK5)=Level:Benign
+                Loc:TransporteurRelatieID=APM:RelatieID
+                DISPLAY(?AVTRA:FirmaNaam)
+                Loc:TransporteurInkomend=APM:Inkomend
+                Loc:TransporteurUitgaand=APM:Uitgaand
+                Loc:OverboekenTransporteur=TRUE
+                Pal:TransporteurPalletMutatieID = APM:PalletMutatieID
+            ELSE
+                Loc:OverboekenTransporteur=FALSE
+                Clear(AVTRA:FirmaNaam)
+            END
+        ELSIF NOT Pal:TransporteurPalletMutatieID=0
+            Loc:OverboekenTransporteur=TRUE
+            Clear(APM:Record)
+            APM:PalletMutatieID=Pal:TransporteurPalletMutatieID
+            IF Access:APalletMutatie.Fetch(APM:PalletMutatie_PK)=Level:Benign
+                Loc:TransporteurRelatieID=APM:RelatieID
+                DISPLAY(?AVTRA:FirmaNaam)
+                Loc:TransporteurInkomend=APM:Inkomend
+                Loc:TransporteurUitgaand=APM:Uitgaand
+            END
+        END
+    END
+.
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8800
+PROPERTY:END
+If ?Loc:OverboekenTransporteur{PROP:Hide} = True Then
+    Hide(?GROUPTransporteur)
+End
+[END]
+[END]
+WHEN 'Run'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+IF Globalrequest=DeleteRecord
+    if Pal:PlanningID > 0 THEN
+		! Het betreft een mutatie gekoppeld aan een CMR
+        MESSAGE('Deze mutatie is gekoppeld aan een CMR en kan niet verwijderd worden.')
+        RETURN ReturnValue
+    .
+    IF Pal:TransporteurPalletMutatieID<>0
+        Clear(APM:Record)
+        APM:PalletMutatieID=Pal:TransporteurPalletMutatieID
+        IF Access:APalletMutatie.Fetch(APM:PalletMutatie_PK)=Level:Benign
+            Access:APalletMutatie.DeleteRecord(FALSE)
+        END
+    END
+.
+[END]
+[END]
+WHEN 'TakeCompleted'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+IF Pal:PlanningID = 0 THEN
+    IF Pal:Transporteur THEN
+        IF LOC:TransporteurID = 0 THEN
+            CYCLE
+        .
+		
+        Pal:RelatieID = LOC:TransporteurID
+    ELSE
+        IF LOC:RelatieID = 0 THEN
+            CYCLE
+        .
+			
+        Pal:RelatieID = LOC:RelatieID
+    .
+ELSE
+    IF ThisWindow.Request = ChangeRecord THEN
+
+			! Het betreft een CMR-gekoppelde mutatie, zoek een eventuele ander om bij te werken
+            ! ondrstaande code sinds 2010-6-15 overbodig warrschijnlijk		
+!			CLEAR(APM:Record)
+!			APM:PlanningID = Pal:PlanningID
+!			SET(APM:PalletMutatie_FK3,APM:PalletMutatie_FK3)
+!			LOOP UNTIL Access:APalletMutatie.Next()
+!				IF APM:PlanningID <> Pal:PlanningID THEN BREAK.
+!				IF APM:PalletMutatieID = Pal:PalletMutatieID THEN CYCLE.
+!				
+!				!Enkele uitgaande pallets zijn gekoppeld
+!				!APM:Inkomend = Pal:Inkomend
+!				APM:Uitgaand = Pal:Uitgaand
+!				Access:APalletMutatie.Update()
+!			.
+    .
+.
+
+! nieuw
+IF Loc:OverboekenTransporteur=TRUE
+    IF Pal:TransporteurPalletMutatieID=0 AND (Loc:TransporteurInkomend<>0 or Loc:TransporteurUitgaand<>0)
+        IF NOT Pal:VerkoopID=0
+            Clear(APM:Record)
+            APM:VerkoopID=Pal:VerkoopID
+            APM:PalletSoortID=PAL:PalletSoortID
+            APM:Transporteur=1
+            IF Access:APalletMutatie.Fetch(APM:PalletMutatie_FK5)=Level:Benign
+                APM:Inkomend=Loc:TransporteurInkomend
+                APM:Uitgaand=Loc:TransporteurUitgaand
+                Access:APalletMutatie.Update()
+            ELSE
+                CLEAR(APM:Record)
+                APM:Record=PAL:Record
+                APM:RelatieID = Loc:TransporteurRelatieID
+                APM:Transporteur =1
+                APM:Inkomend=Loc:TransporteurInkomend
+                APM:Uitgaand=Loc:TransporteurUitgaand
+                Access:APalletMutatie.Insert()
+                ! AANGEPAST 6-7-2018 HG anders geeft hij het originele ID
+                IF Access:APalletMutatie.Fetch(Pal:PalletMutatie_FK5)=Level:Benign
+                    PAL:TransporteurPalletMutatieID = APM:PalletMutatieID
+                END
+            END
+        ELSE
+            CLEAR(APM:Record)
+            APM:RelatieID = Loc:TransporteurRelatieID
+            APM:PalletSoortID=Pal:PalletSoortID
+            APM:PlanningID=Pal:PlanningID
+            APM:DatumTijd_DATE=Pal:DatumTijd_DATE
+            APM:DatumTijd_TIME=Pal:DatumTijd_TIME
+            APM:Opmerking=Pal:Opmerking
+            APM:VerkoopID=Pal:VerkoopID
+            APM:TransporteurPalletMutatieID=0
+            APM:Transporteur =1
+            APM:Inkomend=Loc:TransporteurInkomend
+            APM:Uitgaand=Loc:TransporteurUitgaand
+            Access:APalletMutatie.Insert()
+
+            Clear(APM:Record)
+            APM:PalletMutatieID=LocalClass.BepaalNewMutatieID()
+            ! AANGEPAST 6-7-2018 HG anders geeft hij het originele ID
+            IF Access:APalletMutatie.Fetch(APM:PalletMutatie_PK)=Level:Benign
+                PAL:TransporteurPalletMutatieID = APM:PalletMutatieID
+            END
+        END
+    ELSIF Pal:TransporteurPalletMutatieID<>0
+        CLEAR(APM:Record)
+        APM:PalletMutatieID = Pal:TransporteurPalletMutatieID
+        IF Access:APalletMutatie.Fetch(APM:PalletMutatie_PK)=Level:Benign
+            APM:RelatieID = Loc:TransporteurRelatieID
+            APM:Transporteur =1
+            APM:Inkomend=Loc:TransporteurInkomend
+            APM:Uitgaand=Loc:TransporteurUitgaand
+            Access:APalletMutatie.Update()
+        END
+    END
+ELSE
+    IF Pal:TransporteurPalletMutatieID<>0
+        CLEAR(APM:Record)
+        APM:PalletMutatieID = Pal:TransporteurPalletMutatieID
+        IF Access:APalletMutatie.Fetch(APM:PalletMutatie_PK)=Level:Benign
+            Access:APalletMutatie.DeleteRecord(False)
+            Pal:TransporteurPalletMutatieID=0
+        END
+    END
+END
+[END]
+[END]
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?BUTTON1'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+	if globalresponse=RequestCompleted
+		Loc:RelatieID = AREL:RelatieID
+		FDCB4.ResetQueue(True)
+	END
+[END]
+[END]
+WHEN '?OK'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7501
+PROPERTY:END
+If Loc:OverboekenTransporteur = TRUE AND Loc:TransporteurRelatieID = 0 Then
+    Select(?AAVTRA:FirmaNaam)
+    0{Prop:AcceptAll} = False
+    Cycle
+End
+[END]
+[END]
+[END]
+EMBED %LocalDataAfterClasses
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7001
+PROPERTY:END
+LocalClass          CLASS
+BepaalNewMutatieID      PROCEDURE(), LONG
+                    END
+[END]
+EMBED %LocalProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.BepaalNewMutatieID        PROCEDURE()
+
+mutatieid               LONG
+CODE
+    Clear(APM:Record)
+    Clear(APM:PalletMutatieID,1)
+    Set(APM:PalletMutatie_PK,APM:PalletMutatie_PK)
+    if Access:APalletMutatie.Previous()=Level:Benign
+        mutatieid = APM:PalletMutatieID
+    END
+    return mutatieid
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 12
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 11
+OWNER 3
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME ABC RecordValidation
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%ValidateOnAccept LONG  (1)
+%ValidateOnNonStopSelect LONG  (1)
+%ControlsExcluded MULTI LONG  ()
+%ControlToExclude DEPEND %ControlsExcluded DEFAULT TIMES 0
+
+%ValidateUsingColoration LONG  (0)
+%InvalidFieldColor LONG  (255)
+%InvalidPromptColor LONG  (255)
+%UseValidateMessage LONG  (0)
+%ValidationMessage DEFAULT  ('The values of Colored Fields are invalid, Please correct this information.')
+%MessageControl FIELD  ()
+[ADDITION]
+NAME ABC SaveButton
+[INSTANCE]
+INSTANCE 2
+PROCPROP
+[PROMPTS]
+%InsertAllowed LONG  (1)
+%InsertMessage DEFAULT  ('Record Will Be Added')
+%ChangeAllowed LONG  (1)
+%ChangeMessage DEFAULT  ('Record Will Be Changed')
+%DeleteAllowed LONG  (1)
+%DeleteMessage DEFAULT  ('Record Will Be Deleted')
+%ViewMessage DEFAULT  ('View Record')
+%MessageHeader LONG  (0)
+%ActionOnDelete DEFAULT  ('Standard Warning')
+%PrimingFields MULTI LONG  ()
+%PrimedField DEPEND %PrimingFields FIELD TIMES 0
+
+%PrimedValue DEPEND %PrimingFields DEFAULT TIMES 0
+
+%ActionOnCancel DEFAULT  ('Confirm cancel')
+%MessageLocation DEFAULT  ('Title Bar')
+%MessageStatusSection DEFAULT  ('0')
+%HistoryKey DEFAULT  ('CtrlH')
+%AppendToTitle LONG  (0)
+%AppendToTitleID DEFAULT  ('')
+%AfterGoodInsert DEFAULT  ('Return to caller')
+%AskAfterAdd LONG  (0)
+[ADDITION]
+NAME ABC CancelButton
+[INSTANCE]
+INSTANCE 3
+[ADDITION]
+NAME ABC ViewFormActions
+[INSTANCE]
+INSTANCE 5
+[PROMPTS]
+%ForceViewOnly LONG  (0)
+%ViewAction DEPEND %Control DEFAULT TIMES 26
+WHEN  ('') ('None')
+WHEN  ('?AAVTRA:FirmaNaam') ('Disable')
+WHEN  ('?AREL:FirmaNaam') ('Disable')
+WHEN  ('?AVTRA:FirmaNaam') ('Disable')
+WHEN  ('?BUTTON1') ('Disable')
+WHEN  ('?Cancel') ('None')
+WHEN  ('?GROUPTransporteur') ('None')
+WHEN  ('?Loc:OverboekenTransporteur') ('None')
+WHEN  ('?Loc:TransporteurInkomend') ('ReadOnly')
+WHEN  ('?Loc:TransporteurInkomend:Prompt') ('None')
+WHEN  ('?Loc:TransporteurUitgaand') ('ReadOnly')
+WHEN  ('?Loc:TransporteurUitgaand:Prompt') ('None')
+WHEN  ('?OK') ('None')
+WHEN  ('?PROMPT1') ('None')
+WHEN  ('?PROMPT2') ('None')
+WHEN  ('?Pal:DatumTijd_DATE') ('ReadOnly')
+WHEN  ('?Pal:DatumTijd_TIME') ('ReadOnly')
+WHEN  ('?Pal:Inkomend') ('ReadOnly')
+WHEN  ('?Pal:Inkomend:Prompt') ('None')
+WHEN  ('?Pal:Opmerking') ('ReadOnly')
+WHEN  ('?Pal:Opmerking:Prompt') ('None')
+WHEN  ('?Pal:Uitgaand') ('ReadOnly')
+WHEN  ('?Pal:Uitgaand:Prompt') ('None')
+WHEN  ('?Pal:VerkoopID') ('None')
+WHEN  ('?STRING1') ('None')
+WHEN  ('?STRING2') ('None')
+
+%PropertyAssignments DEPEND %Control MULTI LONG TIMES 0
+
+%CtrlProperty DEPEND %PropertyAssignments DEFAULT TIMES 0
+
+%CtrlValue DEPEND %PropertyAssignments DEFAULT TIMES 0
+
+[ADDITION]
+NAME ABC WindowResize
+[FIELDPROMPT]
+%ResizeAnchorTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorBottom DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowBottom DEPEND %Control LONG TIMES 0
+
+[INSTANCE]
+INSTANCE 6
+[PROMPTS]
+%UseAppStrategy DEFAULT  ('1')
+%AppStrategy DEFAULT  ('Surface')
+%RestrictMinSize LONG  (1)
+%WindowMinWidth DEFAULT  ('0')
+%WindowMaxWidth DEFAULT  ('0')
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('WindowResizeClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)')
+
+%WindowMinHeight DEFAULT  ('')
+%RestrictMaxSize LONG  (0)
+%WindowMaxHeight DEFAULT  ('')
+%AutoFindParents DEFAULT  ('Default')
+%DeferMoves DEFAULT  ('Default')
+%OverrideControls MULTI LONG  ()
+%OverrideControl DEPEND %OverrideControls DEFAULT TIMES 0
+
+%DisableResize DEPEND %OverrideControls LONG TIMES 0
+
+%HorizResize DEPEND %OverrideControls DEFAULT TIMES 0
+
+%VertResize DEPEND %OverrideControls DEFAULT TIMES 0
+
+%HorizPositional DEPEND %OverrideControls DEFAULT TIMES 0
+
+%VertPositional DEPEND %OverrideControls DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Resizer')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME ABC FileDropCombo
+[INSTANCE]
+INSTANCE 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo {11}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (AVTRA:RelatieID)
+%TargetField FIELD  (LOC:TransporteurID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (1)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (0)
+WHEN  ('AVTRA:Plaats') (0)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (-1)
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') (0)
+WHEN  ('AVTRA:Plaats') (0)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') ('Local List')
+WHEN  ('AVTRA:Plaats') ('Local List')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') ('')
+WHEN  ('AVTRA:Plaats') ('')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') ('Local List')
+WHEN  ('AVTRA:Plaats') ('Local List')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') ('')
+WHEN  ('AVTRA:Plaats') ('')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') ('Local List')
+WHEN  ('AVTRA:Plaats') ('Local List')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 2
+WHEN  ('AVTRA:FirmaNaam') ('')
+WHEN  ('AVTRA:Plaats') ('')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 6
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:DatumTijd_TIME')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB7')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[INSTANCE]
+INSTANCE 4
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo:1 {9}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (AREL:RelatieID)
+%TargetField FIELD  (LOC:RelatieID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('ARel:Type=LOC:Type')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (1)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (0)
+WHEN  ('AREL:Plaats') (0)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (0)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (-1)
+WHEN  ('AREL:Plaats') (-1)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (-1)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') (0)
+WHEN  ('AREL:Plaats') (0)
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') (0)
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') ('Local List')
+WHEN  ('AREL:Plaats') ('Local List')
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') ('Local List')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') ('')
+WHEN  ('AREL:Plaats') ('')
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') ('')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') ('Local List')
+WHEN  ('AREL:Plaats') ('Local List')
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') ('Local List')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') ('')
+WHEN  ('AREL:Plaats') ('')
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') ('')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') ('Local List')
+WHEN  ('AREL:Plaats') ('Local List')
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') ('Local List')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 2
+WHEN  ('AREL:FirmaNaam') ('')
+WHEN  ('AREL:Plaats') ('')
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats') ('')
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 6
+WHEN  ('?AREL:FirmaNaam')TIMES 0
+WHEN  ('?AVTRA:FirmaNaam')TIMES 1
+WHEN  ('AVTRA:Plaats')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?STRING1')TIMES 0
+WHEN  ('?STRING2')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  (1)
+%HotField DEPEND %HotFields FIELD TIMES 1
+WHEN  (1) (AREL:Type)
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 1
+WHEN  (1) (1)
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB4')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[INSTANCE]
+INSTANCE 9
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo:3 {9}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (AAVTRA:RelatieID)
+%TargetField FIELD  (Loc:TransporteurRelatieID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (1)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (0)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (-1)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (-1)
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') (0)
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') ('Local List')
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') ('')
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') ('Local List')
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') ('')
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') ('Local List')
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('Local List')
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 1
+WHEN  ('AAVTRA:FirmaNaam') ('')
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('') ('')
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('?AAVTRA:FirmaNaam')TIMES 0
+WHEN  ('?Pal:VerkoopID')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+%HotField DEPEND %HotFields FIELD TIMES 10
+WHEN  (1) (AAVTRA:TransporteurID)
+WHEN  (2) (AAVTRA:RelatieID)
+WHEN  (3) (AAVTRA:FirmaNaam)
+WHEN  (4) (AAVTRA:Adres1)
+WHEN  (5) (AAVTRA:Adres2)
+WHEN  (6) (AAVTRA:Postcode)
+WHEN  (7) (AAVTRA:Plaats)
+WHEN  (8) (AAVTRA:Telefoon)
+WHEN  (9) (AAVTRA:Mobiel)
+WHEN  (10) (AAVTRA:Fax)
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 10
+WHEN  (1) (1)
+WHEN  (2) (1)
+WHEN  (3) (1)
+WHEN  (4) (1)
+WHEN  (5) (1)
+WHEN  (6) (1)
+WHEN  (7) (1)
+WHEN  (8) (1)
+WHEN  (9) (1)
+WHEN  (10) (1)
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB9')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[WINDOW]
+QuickWindow WINDOW('Form PalletMutatie'),AT(,,267,169),FONT('MS Sans Serif',8,,FONT:regular, |
+          CHARSET:DEFAULT),DOUBLE,CENTER,GRAY,IMM,MDI,HLP('UpdatePalletMutatie'),SYSTEM
+          PROMPT('Transporteur:'),AT(7,6),USE(?PROMPT1),#ORDINAL(1)
+          COMBO(@s50),AT(94,7,135,10),USE(AVTRA:FirmaNaam),LEFT,DROP(25,200),FORMAT('200L(2)|M~' & |
+            'Firmanaam~C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo),IMM, |
+            #FIELDS(AVTRA:FirmaNaam,AVTRA:Plaats),#ORIG(AVTRA:FirmaNaam),#SEQ(7),#ORDINAL(2)
+          STRING('Klant:'),AT(7,22),USE(?STRING1),#ORDINAL(3)
+          STRING('Leverancier:'),AT(7,22),USE(?STRING2),#ORDINAL(4)
+          COMBO(@s50),AT(94,22,135,10),USE(AREL:FirmaNaam),DROP(25,200),FORMAT('200L(2)|M~' & |
+            'Firmanaam~C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo:1), |
+            IMM,#FIELDS(AREL:FirmaNaam,AREL:Plaats),#ORIG(AREL:FirmaNaam),#SEQ(4),#ORDINAL(5)
+          BUTTON('...'),AT(234,20,27),USE(?BUTTON1),#ORDINAL(6)
+          PROMPT('Datum:'),AT(7,38),USE(?PROMPT2),#ORDINAL(7)
+          ENTRY(@d06-),AT(94,38,64,10),USE(Pal:DatumTijd_DATE),REQ,#ORDINAL(8)
+          ENTRY(@T01),AT(170,38,39,10),USE(Pal:DatumTijd_TIME),REQ,#ORDINAL(9)
+          PROMPT('Inkomend:'),AT(7,66),USE(?Pal:Inkomend:Prompt),TRN,#LINK(?Pal:Inkomend), |
+            #ORIG(?Pal:Inkomend:Prompt),#ORDINAL(10)
+          ENTRY(@n-14.),AT(94,68,64,10),USE(Pal:Inkomend),RIGHT,#LINK(?Pal:Inkomend:Prompt), |
+            #ORIG(Pal:Inkomend),#ORDINAL(11)
+          PROMPT('Uitgaand:'),AT(7,82),USE(?Pal:Uitgaand:Prompt),TRN,#LINK(?Pal:Uitgaand), |
+            #ORIG(?Pal:Uitgaand:Prompt),#ORDINAL(12)
+          ENTRY(@n-14.),AT(94,82,64,10),USE(Pal:Uitgaand),RIGHT,#LINK(?Pal:Uitgaand:Prompt), |
+            #ORIG(Pal:Uitgaand),#ORDINAL(13)
+          PROMPT('Opmerking:'),AT(7,53),USE(?Pal:Opmerking:Prompt),#ORDINAL(14)
+          CHECK('Overboeken Transporteur:'),AT(7,102,96),USE(Loc:OverboekenTransporteur),LEFT, |
+            #ORDINAL(15)
+          GROUP,AT(5,94,260,53),USE(?GROUPTransporteur),TRN,#ORDINAL(16)
+            PROMPT('Inkomend:'),AT(7,116),USE(?Loc:TransporteurInkomend:Prompt),#ORDINAL(17)
+            ENTRY(@n-14),AT(94,117,60,10),USE(Loc:TransporteurInkomend),RIGHT(1),#ORDINAL(18)
+            PROMPT('Uitgaand:'),AT(7,131),USE(?Loc:TransporteurUitgaand:Prompt),#ORDINAL(19)
+            ENTRY(@n-14),AT(94,131,60,10),USE(Loc:TransporteurUitgaand),RIGHT(1),#ORDINAL(20)
+            COMBO(@s50),AT(105,102,155,10),USE(AAVTRA:FirmaNaam),DROP(25,200),FORMAT('200L(2)|M~' & |
+              'Firma Naam~@s50@'),FROM(Queue:FileDropCombo:3),IMM,#FIELDS(AAVTRA:FirmaNaam), |
+              #ORIG(AAVTRA:FirmaNaam),#SEQ(9),#ORDINAL(21)
+          END
+          ENTRY(@s50),AT(94,53,166,10),USE(Pal:Opmerking),#ORDINAL(22)
+          BUTTON('&OK'),AT(156,151,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
+            'a and close the window'),TIP('Accept data and close the window'),#ORIG(?OK),#SEQ(2), |
+            #ORDINAL(23)
+          BUTTON('&Cancel'),AT(211,151,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT, |
+            MSG('Cancel operation'),TIP('Cancel operation'),#ORIG(?Cancel),#SEQ(3),#ORDINAL(24)
+          STRING(@n_6),AT(7,155),USE(Pal:VerkoopID),#ORDINAL(25)
+        END
+
+[END]

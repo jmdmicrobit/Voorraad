@@ -16,214 +16,64 @@
 
 !!! <summary>
 !!! Generated from procedure template - Window
-!!! Form OverboekingRit
+!!! Browse the OverboekingRit file
 !!! </summary>
-UpdateTransfers PROCEDURE (PRM:Datum)
+BrowseTransfers PROCEDURE (PRM:Datum)
 
 CurrentTab           STRING(80)                            ! 
-ActionMessage        CSTRING(40)                           ! 
 LOC:Datum            DATE                                  ! 
+LOC:DatumNu          DATE                                  ! 
+LOC:ExcelInkoop      BYTE                                  ! 
 LOC:DatumVanSQL      LONG                                  ! 
 LOC:DatumTMSQL       LONG                                  ! 
-LOC:Planning_TIME    TIME                                  ! 
-LOC:Planning_DATE    DATE                                  ! 
-LOC:PlanningSoort    STRING(3)                             ! 
-LOC:Getransferd      BYTE                                  ! 
-BRW4::View:Browse    VIEW(OverboekingRitRegel)
-                       PROJECT(ORR:OverboekingRitRegelID)
-                       PROJECT(ORR:OverboekingRitID)
-                       JOIN(Pla:PK_Planning)
-                         PROJECT(Pla:ArtikelID)
-                         PROJECT(Pla:KG)
-                         PROJECT(Pla:Pallets)
-                         PROJECT(Pla:MutatieGemaakt)
-                         PROJECT(Pla:PartijID)
-                         PROJECT(Pla:Transport)
-                         PROJECT(Pla:Instructie)
-                         PROJECT(Pla:OverboekingCelID)
-                         PROJECT(Pla:Planning_DATE)
-                         PROJECT(Pla:Planning_TIME)
-                         JOIN(CEL:CEL_PK)
-                           PROJECT(CEL:CelOms)
-                         END
-                         JOIN(ACel:CEL_PK)
-                           PROJECT(ACel:CelOms)
-                         END
-                         JOIN(Par:Partij_PK)
-                           PROJECT(Par:ExternPartijnr)
-                         END
-                         JOIN(AAArt:Artikel_PK)
-                           PROJECT(AAArt:ArtikelOms)
-                         END
-                         JOIN(AInk:PK_Inkoop)
-                           PROJECT(AInk:Planning_DATE)
-                           PROJECT(AInk:Planning_TIME)
-                         END
-                       END
+LOC:RitID            LONG                                  ! 
+BRW1::View:Browse    VIEW(OverboekingRit)
+                       PROJECT(OR:OverboekingRitID)
+                       PROJECT(OR:DatumTijd_DATE)
+                       PROJECT(OR:DatumTijd_TIME)
+                       PROJECT(OR:Opmerking)
+                       PROJECT(OR:DatumTijd)
                      END
-Queue:Browse         QUEUE                            !Queue declaration for browse/combo box using ?List
-Pla:ArtikelID          LIKE(Pla:ArtikelID)            !List box control field - type derived from field
-AAArt:ArtikelOms       LIKE(AAArt:ArtikelOms)         !List box control field - type derived from field
-LOC:Planning_DATE      LIKE(LOC:Planning_DATE)        !List box control field - type derived from local data
-LOC:Planning_TIME      LIKE(LOC:Planning_TIME)        !List box control field - type derived from local data
-LOC:PlanningSoort      LIKE(LOC:PlanningSoort)        !List box control field - type derived from local data
-Pla:KG                 LIKE(Pla:KG)                   !List box control field - type derived from field
-Pla:Pallets            LIKE(Pla:Pallets)              !List box control field - type derived from field
-Pla:MutatieGemaakt     LIKE(Pla:MutatieGemaakt)       !List box control field - type derived from field
-Pla:MutatieGemaakt_Icon LONG                          !Entry's icon ID
-CEL:CelOms             LIKE(CEL:CelOms)               !List box control field - type derived from field
-ACel:CelOms            LIKE(ACel:CelOms)              !List box control field - type derived from field
-Pla:PartijID           LIKE(Pla:PartijID)             !List box control field - type derived from field
-Par:ExternPartijnr     LIKE(Par:ExternPartijnr)       !List box control field - type derived from field
-Pla:Transport          LIKE(Pla:Transport)            !List box control field - type derived from field
-Pla:Instructie         LIKE(Pla:Instructie)           !List box control field - type derived from field
-Pla:OverboekingCelID   LIKE(Pla:OverboekingCelID)     !Browse hot field - type derived from field
-Pla:Planning_DATE      LIKE(Pla:Planning_DATE)        !Browse hot field - type derived from field
-Pla:Planning_TIME      LIKE(Pla:Planning_TIME)        !Browse hot field - type derived from field
-AInk:Planning_DATE     LIKE(AInk:Planning_DATE)       !Browse hot field - type derived from field
-AInk:Planning_TIME     LIKE(AInk:Planning_TIME)       !Browse hot field - type derived from field
-ORR:OverboekingRitRegelID LIKE(ORR:OverboekingRitRegelID) !Browse hot field - type derived from field
-ORR:OverboekingRitID   LIKE(ORR:OverboekingRitID)     !Browse key field - type derived from field
-Mark                   BYTE                           !Entry's marked status
-ViewPosition           STRING(1024)                   !Entry's view position
-                     END
-BRW8::View:Browse    VIEW(APlanning)
-                       PROJECT(APla:ArtikelID)
-                       PROJECT(APla:Planning_DATE)
-                       PROJECT(APla:Planning_TIME)
-                       PROJECT(APla:KG)
-                       PROJECT(APla:Pallets)
-                       PROJECT(APla:MutatieGemaakt)
-                       PROJECT(APla:PartijID)
-                       PROJECT(APla:Transport)
-                       PROJECT(APla:Instructie)
-                       PROJECT(APla:PlanningID)
-                       PROJECT(APla:Planning)
-                       PROJECT(APla:OverboekingCelID)
-                       PROJECT(APla:InkoopID)
-                       JOIN(AArt:Artikel_PK)
-                         PROJECT(AArt:ArtikelOms)
-                       END
-                       JOIN(APar:Partij_PK)
-                         PROJECT(APar:ExternPartijnr)
-                       END
-                       JOIN(AACel:CEL_PK)
-                         PROJECT(AACel:CelOms)
-                       END
-                       JOIN(AAACel:CEL_PK)
-                         PROJECT(AAACel:CelOms)
-                       END
-                     END
-Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?List:2
-APla:ArtikelID         LIKE(APla:ArtikelID)           !List box control field - type derived from field
-AArt:ArtikelOms        LIKE(AArt:ArtikelOms)          !List box control field - type derived from field
-APla:Planning_DATE     LIKE(APla:Planning_DATE)       !List box control field - type derived from field
-APla:Planning_TIME     LIKE(APla:Planning_TIME)       !List box control field - type derived from field
-APla:KG                LIKE(APla:KG)                  !List box control field - type derived from field
-APla:Pallets           LIKE(APla:Pallets)             !List box control field - type derived from field
-LOC:Getransferd        LIKE(LOC:Getransferd)          !List box control field - type derived from local data
-LOC:Getransferd_Icon   LONG                           !Entry's icon ID
-APla:MutatieGemaakt    LIKE(APla:MutatieGemaakt)      !List box control field - type derived from field
-APla:MutatieGemaakt_Icon LONG                         !Entry's icon ID
-AACel:CelOms           LIKE(AACel:CelOms)             !List box control field - type derived from field
-AAACel:CelOms          LIKE(AAACel:CelOms)            !List box control field - type derived from field
-APla:PartijID          LIKE(APla:PartijID)            !List box control field - type derived from field
-APar:ExternPartijnr    LIKE(APar:ExternPartijnr)      !List box control field - type derived from field
-APla:Transport         LIKE(APla:Transport)           !List box control field - type derived from field
-APla:Instructie        LIKE(APla:Instructie)          !List box control field - type derived from field
-APla:PlanningID        LIKE(APla:PlanningID)          !Browse hot field - type derived from field
-APla:Planning          LIKE(APla:Planning)            !Browse hot field - type derived from field
-APla:OverboekingCelID  LIKE(APla:OverboekingCelID)    !Browse hot field - type derived from field
-APla:InkoopID          LIKE(APla:InkoopID)            !Browse hot field - type derived from field
-Mark                   BYTE                           !Entry's marked status
-ViewPosition           STRING(1024)                   !Entry's view position
-                     END
-BRW10::View:Browse   VIEW(PlanningInkoop)
-                       PROJECT(Pla2:ArtikelID)
-                       PROJECT(Pla2:FirmaNaam)
-                       PROJECT(Pla2:PlanningID)
-                       PROJECT(Pla2:Planning)
-                       JOIN(Ink:PK_Inkoop)
-                         PROJECT(Ink:Planning_DATE)
-                         PROJECT(Ink:Planning_TIME)
-                       END
-                       JOIN(AAPla:PK_Planning)
-                         PROJECT(AAPla:KG)
-                         PROJECT(AAPla:Pallets)
-                         PROJECT(AAPla:MutatieGemaakt)
-                         JOIN(AAPar:Partij_PK)
-                         END
-                         JOIN(AAAACEL:CEL_PK)
-                           PROJECT(AAAACEL:CelOms)
-                         END
-                       END
-                       JOIN(AArt:Artikel_PK)
-                         PROJECT(AArt:ArtikelOms)
-                       END
-                     END
-Queue:Browse:2       QUEUE                            !Queue declaration for browse/combo box using ?List:3
-Pla2:ArtikelID         LIKE(Pla2:ArtikelID)           !List box control field - type derived from field
-AArt:ArtikelOms        LIKE(AArt:ArtikelOms)          !List box control field - type derived from field
-Ink:Planning_DATE      LIKE(Ink:Planning_DATE)        !List box control field - type derived from field
-Ink:Planning_TIME      LIKE(Ink:Planning_TIME)        !List box control field - type derived from field
-AAPla:KG               LIKE(AAPla:KG)                 !List box control field - type derived from field
-AAPla:Pallets          LIKE(AAPla:Pallets)            !List box control field - type derived from field
-LOC:Getransferd        LIKE(LOC:Getransferd)          !List box control field - type derived from local data
-LOC:Getransferd_Icon   LONG                           !Entry's icon ID
-AAPla:MutatieGemaakt   LIKE(AAPla:MutatieGemaakt)     !List box control field - type derived from field
-AAPla:MutatieGemaakt_Icon LONG                        !Entry's icon ID
-AAAACEL:CelOms         LIKE(AAAACEL:CelOms)           !List box control field - type derived from field
-Pla2:FirmaNaam         LIKE(Pla2:FirmaNaam)           !List box control field - type derived from field
-Pla2:PlanningID        LIKE(Pla2:PlanningID)          !Primary key field - type derived from field
-Pla2:Planning          LIKE(Pla2:Planning)            !Browse key field - type derived from field
+Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?Browse:1
+OR:OverboekingRitID    LIKE(OR:OverboekingRitID)      !List box control field - type derived from field
+OR:DatumTijd_DATE      LIKE(OR:DatumTijd_DATE)        !List box control field - type derived from field
+OR:DatumTijd_TIME      LIKE(OR:DatumTijd_TIME)        !List box control field - type derived from field
+OR:Opmerking           LIKE(OR:Opmerking)             !List box control field - type derived from field
+OR:DatumTijd           LIKE(OR:DatumTijd)             !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-History::OR:Record   LIKE(OR:RECORD),THREAD
 NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
 NetLocalRefreshTime     Long
-NetLocalDependancies    String('|OverboekingRit|OverboekingRitRegel|Planning|Cel|ACel|Partij|AAViewArtikel|AInkoop|APlanning|AViewArtikel|APartij|AACel|AAACel|PlanningInkoop|Inkoop|AAPlanning|AAPartij|AAAACel|')
-QuickWindow          WINDOW('Form OverboekingRit'),AT(,,633,412),FONT('MS Sans Serif',8,,FONT:regular,CHARSET:DEFAULT), |
-  DOUBLE,CENTER,GRAY,IMM,MDI,HLP('UpdateOverboekingRit'),SYSTEM
-                       PROMPT('Uitvoertijdstip:'),AT(8,8),USE(?Ove:DatumTijd_DATE:Prompt),TRN
-                       ENTRY(@d17-),AT(64,9,53,10),USE(OR:DatumTijd_DATE)
-                       ENTRY(@t7),AT(122,9,33,10),USE(OR:DatumTijd_TIME)
-                       PROMPT('Opmerking:'),AT(8,23),USE(?OR:Opmerking:Prompt),TRN
-                       ENTRY(@s100),AT(64,23,262,10),USE(OR:Opmerking)
-                       LIST,AT(9,48,615,98),USE(?List),HVSCROLL,FORMAT('[55L(2)|M~ID~C(0)@s30@120L(2)|M~Omschr' & |
-  'ijving~C(0)@s60@]|~Artikel~[47R(2)|M@d17-@31R(2)|M@t7@]|~Tijdstip~17C|M@s3@40R(2)|M~' & |
-  'KG~C(0)@n-13`2@30R(2)|M~Pallets~C(0)@n-14.@64R(2)|MI~Mutaties Gemaakt~C(0)@p p@[70L(' & |
-  '2)|M~Van~C(0)@s50@70L(2)|M~Naar~C(0)@s50@]|~Cel~[50R(2)|M~Intern~C(0)@n_10@50R(2)|M~' & |
-  'Extern~C(0)@n_10@]|~Partijnr.~100L(2)|M~Transport~C(0)@s100@200L(2)|M~Instructie~C(0)@s100@'), |
-  FROM(Queue:Browse),IMM
-                       BUTTON('Deselecteren'),AT(9,150),USE(?DeselecterenButton)
-                       PROMPT('Datum:'),AT(10,171),USE(?LOC:Datum:Prompt)
-                       SPIN(@d17-),AT(43,171,56,11),USE(LOC:Datum)
-                       LIST,AT(9,200,615,79),USE(?List:2),HVSCROLL,FORMAT('[55L(2)|M~ID~C(0)@s30@120L(2)|M~Oms' & |
-  'chrijving~C(0)@s60@]|~Artikel~[50R(2)|M@d17-@31R(2)|M@t7@]|~Tijdstip~40R(2)|M~KG~C(0' & |
-  ')@n-13`2@30R(2)|M~Pallets~C(0)@n-14.@45R(2)|MI~Getransferd~C(0)@p p@45R(2)|MI~Overge' & |
-  'boekt~C(0)@p p@[70L(2)|M~Van~C(0)@s50@70L(2)|M~Naar~C(0)@s50@]|~Cel~[50R(2)|M~Intern' & |
-  '~C(0)@n_10@50R(2)|M~Extern~C(1)@n_10@]|~Partijnr.~100L(2)|M~Transport~C(0)@s100@200L' & |
-  '(2)|M~Instructie~C(0)@s100@'),FROM(Queue:Browse:1),IMM
-                       BUTTON('Selecteren'),AT(9,283,57),USE(?SelecterenButton)
-                       BUTTON('&OK'),AT(524,393,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
-  'a and close the window'),TIP('Accept data and close the window')
-                       BUTTON('&Cancel'),AT(576,393,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'), |
-  TIP('Cancel operation')
-                       PROMPT('Transfer ID:'),AT(521,9),USE(?OR:OverboekingRitID:Prompt)
-                       ENTRY(@n_10),AT(564,9,60,10),USE(OR:OverboekingRitID),RIGHT,DISABLE
-                       STRING('Overboekingen'),AT(11,186),USE(?STRING1),FONT('Microsoft Sans Serif',,,FONT:bold)
-                       STRING('Geselecteerde inkopen/overboekingen'),AT(9,35),USE(?STRING2),FONT('Microsoft Sans Serif', |
-  ,,FONT:bold)
-                       LIST,AT(11,317,613,70),USE(?List:3),HVSCROLL,FORMAT('[55L(2)|M~ID~C(0)@s30@120L(2)|M~Om' & |
-  'schrijving~C(0)@s60@]|~Artikel~[50L(2)|M@d17-@31R(2)|M@t7@]|~Tijdstip~40R(2)|M~KG~C(' & |
-  '0)@n-13`2@30R(2)|M~Pallets~C(0)@n-14.@45R(2)|MI~Getransferd~C(0)@p p@25R(2)|MI~Insla' & |
-  'g~C(0)@p p@70L(2)|M~Cel~C(0)@s50@100L(2)|M~Leverancier~C(0)@s50@'),FROM(Queue:Browse:2), |
-  IMM
-                       BUTTON('Selecteren'),AT(10,392,57),USE(?SelecterenInkoop)
-                       STRING('Inkopen'),AT(11,303),USE(?STRING3),FONT('Microsoft Sans Serif',,,FONT:bold)
+NetLocalDependancies    String('|OverboekingRit|')
+QuickWindow          WINDOW('Transfers'),AT(,,399,254),FONT('MS Sans Serif',8,,FONT:regular,CHARSET:DEFAULT),RESIZE, |
+  CENTER,GRAY,IMM,MAX,MDI,HLP('BrowseRitten'),SYSTEM
+                       LIST,AT(8,44,383,167),USE(?Browse:1),HVSCROLL,FORMAT('45R(2)|M~Transfer-ID~C(0)@n_10@[5' & |
+  '3R(2)|M@d17-@80R(2)|M@t7@](77)|~Uitvoerdatum~80L(2)|M~Opmerking~C(2)@s100@'),FROM(Queue:Browse:1), |
+  IMM,MSG('Browsing the OverboekingRit file')
+                       BUTTON('&Select'),AT(131,215,49,14),USE(?Select:2),LEFT,ICON('WASELECT.ICO'),FLAT,MSG('Select the Record'), |
+  TIP('Select the Record')
+                       BUTTON('&View'),AT(184,215,49,14),USE(?View:3),LEFT,ICON('WAVIEW.ICO'),FLAT,MSG('View Record'), |
+  TIP('View Record')
+                       BUTTON('&Insert'),AT(237,215,49,14),USE(?Insert:4),LEFT,ICON('WAINSERT.ICO'),FLAT,MSG('Insert a Record'), |
+  TIP('Insert a Record')
+                       BUTTON('&Change'),AT(290,215,49,14),USE(?Change:4),LEFT,ICON('WACHANGE.ICO'),DEFAULT,FLAT, |
+  MSG('Change the Record'),TIP('Change the Record')
+                       BUTTON('&Delete'),AT(343,215,49,14),USE(?Delete:4),LEFT,ICON('WADELETE.ICO'),FLAT,MSG('Delete the Record'), |
+  TIP('Delete the Record')
+                       SHEET,AT(4,4,393,231),USE(?CurrentTab)
+                         TAB('&1) Op Datum'),USE(?Tab:2)
+                           PROMPT('Datum:'),AT(7,27),USE(?LOC:Datum:Prompt)
+                           SPIN(@d17-),AT(35,24,83,15),USE(LOC:Datum)
+                         END
+                         TAB('&2) Alle'),USE(?Tab:3)
+                         END
+                       END
+                       BUTTON('&Close'),AT(348,238,49,14),USE(?Close),LEFT,ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'), |
+  TIP('Close Window')
+                       BUTTON('Excel'),AT(5,236),USE(?Excel)
                      END
 
     omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
@@ -231,50 +81,30 @@ WE::CantCloseNowSetHereDone equate(1)
 WE::CantCloseNowSetHere     long
     !***
 ThisWindow           CLASS(WindowManager)
-Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-PrimeUpdate            PROCEDURE(),BYTE,PROC,DERIVED
 Reset                  PROCEDURE(BYTE Force=0),DERIVED
-Run                    PROCEDURE(),BYTE,PROC,DERIVED
+Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
-TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
 TakeFieldEvent         PROCEDURE(),BYTE,PROC,DERIVED
-TakeNewSelection       PROCEDURE(),BYTE,PROC,DERIVED
 TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
+BRW1                 CLASS(BrowseClass)                    ! Browse using ?Browse:1
+Q                      &Queue:Browse:1                !Reference to browse queue
+Ask                    PROCEDURE(BYTE Request),BYTE,PROC,DERIVED
+Init                   PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
+ResetSort              PROCEDURE(BYTE Force),BYTE,PROC,DERIVED
+                     END
+
+BRW1::Sort0:Locator  StepLocatorClass                      ! Default Locator
+BRW1::Sort1:Locator  StepLocatorClass                      ! Conditional Locator - CHOICE(?CurrentTab) = 2
 Resizer              CLASS(WindowResizeClass)
 Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
                      END
 
-BRW4                 CLASS(BrowseClass)                    ! Browse using ?List
-Q                      &Queue:Browse                  !Reference to browse queue
-ResetQueue             PROCEDURE(BYTE ResetMode),DERIVED
-SetQueueRecord         PROCEDURE(),DERIVED
-ValidateRecord         PROCEDURE(),BYTE,DERIVED
-                     END
-
-BRW4::Sort0:Locator  StepLocatorClass                      ! Default Locator
-BRW8                 CLASS(BrowseClass)                    ! Browse using ?List:2
-Q                      &Queue:Browse:1                !Reference to browse queue
-SetQueueRecord         PROCEDURE(),DERIVED
-                     END
-
-BRW8::Sort0:Locator  StepLocatorClass                      ! Default Locator
-BRW10                CLASS(BrowseClass)                    ! Browse using ?List:3
-Q                      &Queue:Browse:2                !Reference to browse queue
-SetQueueRecord         PROCEDURE(),DERIVED
-                     END
-
-BRW10::Sort0:Locator StepLocatorClass                      ! Default Locator
-CurCtrlFeq          LONG
-FieldColorQueue     QUEUE
-Feq                   LONG
-OldColor              LONG
-                    END
 
   CODE
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
@@ -286,187 +116,306 @@ DefineListboxStyle ROUTINE
 !| It`s called after the window open
 !|
 !---------------------------------------------------------------------------
+ExportExcel         ROUTINE
+    GlobalClass.InitExcelOle()
+	GlobalClass.MaakExcel('')
+	
+	LOC:DatumNu = TODAY()
+	
+	CLEAR(ORR:RECORD)
+	ORR:OverboekingRitID=OR:OverboekingRitID
+	SET(ORR:FK_OverboekingRitRegel,ORR:FK_OverboekingRitRegel)
+	
+	LOC:ExcelInkoop = 0 ! 1=alles inkoop, 2=ook 1> overboeking gevonden
+	
+	LOOP
+		Access:OverboekingRitRegel.TryNext()
+		IF ERROR() THEN BREAK.
+		IF ORR:OverboekingRitID<>OR:OverboekingRitID THEN BREAK.
+		
+		CLEAR(Pla:Record)
+		Pla:PlanningID=ORR:PlanningID
+		Access:Planning.TryFetch(Pla:PK_Planning)
+		
+		IF Pla:OverboekingCelID=0 AND LOC:ExcelInkoop <> 2
+			! Inkoop
+			LOC:ExcelInkoop = 1
+		ELSE
+			LOC:ExcelInkoop = 2
+		.
+	.
+	
+	Execute  (Loc:DAtumNU%7 )+ 1
+    	Loc:Ole{'Application.Range(A1).Value'}='Zondag '&Format(Loc:DAtumNU,@d6-) 
+    	Loc:Ole{'Application.Range(A1).Value'}='Maandag '&Format(Loc:DAtumNU,@d6-) 
+    	Loc:Ole{'Application.Range(A1).Value'}='Dinsdag '&Format(Loc:DAtumNU,@d6-) 
+    	Loc:Ole{'Application.Range(A1).Value'}='Woensdag '&Format(Loc:DAtumNU,@d6-) 
+    	Loc:Ole{'Application.Range(A1).Value'}='Donderdag '&Format(Loc:DAtumNU,@d6-) 
+    	Loc:Ole{'Application.Range(A1).Value'}='Vrijdag '&Format(Loc:DAtumNU,@d6-) 
+    	Loc:Ole{'Application.Range(A1).Value'}='Zaterdag '&Format(Loc:DAtumNU,@d6-) 
+	End
+	
+	Loc:Rij = 3
+	Execute  (OR:DatumTijd_DATE%7 )+ 1
+    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Zondag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Maandag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Dinsdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Woensdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Donderdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Vrijdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+    	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Uitvoerdatum: Zaterdag ' & Format(OR:DatumTijd_DATE,@d6-) & ' ' & Format(OR:DatumTijd_TIME,@t1B)
+	End
+
+	Loc:Rij += 3
+	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='REFERENTIE-NR.:'
+	
+	Loc:Rij += 3
+	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Opmerking: ' & CLIP(OR:Opmerking)
+	
+	Loc:Rij += 2
+	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}=''
+	Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}='Partijnr. (Int/Ext)'
+	Loc:Ole{'Application.Range(C'&Loc:Rij&').Value'}='ArtikelID'
+	Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}='Artikelnaam' 
+	Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}='Leverancier' 
+	Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}='Verpakking' 
+	Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}='KG' 
+	!Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}='Pallets' 
+	Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}='Instructie'
+	!Loc:Ole{'Application.Range(J'&Loc:Rij&').Value'}='Transport'
+	IF (LOC:ExcelInkoop <> 1)
+	!	Loc:Ole{'Application.Range(K'&Loc:Rij&').Value'}='Van Cel' 
+	!	Loc:Ole{'Application.Range(L'&Loc:Rij&').Value'}='Naar Cel' 
+		!Loc:Ole{'Application.Range(M'&Loc:Rij&').Value'}='Verwerkt'
+	.
+	
+   	Loc:Ole{'Application.Columns(A:A).ColumnWidth'}=15
+   	Loc:Ole{'Application.Columns(B:B).ColumnWidth'}=25
+   	Loc:Ole{'Application.Columns(C:C).ColumnWidth'}=18
+   	Loc:Ole{'Application.Columns(D:D).ColumnWidth'}=30
+   	Loc:Ole{'Application.Columns(E:E).ColumnWidth'}=30
+   	Loc:Ole{'Application.Columns(F:F).ColumnWidth'}=20
+   	Loc:Ole{'Application.Columns(G:G).ColumnWidth'}=10
+	!Loc:Ole{'Application.Columns(H:H).ColumnWidth'}=10
+    IF GLO:HidePlanningInstructie = 0 THEN
+        Loc:Ole{'Application.Columns(H:H).ColumnWidth'}=50
+    END
+   	!Loc:Ole{'Application.Columns(J:J).ColumnWidth'}=20
+	IF (LOC:ExcelInkoop <> 1)	
+   	!	Loc:Ole{'Application.Columns(K:K).ColumnWidth'}=12
+   	!	Loc:Ole{'Application.Columns(L:L).ColumnWidth'}=12
+		!Loc:Ole{'Application.Columns(M:M).ColumnWidth'}=12
+	.
+	
+	Do TrekLijntjes
+	Do Vet
+	
+	CLEAR(ORR:RECORD)
+	ORR:OverboekingRitID=OR:OverboekingRitID
+	SET(ORR:FK_OverboekingRitRegel,ORR:FK_OverboekingRitRegel)
+
+	LOOP
+		Access:OverboekingRitRegel.TryNext()
+		IF ERROR() THEN BREAK.
+		IF ORR:OverboekingRitID<>OR:OverboekingRitID THEN BREAK.
+		
+		CLEAR(Pla:Record)
+		Pla:PlanningID=ORR:PlanningID
+		Access:Planning.TryFetch(Pla:PK_Planning)
+		
+		CLEAR(Pla2:Record)
+		Pla2:PlanningID=Pla:PlanningID
+		Access:PlanningInkoop.TryFetch(Pla2:PlanningID_K)
+		
+		CLEAR(Par:Record)
+		Par:PartijID=Pla:PartijID
+		Access:Partij.TryFetch(Par:Partij_PK)
+		
+		CLEAR(Ver:Record)
+		Ver:VerpakkingID=Pla:VerpakkingID
+		Access:Verpakking.TryFetch(Ver:Verpakking_PK)
+		
+		CLEAR(Rel:Record)
+		Rel:RelatieID=Par:Leverancier
+		Access:Relatie.TryFetch(Rel:Relatie_PK)
+		
+		CLEAR(Cel:Record)
+		Cel:CelID=Pla:CelID
+		Access:Cel.TryFetch(Cel:Cel_PK)
+		
+		CLEAR(ACel:Record)
+		ACel:CelID=Pla:OverboekingCelID
+		Access:ACel.TryFetch(ACel:Cel_PK)
+		
+		CLEAR(Art:Record)
+		Art:ArtikelID=Pla:ArtikelID
+		Access:ViewArtikel.TryFetch(Art:Artikel_PK)
+		
+		Loc:Rij+=1
+
+		db.DebugOut('ORR: (' & Pla:PlanningID & ',' & Pla2:PlanningID & ',' & CLIP(Pla2:FirmaNaam) & ',' & CLIP(Rel:FirmaNaam) & ')')
+		
+		IF Pla:OverboekingCelID <> 0 THEN
+			Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Overboek'
+			Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}=Rel:FirmaNaam
+		ELSE
+			Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Inslag'
+			Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}=Pla2:FirmaNaam
+		END
+		
+		IF CLIP(LEFT(FORMAT(Par:ExternPartijnr, @N_10B))) = '' THEN
+			Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}=CLIP(LEFT(FORMAT(Par:PartijID, @N_10B)))
+		ELSE
+			Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}=CLIP(LEFT(FORMAT(Par:PartijID, @N_10B))) & ' \ ' & CLIP(LEFT(FORMAT(Par:ExternPartijnr, @S30)))
+		.
+		Loc:Ole{'Application.Range(C'&Loc:Rij&').Value'}=CLIP(LEFT(Pla:ArtikelID))
+		Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}=Art:Artikeloms
+		Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=VER:VerpakkingOmschrijving
+		Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}=Pla:KG
+		! Verwijderd n.a.v. mail van 5-10-2011
+		!Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}=Pla:Pallets
+        IF GLO:HidePlanningInstructie = 0 THEN
+            Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}=Pla:Instructie
+        END            
+		!Loc:Ole{'Application.Range(J'&Loc:Rij&').Value'}=Pla:Transport
+		
+		IF (LOC:ExcelInkoop <> 1)
+		! Verwijderd n.a.v. mail van 5-10-2011
+			!Loc:Ole{'Application.Range(K'&Loc:Rij&').Value'}=CEL:CelOms
+			!Loc:Ole{'Application.Range(L'&Loc:Rij&').Value'}=ACel:CelOms
+			
+			!IF Pla:Verwerkt = 1
+			!	Loc:Ole{'Application.Range(M'&Loc:Rij&').Value'}='X'.
+		.
+		
+		Do TrekLijntjes
+	END
+
+	
+	Loc:Rij += 2
+	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Laden:'
+	Loc:Rij += 1
+	Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}='Lossen Ven Poultry BV:'	
+
+
+	Loc:Ole{'Cells.Select'}
+	Loc:Ole{'Application.Selection.Font.Name'} = 'Ariel'
+	Loc:Ole{'Application.Selection.Font.Size'} = 14
+	
+	Loc:Ole{'Application.Rows(1:'&Loc:Rij&').AutoFit'}
+	Loc:Ole{'Application.ActiveSheet.PageSetup.Zoom'} = 50 != Loc:Ole{'Application.ActiveSheet.PageSetup.BlackAndWhite'}!
+	Loc:Ole{'Application.ActiveSheet.PageSetup.Orientation'} = 2 != Landscape
+	Loc:Ole{'Application.ActiveSheet.PageSetup.TopMargin'} = 30 != Points (1/72 inch
+	Loc:Ole{'Application.ActiveSheet.PageSetup.BottomMargin'} = 30 != Points (1/72 inch
+	Loc:Ole{'Application.ActiveSheet.PageSetup.LeftMargin'} = 30 != Points (1/72 inch
+	Loc:Ole{'Application.ActiveSheet.PageSetup.RightMargin'} = 30 != Points (1/72 inch
+	
+	Loc:Ole{'Application.Visible'}=true ! nu pas excel laten zien
+	
+	!Loc:Ole{'Application.ActiveWindow.SelectedSheets.PrintPreview'}
+	!LOC:ExcelMacroFile = CLIP(GETINI('Excel', 'MacroXLS',,'.\Voorraad.ini'))
+	
+	!Loc:Ole{'Application.Workbooks.Open('&CLIP(LOC:ExcelMacroFile)&')'}
+	
+	!pos# = INSTRING('\', CLIP(LOC:ExcelMacroFile), -1, LEN(CLIP(LOC:ExcelMacroFile)))
+	!Loc:Ole{'Application.Run('&CLIP(SUB(CLIP(LOC:ExcelMacroFile), pos# + 1, LEN(CLIP(LOC:ExcelMacroFile)) - pos#)) & '!Macro1)'}
+	
+TrekLijntjes        Routine
+	
+	IF (LOC:ExcelInkoop <> 1)
+		Loc:Ole{'Application.Range(A'&Loc:Rij&':H'&Loc:Rij&').Select'}
+	ELSE
+		Loc:Ole{'Application.Range(A'&Loc:Rij&':H'&Loc:Rij&').Select'}
+	.
+	  Loc:Ole{'Application.Selection.Borders(9).Weight'}=2 ! xlEdgeBottom
+      Loc:Ole{'Application.Selection.Borders(10).Weight'}=2 ! xlEdgeRight
+      Loc:Ole{'Application.Selection.Borders(7).Weight'}=2 ! xlEdgeLeft
+      Loc:Ole{'Application.Selection.Borders(8).Weight'}=2 ! xlEdgeTop
+      Loc:Ole{'Application.Selection.Borders(11).Weight'}=2 ! xlInsideVertical
+!      ?Ole{'Application.Selection.Borders(12).Weight'}=2 ! xlInsideHorizontal
+
+Vet                     Routine
+	  Loc:Ole{'Application.Range(A'&Loc:Rij&':L'&Loc:Rij&').Font.Bold'}=True
+	
 ConvertDatum        ROUTINE
-	Loc:DatumVanSQL = Loc:Datum - 36163
-	Loc:DatumTMSQL = Loc:Datum - 36163 + 1
-
-ThisWindow.Ask PROCEDURE
-
-  CODE
-  CASE SELF.Request                                        ! Configure the action message text
-  OF ViewRecord
-    ActionMessage = 'View Record'
-  OF InsertRecord
-    ActionMessage = 'Record Will Be Added'
-  OF ChangeRecord
-    ActionMessage = 'Record Will Be Changed'
-  END
-  QuickWindow{PROP:Text} = ActionMessage                   ! Display status message in title bar
-  PARENT.Ask
-
+	IF YEAR(LOC:Datum) < 2005
+		Loc:DatumVanSQL = DATE(1,1,2005) - 36163
+		Loc:DatumTMSQL = DATE(1,1,2005) - 36163 + 1
+	ELSE
+		Loc:DatumVanSQL = Loc:DAtum - 36163
+		Loc:DatumTMSQL = Loc:DAtum - 36163 + 1
+	.
 
 ThisWindow.Init PROCEDURE
 
 ReturnValue          BYTE,AUTO
 
   CODE
-  GlobalErrors.SetProcedureName('UpdateTransfers')
+  GlobalErrors.SetProcedureName('BrowseTransfers')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
   IF ReturnValue THEN RETURN ReturnValue.
-  SELF.FirstField = ?Ove:DatumTijd_DATE:Prompt
+  SELF.FirstField = ?Browse:1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  BIND('Loc:DatumTMSQL',Loc:DatumTMSQL)                    ! Added by: BrowseBox(ABC)
-  BIND('LOC:Planning_DATE',LOC:Planning_DATE)              ! Added by: BrowseBox(ABC)
-  BIND('LOC:Planning_TIME',LOC:Planning_TIME)              ! Added by: BrowseBox(ABC)
-  BIND('LOC:PlanningSoort',LOC:PlanningSoort)              ! Added by: BrowseBox(ABC)
-  BIND('LOC:Getransferd',LOC:Getransferd)                  ! Added by: BrowseBox(ABC)
-  BIND('APla:PlanningID',APla:PlanningID)                  ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
+  BIND('LOC:DatumVanSQL',LOC:DatumVanSQL)                  ! Added by: BrowseBox(ABC)
+  BIND('LOC:DatumTMSQL',LOC:DatumTMSQL)                    ! Added by: BrowseBox(ABC)
+  BIND('LOC:Datum',LOC:Datum)                              ! Added by: BrowseBox(ABC)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.HistoryKey = CtrlH
-  SELF.AddHistoryFile(OR:Record,History::OR:Record)
-  SELF.AddHistoryField(?OR:DatumTijd_DATE,4)
-  SELF.AddHistoryField(?OR:DatumTijd_TIME,5)
-  SELF.AddHistoryField(?OR:Opmerking,6)
-  SELF.AddHistoryField(?OR:OverboekingRitID,1)
-  SELF.AddUpdateFile(Access:OverboekingRit)
-  SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
-  Relate:AOverboekingRit.Open                              ! File AOverboekingRit used by this procedure, so make sure it's RelationManager is open
-  Relate:AOverboekingRitRegel.Open                         ! File AOverboekingRitRegel used by this procedure, so make sure it's RelationManager is open
-  Relate:APlanning.Open                                    ! File APlanning used by this procedure, so make sure it's RelationManager is open
+  SELF.AddItem(Toolbar)
+  IF SELF.Request = SelectRecord
+     SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
+  ELSE
+     SELF.AddItem(?Close,RequestCompleted)                 ! Add the close control to the window manger
+  END
+  IF PRM:Datum = 0 THEN
+  	LOC:Datum = TODAY()
+  ELSE
+  	LOC:Datum = PRM:Datum
+  .
+  
+  DO ConvertDatum
+  Relate:ACel.Open                                         ! File ACel used by this procedure, so make sure it's RelationManager is open
+  Relate:Cel.SetOpenRelated()
+  Relate:Cel.Open                                          ! File Cel used by this procedure, so make sure it's RelationManager is open
   Relate:OverboekingRit.SetOpenRelated()
   Relate:OverboekingRit.Open                               ! File OverboekingRit used by this procedure, so make sure it's RelationManager is open
+  Relate:Partij.Open                                       ! File Partij used by this procedure, so make sure it's RelationManager is open
+  Relate:Planning.SetOpenRelated()
+  Relate:Planning.Open                                     ! File Planning used by this procedure, so make sure it's RelationManager is open
   Relate:PlanningInkoop.Open                               ! File PlanningInkoop used by this procedure, so make sure it's RelationManager is open
+  Relate:Sjabloon.Open                                     ! File Sjabloon used by this procedure, so make sure it's RelationManager is open
+  Relate:ViewArtikel.Open                                  ! File ViewArtikel used by this procedure, so make sure it's RelationManager is open
+  Access:Relatie.UseFile                                   ! File referenced in 'Other Files' so need to inform it's FileManager
+  Access:OverboekingRitRegel.UseFile                       ! File referenced in 'Other Files' so need to inform it's FileManager
   SELF.FilesOpened = True
-  SELF.Primary &= Relate:OverboekingRit
-  IF SELF.Request = ViewRecord AND NOT SELF.BatchProcessing ! Setup actions for ViewOnly Mode
-    SELF.InsertAction = Insert:None
-    SELF.DeleteAction = Delete:None
-    SELF.ChangeAction = Change:None
-    SELF.CancelAction = Cancel:Cancel
-    SELF.OkControl = 0
-  ELSE
-    SELF.ChangeAction = Change:Caller                      ! Changes allowed
-    SELF.CancelAction = Cancel:Cancel+Cancel:Query         ! Confirm cancel
-    SELF.OkControl = ?OK
-    IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
-  END
-  BRW4.Init(?List,Queue:Browse.ViewPosition,BRW4::View:Browse,Queue:Browse,Relate:OverboekingRitRegel,SELF) ! Initialize the browse manager
-  BRW8.Init(?List:2,Queue:Browse:1.ViewPosition,BRW8::View:Browse,Queue:Browse:1,Relate:APlanning,SELF) ! Initialize the browse manager
-  BRW10.Init(?List:3,Queue:Browse:2.ViewPosition,BRW10::View:Browse,Queue:Browse:2,Relate:PlanningInkoop,SELF) ! Initialize the browse manager
+  BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:OverboekingRit,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
-  IF SELF.Request = InsertRecord
-  	OR:DatumTijd_DATE=PRM:Datum
-  END
-  
-  LOC:Datum=PRM:Datum
-  DO ConvertDatum
-  
-  IF GLO:HidePlanningInstructie THEN
-      ?List{PROPLIST:Width, 11} = 0
-      ?List:2{PROPLIST:Width, 11} = 0
-  END    
-  
   Do DefineListboxStyle
-  IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
-    ?OR:DatumTijd_DATE{PROP:ReadOnly} = True
-    ?OR:DatumTijd_TIME{PROP:ReadOnly} = True
-    ?OR:Opmerking{PROP:ReadOnly} = True
-    DISABLE(?DeselecterenButton)
-    DISABLE(?SelecterenButton)
-    ?OR:OverboekingRitID{PROP:ReadOnly} = True
-    DISABLE(?SelecterenInkoop)
-  END
+  BRW1.Q &= Queue:Browse:1
+  BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
+  BRW1.AddSortOrder(,OR:PK_OverboekingRit)                 ! Add the sort order for OR:PK_OverboekingRit for sort order 1
+  BRW1.AddLocator(BRW1::Sort1:Locator)                     ! Browse has a locator for sort order 1
+  BRW1::Sort1:Locator.Init(,OR:OverboekingRitID,,BRW1)     ! Initialize the browse locator using  using key: OR:PK_OverboekingRit , OR:OverboekingRitID
+  BRW1.AddSortOrder(,OR:FK_OverboekingRit)                 ! Add the sort order for OR:FK_OverboekingRit for sort order 2
+  BRW1.AddLocator(BRW1::Sort0:Locator)                     ! Browse has a locator for sort order 2
+  BRW1::Sort0:Locator.Init(,OR:DatumTijd,,BRW1)            ! Initialize the browse locator using  using key: OR:FK_OverboekingRit , OR:DatumTijd
+  BRW1.SetFilter('(OR:DatumTijd >= LOC:DatumVanSQL AND OR:DatumTijd << LOC:DatumTMSQL)') ! Apply filter expression to browse
+  BRW1.AddField(OR:OverboekingRitID,BRW1.Q.OR:OverboekingRitID) ! Field OR:OverboekingRitID is a hot field or requires assignment from browse
+  BRW1.AddField(OR:DatumTijd_DATE,BRW1.Q.OR:DatumTijd_DATE) ! Field OR:DatumTijd_DATE is a hot field or requires assignment from browse
+  BRW1.AddField(OR:DatumTijd_TIME,BRW1.Q.OR:DatumTijd_TIME) ! Field OR:DatumTijd_TIME is a hot field or requires assignment from browse
+  BRW1.AddField(OR:Opmerking,BRW1.Q.OR:Opmerking)          ! Field OR:Opmerking is a hot field or requires assignment from browse
+  BRW1.AddField(OR:DatumTijd,BRW1.Q.OR:DatumTijd)          ! Field OR:DatumTijd is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
-  BRW4.Q &= Queue:Browse
-  BRW4.AddSortOrder(,ORR:FK_OverboekingRitRegel)           ! Add the sort order for ORR:FK_OverboekingRitRegel for sort order 1
-  BRW4.AddRange(ORR:OverboekingRitID,OR:OverboekingRitID)  ! Add single value range limit for sort order 1
-  BRW4.AddLocator(BRW4::Sort0:Locator)                     ! Browse has a locator for sort order 1
-  BRW4::Sort0:Locator.Init(,ORR:OverboekingRitRegelID,,BRW4) ! Initialize the browse locator using  using key: ORR:FK_OverboekingRitRegel , ORR:OverboekingRitRegelID
-  ?List{PROP:IconList,1} = '~off.ico'
-  ?List{PROP:IconList,2} = '~on.ico'
-  BRW4.AddField(Pla:ArtikelID,BRW4.Q.Pla:ArtikelID)        ! Field Pla:ArtikelID is a hot field or requires assignment from browse
-  BRW4.AddField(AAArt:ArtikelOms,BRW4.Q.AAArt:ArtikelOms)  ! Field AAArt:ArtikelOms is a hot field or requires assignment from browse
-  BRW4.AddField(LOC:Planning_DATE,BRW4.Q.LOC:Planning_DATE) ! Field LOC:Planning_DATE is a hot field or requires assignment from browse
-  BRW4.AddField(LOC:Planning_TIME,BRW4.Q.LOC:Planning_TIME) ! Field LOC:Planning_TIME is a hot field or requires assignment from browse
-  BRW4.AddField(LOC:PlanningSoort,BRW4.Q.LOC:PlanningSoort) ! Field LOC:PlanningSoort is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:KG,BRW4.Q.Pla:KG)                      ! Field Pla:KG is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:Pallets,BRW4.Q.Pla:Pallets)            ! Field Pla:Pallets is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:MutatieGemaakt,BRW4.Q.Pla:MutatieGemaakt) ! Field Pla:MutatieGemaakt is a hot field or requires assignment from browse
-  BRW4.AddField(CEL:CelOms,BRW4.Q.CEL:CelOms)              ! Field CEL:CelOms is a hot field or requires assignment from browse
-  BRW4.AddField(ACel:CelOms,BRW4.Q.ACel:CelOms)            ! Field ACel:CelOms is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:PartijID,BRW4.Q.Pla:PartijID)          ! Field Pla:PartijID is a hot field or requires assignment from browse
-  BRW4.AddField(Par:ExternPartijnr,BRW4.Q.Par:ExternPartijnr) ! Field Par:ExternPartijnr is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:Transport,BRW4.Q.Pla:Transport)        ! Field Pla:Transport is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:Instructie,BRW4.Q.Pla:Instructie)      ! Field Pla:Instructie is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:OverboekingCelID,BRW4.Q.Pla:OverboekingCelID) ! Field Pla:OverboekingCelID is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:Planning_DATE,BRW4.Q.Pla:Planning_DATE) ! Field Pla:Planning_DATE is a hot field or requires assignment from browse
-  BRW4.AddField(Pla:Planning_TIME,BRW4.Q.Pla:Planning_TIME) ! Field Pla:Planning_TIME is a hot field or requires assignment from browse
-  BRW4.AddField(AInk:Planning_DATE,BRW4.Q.AInk:Planning_DATE) ! Field AInk:Planning_DATE is a hot field or requires assignment from browse
-  BRW4.AddField(AInk:Planning_TIME,BRW4.Q.AInk:Planning_TIME) ! Field AInk:Planning_TIME is a hot field or requires assignment from browse
-  BRW4.AddField(ORR:OverboekingRitRegelID,BRW4.Q.ORR:OverboekingRitRegelID) ! Field ORR:OverboekingRitRegelID is a hot field or requires assignment from browse
-  BRW4.AddField(ORR:OverboekingRitID,BRW4.Q.ORR:OverboekingRitID) ! Field ORR:OverboekingRitID is a hot field or requires assignment from browse
-  BRW8.Q &= Queue:Browse:1
-  BRW8.AddSortOrder(,APla:Datum_Tijd_K)                    ! Add the sort order for APla:Datum_Tijd_K for sort order 1
-  BRW8.AddRange(APla:Planning,LOC:DatumVanSQL,LOC:DatumTMSQL) ! Add 'range of values' range limit for sort order 1
-  BRW8.AddLocator(BRW8::Sort0:Locator)                     ! Browse has a locator for sort order 1
-  BRW8::Sort0:Locator.Init(,APla:Planning,,BRW8)           ! Initialize the browse locator using  using key: APla:Datum_Tijd_K , APla:Planning
-  BRW8.SetFilter('((APla:OverboekingCelID <<> 0) AND (APla:Planning <<> Loc:DatumTMSQL))') ! Apply filter expression to browse
-  ?List:2{PROP:IconList,1} = '~off.ico'
-  ?List:2{PROP:IconList,2} = '~on.ico'
-  BRW8.AddField(APla:ArtikelID,BRW8.Q.APla:ArtikelID)      ! Field APla:ArtikelID is a hot field or requires assignment from browse
-  BRW8.AddField(AArt:ArtikelOms,BRW8.Q.AArt:ArtikelOms)    ! Field AArt:ArtikelOms is a hot field or requires assignment from browse
-  BRW8.AddField(APla:Planning_DATE,BRW8.Q.APla:Planning_DATE) ! Field APla:Planning_DATE is a hot field or requires assignment from browse
-  BRW8.AddField(APla:Planning_TIME,BRW8.Q.APla:Planning_TIME) ! Field APla:Planning_TIME is a hot field or requires assignment from browse
-  BRW8.AddField(APla:KG,BRW8.Q.APla:KG)                    ! Field APla:KG is a hot field or requires assignment from browse
-  BRW8.AddField(APla:Pallets,BRW8.Q.APla:Pallets)          ! Field APla:Pallets is a hot field or requires assignment from browse
-  BRW8.AddField(LOC:Getransferd,BRW8.Q.LOC:Getransferd)    ! Field LOC:Getransferd is a hot field or requires assignment from browse
-  BRW8.AddField(APla:MutatieGemaakt,BRW8.Q.APla:MutatieGemaakt) ! Field APla:MutatieGemaakt is a hot field or requires assignment from browse
-  BRW8.AddField(AACel:CelOms,BRW8.Q.AACel:CelOms)          ! Field AACel:CelOms is a hot field or requires assignment from browse
-  BRW8.AddField(AAACel:CelOms,BRW8.Q.AAACel:CelOms)        ! Field AAACel:CelOms is a hot field or requires assignment from browse
-  BRW8.AddField(APla:PartijID,BRW8.Q.APla:PartijID)        ! Field APla:PartijID is a hot field or requires assignment from browse
-  BRW8.AddField(APar:ExternPartijnr,BRW8.Q.APar:ExternPartijnr) ! Field APar:ExternPartijnr is a hot field or requires assignment from browse
-  BRW8.AddField(APla:Transport,BRW8.Q.APla:Transport)      ! Field APla:Transport is a hot field or requires assignment from browse
-  BRW8.AddField(APla:Instructie,BRW8.Q.APla:Instructie)    ! Field APla:Instructie is a hot field or requires assignment from browse
-  BRW8.AddField(APla:PlanningID,BRW8.Q.APla:PlanningID)    ! Field APla:PlanningID is a hot field or requires assignment from browse
-  BRW8.AddField(APla:Planning,BRW8.Q.APla:Planning)        ! Field APla:Planning is a hot field or requires assignment from browse
-  BRW8.AddField(APla:OverboekingCelID,BRW8.Q.APla:OverboekingCelID) ! Field APla:OverboekingCelID is a hot field or requires assignment from browse
-  BRW8.AddField(APla:InkoopID,BRW8.Q.APla:InkoopID)        ! Field APla:InkoopID is a hot field or requires assignment from browse
-  BRW10.Q &= Queue:Browse:2
-  BRW10.AddSortOrder(,Pla2:Planning_K)                     ! Add the sort order for Pla2:Planning_K for sort order 1
-  BRW10.AddRange(Pla2:Planning,LOC:DatumVanSQL,LOC:DatumTMSQL) ! Add 'range of values' range limit for sort order 1
-  BRW10.AddLocator(BRW10::Sort0:Locator)                   ! Browse has a locator for sort order 1
-  BRW10::Sort0:Locator.Init(,Pla2:Planning,1,BRW10)        ! Initialize the browse locator using  using key: Pla2:Planning_K , Pla2:Planning
-  BRW10.SetFilter('((Pla2:Planning <<> Loc:DatumTMSQL))')  ! Apply filter expression to browse
-  ?List:3{PROP:IconList,1} = '~off.ico'
-  ?List:3{PROP:IconList,2} = '~on.ico'
-  BRW10.AddField(Pla2:ArtikelID,BRW10.Q.Pla2:ArtikelID)    ! Field Pla2:ArtikelID is a hot field or requires assignment from browse
-  BRW10.AddField(AArt:ArtikelOms,BRW10.Q.AArt:ArtikelOms)  ! Field AArt:ArtikelOms is a hot field or requires assignment from browse
-  BRW10.AddField(Ink:Planning_DATE,BRW10.Q.Ink:Planning_DATE) ! Field Ink:Planning_DATE is a hot field or requires assignment from browse
-  BRW10.AddField(Ink:Planning_TIME,BRW10.Q.Ink:Planning_TIME) ! Field Ink:Planning_TIME is a hot field or requires assignment from browse
-  BRW10.AddField(AAPla:KG,BRW10.Q.AAPla:KG)                ! Field AAPla:KG is a hot field or requires assignment from browse
-  BRW10.AddField(AAPla:Pallets,BRW10.Q.AAPla:Pallets)      ! Field AAPla:Pallets is a hot field or requires assignment from browse
-  BRW10.AddField(LOC:Getransferd,BRW10.Q.LOC:Getransferd)  ! Field LOC:Getransferd is a hot field or requires assignment from browse
-  BRW10.AddField(AAPla:MutatieGemaakt,BRW10.Q.AAPla:MutatieGemaakt) ! Field AAPla:MutatieGemaakt is a hot field or requires assignment from browse
-  BRW10.AddField(AAAACEL:CelOms,BRW10.Q.AAAACEL:CelOms)    ! Field AAAACEL:CelOms is a hot field or requires assignment from browse
-  BRW10.AddField(Pla2:FirmaNaam,BRW10.Q.Pla2:FirmaNaam)    ! Field Pla2:FirmaNaam is a hot field or requires assignment from browse
-  BRW10.AddField(Pla2:PlanningID,BRW10.Q.Pla2:PlanningID)  ! Field Pla2:PlanningID is a hot field or requires assignment from browse
-  BRW10.AddField(Pla2:Planning,BRW10.Q.Pla2:Planning)      ! Field Pla2:Planning is a hot field or requires assignment from browse
-  INIMgr.Fetch('UpdateTransfers',QuickWindow)              ! Restore window settings from non-volatile store
+  INIMgr.Fetch('BrowseTransfers',QuickWindow)              ! Restore window settings from non-volatile store
   Resizer.Resize                                           ! Reset required after window size altered by INI manager
-  BRW4.AddToolbarTarget(Toolbar)                           ! Browse accepts toolbar control
-  BRW8.AddToolbarTarget(Toolbar)                           ! Browse accepts toolbar control
-  BRW10.AddToolbarTarget(Toolbar)                          ! Browse accepts toolbar control
+  BRW1.AskProcedure = 1                                    ! Will call: UpdateTransfers(LOC:Datum)
   SELF.SetAlerts()
   NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
   NetLocalRefreshTime = clock()
-  EnterByTabManager.ExcludeControl(?Cancel)
-  EnterByTabManager.ExcludeControl(?OK)
   EnterByTabManager.Init(False)
   RETURN ReturnValue
 
@@ -479,28 +428,19 @@ ReturnValue          BYTE,AUTO
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
-    Relate:AOverboekingRit.Close
-    Relate:AOverboekingRitRegel.Close
-    Relate:APlanning.Close
+    Relate:ACel.Close
+    Relate:Cel.Close
     Relate:OverboekingRit.Close
+    Relate:Partij.Close
+    Relate:Planning.Close
     Relate:PlanningInkoop.Close
+    Relate:Sjabloon.Close
+    Relate:ViewArtikel.Close
   END
   IF SELF.Opened
-    INIMgr.Update('UpdateTransfers',QuickWindow)           ! Save window data to non-volatile store
+    INIMgr.Update('BrowseTransfers',QuickWindow)           ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
-  RETURN ReturnValue
-
-
-ThisWindow.PrimeUpdate PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  ReturnValue = PARENT.PrimeUpdate()
-    If returnValue = Level:Fatal  ! delete just occured
-      ThisNetRefresh.Send('|OverboekingRit|OverboekingRitRegel|APlanning|PlanningInkoop|') ! NetTalk (NetRefresh)
-    End
   RETURN ReturnValue
 
 
@@ -514,14 +454,18 @@ ThisWindow.Reset PROCEDURE(BYTE Force=0)
   PARENT.Reset(Force)
 
 
-ThisWindow.Run PROCEDURE
+ThisWindow.Run PROCEDURE(USHORT Number,BYTE Request)
 
 ReturnValue          BYTE,AUTO
 
   CODE
-  ReturnValue = PARENT.Run()
-  IF SELF.Request = ViewRecord                             ! In View Only mode always signal RequestCancelled
-    ReturnValue = RequestCancelled
+  ReturnValue = PARENT.Run(Number,Request)
+  IF SELF.Request = ViewRecord
+    ReturnValue = RequestCancelled                         ! Always return RequestCancelled if the form was opened in ViewRecord mode
+  ELSE
+    GlobalRequest = Request
+    UpdateTransfers(LOC:Datum)
+    ReturnValue = GlobalResponse
   END
   RETURN ReturnValue
 
@@ -540,145 +484,19 @@ Looped BYTE
     END
   ReturnValue = PARENT.TakeAccepted()
     CASE ACCEPTED()
-    OF ?DeselecterenButton
+    OF ?Excel
       ThisWindow.Update()
-      DO ConvertDatum
-      Get(BRW4.Q,Choice(?List))
-      
-      found# = 0
-      
-      CLEAR(AORR:Record)
-      AORR:OverboekingRitRegelID=BRW4.Q.ORR:OverboekingRitRegelID
-      IF (Access:AOverboekingRitRegel.TryFetch(AORR:PK_OverboekingRitRegel) = Level:Benign)
-      	Access:AOverboekingRitRegel.DeleteRecord(0)
-      
-      	BRW4.ResetQueue(0)
-      	BRW8.ResetQueue(0)
-      	BRW10.ResetQueue(0)
-      .
-    OF ?SelecterenButton
-      ThisWindow.Update()
-      DO ConvertDatum
-      Get(BRW8.Q,Choice(?List:2))
-      
-      found# = 0
-      
-      db.DebugOut('Selecteren:'&OR:OverboekingRitID)
-      
-      CLEAR(AORR:Record)
-      AORR:OverboekingRitID=OR:OverboekingRitID
-      SET(AORR:FK_OverboekingRitRegel, AORR:FK_OverboekingRitRegel)
-      LOOP
-      	Access:AOverboekingRitRegel.TryNext()
-      	IF ERROR() THEN BREAK.
-      	IF AORR:OverboekingRitID<>OR:OverboekingRitID THEN BREAK.
-      	
-      	IF AORR:PlanningID=BRW8.Q.APla:PlanningID THEN
-      		found# = 1
-      		db.DebugOut('FOUND:'&AORR:PlanningID)
-      	.
-      	db.DebugOut('NOTFOUND:'&AORR:PlanningID)
+      Get(BRW1.Q,Choice(?Browse:1))
+      CLEAR(OR:Record)
+      OR:OverboekingRitID=BRW1.Q.OR:OverboekingRitID
+      IF (Access:OverboekingRit.TryFetch(OR:PK_OverboekingRit) = Level:Benign)
+      	DO ExportExcel
+      ELSE
+      	MESSAGE('Geen overboeking-rit geselecteerd')
       .
       
-      db.DebugOut('FOUND-STATE:'&found#)
-      
-      IF NOT(found#)
-      	CLEAR(AORR:Record)
-      	Access:AOverboekingRitRegel.PrimeRecord()
-      	AORR:OverboekingRitID=OR:OverboekingRitID
-      	AORR:PlanningID=BRW8.Q.APla:PlanningID
-      	Access:AOverboekingRitRegel.TryInsert()
-      
-      	BRW4.ResetQueue(0)
-      	BRW8.ResetQueue(0)
-      	BRW10.ResetQueue(0)
-      .
-    OF ?OK
-      ThisWindow.Update()
-      IF SELF.Request = ViewRecord AND NOT SELF.BatchProcessing THEN
-         POST(EVENT:CloseWindow)
-      END
-    OF ?SelecterenInkoop
-      ThisWindow.Update()
-      DO ConvertDatum
-      
-      Get(BRW10.Q,Choice(?List:3))
-      
-      found# = 0
-      
-      db.DebugOut('Selecteren:'&OR:OverboekingRitID)
-      
-      CLEAR(AORR:Record)
-      AORR:OverboekingRitID=OR:OverboekingRitID
-      SET(AORR:FK_OverboekingRitRegel, AORR:FK_OverboekingRitRegel)
-      LOOP
-      	Access:AOverboekingRitRegel.TryNext()
-      	IF ERROR() THEN BREAK.
-      	IF AORR:OverboekingRitID<>OR:OverboekingRitID THEN BREAK.
-      	
-      	IF AORR:PlanningID=BRW10.Q.Pla2:PlanningID THEN
-      		found# = 1
-      		db.DebugOut('FOUND:'&AORR:PlanningID)
-      	.
-      	db.DebugOut('NOT-FOUND:'&AORR:PlanningID)
-      .
-      
-      db.DebugOut('FOUND-STATE:'&found#)
-      
-      IF NOT(found#)
-      	CLEAR(AORR:Record)
-      	Access:AOverboekingRitRegel.PrimeRecord()
-      	AORR:OverboekingRitID=OR:OverboekingRitID
-      	AORR:PlanningID=BRW10.Q.Pla2:PlanningID
-      	Access:AOverboekingRitRegel.TryInsert()
-      
-      	BRW4.ResetQueue(0)
-      	BRW8.ResetQueue(0)
-      	BRW10.ResetQueue(0)
-      .
+      BRW1.ResetQueue(Reset:Done)
     END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeCompleted PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  ReturnValue = PARENT.TakeCompleted()
-  ! Datum/tijd van de gekoppelde planningen (alleen overboekingen waarvoor nog geen mutatie zijn gemaakt) gelijk zetten aan de uitvoerdatum van de transfer
-  db.Debugout('TakeCompleted() - ' & ThisWindow.Response & ' - RitID: ' & OR:OverboekingRitID)
-  IF ThisWindow.Response = RequestCompleted THEN
-      CLEAR(ORR:Record)
-      ORR:OverboekingRitID = OR:OverboekingRitID
-      SET(ORR:FK_OverboekingRitRegel,ORR:FK_OverboekingRitRegel)
-      LOOP UNTIL Access:OverboekingRitRegel.Next()
-          IF ORR:OverboekingRitID <> OR:OverboekingRitID THEN BREAK.
-          
-          CLEAR(Pla:Record)
-          Pla:PlanningID = ORR:PlanningID
-          IF Access:Planning.Fetch(Pla:PK_Planning) = Level:Benign THEN
-              IF Pla:MutatieGemaakt = 0 AND Pla:VerkoopID = 0 AND Pla:InkoopID = 0  THEN
-                  Pla:Planning_DATE = OR:DatumTijd_DATE
-                  Pla:Planning_TIME = OR:DatumTijd_TIME
-                  Access:Planning.Update()
-              END
-          END
-      END
-  END
-  
-  NetRefreshPlanningViews()
-    ThisNetRefresh.Send('|OverboekingRit|OverboekingRitRegel|APlanning|PlanningInkoop|') ! NetTalk (NetRefresh)
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -728,38 +546,10 @@ Looped BYTE
   ReturnValue = PARENT.TakeFieldEvent()
   CASE FIELD()
   OF ?LOC:Datum
-    CASE EVENT()
-    OF EVENT:Selecting
-      DO ConvertDatum
-      BRW8.ResetQueue(0)
-      BRW10.ResetQueue(0)
-    END
+    DO ConvertDatum
+    BRW1.ResetQueue(Reset:Queue)
+    BRW1.ResetFromView()
   END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeNewSelection PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all NewSelection events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  ReturnValue = PARENT.TakeNewSelection()
-    CASE FIELD()
-    OF ?LOC:Datum
-      DO ConvertDatum
-      BRW8.ResetQueue(0)
-      BRW10.ResetQueue(0)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -799,123 +589,62 @@ Looped BYTE
   RETURN ReturnValue
 
 
+BRW1.Ask PROCEDURE(BYTE Request)
+
+ReturnValue          BYTE,AUTO
+
+  CODE
+  !GET(BRW1.Q, CHOICE(?Browse:1))
+  !IF NOT(ERROR()) THEN
+  !    MESSAGE(BRW1.Q.OR:OverboekingRitID)
+  !END
+  ReturnValue = PARENT.Ask(Request)
+  !BRW1.ResetQueue(Reset:Done)
+  BRW1.ResetQueue(Queue:Browse:1)
+  
+  !LOOP I# = 1 TO RECORDS(BRW1.Q)
+  !    GET(BRW1.Q, I#)
+  !    IF BRW1.Q.OR:OverboekingRitID = LOC:RitID THEN
+  !        ?Browse:1{PROP:Selected
+  !    END
+  !END
+  RETURN ReturnValue
+
+
+BRW1.Init PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
+
+  CODE
+  SELF.SelectControl = ?Select:2
+  SELF.HideSelect = 1                                      ! Hide the select button when disabled
+  PARENT.Init(ListBox,Posit,V,Q,RM,WM)
+  IF WM.Request <> ViewRecord                              ! If called for anything other than ViewMode, make the insert, change & delete controls available
+    SELF.InsertControl=?Insert:4
+    SELF.ChangeControl=?Change:4
+    SELF.DeleteControl=?Delete:4
+  END
+  SELF.ViewControl = ?View:3                               ! Setup the control used to initiate view only mode
+
+
+BRW1.ResetSort PROCEDURE(BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+  CODE
+  IF CHOICE(?CurrentTab) = 2
+    RETURN SELF.SetSort(1,Force)
+  ELSE
+    RETURN SELF.SetSort(2,Force)
+  END
+  ReturnValue = PARENT.ResetSort(Force)
+  RETURN ReturnValue
+
+
 Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
 
 
   CODE
   PARENT.Init(AppStrategy,SetWindowMinSize,SetWindowMaxSize)
   SELF.SetParentDefaults()                                 ! Calculate default control parent-child relationships based upon their positions on the window
-
-
-BRW4.ResetQueue PROCEDURE(BYTE ResetMode)
-
-  CODE
-  IF Pla:OverboekingCelID<>0 THEN
-  	LOC:Planning_TIME=Pla:Planning_TIME
-  	LOC:Planning_DATE=Pla:Planning_DATE
-  	LOC:PlanningSoort='OVR'
-  ELSE
-  	LOC:Planning_TIME=AInk:Planning_TIME
-  	LOC:Planning_DATE=AInk:Planning_DATE
-  	LOC:PlanningSoort='INK'
-  .
-  PARENT.ResetQueue(ResetMode)
-
-
-BRW4.SetQueueRecord PROCEDURE
-
-  CODE
-  PARENT.SetQueueRecord
-  
-  IF (Pla:MutatieGemaakt)
-    SELF.Q.Pla:MutatieGemaakt_Icon = 2                     ! Set icon from icon list
-  ELSE
-    SELF.Q.Pla:MutatieGemaakt_Icon = 1                     ! Set icon from icon list
-  END
-
-
-BRW4.ValidateRecord PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-BRW4::RecordStatus   BYTE,AUTO
-  CODE
-  IF Pla:OverboekingCelID<>0 THEN
-  	LOC:Planning_TIME=Pla:Planning_TIME
-  	LOC:Planning_DATE=Pla:Planning_DATE
-  	LOC:PlanningSoort='OVR'
-  ELSE
-  	LOC:Planning_TIME=AInk:Planning_TIME
-  	LOC:Planning_DATE=AInk:Planning_DATE
-  	LOC:PlanningSoort='INK'
-  .
-  ReturnValue = PARENT.ValidateRecord()
-  BRW4::RecordStatus=ReturnValue
-  RETURN ReturnValue
-
-
-BRW8.SetQueueRecord PROCEDURE
-
-  CODE
-  LOC:Getransferd = 0
-  
-  CLEAR(ORR:Record)
-  ORR:PlanningID=APla:PlanningID
-  SET(ORR:FK2_OverboekingRitRegel, ORR:FK2_OverboekingRitRegel)
-  LOOP
-  	Access:OverboekingRitRegel.Next()
-  	IF ERROR() THEN BREAK.
-  	IF ORR:PlanningID<>APla:PlanningID THEN BREAK.
-  	
-  	CLEAR(AOR:RECORD)
-  	AOR:OverboekingRitID=ORR:OverboekingRitID
-  	IF (Access:AOverboekingRit.TryFetch(AOR:PK_OverboekingRit) <> Level:Benign) THEN CYCLE.
-  	
-  	LOC:Getransferd = 1
-  .
-  PARENT.SetQueueRecord
-  
-  IF (LOC:Getransferd)
-    SELF.Q.LOC:Getransferd_Icon = 2                        ! Set icon from icon list
-  ELSE
-    SELF.Q.LOC:Getransferd_Icon = 1                        ! Set icon from icon list
-  END
-  IF (APla:MutatieGemaakt)
-    SELF.Q.APla:MutatieGemaakt_Icon = 2                    ! Set icon from icon list
-  ELSE
-    SELF.Q.APla:MutatieGemaakt_Icon = 1                    ! Set icon from icon list
-  END
-
-
-BRW10.SetQueueRecord PROCEDURE
-
-  CODE
-  LOC:Getransferd = 0
-  
-  CLEAR(ORR:Record)
-  ORR:PlanningID=Pla2:PlanningID
-  SET(ORR:FK2_OverboekingRitRegel, ORR:FK2_OverboekingRitRegel)
-  LOOP
-  	Access:OverboekingRitRegel.Next()
-  	IF ERROR() THEN BREAK.
-  	IF ORR:PlanningID<>Pla2:PlanningID THEN BREAK.
-  	
-  	CLEAR(AOR:RECORD)
-  	AOR:OverboekingRitID=ORR:OverboekingRitID
-  	IF (Access:AOverboekingRit.TryFetch(AOR:PK_OverboekingRit) <> Level:Benign) THEN CYCLE.
-  	
-  	LOC:Getransferd = 1
-  .
-  PARENT.SetQueueRecord
-  
-  IF (LOC:Getransferd)
-    SELF.Q.LOC:Getransferd_Icon = 2                        ! Set icon from icon list
-  ELSE
-    SELF.Q.LOC:Getransferd_Icon = 1                        ! Set icon from icon list
-  END
-  IF (AAPla:MutatieGemaakt)
-    SELF.Q.AAPla:MutatieGemaakt_Icon = 2                   ! Set icon from icon list
-  ELSE
-    SELF.Q.AAPla:MutatieGemaakt_Icon = 1                   ! Set icon from icon list
-  END
+  SELF.SetStrategy(?LOC:Datum:Prompt, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?LOC:Datum:Prompt
+  SELF.SetStrategy(?LOC:Datum, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?LOC:Datum
 

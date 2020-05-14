@@ -118,14 +118,14 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?OK
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:InslagKG,8)
   SELF.AddHistoryField(?Mut:InslagPallet,9)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Cel.SetOpenRelated()
   Relate:Cel.Open                                          ! File Cel used by this procedure, so make sure it's RelationManager is open

@@ -33,6 +33,8 @@ event:WinEventTaskbarLoadIcon equate(0500h+5510)
  Include('Debuger.INC'),once
   include('cwsynchc.inc'),once  ! added by NetTalk
   include('StringTheory.Inc'),ONCE
+  INCLUDE('UltimateDebug.INC'),ONCE
+  INCLUDE('UltimateDebugProcedureTracker.INC'),ONCE
    Include('EventEqu.Clw'),Once
 
    MAP
@@ -102,15 +104,33 @@ ReportPalletBladMeerdere_WERKTNIET PROCEDURE(LONG)   !
      END
      MODULE('VOORRRPT022.CLW')
 ReportPalletBlad       PROCEDURE(LONG)   !
+     END
+     MODULE('VOORRRPT023.CLW')
 WindowPalletbladExport PROCEDURE   !Process the Mutatie File
+     END
+     MODULE('VOORRRPT024.CLW')
 ReportVerkoopBevestiging PROCEDURE(LONG)   !
+     END
+     MODULE('VOORRRPT025.CLW')
 ReportMutaties         PROCEDURE   !
+     END
+     MODULE('VOORRRPT026.CLW')
 ReportActieAfwijkingen PROCEDURE   !
+     END
+     MODULE('VOORRRPT027.CLW')
 ReportInkoopBevestiging PROCEDURE(LONG)   !
+     END
+     MODULE('VOORRRPT028.CLW')
 ReportSSOPRegistraties PROCEDURE   !
+     END
+     MODULE('VOORRRPT029.CLW')
 ReportVrdCelLocatie    PROCEDURE(LONG, QUEUE)   !Export naar Excel van Cel Voorraad Locatie
+     END
+     MODULE('VOORRRPT030.CLW')
 ExportVerkoop          PROCEDURE(LONG, LONG)   !
-ReportPackLijst        PROCEDURE(LONG)   !Proform Packinglist en Seaway bill
+     END
+     MODULE('VOORRRPT031.CLW')
+ReportPackLijst        PROCEDURE(LONG pVerkoopID,LONG pWelke,String pLayout,<Byte pExcel>)   !Proform Packinglist en Seaway bill
      END
      include('eventmap.clw')
        MODULE('win32')
@@ -145,6 +165,10 @@ ReportPackLijst        PROCEDURE(LONG)   !Proform Packinglist en Seaway bill
      !EventFunc procedure(*SHORT Reference,SIGNED OleControl,LONG CurrentEvent),LONG
      !PropChange PROCEDURE(SIGNED OleControl,STRING CurrentProp)
      !PropEdit   PROCEDURE(SIGNED OleControl,STRING CurrentProp),LONG
+
+DebugABCGlobalInformation_VoorrRpt PROCEDURE()                                           ! DEBUG Prototype
+DebugABCGlobalVariables_VoorrRpt PROCEDURE()                                             ! DEBUG Prototype
+
     ! Declare functions defined in this DLL
 VoorrRpt:Init          PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>)
 VoorrRpt:Kill          PROCEDURE
@@ -310,6 +334,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -437,6 +463,8 @@ UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate70
 UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
 UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
                             END                            !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -567,6 +595,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1302,6 +1335,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1515,6 +1553,8 @@ UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate70
 UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
 UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
                             END                            !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -1609,6 +1649,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1617,6 +1662,9 @@ NieuwPallets                LONG                           !
 db Debuger
 WE::MustClose       long,external,dll
 WE::CantCloseNow    long,external,dll
+UD         CLASS(UltimateDebug)  
+                     END
+ 
 include('GlobalClassDef.inc')
 include('ExcelExportClassDef.inc')
 include('ClassPackLijstDef.inc')
@@ -1857,6 +1905,30 @@ VoorrRpt:Kill_Called    BYTE,STATIC
   ELSE
      VoorrRpt:Kill_Called = True
   END
+ 
+!BOE: DEBUG Global
+DebugABCGlobalInformation_VoorrRpt PROCEDURE()
+
+udpt            UltimateDebugProcedureTracker
+                     
+  CODE
+  
+  udpt.Init(UD,'DebugABCGlobalInformation_VoorrRpt')
+  
+ 
+  RETURN
+
+DebugABCGlobalVariables_VoorrRpt PROCEDURE()
+
+udpt            UltimateDebugProcedureTracker
+
+  CODE
+  
+  udpt.Init(UD,'DebugABCGlobalVariables_VoorrRpt')
+  
+  RETURN
+!EOE: DEBUG Global
+
   
 
 DLLInitializer.Destruct PROCEDURE

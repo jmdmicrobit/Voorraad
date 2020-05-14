@@ -19,7 +19,8 @@ Verpakking
 [KEY]
 Ver:Verpakking_PK
 [PROMPTS]
-%ButtonAction DEPEND %Control DEFAULT TIMES 5
+%ButtonAction DEPEND %Control DEFAULT TIMES 6
+WHEN  ('') ('No Special Action')
 WHEN  ('?Change:3') ('No Special Action')
 WHEN  ('?Close') ('No Special Action')
 WHEN  ('?Delete:3') ('No Special Action')
@@ -38,7 +39,8 @@ WHEN  ('?SamenVoegen') (WindowVerpakkingSamenvoegen)
 %ButtonThread DEPEND %Control LONG TIMES 1
 WHEN  ('?SamenVoegen') (0)
 
-%ButtonThreadStack DEPEND %Control DEFAULT TIMES 5
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 6
+WHEN  ('') ('25000')
 WHEN  ('?Change:3') ('25000')
 WHEN  ('?Close') ('25000')
 WHEN  ('?Delete:3') ('25000')
@@ -48,7 +50,8 @@ WHEN  ('?SamenVoegen') ('25000')
 %ButtonParameters DEPEND %Control DEFAULT TIMES 1
 WHEN  ('?SamenVoegen') ('')
 
-%ButtonRequest DEPEND %Control DEFAULT TIMES 5
+%ButtonRequest DEPEND %Control DEFAULT TIMES 6
+WHEN  ('') ('None')
 WHEN  ('?Change:3') ('None')
 WHEN  ('?Close') ('None')
 WHEN  ('?Delete:3') ('None')
@@ -266,7 +269,8 @@ WHEN  ('WindowToolbar')TIMES 0
 
 %ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
 
-%ExtUITabStyle DEPEND %Control DEFAULT TIMES 2
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('Default')
 WHEN  ('?CurrentTab') ('Default')
 WHEN  ('?SamenVoegen') ('Default')
 
@@ -286,7 +290,8 @@ WHEN  ('?SamenVoegen') ()
 
 %PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
 
-%PostLookupDuringValidate DEPEND %Control LONG TIMES 1
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 2
+WHEN  ('') (1)
 WHEN  ('?SamenVoegen') (1)
 
 %LookupAssign DEPEND %Control MULTI LONG TIMES 0
@@ -305,14 +310,16 @@ WHEN  ('?SamenVoegen') (1)
 
 %CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
 
-%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 1
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
 WHEN  ('?SamenVoegen')TIMES 0
 
 %CheckedEnables DEPEND %Control MULTI LONG TIMES 0
 
 %CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
 
-%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 1
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
 WHEN  ('?SamenVoegen')TIMES 0
 
 %UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
@@ -325,54 +332,65 @@ WHEN  ('?SamenVoegen')TIMES 0
 
 %UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
 
-%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 1
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
 WHEN  ('?SamenVoegen')TIMES 0
 
 %UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
 
 %UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
 
-%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 1
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
 WHEN  ('?SamenVoegen')TIMES 0
 
 %CheckedDisables DEPEND %Control MULTI LONG TIMES 0
 
 %CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
 
-%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 1
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
 WHEN  ('?SamenVoegen')TIMES 0
 
 %UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
 
 %UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
 
-%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 1
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
 WHEN  ('?SamenVoegen')TIMES 0
 
 %ProcedureOneInstance LONG  (0)
-%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Off')
 WHEN  ('?SamenVoegen') ('Off')
 
-%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('')
 WHEN  ('?SamenVoegen') ('')
 
-%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
 WHEN  ('?SamenVoegen') (0)
 
-%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 2
+WHEN  ('') (-1)
 WHEN  ('?SamenVoegen') (-1)
 
 %FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
 WHEN  ('?SamenVoegen') (0)
 
-%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+%FieldGradientColorTo DEPEND %Control LONG TIMES 2
+WHEN  ('') (-1)
 WHEN  ('?SamenVoegen') (-1)
 
 %FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
 WHEN  ('?SamenVoegen') (0)
 
 %PreserveVarsLoc MULTI LONG  ()
@@ -380,13 +398,16 @@ WHEN  ('?SamenVoegen') (0)
 
 %ActiveImageEnable DEPEND %Control LONG TIMES 0
 
-%AIObjectName DEPEND %Control DEFAULT TIMES 1
+%AIObjectName DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('AIBtn0')
 WHEN  ('?SamenVoegen') ('AIBtn8')
 
-%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+%AIEnableMimicControl DEPEND %Control LONG TIMES 2
+WHEN  ('') (1)
 WHEN  ('?SamenVoegen') (1)
 
-%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+%AIMimicControl DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('?Browse:1')
 WHEN  ('?SamenVoegen') ('?Browse:1')
 
 %AIImgRound DEPEND %Control LONG TIMES 0
@@ -395,28 +416,32 @@ WHEN  ('?SamenVoegen') ('?Browse:1')
 
 %AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
 WHEN  ('?SamenVoegen') (0)
 
 %AIDisableImg DEPEND %Control DEFAULT TIMES 0
 
 %AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
 WHEN  ('?SamenVoegen') (0)
 
 %AIHotImg DEPEND %Control DEFAULT TIMES 0
 
 %AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
 WHEN  ('?SamenVoegen') (0)
 
 %AIPressedImg DEPEND %Control DEFAULT TIMES 0
 
 %AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
 WHEN  ('?SamenVoegen') (0)
 
 [EMBED]
@@ -720,31 +745,41 @@ WHEN  ('Locator0')TIMES 0
 %HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
 
 %UseSameColorForAll LONG  (0)
-%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
@@ -754,57 +789,81 @@ WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
 %ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
 
-%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 0
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
-%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 0
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
-%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 0
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
-%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 0
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
-%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
@@ -848,19 +907,25 @@ WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 %ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
 
 %UseSameStyleForAll LONG  (0)
-%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Local List')
 WHEN  ('Ver:VerpakkingID') ('Local List')
 WHEN  ('Ver:VerpakkingOmschrijving') ('Local List')
 
-%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('')
 WHEN  ('Ver:VerpakkingID') ('')
@@ -868,13 +933,17 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('')
 
 %GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
-%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Local List')
 WHEN  ('Ver:VerpakkingID') ('Local List')
 WHEN  ('Ver:VerpakkingOmschrijving') ('Local List')
 
-%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('')
 WHEN  ('Ver:VerpakkingID') ('')
@@ -882,13 +951,17 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('')
 
 %GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
-%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Local List')
 WHEN  ('Ver:VerpakkingID') ('Local List')
 WHEN  ('Ver:VerpakkingOmschrijving') ('Local List')
 
-%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('')
 WHEN  ('Ver:VerpakkingID') ('')
@@ -900,9 +973,13 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('')
 
 %StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
 
-%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 0
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
-%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 0
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
 
@@ -946,19 +1023,25 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('')
 %EnableSortHeader LONG  (0)
 %ControlFieldSortHeaderSave LONG  (0)
 %ControlFieldSortHeaderMulti LONG  (1)
-%ControlFieldSortHeaderOnlyAsc DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlFieldSortHeaderOnlyAsc DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%ControlFieldSortHeaderOverride DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlFieldSortHeaderOverride DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%ControlFieldSortHeaderDisableColumn DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%ControlFieldSortHeaderDisableColumn DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
@@ -968,9 +1051,13 @@ WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
 %ControlFieldSortHeaderField DEPEND %ControlFieldSortHeaderFields FIELD TIMES 0
 
-%ControlFieldSortHeaderFieldOrder DEPEND %ControlFieldSortHeaderFields DEFAULT TIMES 0
+%ControlFieldSortHeaderFieldOrder DEPEND %ControlFieldSortHeaderFields DEFAULT TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
-%ControlFieldSortHeaderFieldCase DEPEND %ControlFieldSortHeaderFields LONG TIMES 0
+%ControlFieldSortHeaderFieldCase DEPEND %ControlFieldSortHeaderFields LONG TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
 %DisableAutoSizeColumn LONG  (0)
 %DisableListFormatManager LONG  (0)
@@ -1155,13 +1242,17 @@ WHEN  ('EIP_Ver:VerpakkingOmschrijving')TIMES 0
 
 %PrimedValue DEPEND %PrimingFields DEFAULT TIMES 0
 
-%AllowEIPExt DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%AllowEIPExt DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (1)
 WHEN  ('Ver:VerpakkingID') (1)
 WHEN  ('Ver:VerpakkingOmschrijving') (1)
 
-%EditInPlaceTypeExt DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceTypeExt DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Entry')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Entry')
 WHEN  ('Ver:VerpakkingID') ('Entry')
@@ -1169,37 +1260,49 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('Entry')
 
 %EditInPlaceFEQTitle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
-%EditInPlaceFEQJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Default')
 WHEN  ('Ver:VerpakkingID') ('Default')
 WHEN  ('Ver:VerpakkingOmschrijving') ('Default')
 
-%EditInPlaceFEQOffset DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQOffset DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('0')
 WHEN  ('Ver:VerpakkingID') ('0')
 WHEN  ('Ver:VerpakkingOmschrijving') ('0')
 
-%EditInPlaceFEQTransparent DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQTransparent DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%EditInPlaceFEQReadOnly DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQReadOnly DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%EditInPlaceFEQRequired DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQRequired DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%EditInPlaceFEQDataSource DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQDataSource DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Fixed')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Fixed')
 WHEN  ('Ver:VerpakkingID') ('Fixed')
@@ -1209,7 +1312,9 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('Fixed')
 
 %EditInPlaceFEQFixedDataSourceValue DEPEND %EditInPlaceFEQFixedDataSource DEFAULT TIMES 0
 
-%EditInPlaceFEQFixedDataSourceSelected DEPEND %EditInPlaceFEQFixedDataSource LONG TIMES 0
+%EditInPlaceFEQFixedDataSourceSelected DEPEND %EditInPlaceFEQFixedDataSource LONG TIMES 1
+WHEN  ('')TIMES 1
+WHEN  ('')TIMES 0
 
 %EditInPlaceFEQQueueDataSourceQN DEPEND %Control DEPEND %ControlField FIELD TIMES 0
 
@@ -1217,7 +1322,9 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('Fixed')
 
 %EditInPlaceFEQQueueDataSourceS DEPEND %Control DEPEND %ControlField FIELD TIMES 0
 
-%EditInPlaceFEQAutoSerializeField DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQAutoSerializeField DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
@@ -1227,19 +1334,25 @@ WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
 %ReturnToOriginalDir DEPEND %Control DEPEND %ControlField LONG TIMES 0
 
-%AllowLongFilenames DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%AllowLongFilenames DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (1)
 WHEN  ('Ver:VerpakkingID') (1)
 WHEN  ('Ver:VerpakkingOmschrijving') (1)
 
-%DOSFileDialogType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%DOSFileDialogType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Open')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Open')
 WHEN  ('Ver:VerpakkingID') ('Open')
 WHEN  ('Ver:VerpakkingOmschrijving') ('Open')
 
-%AllowNoError DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%AllowNoError DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
@@ -1247,13 +1360,17 @@ WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
 %AllowMultiSelect DEPEND %Control DEPEND %ControlField LONG TIMES 0
 
-%DOSMaskDesc DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%DOSMaskDesc DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('All Files')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('All Files')
 WHEN  ('Ver:VerpakkingID') ('All Files')
 WHEN  ('Ver:VerpakkingOmschrijving') ('All Files')
 
-%DOSMask DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%DOSMask DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('*.*')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('*.*')
 WHEN  ('Ver:VerpakkingID') ('*.*')
@@ -1265,25 +1382,33 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('*.*')
 
 %DOSMoreMask DEPEND %DOSMoreMasks DEFAULT TIMES 0
 
-%EditInPlaceFEQForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%EditInPlaceFEQBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%EditInPlaceFEQForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
 WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
-%EditInPlaceFEQBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (-1)
 WHEN  ('Ver:VerpakkingID') (-1)
@@ -1297,49 +1422,65 @@ WHEN  ('Ver:VerpakkingOmschrijving') (-1)
 
 %EditInPlaceFEQListFormat DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
-%EditInPlaceFEQDrop DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQDrop DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('0')
 WHEN  ('Ver:VerpakkingID') ('0')
 WHEN  ('Ver:VerpakkingOmschrijving') ('0')
 
-%EditInPlaceFEQWidth DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQWidth DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('0')
 WHEN  ('Ver:VerpakkingID') ('0')
 WHEN  ('Ver:VerpakkingOmschrijving') ('0')
 
-%EditInPlaceFEQCase DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQCase DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Default')
 WHEN  ('Ver:VerpakkingID') ('Default')
 WHEN  ('Ver:VerpakkingOmschrijving') ('Default')
 
-%EditInPlaceFEQFlat DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQFlat DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%EditInPlaceFEQHorizontal DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQHorizontal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%EditInPlaceFEQVertical DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQVertical DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%EditInPlaceFEQImmediate DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQImmediate DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%EditInPlaceFEQEntryCompletion DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQEntryCompletion DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
@@ -1353,7 +1494,9 @@ WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
 %EditInPlaceFEQFixedDataSourceText DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
-%EditInPlaceFEQCheckJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQCheckJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Default')
 WHEN  ('Ver:VerpakkingID') ('Default')
@@ -1367,37 +1510,49 @@ WHEN  ('Ver:VerpakkingOmschrijving') ('Default')
 
 %EditInPlaceFEQFalseLabel DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
-%EditInPlaceFEQEntryMode DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQEntryMode DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Default')
 WHEN  ('Ver:VerpakkingID') ('Default')
 WHEN  ('Ver:VerpakkingOmschrijving') ('Default')
 
-%EditInPlaceFEQLower DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQLower DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('0')
 WHEN  ('Ver:VerpakkingID') ('0')
 WHEN  ('Ver:VerpakkingOmschrijving') ('0')
 
-%EditInPlaceFEQUpper DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQUpper DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('0')
 WHEN  ('Ver:VerpakkingID') ('0')
 WHEN  ('Ver:VerpakkingOmschrijving') ('0')
 
-%EditInPlaceFEQStep DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%EditInPlaceFEQStep DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('0')
 WHEN  ('Ver:VerpakkingID') ('0')
 WHEN  ('Ver:VerpakkingOmschrijving') ('0')
 
-%EditInPlaceFEQPassword DEPEND %Control DEPEND %ControlField LONG TIMES 1
+%EditInPlaceFEQPassword DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') (0)
 WHEN  ('Ver:VerpakkingID') (0)
 WHEN  ('Ver:VerpakkingOmschrijving') (0)
 
-%LookupType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
+%LookupType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('')TIMES 1
+WHEN  ('') ('Related Field')
 WHEN  ('?Browse:1')TIMES 3
 WHEN  ('Ver:InhoudKG') ('Related Field')
 WHEN  ('Ver:VerpakkingID') ('Related Field')

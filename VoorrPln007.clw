@@ -37,6 +37,7 @@ LOC:CurrentKlant     LONG                                  !
 LOC:TimingMeting     LONG,DIM(10)                          ! 
 Loc:True             BYTE                                  ! 
 Loc:ExportBestand    CSTRING(256)                          ! 
+Loc:Firmanaam3       STRING(50)                            ! 
 BRW1::View:Browse    VIEW(Verkoop)
                        PROJECT(Ver2:VerkoopID)
                        PROJECT(Ver2:Planning_DATE)
@@ -45,8 +46,9 @@ BRW1::View:Browse    VIEW(Verkoop)
                        PROJECT(Ver2:Klant)
                        PROJECT(Ver2:Exported)
                        PROJECT(Ver2:Planning)
-                       JOIN(AAARel:Relatie_PK)
+                       JOIN(AAARel:Relatie_PK,Ver2:Klant)
                          PROJECT(AAARel:FirmaNaam)
+                         PROJECT(AAARel:RelatieID)
                        END
                      END
 Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?Browse:1
@@ -84,6 +86,7 @@ LOC:Artikelen_SelectedBG LONG                         !Selected background color
 Ver2:Klant             LIKE(Ver2:Klant)               !Browse hot field - type derived from field
 Ver2:Exported          LIKE(Ver2:Exported)            !Browse hot field - type derived from field
 Ver2:Planning          LIKE(Ver2:Planning)            !Browse key field - type derived from field
+AAARel:RelatieID       LIKE(AAARel:RelatieID)         !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -159,8 +162,8 @@ QuickWindow          WINDOW('Verkoop'),AT(,,667,217),FONT('MS Sans Serif',8,,,CH
                          TAB('&7) Gefactureerde verkopen'),USE(?TAB5)
                          END
                          TAB('&8) Gefactureerde verkopen per klant'),USE(?TAB6)
-                           COMBO(@s50),AT(292,39,223,13),USE(AREL:FirmaNaam),DROP(25),FORMAT('200L(2)|M~Firma Naam' & |
-  '~L(0)@s50@'),FROM(Queue:FileDropCombo:2),IMM
+                           COMBO(@s50),AT(292,39,223,13),USE(Loc:Firmanaam3),DROP(25),FORMAT('200L(2)|M~Firma Naam' & |
+  '~L(0)@s50@'),FROM(Queue:FileDropCombo:2)
                          END
                        END
                        BUTTON('&Sluiten'),AT(614,201,49,14),USE(?Close),LEFT,ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'), |
@@ -175,8 +178,7 @@ QuickWindow          WINDOW('Verkoop'),AT(,,667,217),FONT('MS Sans Serif',8,,,CH
                        BUTTON,AT(629,38,26,14),USE(?Terug),ICON(ICON:VCRback),TIP('Terug naar verwerkt')
                        BUTTON('Export naar Excel'),AT(145,198,71,15),USE(?Export)
                        BUTTON('XML naar Exact Invoice'),AT(219,199,83,14),USE(?XmlInvoice)
-                       BUTTON('PackLijst'),AT(307,199),USE(?PackLijst)
-                       BUTTON('PackLijst gegevens'),AT(355,199),USE(?ExportData)
+                       BUTTON('PackLijst gegevens'),AT(305,199),USE(?ExportData)
                      END
 
     omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
@@ -271,9 +273,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:Leverancier2',LOC:Leverancier2)                ! Added by: BrowseBox(ABC)
   BIND('Ver2:VerkoopID',Ver2:VerkoopID)                    ! Added by: BrowseBox(ABC)
   BIND('LOC:Artikelen',LOC:Artikelen)                      ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -334,6 +336,7 @@ ReturnValue          BYTE,AUTO
   BRW1.AddField(Ver2:Klant,BRW1.Q.Ver2:Klant)              ! Field Ver2:Klant is a hot field or requires assignment from browse
   BRW1.AddField(Ver2:Exported,BRW1.Q.Ver2:Exported)        ! Field Ver2:Exported is a hot field or requires assignment from browse
   BRW1.AddField(Ver2:Planning,BRW1.Q.Ver2:Planning)        ! Field Ver2:Planning is a hot field or requires assignment from browse
+  BRW1.AddField(AAARel:RelatieID,BRW1.Q.AAARel:RelatieID)  ! Field AAARel:RelatieID is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
   INIMgr.Fetch('BrowseVerkoop',QuickWindow)                ! Restore window settings from non-volatile store
@@ -359,7 +362,7 @@ ReturnValue          BYTE,AUTO
   FDCB2.AddUpdateField(AARel:RelatieID,Loc:Leverancier2)
   ThisWindow.AddItem(FDCB2.WindowComponent)
   FDCB2.DefaultFill = 0
-  FDCB9.Init(AREL:FirmaNaam,?AREL:FirmaNaam,Queue:FileDropCombo:2.ViewPosition,FDCB9::View:FileDropCombo,Queue:FileDropCombo:2,Relate:ARelatie,ThisWindow,GlobalErrors,0,1,0)
+  FDCB9.Init(Loc:Firmanaam3,?Loc:Firmanaam3,Queue:FileDropCombo:2.ViewPosition,FDCB9::View:FileDropCombo,Queue:FileDropCombo:2,Relate:ARelatie,ThisWindow,GlobalErrors,0,1,0)
   FDCB9.EntryCompletion = FALSE
   FDCB9.Q &= Queue:FileDropCombo:2
   FDCB9.AddSortOrder(AREL:Relatie_FK01)
@@ -632,10 +635,6 @@ Looped BYTE
     OF ?XmlInvoice
       ThisWindow.Update()
       ExportInvoiceXML(Ver:Record,,'Invoice')
-      ThisWindow.Reset
-    OF ?PackLijst
-      ThisWindow.Update()
-      ReportPackLijst(Ver2:VerkoopID)
       ThisWindow.Reset
     OF ?ExportData
       ThisWindow.Update()
@@ -1016,7 +1015,6 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   SELF.SetStrategy(?KOPIEER, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?KOPIEER
   SELF.SetStrategy(?SJABLOON:2, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?SJABLOON:2
   SELF.SetStrategy(?RefreshButton, Resize:FixRight+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?RefreshButton
-  SELF.SetStrategy(?PackLijst, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?PackLijst
   SELF.SetStrategy(?ExportData, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?ExportData
 
 

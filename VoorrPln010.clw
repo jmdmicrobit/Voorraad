@@ -66,6 +66,7 @@ BRW7::View:Browse    VIEW(Planning)
                        PROJECT(Pla:PlanningID)
                        PROJECT(Pla:VerkoopID)
                        PROJECT(Pla:VerpakkingID)
+                       PROJECT(Pla:CelID)
                        JOIN(Art:Artikel_PK,Pla:ArtikelID)
                          PROJECT(Art:ArtikelOms)
                          PROJECT(Art:ArtikelID)
@@ -74,8 +75,9 @@ BRW7::View:Browse    VIEW(Planning)
                          PROJECT(Ver:VerpakkingOmschrijving)
                          PROJECT(Ver:VerpakkingID)
                        END
-                       JOIN(CEL:CEL_PK)
+                       JOIN(CEL:CEL_PK,Pla:CelID)
                          PROJECT(CEL:CelOms)
+                         PROJECT(CEL:CelID)
                        END
                      END
 Queue:Browse         QUEUE                            !Queue declaration for browse/combo box using ?List
@@ -172,6 +174,7 @@ Pla:PlanningID         LIKE(Pla:PlanningID)           !Primary key field - type 
 Pla:VerkoopID          LIKE(Pla:VerkoopID)            !Browse key field - type derived from field
 Art:ArtikelID          LIKE(Art:ArtikelID)            !Related join file key field - type derived from field
 Ver:VerpakkingID       LIKE(Ver:VerpakkingID)         !Related join file key field - type derived from field
+CEL:CelID              LIKE(CEL:CelID)                !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -480,9 +483,10 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('Loc:KostKGPrijs',Loc:KostKGPrijs)                  ! Added by: BrowseBox(ABC)
   BIND('Pla:PlanningID',Pla:PlanningID)                    ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Verkoop)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Ver2:Record,History::Ver2:Record)
   SELF.AddHistoryField(?Ver2:Verwerkt,3)
@@ -496,7 +500,6 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Ver2:Transport,9)
   SELF.AddHistoryField(?Ver2:ExtraKostenTekst,12)
   SELF.AddHistoryField(?Ver2:VerkoopID,1)
-  SELF.AddUpdateFile(Access:Verkoop)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AMutatie.Open                                     ! File AMutatie used by this procedure, so make sure it's RelationManager is open
   Relate:APlanning.Open                                    ! File APlanning used by this procedure, so make sure it's RelationManager is open
@@ -654,6 +657,7 @@ ReturnValue          BYTE,AUTO
   BRW7.AddField(Pla:VerkoopID,BRW7.Q.Pla:VerkoopID)        ! Field Pla:VerkoopID is a hot field or requires assignment from browse
   BRW7.AddField(Art:ArtikelID,BRW7.Q.Art:ArtikelID)        ! Field Art:ArtikelID is a hot field or requires assignment from browse
   BRW7.AddField(Ver:VerpakkingID,BRW7.Q.Ver:VerpakkingID)  ! Field Ver:VerpakkingID is a hot field or requires assignment from browse
+  BRW7.AddField(CEL:CelID,BRW7.Q.CEL:CelID)                ! Field CEL:CelID is a hot field or requires assignment from browse
   BRW12.Q &= Queue:Browse:1
   BRW12.AddSortOrder(,Kos:PK_KostenStamgeg)                ! Add the sort order for Kos:PK_KostenStamgeg for sort order 1
   BRW12.AddLocator(BRW12::Sort0:Locator)                   ! Browse has a locator for sort order 1
@@ -776,6 +780,7 @@ ThisWindow.Reset PROCEDURE(BYTE Force=0)
   CODE
   SELF.ForcedReset += Force
   IF QuickWindow{Prop:AcceptAll} THEN RETURN.
+  AAARel:RelatieID = Ver2:Klant                            ! Assign linking field value
   Access:AAARelatie.Fetch(AAARel:Relatie_PK)
     NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
     NetLocalRefreshTime = clock()

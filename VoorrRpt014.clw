@@ -17,6 +17,7 @@
 !!! </summary>
 ReportPalletTegoedenExcel PROCEDURE (BYTE PRM:EnkelTegoedTonen)
 
+udpt            UltimateDebugProcedureTracker
 LOC:PalletSoortID    BYTE                                  ! 
 Progress:Thermometer BYTE                                  ! 
 LOC:Geexporteerd     BYTE                                  ! 
@@ -83,6 +84,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ReportPalletTegoedenExcel','VoorrRpt014.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+             
   GlobalErrors.SetProcedureName('ReportPalletTegoedenExcel')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -99,6 +102,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportPalletTegoedenExcel',ProgressWindow) ! Restore window settings from non-volatile store
   ProgressWindow{Prop:Timer} = 10                          ! Assign timer interval
   ProgressMgr.Init(ScrollSort:AllowNumeric,)
@@ -145,6 +149,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ReportPalletTegoedenExcel',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/15/2011 @ 10:59AM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:19AM')  
+    
+  END
   RETURN ReturnValue
 
 

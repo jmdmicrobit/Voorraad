@@ -102,16 +102,16 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?ACT:Datum:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Activiteit)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(ACT:Record,History::ACT:Record)
   SELF.AddHistoryField(?ACT:Datum,5)
   SELF.AddHistoryField(?ACT:Tijd,6)
   SELF.AddHistoryField(?ACT:Omschrijving,7)
   SELF.AddHistoryField(?ACT:Uitgevoerd,8)
-  SELF.AddUpdateFile(Access:Activiteit)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Activiteit.Open                                   ! File Activiteit used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True

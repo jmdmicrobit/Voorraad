@@ -76,28 +76,36 @@ FDCB4::View:FileDropCombo VIEW(ViewVoorraadPartij)
                        PROJECT(VVPar:BerekendeInkoopKGPrijs)
                        PROJECT(VVPar:Locatienaam)
                        PROJECT(VVPar:VoorraadKG)
-                       JOIN(ACel:CEL_PK)
+                       JOIN(ACel:CEL_PK,VVPar:CelID)
                          PROJECT(ACel:CelOms)
+                         PROJECT(ACel:CelID)
                        END
-                       JOIN(Par:Partij_PK)
+                       JOIN(Par:Partij_PK,VVPar:PartijID)
                          PROJECT(Par:PartijID)
                          PROJECT(Par:ExternPartijnr)
                          PROJECT(Par:AanmaakDatum_DATE)
-                         JOIN(AREL:Relatie_PK)
+                         PROJECT(Par:Leverancier)
+                         PROJECT(Par:VerpakkingID)
+                         JOIN(AREL:Relatie_PK,Par:Leverancier)
                            PROJECT(AREL:FirmaNaam)
+                           PROJECT(AREL:RelatieID)
                          END
-                         JOIN(AVP:Verpakking_PK)
+                         JOIN(AVP:Verpakking_PK,Par:VerpakkingID)
                            PROJECT(AVP:VerpakkingOmschrijving)
+                           PROJECT(AVP:VerpakkingID)
                          END
                        END
-                       JOIN(VPPar:PartijCelID_K)
+                       JOIN(VPPar:PartijCelID_K,VVPar:PartijCelID)
                          PROJECT(VPPar:VerkoopKG)
+                         PROJECT(VPPar:PartijCelID)
                        END
-                       JOIN(VVParT:PK_ViewVoorraadPartijTotaal)
+                       JOIN(VVParT:PK_ViewVoorraadPartijTotaal,VVPar:PartijID)
                          PROJECT(VVParT:VoorraadKG)
+                         PROJECT(VVParT:PartijID)
                        END
-                       JOIN(VPParT:PK_ViewPlanningPartijTotaal)
+                       JOIN(VPParT:PK_ViewPlanningPartijTotaal,VVPar:PartijID)
                          PROJECT(VPParT:VerkoopKG)
+                         PROJECT(VPParT:PartijID)
                        END
                      END
 FDCB6::View:FileDropCombo VIEW(ViewArtikel)
@@ -176,6 +184,12 @@ AREL:FirmaNaam         LIKE(AREL:FirmaNaam)           !List box control field - 
 AVP:VerpakkingOmschrijving LIKE(AVP:VerpakkingOmschrijving) !List box control field - type derived from field
 VPParT:VerkoopKG       LIKE(VPParT:VerkoopKG)         !Browse hot field - type derived from field
 VPPar:VerkoopKG        LIKE(VPPar:VerkoopKG)          !Browse hot field - type derived from field
+ACel:CelID             LIKE(ACel:CelID)               !Related join file key field - type derived from field
+AREL:RelatieID         LIKE(AREL:RelatieID)           !Related join file key field - type derived from field
+AVP:VerpakkingID       LIKE(AVP:VerpakkingID)         !Related join file key field - type derived from field
+VPPar:PartijCelID      LIKE(VPPar:PartijCelID)        !Related join file key field - type derived from field
+VVParT:PartijID        LIKE(VVParT:PartijID)          !Related join file key field - type derived from field
+VPParT:PartijID        LIKE(VPParT:PartijID)          !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -207,11 +221,11 @@ QuickWindow          WINDOW('Form Planning'),AT(,,497,360),FONT('MS Sans Serif',
                              STRING(@s99),AT(117,50,281),USE(LOC:CMRArtikelOms),FONT('Microsoft Sans Serif',,,FONT:regular), |
   LEFT
                              PROMPT('Artikelomschrijving:'),AT(10,66,103,12),USE(?Pla:AlternatieveArtikelOms:Prompt)
-                             ENTRY(@s200),AT(157,67,241,10),USE(Pla:AlternatieveArtikelOms)
                              BUTTON,AT(118,65,33,14),USE(?OvernemenButton),FONT('Microsoft Sans Serif',,COLOR:BTNFACE,FONT:regular), |
   ICON('overnemen.png'),TIP('Overnemen klant-specifieke artikelnaam')
-                             BUTTON('Wijzigen'),AT(405,48,57,14),USE(?ChangeCMRArtikel),FONT('Microsoft Sans Serif',,,FONT:regular), |
+                             BUTTON('Wijzigen'),AT(405,45,57,14),USE(?ChangeCMRArtikel),FONT('Microsoft Sans Serif',,,FONT:regular), |
   LEFT,ICON('WAChange.ico')
+                             TEXT,AT(155,62,333,17),USE(Pla:AlternatieveArtikelOms)
                            END
                            PROMPT('Partij:'),AT(7,87),USE(?PROMPT1)
                            COMBO(@s25),AT(69,87,177,10),USE(VVPar:PartijCelID),HVSCROLL,DROP(25,800),FORMAT('50L(2)|~Pa' & |
@@ -250,9 +264,11 @@ QuickWindow          WINDOW('Form Planning'),AT(,,497,360),FONT('MS Sans Serif',
                              PROMPT('Afleverdatum (12):'),AT(362,105),USE(?Pla:UitslagPalletbladDueDate12_DATE:Prompt)
                              ENTRY(@D6-B),AT(433,105,50,10),USE(Pla:UitslagPalletbladDueDate12_DATE)
                              PROMPT('Productiedatum (11):'),AT(362,121),USE(?Pla:UitslagPalletbladProductionDate11_DATE:Prompt)
-                             ENTRY(@D6-B),AT(433,124,50,10),USE(Pla:UitslagPalletbladProductionDate11_DATE)
-                             PROMPT('THT (15):'),AT(362,137),USE(?Pla:UitslagPalletbladSellByDate15_DATE:Prompt)
-                             ENTRY(@D6-B),AT(433,140,50,10),USE(Pla:UitslagPalletbladSellByDate15_DATE)
+                             ENTRY(@D6-B),AT(433,121,50,10),USE(Pla:UitslagPalletbladProductionDate11_DATE)
+                             PROMPT('THT (15):'),AT(362,134),USE(?Pla:UitslagPalletbladSellByDate15_DATE:Prompt)
+                             ENTRY(@D6-B),AT(433,134,50,10),USE(Pla:UitslagPalletbladSellByDate15_DATE)
+                             PROMPT('Harvast Date (7007)'),AT(361,147),USE(?Pla:UitslagPalletbladHarvastDate7007_DATE:Prompt)
+                             ENTRY(@d6-B),AT(433,147,50,10),USE(Pla:UitslagPalletbladHarvastDate7007_DATE)
                              PROMPT('Origin Live Bird:'),AT(362,160),USE(?Pla:UitslagPalletbladOriginLiveBird:Prompt)
                              ENTRY(@s50),AT(433,159,60,10),USE(Pla:UitslagPalletbladOriginLiveBird)
                              PROMPT('Origin Slauther House:'),AT(362,177),USE(?Pla:UitslagPalletbladOriginSlautherHouse:Prompt)
@@ -542,9 +558,10 @@ ReturnValue          BYTE,AUTO
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('ACT:ActiviteitID',ACT:ActiviteitID)                ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Planning)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Pla:Record,History::Pla:Record)
   SELF.AddHistoryField(?Pla:AlternatieveArtikelOms,41)
@@ -560,6 +577,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Pla:UitslagPalletbladDueDate12_DATE,31)
   SELF.AddHistoryField(?Pla:UitslagPalletbladProductionDate11_DATE,35)
   SELF.AddHistoryField(?Pla:UitslagPalletbladSellByDate15_DATE,39)
+  SELF.AddHistoryField(?Pla:UitslagPalletbladHarvastDate7007_DATE,68)
   SELF.AddHistoryField(?Pla:UitslagPalletbladOriginLiveBird,44)
   SELF.AddHistoryField(?Pla:UitslagPalletbladOriginSlautherHouse,45)
   SELF.AddHistoryField(?Pla:UitslagPalletbladOriginProcessing,46)
@@ -571,7 +589,6 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Pla:PlantNumber,52)
   SELF.AddHistoryField(?Pla:DeliveryDate_DATE,55)
   SELF.AddHistoryField(?Pla:PlanningID,1)
-  SELF.AddUpdateFile(Access:Planning)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAPlanning.Open                                   ! File AAPlanning used by this procedure, so make sure it's RelationManager is open
   Relate:APlanning.Open                                    ! File APlanning used by this procedure, so make sure it's RelationManager is open
@@ -704,7 +721,6 @@ ReturnValue          BYTE,AUTO
   Do DefineListboxStyle
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     DISABLE(?Art:ArtikelOms)
-    DISABLE(?Pla:AlternatieveArtikelOms)
     HIDE(?OvernemenButton)
     HIDE(?ChangeCMRArtikel)
     DISABLE(?VVPar:PartijCelID)
@@ -722,6 +738,7 @@ ReturnValue          BYTE,AUTO
     DISABLE(?Pla:UitslagPalletbladDueDate12_DATE)
     DISABLE(?Pla:UitslagPalletbladProductionDate11_DATE)
     DISABLE(?Pla:UitslagPalletbladSellByDate15_DATE)
+    ?Pla:UitslagPalletbladHarvastDate7007_DATE{PROP:ReadOnly} = True
     ?Pla:UitslagPalletbladOriginLiveBird{PROP:ReadOnly} = True
     ?Pla:UitslagPalletbladOriginSlautherHouse{PROP:ReadOnly} = True
     ?Pla:UitslagPalletbladOriginProcessing{PROP:ReadOnly} = True
@@ -805,6 +822,12 @@ ReturnValue          BYTE,AUTO
   FDCB4.AddField(AVP:VerpakkingOmschrijving,FDCB4.Q.AVP:VerpakkingOmschrijving) !List box control field - type derived from field
   FDCB4.AddField(VPParT:VerkoopKG,FDCB4.Q.VPParT:VerkoopKG) !Browse hot field - type derived from field
   FDCB4.AddField(VPPar:VerkoopKG,FDCB4.Q.VPPar:VerkoopKG) !Browse hot field - type derived from field
+  FDCB4.AddField(ACel:CelID,FDCB4.Q.ACel:CelID) !Related join file key field - type derived from field
+  FDCB4.AddField(AREL:RelatieID,FDCB4.Q.AREL:RelatieID) !Related join file key field - type derived from field
+  FDCB4.AddField(AVP:VerpakkingID,FDCB4.Q.AVP:VerpakkingID) !Related join file key field - type derived from field
+  FDCB4.AddField(VPPar:PartijCelID,FDCB4.Q.VPPar:PartijCelID) !Related join file key field - type derived from field
+  FDCB4.AddField(VVParT:PartijID,FDCB4.Q.VVParT:PartijID) !Related join file key field - type derived from field
+  FDCB4.AddField(VPParT:PartijID,FDCB4.Q.VPParT:PartijID) !Related join file key field - type derived from field
   FDCB4.AddUpdateField(VVPar:PartijID,Pla:PartijID)
   FDCB4.AddUpdateField(Par:VerpakkingID,LOC:VerpakkingID)
   FDCB4.AddUpdateField(VVPar:CelID,LOC:CelID)
@@ -1082,10 +1105,18 @@ Looped BYTE
       DO UpdatePartijFilter
       ! Als KG wordt ingevoerd automatisch de dozen berekenen
       IF 0{PROP:AcceptAll}=FALSE 
-          IF Pla:Dozen=0 AND Ver:InhoudKG<>0
+          !IF Pla:Dozen=0 AND Ver:InhoudKG<>0
+          IF Ver:InhoudKG<>0
               Pla:Dozen=Pla:KG/Ver:InhoudKG
               DISPLAY(?Pla:Dozen)
           END
+      END
+      
+    OF ?Pla:Pallets
+      ! Als GrossWeight berekening wordt ingevoerd automatisch de dozen berekenen
+      IF 0{PROP:AcceptAll}=FALSE 
+          Pla:GrossWeight=Pla:KG+(Pla:Dozen*Loc:GewichtDoos)+Pla:Pallets*Loc:GewichtPallet
+          DISPLAY(?Pla:GrossWeight)
       END
       
     OF ?Pla:Dozen

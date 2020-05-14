@@ -4257,13 +4257,59 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80004')
+%dClassVersion DEFAULT  ('80127')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
+[ADDITION]
+NAME UltimateVersion UltimateVersionResource
+[INSTANCE]
+INSTANCE 6
+[PROMPTS]
+%verCoName DEFAULT  ('JMD Microbit Automatisering')
+%verCopyright DEFAULT  ('Copyright (c) 2020')
+%verTrademarks DEFAULT  ('')
+%verComments DEFAULT  ('')
+%includegetversionclass LONG  (0)
+%getversionclassobjectname DEFAULT  ('gv')
+%verMakeVariables LONG  (0)
+%verExtProdVersion LONG  (1)
+%verSourceFile DEFAULT  ('Voorraad.Version')
+%verProdName DEFAULT  ('')
+%AutoGenVersion LONG  (0)
+%verUseVerFile LONG  (0)
+%verVerFileName DEFAULT  ('')
+%verProdMajVer DEFAULT  ('0')
+%verProdMinVer DEFAULT  ('0')
+%verProdSubVer DEFAULT  ('0')
+%verProdGenBuildNo LONG  (1)
+%verProdBuildNo DEFAULT  ('0')
+%verDesc DEFAULT  ('')
+%verFileAsProdVersion LONG  (1)
+%verIntName DEFAULT  ('')
+%verFileMajVer DEFAULT  ('0')
+%verFileMinVer DEFAULT  ('0')
+%verFileSubVer DEFAULT  ('0')
+%verFileGenBuildNo LONG  (1)
+%verFileBuildNo DEFAULT  ('0')
+%verFilePreRelease LONG  (0)
+%verSelLangID DEFAULT  ('Dutch')
+%verSelCPID DEFAULT  ('Multilingual')
+%verIncludeCW LONG  (1)
+%verClarionVersion DEFAULT  ('10000')
+%verTemplateFamily DEFAULT  ('ABC')
+%verTemplateVersion DEFAULT  ('v10.0')
+%verUserLabel1 DEFAULT  ('')
+%verUserValue1 DEFAULT  ('')
+%verUserLabel2 DEFAULT  ('')
+%verUserValue2 DEFAULT  ('')
+%verUserLabel3 DEFAULT  ('')
+%verUserValue3 DEFAULT  ('')
+%verUserLabel4 DEFAULT  ('')
+%verUserValue4 DEFAULT  ('')
 [PERSIST]
 %SaveCreateLocalMap DEFAULT  ('1')
-%GenerationCompleted DEPEND %Module DEFAULT TIMES 23
+%GenerationCompleted DEPEND %Module DEFAULT TIMES 42
 WHEN  ('VoorrStm.clw') ('1')
 WHEN  ('VoorrStm001.clw') ('1')
 WHEN  ('VoorrStm002.clw') ('1')
@@ -4287,6 +4333,25 @@ WHEN  ('VoorrStm019.clw') ('1')
 WHEN  ('VoorrStm020.clw') ('1')
 WHEN  ('VoorrStm021.clw') ('1')
 WHEN  ('VoorrStm022.clw') ('1')
+WHEN  ('VoorrStm023.clw') ('1')
+WHEN  ('VoorrStm024.clw') ('1')
+WHEN  ('VoorrStm025.clw') ('1')
+WHEN  ('VoorrStm026.clw') ('1')
+WHEN  ('VoorrStm027.clw') ('1')
+WHEN  ('VoorrStm028.clw') ('1')
+WHEN  ('VoorrStm029.clw') ('1')
+WHEN  ('VoorrStm030.clw') ('1')
+WHEN  ('VoorrStm031.clw') ('1')
+WHEN  ('VoorrStm032.clw') ('1')
+WHEN  ('VoorrStm033.clw') ('1')
+WHEN  ('VoorrStm034.clw') ('1')
+WHEN  ('VoorrStm035.clw') ('1')
+WHEN  ('VoorrStm036.clw') ('1')
+WHEN  ('VoorrStm037.clw') ('1')
+WHEN  ('VoorrStm038.clw') ('1')
+WHEN  ('VoorrStm039.clw') ('1')
+WHEN  ('VoorrStm040.clw') ('1')
+WHEN  ('VoorrStm041.clw') ('1')
 
 %LastTarget32 DEFAULT  ('1')
 %LastProgramExtension DEFAULT  ('DLL')
@@ -4296,7 +4361,15 @@ WHEN  ('VoorrStm022.clw') ('1')
 -- NAMESPACE ClarionDefaultNamespace
 #system win32 dll
 #model clarion dll
-#pragma debug(vid=>off)
+#pragma define(NETTALKLOG=>1) -- GENERATED
+#pragma define(_ODDJOB_=>0) -- GENERATED
+#pragma define(_CRYPTONITE_=>0) -- GENERATED
+#pragma define(StringTheoryLinkMode=>0) -- GENERATED
+#pragma define(StringTheoryDllMode=>1) -- GENERATED
+#pragma define(_ABCDllMode_=>1) -- GENERATED
+#pragma define(_ABCLinkMode_=>0) -- GENERATED
+#pragma define(_NetTalkDllMode_=>1) -- GENERATED
+#pragma define(_NetTalkLinkMode_=>0) -- GENERATED
 #compile "VoorrStm.clw" -- GENERATED
 #compile "VoorrStm001.clw" -- GENERATED
 #compile "VoorrStm002.clw" -- GENERATED
@@ -4320,4 +4393,25 @@ WHEN  ('VoorrStm022.clw') ('1')
 #compile "VoorrStm020.clw" -- GENERATED
 #compile "VoorrStm021.clw" -- GENERATED
 #compile "VoorrStm022.clw" -- GENERATED
+#compile "VoorrStm023.clw" -- GENERATED
+#compile "VoorrStm024.clw" -- GENERATED
+#compile "VoorrStm025.clw" -- GENERATED
+#compile "VoorrStm026.clw" -- GENERATED
+#compile "VoorrStm027.clw" -- GENERATED
+#compile "VoorrStm028.clw" -- GENERATED
+#compile "VoorrStm029.clw" -- GENERATED
+#compile "VoorrStm030.clw" -- GENERATED
+#compile "VoorrStm031.clw" -- GENERATED
+#compile "VoorrStm032.clw" -- GENERATED
+#compile "VoorrStm033.clw" -- GENERATED
+#compile "VoorrStm034.clw" -- GENERATED
+#compile "VoorrStm035.clw" -- GENERATED
+#compile "VoorrStm036.clw" -- GENERATED
+#compile "VoorrStm037.clw" -- GENERATED
+#compile "VoorrStm038.clw" -- GENERATED
+#compile "VoorrStm039.clw" -- GENERATED
+#compile "VoorrStm040.clw" -- GENERATED
+#compile "VoorrStm041.clw" -- GENERATED
+#compile "EFOCUS.CLW" -- GENERATED
+#pragma link("C%V%dos%X%%L%.lib") -- GENERATED
 #link "VoorrStm.DLL"

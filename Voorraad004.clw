@@ -25,7 +25,7 @@ st                  StringTheory
 FilesOpened     BYTE(0)
 
   CODE
-    GLO:Versie = 3.25
+    GLO:Versie = 3.27
     IF GLO:Versie <= 3.22                   ! spelvouten....
         Glo:Owner=GETINI('SQL','OWNER','172.16.0.7\MS$DPM2007$,Voorraad,jmd,superjmd','.\vooraad.ini')&';APP=JMDVoorraad v'&Glo:Versie&';WSID='&GETUSERNAME()
     ELSE    
@@ -49,6 +49,32 @@ FilesOpened     BYTE(0)
 		LOC:ToonWijziging = false
 		Loc:Versie += 0.01
 		Case Loc:Versie
+    of 3.27 ! 09-04-2020
+    Clear(VRS:Record)
+    VRS:Versie=Loc:Versie
+    if Access:Versie.Fetch(VRS:Versie_PK)
+        LocalClass.ExecuteSQLCommando('ALTER TABLE [dbo].[Partij] ALTER COLUMN CorrectieveMaatregel varchar(2000)')
+        LocalClass.ExecuteSQLCommando('ALTER TABLE [dbo].[Mutatie] ALTER COLUMN CorrectieveMaatregel varchar(2000)')
+
+        LocalClass.ExecuteSQLCommando('ALTER TABLE [dbo].[Partij] ADD Oorzaak varchar(2000), TransportBedrijf varchar(2000)')
+        LocalClass.ExecuteSQLCommando('ALTER TABLE [dbo].[Mutatie] ADD Oorzaak varchar(2000), TransportBedrijf varchar(2000)')
+
+        LocalClass.SchrijfVersie(Loc:Versie,'Oorzaak en TransportBedrijf toegevoegd aan Partij en Mutatie')   
+
+        LOC:ToonWijziging = false
+    End
+            
+    of 3.26 ! 15-01-2020
+    Clear(VRS:Record)
+    VRS:Versie=Loc:Versie
+    if Access:Versie.Fetch(VRS:Versie_PK)
+        LocalClass.ExecuteSQLCommando('ALTER TABLE [dbo].[Planning] ADD UitslagPalletbladHarvastDate7007 datetime')
+
+        LocalClass.SchrijfVersie(Loc:Versie,'UitslagPalletbladHarvastDate7007 toegevoegd aan Planning')   
+
+        LOC:ToonWijziging = false
+    End
+            
     of 3.25 ! 13-01-2020
     Clear(VRS:Record)
     VRS:Versie=Loc:Versie

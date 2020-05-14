@@ -1444,7 +1444,7 @@ PROPERTY:END
 		LOC:ExtraDocumenten=''
 		LOC:Transporteur='Transport:<13><10>Truck:<13><10>Container:'
 		LOC:TransporteurExtra=''
-		LOC:OpmerkingenVervoerder=''
+		LOC:OpmerkingenVervoerder='Geboekt<13><10>Aankomst<13><10>Vertrek'
 
 		DO VulArtikelQueue
         DO VulLocArtikel

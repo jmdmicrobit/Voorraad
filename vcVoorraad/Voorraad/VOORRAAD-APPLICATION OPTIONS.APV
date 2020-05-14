@@ -4452,35 +4452,41 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80004')
+%dClassVersion DEFAULT  ('80127')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
 [ADDITION]
-NAME cwVersionRes cwVersionRes
+NAME UltimateVersion UltimateVersionResource
 [INSTANCE]
-INSTANCE 6
+INSTANCE 8
 [PROMPTS]
 %verCoName DEFAULT  ('JMD Microbit Automatisering')
-%verCopyright DEFAULT  ('Copyright (c) 2019')
-%verTrademarks DEFAULT  ('Trademark')
+%verCopyright DEFAULT  ('Copyright (c) 2020')
+%verTrademarks DEFAULT  ('')
 %verComments DEFAULT  ('')
+%includegetversionclass LONG  (1)
+%getversionclassobjectname DEFAULT  ('gv')
+%verMakeVariables LONG  (0)
 %verExtProdVersion LONG  (0)
 %verSourceFile DEFAULT  ('')
 %verProdName DEFAULT  ('Voorraad')
+%AutoGenVersion LONG  (0)
+%verUseVerFile LONG  (0)
+%verVerFileName DEFAULT  ('')
 %verProdMajVer DEFAULT  ('3')
-%verProdMinVer DEFAULT  ('1')
+%verProdMinVer DEFAULT  ('26')
 %verProdSubVer DEFAULT  ('0')
 %verProdGenBuildNo LONG  (1)
-%verProdBuildNo DEFAULT  ('109')
+%verProdBuildNo DEFAULT  ('131')
 %verDesc DEFAULT  ('')
 %verFileAsProdVersion LONG  (1)
 %verIntName DEFAULT  ('Voorraad')
 %verFileMajVer DEFAULT  ('3')
-%verFileMinVer DEFAULT  ('1')
+%verFileMinVer DEFAULT  ('26')
 %verFileSubVer DEFAULT  ('0')
 %verFileGenBuildNo LONG  (1)
-%verFileBuildNo DEFAULT  ('109')
+%verFileBuildNo DEFAULT  ('131')
 %verFilePreRelease LONG  (0)
 %verSelLangID DEFAULT  ('Dutch')
 %verSelCPID DEFAULT  ('Multilingual')
@@ -4498,7 +4504,7 @@ INSTANCE 6
 %verUserValue4 DEFAULT  ('')
 [PERSIST]
 %SaveCreateLocalMap DEFAULT  ('1')
-%GenerationCompleted DEPEND %Module DEFAULT TIMES 34
+%GenerationCompleted DEPEND %Module DEFAULT TIMES 38
 WHEN  ('VoorrPln.lib') ('')
 WHEN  ('VoorrRpt.lib') ('')
 WHEN  ('VoorrStm.lib') ('')
@@ -4533,6 +4539,10 @@ WHEN  ('Voorraad026.clw') ('1')
 WHEN  ('Voorraad027.clw') ('1')
 WHEN  ('Voorraad028.clw') ('1')
 WHEN  ('Voorraad029.clw') ('1')
+WHEN  ('Voorraad030.clw') ('1')
+WHEN  ('Voorraad031.clw') ('1')
+WHEN  ('Voorraad032.clw') ('1')
+WHEN  ('Voorraad033.clw') ('1')
 
 %LastTarget32 DEFAULT  ('1')
 %LastProgramExtension DEFAULT  ('EXE')
@@ -4542,7 +4552,6 @@ WHEN  ('Voorraad029.clw') ('1')
 -- NAMESPACE Voorraad
 #system win32 exe
 #model clarion dll
-#pragma debug(vid=>off)
 #pragma define(NETTALKLOG=>1) -- GENERATED
 #pragma define(_ODDJOB_=>0) -- GENERATED
 #pragma define(_CRYPTONITE_=>0) -- GENERATED
@@ -4588,6 +4597,10 @@ WHEN  ('Voorraad029.clw') ('1')
 #compile "Voorraad027.clw" -- GENERATED
 #compile "Voorraad028.clw" -- GENERATED
 #compile "Voorraad029.clw" -- GENERATED
+#compile "Voorraad030.clw" -- GENERATED
+#compile "Voorraad031.clw" -- GENERATED
+#compile "Voorraad032.clw" -- GENERATED
+#compile "Voorraad033.clw" -- GENERATED
 #compile "EFOCUS.CLW" -- GENERATED
 #pragma link("VoorrStm.lib") -- GENERATED
 #pragma link("VoorrRpt.lib") -- GENERATED
@@ -4595,6 +4608,7 @@ WHEN  ('Voorraad029.clw') ('1')
 #pragma link("VoorrVrd.lib") -- GENERATED
 #pragma link("C%V%dos%X%%L%.lib") -- GENERATED
 #pragma link("clanet.lib") -- GENERATED
+#pragma link("Win32Ext.LIB") -- GENERATED
 #pragma link("CLAWE.Lib") -- GENERATED
 #pragma link("Voorraad.EXE.manifest") -- GENERATED
 #pragma link("Voorraad.Version") -- GENERATED

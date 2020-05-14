@@ -1,0 +1,1015 @@
+[MODULE]
+NAME 'WindowRedenRetour_VoorrPln.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME WindowRedenRetour
+PROTOTYPE '(string, Long, *CString, *Date),Byte'
+PARAMETERS '(string pVerkoopInkoop,Long pID,*CString pRedenRetour,*Date pRetourDatum)'
+[COMMON]
+FROM ABC Window
+[DATA]
+[SCREENCONTROLS]
+! PROMPT('Loc : Return Value:'),USE(?Loc:ReturnValue:Prompt)
+! ENTRY(@n3),USE(Loc:ReturnValue)
+[REPORTCONTROLS]
+! STRING(@n3),USE(Loc:ReturnValue)
+Loc:ReturnValue          BYTE
+!!> GUID('cf3e54df-28ae-4dd3-a0aa-fd2863f037a6'),PROMPT('Loc : Return Value:'),HEADER('Loc : Return Value'),PICTURE(@n3),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Retour KG:'),USE(?Loc:RetourKG:Prompt)
+! ENTRY(@n-15.2),USE(Loc:RetourKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-15.2),USE(Loc:RetourKG),DECIMAL(12)
+Loc:RetourKG             DECIMAL(11,2)
+!!> GUID('39a166cf-9f36-4e43-bdfd-6bd10f33e1a9'),PROMPT('Loc : Retour KG:'),HEADER('Loc : Retour KG'),PICTURE(@n-15.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Loc : Retour Pallets:'),USE(?Loc:RetourPallets:Prompt)
+! ENTRY(@n-14),USE(Loc:RetourPallets),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:RetourPallets),RIGHT(1)
+Loc:RetourPallets        LONG
+!!> GUID('d1305b35-b23a-42eb-887f-7610b25bc4e2'),PROMPT('Loc : Retour Pallets:'),HEADER('Loc : Retour Pallets'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Reden Retour:'),USE(?Loc:RedenRetour:Prompt)
+! ENTRY(@s50),USE(Loc:RedenRetour)
+[REPORTCONTROLS]
+! STRING(@s50),USE(Loc:RedenRetour)
+Loc:RedenRetour          CSTRING(51)
+!!> GUID('75411345-b760-403d-b86b-33e374fea9dc'),PROMPT('Loc : Reden Retour:'),HEADER('Loc : Reden Retour'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Retour Datum:'),USE(?Loc:RetourDatum:Prompt)
+! SPIN(@d17),USE(Loc:RetourDatum)
+[REPORTCONTROLS]
+! STRING(@d17),USE(Loc:RetourDatum)
+Loc:RetourDatum          DATE
+!!> GUID('2ae0e454-feb5-46b4-b354-2634fbb00132'),PROMPT('Loc : Retour Datum:'),HEADER('Loc : Retour Datum'),PICTURE(@d17),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Cel ID:'),USE(?Loc:CelID:Prompt)
+! ENTRY(@n-14),USE(Loc:CelID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:CelID),RIGHT(1)
+Loc:CelID                LONG
+!!> GUID('48ba0859-3061-4ac0-8580-0ca6ff66b1c1'),PROMPT('Loc : Cel ID:'),HEADER('Loc : Cel ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Cel Lokatie ID:'),USE(?Loc:CelLokatieID:Prompt)
+! ENTRY(@n-14),USE(Loc:CelLokatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:CelLokatieID),RIGHT(1)
+Loc:CelLokatieID         LONG
+!!> GUID('31b0d85f-e4cc-447e-b9d4-5f98f4867cce'),PROMPT('Loc : Cel Lokatie ID:'),HEADER('Loc : Cel Lokatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : List Q:'),USE(?Loc:ListQ:Prompt)
+! ENTRY(@s20),USE(Loc:ListQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:ListQ)
+Loc:ListQ                QUEUE,PRE(LQ)
+!!> GUID('94d037a4-b081-448e-8ac1-bf97f3c5d17a'),PROMPT('Loc : List Q:'),HEADER('Loc : List Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Artikel ID:'),USE(?LQ:ArtikelID:Prompt)
+! ENTRY(@s30),USE(LQ:ArtikelID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@s30),USE(LQ:ArtikelID),RIGHT(1)
+ArtikelID                  CSTRING(31)
+!!> GUID('98190ce2-04c5-4a7a-90b0-36512b4804ee'),PROMPT('Artikel ID:'),HEADER('Artikel ID'),PICTURE(@s30),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Artikel Omschrijving:'),USE(?LQ:ArtikelOmschrijving:Prompt)
+! ENTRY(@s99),USE(LQ:ArtikelOmschrijving)
+[REPORTCONTROLS]
+! STRING(@s99),USE(LQ:ArtikelOmschrijving)
+ArtikelOmschrijving        CSTRING(100)
+!!> GUID('71d315b5-d604-4f1a-8c83-5acdc6be672e'),PROMPT('Artikel Omschrijving:'),HEADER('Artikel Omschrijving'),PICTURE(@s99),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?LQ:KG:Prompt)
+! ENTRY(@n-10.2),USE(LQ:KG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-10.2),USE(LQ:KG),DECIMAL(12)
+KG                         DECIMAL(7,2)
+!!> GUID('2a7f393c-ceeb-416e-8349-85f426bb7750'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-10.2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Pallets:'),USE(?LQ:Pallets:Prompt)
+! ENTRY(@n-14),USE(LQ:Pallets),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LQ:Pallets),RIGHT(1)
+Pallets                    LONG
+!!> GUID('47db9ffb-ce61-4e02-bec9-80bd31735f8c'),PROMPT('Pallets:'),HEADER('Pallets'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('KGR etour:'),USE(?LQ:KGRetour:Prompt)
+! ENTRY(@n-14),USE(LQ:KGRetour),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LQ:KGRetour),RIGHT(1)
+KGRetour                   LONG
+!!> GUID('51859810-fb88-4b26-b8ce-8bb88629590b'),PROMPT('KGR etour:'),HEADER('KGR etour'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Pallets Retour:'),USE(?LQ:PalletsRetour:Prompt)
+! ENTRY(@n-14),USE(LQ:PalletsRetour),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LQ:PalletsRetour),RIGHT(1)
+PalletsRetour              LONG
+!!> GUID('4948a34d-1e1a-4495-bf94-00650612b3f2'),PROMPT('Pallets Retour:'),HEADER('Pallets Retour'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Planning ID:'),USE(?LQ:PlanningID:Prompt)
+! ENTRY(@n-14),USE(LQ:PlanningID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LQ:PlanningID),RIGHT(1)
+PlanningID                 LONG
+!!> GUID('68c7f1cc-ad86-42ae-bafe-6df3adf90d6d'),PROMPT('Planning ID:'),HEADER('Planning ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Cel ID:'),USE(?LQ:CelID:Prompt)
+! ENTRY(@n-14),USE(LQ:CelID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LQ:CelID),RIGHT(1)
+CelID                      LONG
+!!> GUID('a3c21370-e855-4974-af91-a2e877f102f1'),PROMPT('Cel ID:'),HEADER('Cel ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Cel Locatie ID:'),USE(?LQ:CelLocatieID:Prompt)
+! ENTRY(@n-14),USE(LQ:CelLocatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LQ:CelLocatieID),RIGHT(1)
+CelLocatieID               LONG
+!!> GUID('abb6f1b0-d88e-47c2-8e2a-4c78cc8e46c5'),PROMPT('Cel Locatie ID:'),HEADER('Cel Locatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('8d49b9cc-22c5-429e-89f7-7203fcb31941')
+[FILES]
+[OTHERS]
+Inkoop
+ViewArtikel
+Verkoop
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeFieldEvent {9}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  (Loc:ReturnValue)
+%ProcedureOneInstance LONG  (0)
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Default')
+WHEN  ('?Loc:RedenRetour') ('Default')
+
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('Off')
+WHEN  ('?Loc:RedenRetour') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('')
+WHEN  ('?Loc:RedenRetour') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Loc:RedenRetour') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 2
+WHEN  ('') (-1)
+WHEN  ('?Loc:RedenRetour') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Loc:RedenRetour') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 2
+WHEN  ('') (-1)
+WHEN  ('?Loc:RedenRetour') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Loc:RedenRetour') (0)
+
+%ButtonAction DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('No Special Action')
+WHEN  ('?CancelButton') ('No Special Action')
+WHEN  ('?Loc:RedenRetour') ('No Special Action')
+WHEN  ('?OkButton') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('25000')
+WHEN  ('?CancelButton') ('25000')
+WHEN  ('?Loc:RedenRetour') ('25000')
+WHEN  ('?OkButton') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('None')
+WHEN  ('?CancelButton') ('None')
+WHEN  ('?Loc:RedenRetour') ('None')
+WHEN  ('?OkButton') ('None')
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 3
+WHEN  ('') (1)
+WHEN  ('?Loc:RedenRetour') (1)
+WHEN  ('?Loc:RetourDatum') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:RedenRetour')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:RedenRetour')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:RedenRetour')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:RedenRetour')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:RedenRetour')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+WHEN  ('')TIMES 0
+WHEN  ('?Loc:RedenRetour')TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('AIBtn0')
+WHEN  ('?Loc:RedenRetour') ('AIBtn3')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 2
+WHEN  ('') (1)
+WHEN  ('?Loc:RedenRetour') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 2
+WHEN  ('') ('?Loc:RedenRetour')
+WHEN  ('?Loc:RedenRetour') ('?OkButton')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Loc:RedenRetour') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Loc:RedenRetour') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Loc:RedenRetour') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 2
+WHEN  ('') (0)
+WHEN  ('?Loc:RedenRetour') (0)
+
+[EMBED]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?OkButton'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+if Loc:RedenRetour=''
+    SELECT(?Loc:RedenRetour)
+    CYCLE
+elsif Loc:RetourDatum=0
+    Select(?Loc:RetourDatum)
+    CYCLE
+END
+Aantalkilo# = 0
+Loop i#=1 TO Records(Loc:ListQ)
+    GET(Loc:ListQ,i#)
+    Aantalkilo# += LQ:KGRetour
+END
+
+IF Message('Weet u zeker dat er in totaal '&Aantalkilo#&' kilo teruggeboekt moet worden','Retour boeken',ICON:Question,Button:Yes+Button:No, Button:No)=Button:No
+    CYCLE
+END
+
+LocalClass.Verwerk()
+
+Loc:ReturnValue=RequestCompleted
+Post(EVENT:CloseWindow)
+[END]
+[END]
+WHEN '?CancelButton'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+Loc:ReturnValue=RequestCancelled
+Post(EVENT:CloseDown)
+[END]
+[END]
+WHEN '?LIST1'
+[INSTANCES]
+WHEN 'PreAlertKey'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+IF KEYCode()=MouseLeft OR KEYCode()=MouseLeft2
+    CYCLE
+END
+[END]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4499
+PROPERTY:END
+IF KEYCode()=MouseLeft2
+    Rij#=?LIST1{PROPLIST:MouseDownRow}
+    Get(Loc:ListQ,Rij#)
+    IF ERROR()
+        Message('Rij '&Rij#&' kan niet gevonden worden'&ERROR())
+    ELSE
+        WindowBoekRetourRegel(LQ:PlanningID, Loc:RetourKG,Loc:RetourPallets,LQ:CelID,LQ:CelLocatieID)
+        IF GlobalResponse=RequestCompleted
+            LQ:KGRetour=Loc:RetourKG
+            LQ:PalletsRetour=Loc:RetourPallets
+            !=Loc:CelID
+            !=Loc:CelLokatieID
+            Put(Loc:ListQ)
+        END
+    END
+    DISPLAY()
+END
+!IF KEYCode()=MouseLeft
+!    Rij#=?LIST1{PROPLIST:MouseDownRow}
+!    Get(Loc:ListQ,Rij#)
+!    IF ERROR()
+!        Message('Rij '&Rij#&' kan niet gevonden worden'&ERROR())
+!    ELSE
+!        IF LQ:KGRetour=LQ:KG
+!            LQ:KGRetour=0
+!        ELSE
+!            LQ:KGRetour=LQ:KG
+!        END
+!        Put(Loc:ListQ)
+!    END
+!    DISPLAY()
+!END
+[END]
+[END]
+[END]
+EMBED %LocalDataAfterClasses
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass          CLASS
+Verwerk                 Procedure()
+InitQ                   Procedure()
+AddQ                    PROCEDURE()
+                    END
+[END]
+EMBED %LocalProcedures
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.InitQ    Procedure
+CODE
+    FREE(Loc:ListQ)
+    Loc:RedenRetour=pRedenRetour
+    Loc:RetourDatum=PRetourDatum
+    IF pVerkoopInkoop='Verkoop'
+        Clear(Pla:Record)
+        Pla:VerkoopID=pID
+        Set(Pla:Planning_FK02,Pla:Planning_FK02)
+        LOOP UNTIL Access:Planning.Next()
+            IF NOT Pla:VerkoopID=pID THEN BREAK.
+    ! De regels die tegengeboekt moeten worden zijn verwerkt=true
+    ! De nieuwe regels zetten we eerst op false, anders komen we in een loop
+            IF Pla:Verwerkt=FALSE THEN CYCLE.
+            LocalClass.AddQ()
+!        IF Pla:PlanningIDParent=0
+!            LQ:ArtikelID=Pla:ArtikelID
+!            Clear(Art:Record)
+!            Art:ArtikelID=Pla:ArtikelID
+!            IF Access:ViewArtikel.Fetch(Art:Artikel_PK) = Level:Benign
+!                LQ:ArtikelOmschrijving=Art:ArtikelOms
+!            ELSE
+!                LQ:ArtikelOmschrijving='Onbekend artikelid'&Pla:ArtikelID
+!            END
+!            LQ:KG=Pla:KG
+!            LQ:Pallets=Pla:Pallets
+!            LQ:KGRetour=0
+!            LQ:PalletsRetour=0
+!            LQ:PlanningID=Pla:PlanningID
+!            IF Pla:PlanningIDRetour<>0
+!                APla:PlanningID=Pla:PlanningIDRetour
+!                IF Access:APlanning.Fetch(APla:PK_Planning)=Level:Benign
+!                    LQ:KGRetour=-APla:KG
+!                    LQ:PalletsRetour=-APla:Pallets
+!                END
+!            END
+!            Add(Loc:ListQ)
+!        END
+        END
+    ELSE            ! Inkoop dus
+    !   Loc:RedenRetour=Ink:RedenRetour
+        Clear(Pla:Record)
+        Pla:InkoopID=pID
+        Set(Pla:Planning_FK01,Pla:Planning_FK01)
+        LOOP UNTIL Access:Planning.Next()
+            IF NOT Pla:InkoopID=pID THEN BREAK.
+            IF Pla:Verwerkt=FALSE THEN CYCLE.
+            LocalClass.AddQ()
+        END
+    END
+
+    RETURN
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.AddQ     PROCEDURE()
+CODE
+    !MS(20180606): De regels zijn niet zichtbaar omdat het veld PlanningIDParent in de database de waarde 0 heeft en niet NULL,
+    !              maar ik zie ook regels waarbij dit veld wel NULL is. Daarom controle of beide
+    IF NULL(Pla:PlanningIDParent) OR Pla:PlanningIDParent = 0 THEN
+        LQ:ArtikelID=Pla:ArtikelID
+        Clear(Art:Record)
+        Art:ArtikelID=Pla:ArtikelID
+        IF Access:ViewArtikel.Fetch(Art:Artikel_PK) = Level:Benign
+            LQ:ArtikelOmschrijving=Art:ArtikelOms
+        ELSE
+            LQ:ArtikelOmschrijving='Onbekend artikelid'&Pla:ArtikelID
+        END
+        LQ:KG=Pla:KG
+        LQ:Pallets=Pla:Pallets
+        LQ:KGRetour=0
+        LQ:PalletsRetour=0
+        LQ:CelID=Pla:CelID
+        LQ:CelLocatieID=Pla:CelLocatieID
+        IF NOT pVerkoopInkoop='Verkoop'
+            IF Pla:CelID=0
+                Clear(Mut:Record)
+                Mut:PlanningID=Pla:PlanningID
+                Set(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+                Loop Until Access:Mutatie.Next()
+                IF NOT (Mut:PlanningID=Pla:PlanningID) THEN BREAK.
+                    LQ:CelID=Mut:CelID
+                    LQ:CelLocatieID=Mut:CelLocatieID
+                END
+            END
+        END
+        LQ:PlanningID=Pla:PlanningID
+        IF Pla:PlanningIDRetour<>0
+            APla:PlanningID=Pla:PlanningIDRetour
+            IF Access:APlanning.Fetch(APla:PK_Planning)=Level:Benign
+                LQ:KGRetour=-APla:KG
+                LQ:PalletsRetour=-APla:Pallets
+                LQ:CelID=APla:CelID
+                LQ:CelLocatieID=APla:CelLocatieID
+            END
+        END
+        Add(Loc:ListQ)
+    END
+    Return
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.Verwerk  Procedure
+CODE
+    Loop i#=1 TO Records(Loc:ListQ)
+        GET(Loc:ListQ,i#)
+        Clear(Pla:Record)
+        Pla:PlanningID = LQ:PlanningID
+        IF Access:Planning.Fetch(Pla:PK_Planning) <> Level:Benign
+            Message('Het terugboeken van '&LQ:PlanningID&' is mislukt '&ERROR())
+        END
+        IF LQ:KGRetour = 0
+            IF Pla:PlanningIDRetour=0
+                CYCLE
+            ELSE
+                APla:PlanningID = Pla:PlanningIDRetour
+                IF Access:APlanning.Fetch(APla:PK_Planning)=Level:Benign
+                    Access:APlanning.DeleteRecord(false)
+                END
+                Clear(Mut:Record)
+                Mut:PlanningID=Pla:PlanningIDRetour
+                Set(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+                Loop Until Access:Mutatie.Next()
+                    IF NOT (Mut:PlanningID=Pla:PlanningIDRetour) THEN BREAK.
+                    Access:Mutatie.DeleteRecord(False)
+                END
+            END
+        END
+
+        !retour boeken van een planning
+        IF Pla:PlanningIDRetour=0
+            !planning toevoegen voor de retour boeking
+            APla:Record=Pla:Record
+            APla:Verwerkt=FALSE
+            APla:MutatieGemaakt=FALSE
+            APla:KG=-LQ:KGRetour
+            APla:Pallets=-LQ:PalletsRetour
+            APla:MutatieKG=-LQ:KGRetour
+            APla:MutatiePallets=-LQ:PalletsRetour
+            APla:Memo=CLIP(Pla:Memo)&'RETOUR'
+            APla:CelID=LQ:CelID
+            APla:CelLocatieID=LQ:CelLocatieID
+            APla:PlanningIDParent = Pla:PlanningID
+            Access:APlanning.PrimeRecord(TRUE)
+            Pla:PlanningIDRetour=APla:PlanningID
+            Access:Planning.Update()
+
+            !mutatie(s) aanmaken
+            Clear(Mut:Record)
+            Mut:PlanningID=Pla:PlanningID
+            Set(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+            Loop Until Access:Mutatie.Next()
+                IF NOT (Mut:PlanningID=Pla:PlanningID) THEN BREAK.
+                AMut:Record=Mut:Record
+
+                !MS(20180522): In geval van Verkoop Uitslag mutatie toevoegen
+                !              In geval van Inkoop Inslag mutatie toevoegen
+                IF pVerkoopInkoop='Verkoop'
+                    AMut:InslagKG=0
+                    AMut:InslagPallet=0
+                    AMut:UitslagKG=-LQ:KGRetour
+                    AMut:UitslagPallet=-LQ:PalletsRetour
+                ELSE
+                    AMut:InslagKG=-LQ:KGRetour
+                    AMut:InslagPallet=-LQ:PalletsRetour
+                    AMut:UitslagKG=0
+                    AMut:UitslagPallet=0
+                END
+                AMut:CelID=LQ:CelID
+                AMut:CelLocatieID=LQ:CelLocatieID
+                AMut:RedenAfboeking='RETOUR'
+                AMut:PlanningID=APla:PlanningID
+                Access:AMutatie.PrimeRecord(True)
+            END
+
+        !retour boeken van een retourboeking
+        ELSE
+            !retourboeking opvragen en wijzigen
+            APla:PlanningID = Pla:PlanningIDRetour
+            IF Access:APlanning.Fetch(APla:PK_Planning)=Level:Benign
+                APla:KG=-LQ:KGRetour
+                APla:Pallets = -LQ:PalletsRetour
+                APla:MutatieKG=-LQ:KGRetour
+                APla:MutatiePallets=-LQ:PalletsRetour
+                Access:APlanning.Update()
+            ELSE
+                ! weghalen
+                Pla:PlanningIDRetour=0
+                Access:Planning.Update()
+                Message('Let op de Retour Planningsregel '&Pla:PlanningIDRetour&' kan niet gevonden worden','Planning Retour bekend',ICON:Cross)
+
+            END
+
+            !mutatie(s) aanpassen
+            Clear(Mut:Record)
+            Mut:PlanningID=Pla:PlanningIDRetour
+            Set(Mut:Mutatie_FK02,Mut:Mutatie_FK02)
+            Loop Until Access:Mutatie.Next()
+                IF NOT (Mut:PlanningID=Pla:PlanningIDRetour) THEN BREAK.
+
+                !MS(20180522): In geval van Verkoop Uitslag mutatie aanpassen
+                !              In geval van Inkoop Inslag mutatie aanpassen
+                IF pVerkoopInkoop='Verkoop'
+                    Mut:UitslagKG=-LQ:KGRetour
+                    Mut:UitslagPallet=-LQ:PalletsRetour
+                ELSE
+                    Mut:InslagKG=-LQ:KGRetour
+                    Mut:InslagPallet=-LQ:PalletsRetour
+                END
+
+                Access:Mutatie.Update()
+            END
+        END
+    END
+
+    ! en nu op verwerkt zetten.....
+    IF pVerkoopInkoop='Verkoop'
+        Clear(Pla:Record)
+        Pla:VerkoopID=pID
+        Set(Pla:Planning_FK02,Pla:Planning_FK02)
+        LOOP UNTIL Access:Planning.Next()
+            IF NOT Pla:VerkoopID=pID THEN BREAK.
+            IF Pla:Verwerkt=TRUE THEN CYCLE.
+            Pla:Verwerkt=TRUE
+            Pla:MutatieGemaakt=TRUE
+            Access:Planning.Update()
+        END
+         ! reden retour wegscvhrijven
+!        Ver2:RedenRetour=Loc:RedenRetour
+!        Ver2:RetourDatum_DATE = Lco:RetourDatum
+!        IF Access:Verkoop.Update()<> Level:Benign
+!            Message('Het wegschrijven is foutgegaan'&ERROR())
+!        END
+    ELSE
+        Clear(Pla:Record)
+        Pla:InkoopID=pID
+        Set(Pla:Planning_FK01,Pla:Planning_FK01)
+        LOOP UNTIL Access:Planning.Next()
+            IF NOT Pla:InkoopID=pID THEN BREAK.
+            IF Pla:Verwerkt=TRUE THEN CYCLE.
+            Pla:Verwerkt=TRUE
+            Pla:MutatieGemaakt=TRUE
+            Access:Planning.Update()
+        END
+         ! reden retour wegscvhrijven
+!        Ink:RedenRetour=Loc:RedenRetour
+!        Ink:RetourDatum_DATE = Lco:RetourDatum
+!        IF Access:Inkoop.Update()<> Level:Benign
+!            Message('Het wegschrijven is foutgegaan'&ERROR())
+!        END
+    END
+
+    pRedenRetour=Loc:RedenRetour
+    pRetourDatum= Loc:RetourDatum
+
+    RETURN
+
+[END]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 9001
+PROPERTY:END
+LocalClass.InitQ()
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 2
+OWNER 4
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%CheckForCantCloseNowSetHere LONG  (1)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%WindowsVisibleAfterOpen LONG  (1)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 1
+OWNER 2
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[CALLS]
+WindowBoekRetourRegel
+[WINDOW]
+Window  WINDOW('Retourboeken'),AT(,,409,199),FONT('Microsoft Sans Serif',8,,FONT:regular), |
+          RESIZE,GRAY,MDI,SYSTEM
+          ENTRY(@s50),AT(67,9,303,10),USE(Loc:RedenRetour),REQ,#ORDINAL(1)
+          SPIN(@d17),AT(67,23,60,10),USE(Loc:RetourDatum),REQ,#ORDINAL(2)
+          STRING('Reden'),AT(15,9),USE(?STRING1),#ORDINAL(3)
+          LIST,AT(15,39,384,139),USE(?LIST1),HVSCROLL,ALRT(MouseLeft),ALRT(MouseLeft2),FORMAT('60L(2)|M~A' & |
+            'rtikel ID~L(1)@S30@124L(2)|M~Artikel Omschrijving~L(0)@s99@[49R(2)|M~KG~@n' & |
+            '-12_`2@46R(2)|M~Pallets~R(1)@n-14.@]|~Verkoop of Inkoop~[50R(2)|M~KG ~@n-1' & |
+            '2_`2B@60R(2)|M~Pallets~R(1)@n-14.B@]|~Retour~60L(2)|M~Planning ID~L(1)@n-1' & |
+            '4@60L(2)|M~Cel ID~L(1)@n-14@60L(2)|M~Cel Locatie ID~L(1)@n-14@'),FROM(Loc:ListQ), |
+            #FIELDS(LQ:ArtikelID,LQ:ArtikelOmschrijving,LQ:KG,LQ:Pallets,LQ:KGRetour,LQ:PalletsRetour, |
+            LQ:PlanningID,LQ:CelID,LQ:CelLocatieID),#ORDINAL(4)
+          BUTTON('&OK'),AT(320,183,35,14),USE(?OkButton),DEFAULT,#ORDINAL(5)
+          BUTTON('&Cancel'),AT(363,183,36,14),USE(?CancelButton),#ORDINAL(6)
+          PROMPT('Retour Datum:'),AT(15,24),USE(?Lco:RetourDatum:Prompt),#ORDINAL(7)
+        END
+
+[END]

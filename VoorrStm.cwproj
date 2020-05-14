@@ -10,6 +10,7 @@
     <Model>Dll</Model>
     <stack_size>16384</stack_size>
     <CopyCore>False</CopyCore>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>True</DebugSymbols>
@@ -43,72 +44,6 @@
     <Compile Include="VoorrStm.clw">
       <Generated>true</Generated>
     </Compile>
-    <Compile Include="VoorrStm001.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm002.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm003.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm004.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm005.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm006.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm007.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm008.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm009.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm010.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm011.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm012.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm013.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm014.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm015.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm016.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm017.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm018.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm019.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm020.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm021.clw">
-      <Generated>true</Generated>
-    </Compile>
-    <Compile Include="VoorrStm022.clw">
-      <Generated>true</Generated>
-    </Compile>
     <ProjectReference Include="VoorrDct.cwproj">
       <Project>{148B4D9D-7E61-422E-B76E-8034DAC73042}</Project>
       <Name>VoorrDct</Name>
@@ -119,6 +54,8 @@
     <Library Include="CLAWE.Lib" />
     <Library Include="off.ico" />
     <Library Include="on.ico" />
+    <Library Include="VoorrStm.Version" />
+    <Library Include="Win32Ext.LIB" />
     <None Include="caroot.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generated>True</Generated>
@@ -156,4 +93,7 @@
     </None>
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /as /fd sha256 /f "H:\Certificates\info@microbit_nl\info@microbit_nl.p12" /tr http://timestamp.digicert.com /td sha256 $(SolutionDir)werk\VoorrStm.DLL</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -4757,7 +4757,7 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80004')
+%dClassVersion DEFAULT  ('80126')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
@@ -4893,6 +4893,52 @@ INSTANCE 7
   'ViewPalletTegoeden', 'ViewPartijCelLocaties', 'ViewPlanningPartij', 'ViewPlanningPartijTotaal', |
   'ViewTransporteur', 'ViewVoorraadCelTotaal', 'ViewVoorraadPartij', 'ViewVoorraadPartijTotaal', |
   'ViewVoorraadPartij_INDEXED', 'ViewVoorraadPlanning', 'VoorraadVerloop', 'Weging')
+[ADDITION]
+NAME UltimateVersion UltimateVersionResource
+[INSTANCE]
+INSTANCE 9
+[PROMPTS]
+%verCoName DEFAULT  ('JMD Microbit Automatisering')
+%verCopyright DEFAULT  ('Copyright (c) 2009')
+%verTrademarks DEFAULT  ('')
+%verComments DEFAULT  ('')
+%includegetversionclass LONG  (0)
+%getversionclassobjectname DEFAULT  ('gv')
+%verMakeVariables LONG  (0)
+%verExtProdVersion LONG  (1)
+%verSourceFile DEFAULT  ('Voorraad.Version')
+%verProdName DEFAULT  ('')
+%AutoGenVersion LONG  (0)
+%verUseVerFile LONG  (1)
+%verVerFileName DEFAULT  ('Voorraad.Version')
+%verProdMajVer DEFAULT  ('0')
+%verProdMinVer DEFAULT  ('0')
+%verProdSubVer DEFAULT  ('0')
+%verProdGenBuildNo LONG  (1)
+%verProdBuildNo DEFAULT  ('1')
+%verDesc DEFAULT  ('')
+%verFileAsProdVersion LONG  (1)
+%verIntName DEFAULT  ('')
+%verFileMajVer DEFAULT  ('0')
+%verFileMinVer DEFAULT  ('0')
+%verFileSubVer DEFAULT  ('0')
+%verFileGenBuildNo LONG  (1)
+%verFileBuildNo DEFAULT  ('1')
+%verFilePreRelease LONG  (0)
+%verSelLangID DEFAULT  ('Dutch')
+%verSelCPID DEFAULT  ('Multilingual')
+%verIncludeCW LONG  (1)
+%verClarionVersion DEFAULT  ('10000')
+%verTemplateFamily DEFAULT  ('ABC')
+%verTemplateVersion DEFAULT  ('v10.0')
+%verUserLabel1 DEFAULT  ('')
+%verUserValue1 DEFAULT  ('')
+%verUserLabel2 DEFAULT  ('')
+%verUserValue2 DEFAULT  ('')
+%verUserLabel3 DEFAULT  ('')
+%verUserValue3 DEFAULT  ('')
+%verUserLabel4 DEFAULT  ('')
+%verUserValue4 DEFAULT  ('')
 [PERSIST]
 %SaveCreateLocalMap DEFAULT  ('1')
 %GenerationCompleted DEPEND %Module DEFAULT TIMES 4
@@ -4909,7 +4955,6 @@ WHEN  ('VoorrDct003.clw') ('1')
 -- NAMESPACE VoorrDct
 #system win32 dll
 #model clarion dll
-#pragma debug(vid=>off)
 #pragma define(NETTALKLOG=>1) -- GENERATED
 #pragma define(_ODDJOB_=>0) -- GENERATED
 #pragma define(_CRYPTONITE_=>0) -- GENERATED
@@ -4936,8 +4981,19 @@ WHEN  ('VoorrDct003.clw') ('1')
 #compile "VoorrDct_BC4.CLW" -- GENERATED
 #compile "VoorrDct_BC5.CLW" -- GENERATED
 #compile "VOORRDCT_BC.CLW" -- GENERATED
+#compile "VoorrDct004.clw" -- GENERATED
+#compile "VoorrDct005.clw" -- GENERATED
+#compile "VoorrDct006.clw" -- GENERATED
+#compile "VoorrDct007.clw" -- GENERATED
 #pragma link("C%V%asc%X%%L%.lib") -- GENERATED
 #pragma link("C%V%dos%X%%L%.lib") -- GENERATED
+#pragma link("clanet.lib") -- GENERATED
+#pragma link("LSPZIPX.LIB") -- GENERATED
+#pragma link("LSPUZIPX.LIB") -- GENERATED
+#pragma link("CLAFM3.lib") -- GENERATED
 #pragma link("C%V%tps%X%%L%.lib") -- GENERATED
+#pragma link("Win32Ext.LIB") -- GENERATED
+#pragma link("CLAWE.Lib") -- GENERATED
 #pragma link("C%V%mss%X%%L%.lib") -- GENERATED
+#pragma link("VoorrDct.Version") -- GENERATED
 #link "VoorrDct.DLL"

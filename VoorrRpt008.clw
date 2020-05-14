@@ -18,6 +18,7 @@
 !!! </summary>
 ReportInslag PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 LOC:InslagQATransportmiddelSchoon STRING(5)                ! 
 LOC:InslagQAVerpakkingSchoonGesloten STRING(5)             ! 
@@ -197,6 +198,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ReportInslag','VoorrRpt008.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+             
   GlobalErrors.SetProcedureName('ReportInslag')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -213,6 +216,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportInslag',ProgressWindow)              ! Restore window settings from non-volatile store
   TargetSelector.AddItem(PDFReporter.IReportGenerator)
   SELF.AddItem(TargetSelector)
@@ -257,6 +261,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ReportInslag',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:19AM')  
+    
+  END
   RETURN ReturnValue
 
 

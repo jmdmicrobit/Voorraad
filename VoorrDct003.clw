@@ -344,8 +344,8 @@ CODE
         st.Append('<OrderLine lineNo="'&pLineNo&'">')
     END
 
-    st.Append('<Description>'&CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms)&'</Description>')
-    st.Append('<LongDescription>'&CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms)&'</LongDescription>')
+    st.Append('<Description>'&ExportClass.DecodeXML(CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms))&'</Description>')
+    st.Append('<LongDescription>'&ExportClass.DecodeXML(CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms))&'</LongDescription>')
     st.Append('<Item code="'&Pla:ArtikelID&'" type="S" searchcode="'&Pla:ArtikelID&'">')
     
 !    st.Append('<Assortment number="5" code="030"><Description>Geslachte kuikens</Description>')
@@ -452,7 +452,7 @@ CODE
     st.Append('<Delivery>')
     st.Append('<Date>'&Format(Ver2:Planning_DATE,@D010-)&'</Date>')
     st.Append('</Delivery>')
-    st.Append('<Text>'&CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms)&'</Text>')
+    st.Append('<Text>'&ExportClass.DecodeXML(CHOOSE(Pla:AlternatieveArtikelOms='',Art:ArtikelOms,Pla:AlternatieveArtikelOms))&'</Text>')
     
     IF CurrentLayout=LayOut:Invoice
         st.Append('</InvoiceLine>')

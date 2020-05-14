@@ -185,7 +185,7 @@ ViewPosition           STRING(1024)                   !Entry's view position
                      END
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-Window               WINDOW('Inslaan Partij'),AT(,,678,334),FONT('MS Sans Serif',8),ICON('WAOK.ICO'),GRAY,MDI,SYSTEM,IMM
+Window               WINDOW('Inslaan Partij'),AT(,,678,370),FONT('MS Sans Serif',8),ICON('WAOK.ICO'),GRAY,MDI,SYSTEM,IMM
                        PROMPT('Artikel:'),AT(7,21),USE(?PROMPT2)
                        PROMPT('Verpakking:'),AT(7,34),USE(?PROMPT3)
                        PROMPT('Leverancier:<0DH,0AH>'),AT(7,50),USE(?PROMPT1)
@@ -272,7 +272,7 @@ Window               WINDOW('Inslaan Partij'),AT(,,678,334),FONT('MS Sans Serif'
   'Artikel Oms~L(0)@s60@'),FROM(Queue:FileDropCombo:7),IMM
                        ENTRY(@s50),AT(76,65,150,10),USE(Par:Referentie)
                        PROMPT('Partij-nr.:'),AT(594,3),USE(?PROMPT5)
-                       GROUP('Kwaliteit'),AT(7,95,220,236),USE(?GROUP1),BOXED
+                       GROUP('Kwaliteit'),AT(7,95,220,274),USE(?GROUP1),BOXED
                          CHECK('Is transportmiddel schoon?'),AT(12,105),USE(Par:InslagQATransportmiddelSchoon),VALUE('1', |
   '0')
                          CHECK('Is verpakking schoon en gesloten?'),AT(12,116),USE(Par:InslagQAVerpakkingSchoonGesloten), |
@@ -281,22 +281,28 @@ Window               WINDOW('Inslaan Partij'),AT(,,678,334),FONT('MS Sans Serif'
   VALUE('1','0')
                          CHECK('Is geur/kleur producteigen?'),AT(12,139),USE(Par:InslagQAIsGeurKleurProductEigen)
                          CHECK('Geen glasbreuk?'),AT(12,150),USE(Par:InslagQAGeenGlasbreuk)
-                         PROMPT('Behandeld door:'),AT(12,164),USE(?PROMPT6)
-                         ENTRY(@s40),AT(70,164,107,10),USE(Par:InslagQAUitgevoerdDoor)
-                         PROMPT('Gemeten temperaturen:'),AT(12,175),USE(?Par:InslagQATemperatuur1:Prompt)
-                         ENTRY(@s20),AT(13,183,52,10),USE(Par:InslagQATemperatuur1)
-                         ENTRY(@s20),AT(70,183,50,10),USE(Par:InslagQATemperatuur2)
-                         ENTRY(@s20),AT(128,183,50,10),USE(Par:InslagQATemperatuur3)
+                         PROMPT('Behandeld door:'),AT(12,162),USE(?PROMPT6)
+                         ENTRY(@s40),AT(70,162,107,10),USE(Par:InslagQAUitgevoerdDoor)
+                         PROMPT('Gemeten temperaturen:'),AT(12,172),USE(?Par:InslagQATemperatuur1:Prompt)
+                         ENTRY(@s20),AT(13,182,52,10),USE(Par:InslagQATemperatuur1)
+                         ENTRY(@s20),AT(70,182,50,10),USE(Par:InslagQATemperatuur2)
+                         ENTRY(@s20),AT(128,182,50,10),USE(Par:InslagQATemperatuur3)
                          PROMPT('Temperatuur Vervoermiddel:'),AT(12,196),USE(?Par:InslagQATemperatuurVervoermiddel:Prompt)
                          ENTRY(@s20),AT(105,196,60,10),USE(Par:InslagQATemperatuurVervoermiddel)
                          PROMPT('Afwijking:'),AT(12,209),USE(?Par:InslagQAActieAfwijkingen:Prompt)
-                         TEXT,AT(97,209,125,33),USE(Par:InslagQAActieAfwijkingen,,?Par:InslagQAActieAfwijkingen:2)
-                         PROMPT('Corrigerende Maatregel:'),AT(13,274),USE(?Par:CorrigerendeMaatregel:Prompt)
-                         TEXT,AT(97,247,125,25),USE(Par:CorrectieveMaatregel,,?Par:CorrectieveMaatregel:2)
-                         PROMPT('Afgehandeld:'),AT(15,301),USE(?Par:Afgehandeld:Prompt)
-                         TEXT,AT(97,277,125,20),USE(Par:CorrigerendeMaatregel,,?Par:CorrigerendeMaatregel:2),HVSCROLL
-                         TEXT,AT(97,302,125,23),USE(Par:Afgehandeld,,?Par:Afgehandeld:2),HVSCROLL
-                         PROMPT('CorrectieveMaatregel'),AT(13,244),USE(?Par:CorrectieveMaatregel:Prompt)
+                         TEXT,AT(97,209,125,20),USE(Par:InslagQAActieAfwijkingen,,?Par:InslagQAActieAfwijkingen:2)
+                         PROMPT('Corrigerende Maatregel:'),AT(13,311),USE(?Par:CorrigerendeMaatregel:Prompt)
+                         TEXT,AT(97,232,125,20),USE(Par:Oorzaak)
+                         TEXT,AT(98,257,125,20),USE(Par:TransportBedrijf)
+                         TEXT,AT(97,284,125,25),USE(Par:CorrectieveMaatregel,,?Par:CorrectieveMaatregel:2)
+                         PROMPT('Afgehandeld:'),AT(15,338),USE(?Par:Afgehandeld:Prompt)
+                         TEXT,AT(97,314,125,20),USE(Par:CorrigerendeMaatregel,,?Par:CorrigerendeMaatregel:2),HVSCROLL
+                         TEXT,AT(97,340,125,23),USE(Par:Afgehandeld,,?Par:Afgehandeld:2),HVSCROLL
+                         PROMPT('CorrectieveMaatregel'),AT(13,281),USE(?Par:CorrectieveMaatregel:Prompt)
+                         PROMPT('Oorzaak:'),AT(12,230),USE(?Par:InslagQAActieAfwijkingen:Prompt:2)
+                         PROMPT('Transport Bedrijf:'),AT(13,251),USE(?Par:InslagQAActieAfwijkingen:Prompt:3)
+                         PROMPT('Direct actie'),AT(13,292),USE(?Par:CorrectieveMaatregel:Prompt:2)
+                         PROMPT('voorkomen'),AT(13,321),USE(?Par:CorrectieveMaatregel:Prompt:3)
                        END
                      END
 
@@ -766,9 +772,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?PROMPT2
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.AddUpdateFile(Access:Partij)
   Relate:AAAACelLocatie.Open                               ! File AAAACelLocatie used by this procedure, so make sure it's RelationManager is open
   Relate:AAACel.Open                                       ! File AAACel used by this procedure, so make sure it's RelationManager is open

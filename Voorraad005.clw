@@ -47,9 +47,12 @@ Loc:GewichtDoos      DECIMAL(7,3)                          !
 Loc:GewichtPallet    DECIMAL(7,3)                          ! 
 Loc:LocalPath        CSTRING(256)                          ! 
 Loc:NetPath          CSTRING(256)                          ! 
+Loc:Titel            CSTRING(101)                          ! 
+Loc:BackgroundColor  LONG                                  ! 
+Loc:KwalitetKnopVerbergen BYTE                             ! 
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-Window               WINDOW('Systeemgegevens'),AT(,,508,372),FONT('Microsoft Sans Serif',10,,,CHARSET:DEFAULT), |
+Window               WINDOW('Systeemgegevens'),AT(,,508,393),FONT('Microsoft Sans Serif',10,,,CHARSET:DEFAULT), |
   GRAY
                        PROMPT('Pallet Etiket Printer:'),AT(4,1),USE(?Loc:PalletEtiketPrinter:Prompt)
                        ENTRY(@s198),AT(88,1,222,10),USE(Loc:PalletEtiketPrinter)
@@ -121,8 +124,8 @@ Window               WINDOW('Systeemgegevens'),AT(,,508,372),FONT('Microsoft San
                        PROMPT('Export Bestand Orders:'),AT(4,276),USE(?Loc:ExportDirectory:Prompt)
                        ENTRY(@s254),AT(89,276,280,10),USE(Loc:ExportBestand)
                        BUTTON('...'),AT(374,276,12,12),USE(?LookupFile:2)
-                       BUTTON('OK'),AT(419,352),USE(?Close)
-                       BUTTON('Annuleren'),AT(455,352),USE(?Cancel)
+                       BUTTON('OK'),AT(418,373),USE(?Close)
+                       BUTTON('Annuleren'),AT(454,373),USE(?Cancel)
                        PROMPT('Export Bestand Invoice:'),AT(4,289),USE(?Loc:ExportBestandInvoice:Prompt)
                        ENTRY(@s254),AT(89,289,280,10),USE(Loc:ExportBestandInvoice)
                        BUTTON('...'),AT(374,288,12,12),USE(?LookupFile:3)
@@ -131,14 +134,18 @@ Window               WINDOW('Systeemgegevens'),AT(,,508,372),FONT('Microsoft San
                        BUTTON('...'),AT(376,301,12,12),USE(?LookupFile:4)
                        PROMPT('Gewicht Doos:'),AT(4,314),USE(?Loc:GewichtDoos:Prompt)
                        ENTRY(@n-10`3),AT(89,313,60,10),USE(Loc:GewichtDoos),RIGHT(2)
-                       PROMPT('Gewicht Pallet:'),AT(4,326),USE(?Loc:GewichtPallet:Prompt)
-                       ENTRY(@n-10`3),AT(89,325,60,10),USE(Loc:GewichtPallet),RIGHT(2)
+                       PROMPT('Gewicht Pallet:'),AT(180,316),USE(?Loc:GewichtPallet:Prompt)
+                       ENTRY(@n-10`3),AT(266,316,60,10),USE(Loc:GewichtPallet),RIGHT(2)
                        STRING('kg'),AT(152,314),USE(?STRING12)
-                       STRING('kg'),AT(152,324,8,10),USE(?STRING12:2)
-                       PROMPT('Local Path:'),AT(4,340),USE(?Loc:LocalPath:Prompt)
-                       ENTRY(@s255),AT(89,339,174,10),USE(Loc:LocalPath)
-                       PROMPT('Net Path:'),AT(4,352),USE(?Loc:NetPath:Prompt)
-                       ENTRY(@s255),AT(89,352,174,10),USE(Loc:NetPath)
+                       STRING('kg'),AT(328,316,8,10),USE(?STRING12:2)
+                       PROMPT('Local Path:'),AT(4,326),USE(?Loc:LocalPath:Prompt)
+                       ENTRY(@s255),AT(89,326,174,10),USE(Loc:LocalPath)
+                       PROMPT('Net Path:'),AT(4,338),USE(?Loc:NetPath:Prompt)
+                       ENTRY(@s255),AT(89,338,174,10),USE(Loc:NetPath)
+                       PROMPT('Programma Titel:'),AT(5,350),USE(?Loc:Titel:Prompt)
+                       ENTRY(@s100),AT(89,350,174,10),USE(Loc:Titel)
+                       BUTTON('Achtergrondkleur'),AT(273,346),USE(?AchtergrondKleur)
+                       CHECK('Kwaliteit Knop verbergen:'),AT(89,363),USE(Loc:KwalitetKnopVerbergen)
                      END
 
     omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
@@ -229,6 +236,12 @@ ReturnValue          BYTE,AUTO
   
   Loc:LocalPath= GETINI('AutoNet','LocalPath',,'.\Voorraad.ini')
   Loc:NetPath= GETINI('AutoNet','NetPath',,'.\Voorraad.ini')
+  
+  Loc:Titel=GETINI('SYSTEEM','Titel','JMD Voorraad','.\Voorraad.ini')
+  Loc:BackgroundColor=GETINI('SYSTEEM','Achtergond',Color:None,'.\Voorraad.ini')
+  ?AchtergrondKleur{PROP:Background}=Loc:BackgroundColor
+  
+  Loc:KwalitetKnopVerbergen=GETINI('SYSTEEM','KwaliteitKnopVerbergen',True,'.\Voorraad.ini')
   SELF.Open(Window)                                        ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
@@ -334,6 +347,10 @@ Looped BYTE
       
       PUTINI('AutoNet','LocalPath',Loc:LocalPath,'.\Voorraad.ini')
       PUTINI('AutoNet','NetPath',Loc:NetPath,'.\Voorraad.ini')
+      
+      PUTINI('SYSTEEM','Titel',Loc:Titel,'.\Voorraad.ini')
+      PUTINI('SYSTEEM','Achtergond',Loc:BackgroundColor,'.\Voorraad.ini')
+      PUTINI('SYSTEEM','KwaliteitKnopVerbergen',Loc:KwalitetKnopVerbergen,'.\Voorraad.ini')
     OF ?LookupFile:3
       ThisWindow.Update()
       Loc:ExportBestandInvoice = FileLookup7.Ask(1)
@@ -342,6 +359,12 @@ Looped BYTE
       ThisWindow.Update()
       Loc:ExportBestandPurchaseOrder = FileLookup8.Ask(1)
       DISPLAY
+    OF ?AchtergrondKleur
+      ThisWindow.Update()
+      IF COLORDIALOG('Kies achtergrond kleur',Loc:BackgroundColor)
+          ?AchtergrondKleur{PROP:Background}=Loc:BackgroundColor
+      END
+      
     END
     RETURN ReturnValue
   END

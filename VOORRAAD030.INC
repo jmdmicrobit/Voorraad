@@ -1,3 +1,3 @@
   MODULE('VOORRAAD030.CLW')
-BrowseTransfers        PROCEDURE(<DATE>)              !Browse the OverboekingRit file
+BrowsePallet           PROCEDURE                      !Browse the Pallet file
   END

@@ -1,0 +1,1373 @@
+[MODULE]
+NAME 'WijzigLocatie_VoorrVrd.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME WijzigLocatie
+PROTOTYPE '(LONG, LONG)'
+PARAMETERS '(LONG PRM:PartijID,LONG PRM:CelID)'
+[COMMON]
+DESCRIPTION 'Cel / Lokatie wijzigen'
+FROM ABC Window
+CATEGORY 'Window'
+[DATA]
+[SCREENCONTROLS]
+! PROMPT('LOC : Partij ID:'),USE(?LOC:PartijID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:PartijID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:PartijID),RIGHT(1)
+LOC:PartijID             LONG
+!!> GUID('22ccb001-6a97-4eef-846b-1bc95f3f8ad5'),PROMPT('LOC : Partij ID:'),HEADER('LOC : Partij ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Cel KG:'),USE(?Loc:CelKG:Prompt)
+! ENTRY(@n-14),USE(Loc:CelKG),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:CelKG),RIGHT(1)
+Loc:CelKG                LONG
+!!> GUID('04b84018-92fa-47c1-aebb-a2c461d41026'),PROMPT('Loc : Cel KG:'),HEADER('Loc : Cel KG'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Cel Pallet:'),USE(?Loc:CelPallet:Prompt)
+! ENTRY(@n-14),USE(Loc:CelPallet),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:CelPallet),RIGHT(1)
+Loc:CelPallet            LONG
+!!> GUID('b1f7fec9-5bbd-4f25-b084-af9aed7d9e99'),PROMPT('Loc : Cel Pallet:'),HEADER('Loc : Cel Pallet'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige KG:'),USE(?Loc:HuidigeKG:Prompt)
+! ENTRY(@n-13`2),USE(Loc:HuidigeKG),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-13`2),USE(Loc:HuidigeKG),DECIMAL(12)
+Loc:HuidigeKG            DECIMAL(9,2)
+!!> GUID('55d5df74-6c52-4a36-9670-1303788e196e'),PROMPT('Loc : Huidige KG:'),HEADER('Loc : Huidige KG'),PICTURE(@n-13`2),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige KGW ijzing:'),USE(?Loc:HuidigeKGWijzing:Prompt)
+! ENTRY(@n-13`2),USE(Loc:HuidigeKGWijzing),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-13`2),USE(Loc:HuidigeKGWijzing),RIGHT(1)
+Loc:HuidigeKGWijzing     LONG
+!!> GUID('ca5da349-0c16-496b-9940-753c820d66c7'),PROMPT('Loc : Huidige KGW ijzing:'),HEADER('Loc : Huidige KGW ijzing'),PICTURE(@n-13`2),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige KGW ijzing:'),USE(?Loc:HuidigeKGRest:Prompt)
+! ENTRY(@n-13`2),USE(Loc:HuidigeKGRest),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-13`2),USE(Loc:HuidigeKGRest),RIGHT(1)
+Loc:HuidigeKGRest        LONG
+!!> GUID('19ad3905-ef7b-4395-a1bc-3d2226a43984'),PROMPT('Loc : Huidige KGW ijzing:'),HEADER('Loc : Huidige KGW ijzing'),PICTURE(@n-13`2),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige Pallet Wijzig:'),USE(?Loc:HuidigePalletWijzig:Prompt)
+! ENTRY(@n-14),USE(Loc:HuidigePalletWijzig),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:HuidigePalletWijzig),RIGHT(1)
+Loc:HuidigePalletWijzig  LONG
+!!> GUID('0f36309b-fa83-4735-b5e3-6a0523db1194'),PROMPT('Loc : Huidige Pallet Wijzig:'),HEADER('Loc : Huidige Pallet Wijzig'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige Pallet Wijzig:'),USE(?Loc:HuidigePalletRest:Prompt)
+! ENTRY(@n-14),USE(Loc:HuidigePalletRest),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:HuidigePalletRest),RIGHT(1)
+Loc:HuidigePalletRest    LONG
+!!> GUID('4fe558e1-cac0-4af5-9b67-fb5fb389175d'),PROMPT('Loc : Huidige Pallet Wijzig:'),HEADER('Loc : Huidige Pallet Wijzig'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige Pallet:'),USE(?Loc:HuidigePallet:Prompt)
+! ENTRY(@n-14),USE(Loc:HuidigePallet),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:HuidigePallet),RIGHT(1)
+Loc:HuidigePallet        LONG
+!!> GUID('205d63fd-db11-497e-a8d0-6a4184597e1e'),PROMPT('Loc : Huidige Pallet:'),HEADER('Loc : Huidige Pallet'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Naar Locatie Q:'),USE(?Loc:NaarLocatieQ:Prompt)
+! ENTRY(@s20),USE(Loc:NaarLocatieQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:NaarLocatieQ)
+Loc:NaarLocatieQ         QUEUE,PRE(NLQ)
+!!> GUID('7921f745-9740-4866-b21f-2eeac153ce01'),PROMPT('Loc : Naar Locatie Q:'),HEADER('Loc : Naar Locatie Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Cel Omschrijving:'),USE(?NLQ:CelOmschrijving:Prompt)
+! ENTRY(@s20),USE(NLQ:CelOmschrijving)
+[REPORTCONTROLS]
+! STRING(@s20),USE(NLQ:CelOmschrijving)
+CelOmschrijving            CSTRING(21)
+!!> GUID('96ab1056-10fc-410d-93ad-37d9d9ae0813'),PROMPT('Cel Omschrijving:'),HEADER('Cel Omschrijving'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Locatie Naam:'),USE(?NLQ:LocatieNaam:Prompt)
+! ENTRY(@s50),USE(NLQ:LocatieNaam)
+[REPORTCONTROLS]
+! STRING(@s50),USE(NLQ:LocatieNaam)
+LocatieNaam                CSTRING(51)
+!!> GUID('19651638-d26f-4f57-b57e-c2ef880d9cd7'),PROMPT('Locatie Naam:'),HEADER('Locatie Naam'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Kg:'),USE(?NLQ:Kg:Prompt)
+! ENTRY(@n-14),USE(NLQ:Kg),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(NLQ:Kg),RIGHT(1)
+Kg                         LONG
+!!> GUID('0ab87a93-4eee-4b11-be54-223db667ec85'),PROMPT('Kg:'),HEADER('Kg'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Pallet:'),USE(?NLQ:Pallet:Prompt)
+! ENTRY(@n-14),USE(NLQ:Pallet),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(NLQ:Pallet),RIGHT(1)
+Pallet                     LONG
+!!> GUID('3056e6a5-f69f-4af6-aa8f-3f350bfe52e4'),PROMPT('Pallet:'),HEADER('Pallet'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Cel ID:'),USE(?NLQ:CelID:Prompt)
+! ENTRY(@n-14),USE(NLQ:CelID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(NLQ:CelID),RIGHT(1)
+CelID                      LONG
+!!> GUID('8766330c-67f0-44a0-9db7-cefda86936c3'),PROMPT('Cel ID:'),HEADER('Cel ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Cel Locatie ID:'),USE(?NLQ:CelLocatieID:Prompt)
+! ENTRY(@n-14),USE(NLQ:CelLocatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(NLQ:CelLocatieID),RIGHT(1)
+CelLocatieID               LONG
+!!> GUID('29eca637-80f6-4f58-8fc6-673956696520'),PROMPT('Cel Locatie ID:'),HEADER('Cel Locatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('7bb7df94-39dc-4542-aab7-daac79280634')
+[SCREENCONTROLS]
+! PROMPT('LOC : Cel ID:'),USE(?LOC:CelID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:CelID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:CelID),RIGHT(1)
+LOC:CelID                LONG
+!!> GUID('7ee793d4-6716-44cb-85a6-e9922c4cd4b5'),PROMPT('LOC : Cel ID:'),HEADER('LOC : Cel ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Nieuwe Cel ID:'),USE(?LOC:NieuweCelID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:NieuweCelID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:NieuweCelID),RIGHT(1)
+LOC:NieuweCelID          LONG
+!!> GUID('000ec1f2-7048-409f-b446-c1730b73159e'),PROMPT('LOC : Nieuwe Cel ID:'),HEADER('LOC : Nieuwe Cel ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Nieuwe Cel Locatie ID:'),USE(?LOC:NieuweCelLocatieID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:NieuweCelLocatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:NieuweCelLocatieID),RIGHT(1)
+LOC:NieuweCelLocatieID   LONG
+!!> GUID('54cf5697-5e93-4015-a99f-822f2fadb57f'),PROMPT('LOC : Nieuwe Cel Locatie ID:'),HEADER('LOC : Nieuwe Cel Locatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidge Cel Locatie Namen:'),USE(?Loc:HuidgeCelLocatieNamen:Prompt)
+! ENTRY(@s254),USE(Loc:HuidgeCelLocatieNamen)
+[REPORTCONTROLS]
+! STRING(@s254),USE(Loc:HuidgeCelLocatieNamen)
+Loc:HuidgeCelLocatieNamen CSTRING(255)
+!!> GUID('709dc0be-b4dc-41a2-a90c-24e153b6aecf'),PROMPT('Loc : Huidge Cel Locatie Namen:'),HEADER('Loc : Huidge Cel Locatie Namen'),PICTURE(@s254),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige Cel Naam:'),USE(?Loc:HuidigeCelNaam:Prompt)
+! ENTRY(@s50),USE(Loc:HuidigeCelNaam)
+[REPORTCONTROLS]
+! STRING(@s50),USE(Loc:HuidigeCelNaam)
+Loc:HuidigeCelNaam       CSTRING(51)
+!!> GUID('05cb77a6-3ec3-4b36-8dda-4389d176a92e'),PROMPT('Loc : Huidige Cel Naam:'),HEADER('Loc : Huidige Cel Naam'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige Cel Locatie ID:'),USE(?Loc:HuidigeCelLocatieID:Prompt)
+! ENTRY(@n-14),USE(Loc:HuidigeCelLocatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(Loc:HuidigeCelLocatieID),RIGHT(1)
+Loc:HuidigeCelLocatieID  LONG
+!!> GUID('068085af-a2f2-4373-bc91-77054684ab6e'),PROMPT('Loc : Huidige Cel Locatie ID:'),HEADER('Loc : Huidige Cel Locatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Loc : Gekozen Cel:'),USE(?Loc:GekozenCel:Prompt)
+! ENTRY(@s20),USE(Loc:GekozenCel)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:GekozenCel)
+Loc:GekozenCel           STRING(20)
+!!> GUID('92374102-5cb1-45cf-89e7-2da62c9df7e8'),PROMPT('Loc : Gekozen Cel:'),HEADER('Loc : Gekozen Cel'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Loc : Huidige Locatie Q:'),USE(?Loc:HuidigeLocatieQ:Prompt)
+! ENTRY(@s20),USE(Loc:HuidigeLocatieQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:HuidigeLocatieQ)
+Loc:HuidigeLocatieQ      QUEUE,PRE(HLQ)
+!!> GUID('09719288-d637-4b5c-ae6f-ed3d3755e2d3'),PROMPT('Loc : Huidige Locatie Q:'),HEADER('Loc : Huidige Locatie Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Locatie Naam:'),USE(?HLQ:LocatieNaam:Prompt)
+! ENTRY(@s50),USE(HLQ:LocatieNaam)
+[REPORTCONTROLS]
+! STRING(@s50),USE(HLQ:LocatieNaam)
+LocatieNaam                CSTRING(51)
+!!> GUID('99074545-e42d-4b4b-a480-15c6747e9ec1'),PROMPT('Locatie Naam:'),HEADER('Locatie Naam'),PICTURE(@s50),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('KG:'),USE(?HLQ:KG:Prompt)
+! ENTRY(@n-14),USE(HLQ:KG),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(HLQ:KG),RIGHT(1)
+KG                         LONG
+!!> GUID('228fc3d8-a53e-4c85-9194-4171b981943c'),PROMPT('KG:'),HEADER('KG'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Pallet:'),USE(?HLQ:Pallet:Prompt)
+! ENTRY(@n-14),USE(HLQ:Pallet),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(HLQ:Pallet),RIGHT(1)
+Pallet                     LONG
+!!> GUID('7a1e6746-0808-4edd-bc13-255086fafa3b'),PROMPT('Pallet:'),HEADER('Pallet'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Cel Locatie ID:'),USE(?HLQ:CelLocatieID:Prompt)
+! ENTRY(@n-14),USE(HLQ:CelLocatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(HLQ:CelLocatieID),RIGHT(1)
+CelLocatieID               LONG
+!!> GUID('348b3c8b-7b0d-439a-84f1-9e192a3cfaa1'),PROMPT('Cel Locatie ID:'),HEADER('Cel Locatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('7756e7f8-ac73-4978-8398-92e4cb4e798e')
+[SCREENCONTROLS]
+! PROMPT('Loc : Cel Q:'),USE(?Loc:CelQ:Prompt)
+! ENTRY(@s20),USE(Loc:CelQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:CelQ)
+Loc:CelQ                 QUEUE,PRE(LCQ)
+!!> GUID('e2d6ec42-7688-4a12-b410-d33d9443d8f8'),PROMPT('Loc : Cel Q:'),HEADER('Loc : Cel Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Cel Naam:'),USE(?LCQ:CelNaam:Prompt)
+! ENTRY(@s20),USE(LCQ:CelNaam)
+[REPORTCONTROLS]
+! STRING(@s20),USE(LCQ:CelNaam)
+CelNaam                    CSTRING(21)
+!!> GUID('8a77738b-7fc9-4372-b5c5-9d3f55c39ab5'),PROMPT('Cel Naam:'),HEADER('Cel Naam'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Cel ID:'),USE(?LCQ:CelID:Prompt)
+! ENTRY(@n-14),USE(LCQ:CelID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LCQ:CelID),RIGHT(1)
+CelID                      LONG
+!!> GUID('69faebac-fc53-4dba-9fb5-c171099ba5a1'),PROMPT('Cel ID:'),HEADER('Cel ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('d5859309-217c-4126-b66f-1734a7716843')
+[SCREENCONTROLS]
+! PROMPT('Loc : Cel Locatie Q:'),USE(?Loc:CelLocatieQ:Prompt)
+! ENTRY(@s20),USE(Loc:CelLocatieQ)
+[REPORTCONTROLS]
+! STRING(@s20),USE(Loc:CelLocatieQ)
+Loc:CelLocatieQ          QUEUE,PRE(CLQ)
+!!> GUID('a2311cab-567d-468d-928c-3518c4b7b892'),PROMPT('Loc : Cel Locatie Q:'),HEADER('Loc : Cel Locatie Q'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Locatie Naam:'),USE(?CLQ:LocatieNaam:Prompt)
+! ENTRY(@s20),USE(CLQ:LocatieNaam)
+[REPORTCONTROLS]
+! STRING(@s20),USE(CLQ:LocatieNaam)
+LocatieNaam                STRING(20)
+!!> GUID('3248df04-bf29-4776-835c-9a551714071f'),PROMPT('Locatie Naam:'),HEADER('Locatie Naam'),PICTURE(@s20),TYPEMODE(INS)
+[SCREENCONTROLS]
+! PROMPT('Cel Locatie ID:'),USE(?CLQ:CelLocatieID:Prompt)
+! ENTRY(@n-14),USE(CLQ:CelLocatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(CLQ:CelLocatieID),RIGHT(1)
+CelLocatieID               LONG
+!!> GUID('f04aaaae-1630-44cd-9eed-b2cf7c8a8b81'),PROMPT('Cel Locatie ID:'),HEADER('Cel Locatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+                         END
+!!> GUID('0b3108f4-f9d6-43d2-9710-499c8d9ba0dd')
+[FILES]
+[OTHERS]
+Cel
+ViewVoorraadPartij_INDEXED
+ViewPartijCelLocaties
+CelLocatie
+Mutatie
+[PROMPTS]
+%ButtonAction DEPEND %Control DEFAULT TIMES 8
+WHEN  ('') ('No Special Action')
+WHEN  ('?Cancel') ('No Special Action')
+WHEN  ('?Change') ('No Special Action')
+WHEN  ('?Delete') ('No Special Action')
+WHEN  ('?Insert') ('No Special Action')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('No Special Action')
+WHEN  ('?Ok') ('No Special Action')
+WHEN  ('?PROMPT3') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 8
+WHEN  ('') ('25000')
+WHEN  ('?Cancel') ('25000')
+WHEN  ('?Change') ('25000')
+WHEN  ('?Delete') ('25000')
+WHEN  ('?Insert') ('25000')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('25000')
+WHEN  ('?Ok') ('25000')
+WHEN  ('?PROMPT3') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 8
+WHEN  ('') ('None')
+WHEN  ('?Cancel') ('None')
+WHEN  ('?Change') ('None')
+WHEN  ('?Delete') ('None')
+WHEN  ('?Insert') ('None')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('None')
+WHEN  ('?Ok') ('None')
+WHEN  ('?PROMPT3') ('None')
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(),BYTE,PROC,DERIVED', 'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Reset {18}PROCEDURE(BYTE Force=0),DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeFieldEvent {9}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Default')
+WHEN  ('?Insert') ('Default')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('Default')
+WHEN  ('?PROMPT3') ('Default')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 0
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 0
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 0
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 6
+WHEN  ('') (1)
+WHEN  ('?Insert') (1)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (1)
+WHEN  ('?Loc:HuidigeKGWijzing') (1)
+WHEN  ('?Loc:HuidigePalletWijzig') (1)
+WHEN  ('?PROMPT3') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Insert')TIMES 0
+WHEN  ('?Loc:HuidgeCelLocatieNamen')TIMES 0
+WHEN  ('?PROMPT3')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Insert')TIMES 0
+WHEN  ('?Loc:HuidgeCelLocatieNamen')TIMES 0
+WHEN  ('?PROMPT3')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Insert')TIMES 0
+WHEN  ('?Loc:HuidgeCelLocatieNamen')TIMES 0
+WHEN  ('?PROMPT3')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Insert')TIMES 0
+WHEN  ('?Loc:HuidgeCelLocatieNamen')TIMES 0
+WHEN  ('?PROMPT3')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Insert')TIMES 0
+WHEN  ('?Loc:HuidgeCelLocatieNamen')TIMES 0
+WHEN  ('?PROMPT3')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
+WHEN  ('?Insert')TIMES 0
+WHEN  ('?Loc:HuidgeCelLocatieNamen')TIMES 0
+WHEN  ('?PROMPT3')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Off')
+WHEN  ('?Insert') ('Off')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('Off')
+WHEN  ('?PROMPT3') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('')
+WHEN  ('?Insert') ('')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('')
+WHEN  ('?PROMPT3') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Insert') (0)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (0)
+WHEN  ('?PROMPT3') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
+WHEN  ('?Insert') (-1)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (-1)
+WHEN  ('?PROMPT3') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Insert') (0)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (0)
+WHEN  ('?PROMPT3') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
+WHEN  ('?Insert') (-1)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (-1)
+WHEN  ('?PROMPT3') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Insert') (0)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (0)
+WHEN  ('?PROMPT3') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('AIBtn0')
+WHEN  ('?Insert') ('AIBtn17')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('AIBtn11')
+WHEN  ('?PROMPT3') ('AIBtn3')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 4
+WHEN  ('') (1)
+WHEN  ('?Insert') (1)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (1)
+WHEN  ('?PROMPT3') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('?GROUP1')
+WHEN  ('?Insert') ('?GROUP1')
+WHEN  ('?Loc:HuidgeCelLocatieNamen') ('?PROMPT3:2')
+WHEN  ('?PROMPT3') ('?PROMPT3:2')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Insert') (0)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (0)
+WHEN  ('?PROMPT3') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Insert') (0)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (0)
+WHEN  ('?PROMPT3') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Insert') (0)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (0)
+WHEN  ('?PROMPT3') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
+WHEN  ('?Insert') (0)
+WHEN  ('?Loc:HuidgeCelLocatieNamen') (0)
+WHEN  ('?PROMPT3') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8000
+PROPERTY:END
+db.DebugOut('WijzigLocatie:' & PRM:PartijID & ', ' & PRM:CelID)
+LOC:PartijID = PRM:PartijID
+LOC:CelID = PRM:CelID
+Clear(Cel:Record)
+Cel:CelID=LOC:CelID
+IF Access:Cel.Fetch(CEL:CEL_PK)=Level:Benign
+    Loc:HuidigeCelNaam=CEL:CelOms
+END
+
+Clear(VVParI:Record)
+VVParI:PartijID=PRM:PartijID
+VVParI:CelID=PRM:CelID
+IF Access:ViewVoorraadPartij_INDEXED.Fetch(VVParI:PartijID_CelID_K)<>Level:Benign
+    Message('Voorraad per partij cel kon niet bepaald worden','Error',ICON:Cross)
+END
+
+Loc:CelKG=VVParI:InslagKG-VVParI:UitslagKG
+Loc:CelPallet=VVParI:InslagPallets-VVParI:UitslagPallets
+
+!LOC:HuidigeCelLocatieNaam = 'Alle locatie''s'
+DO VulHuidigeCelLocatieQueue
+
+LOC:NieuweCelID = LOC:CelID
+
+CLEAR(CL:Record)
+
+Free(Loc:CelQ)
+Clear(Cel:Record)
+Set(CEL:CEL_PK,CEL:CEL_PK)
+Loop Until Access:Cel.Next()
+    LCQ:CelNaam=CEL:CelOms
+    LCQ:CelID=CEL:CelID
+    Add(Loc:CelQ)
+END
+
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8800
+PROPERTY:END
+  ! eerste Cellocatie vullen
+  ?List{PROP:LineHeight}=12
+Select(?Loc:HuidgeCelLocatieNamen,1)
+DO ToonCelLocatieKG
+[END]
+[END]
+[END]
+EMBED %ControlEventHandling
+[INSTANCES]
+WHEN '?Ok'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+! Mutaties toevoegen voor het overboeken
+CLEAR(Mut:Record)
+Access:Mutatie.PrimeRecord(false)
+Mut:DatumTijd_DATE=TODAY()
+Mut:DatumTijd_TIME=CLOCK()
+Mut:PartijID=PRM:PartijID
+Mut:CelID=PRM:CelID
+Mut:CelLocatieID=Loc:HuidigeCelLocatieID
+Mut:InslagKG=0
+Mut:InslagPallet=0
+Mut:UitslagKG=Loc:HuidigeKGWijzing
+Mut:UitslagPallet=Loc:HuidigePalletWijzig
+Mut:SoortMutatie='OUIT'
+Mut:NaarCELID=NLQ:CelID
+Mut:RedenAfboeking=''
+Mut:ArtikelID=VVParI:ArtikelID
+Mut:PlanningID=0
+GLO:GebruikerLogHandelingOpmerking='Corrigeer Cel/Locatie van'	
+Access:Mutatie.Insert()
+
+Loop i#=1 to Records(Loc:NaarLocatieQ)
+    Get(Loc:NaarLocatieQ,i#)
+    ! (1) Eerst  OUIT-mutatie
+    CLEAR(Mut:Record)
+    Access:Mutatie.PrimeRecord(false)
+    Mut:DatumTijd_DATE=TODAY()
+    Mut:DatumTijd_TIME=CLOCK()
+    Mut:PartijID=PRM:PartijID
+    Mut:CelID=NLQ:CelID
+    Mut:CelLocatieID=NLQ:CelLocatieID
+    Mut:InslagKG=NLQ:Kg
+    Mut:InslagPallet=NLQ:Pallet
+    Mut:UitslagKG=0
+    Mut:UitslagPallet=0
+    Mut:SoortMutatie='OIN'
+    Mut:NaarCELID=PRM:CelID
+    Mut:RedenAfboeking=''
+    Mut:ArtikelID=VVParI:ArtikelID
+    Mut:PlanningID=0
+    GLO:GebruikerLogHandelingOpmerking='Corrigeer Cel/Locatie naar'	
+    Access:Mutatie.Insert()
+
+END
+[END]
+[END]
+WHEN '?Loc:HuidgeCelLocatieNamen'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5000
+PROPERTY:END
+    ! Huidige cellocatie opslaan
+    DO ToonCelLocatieKG
+    !Message(Loc:HuidgeCelLocatieNamen)
+[END]
+[END]
+WHEN '?Delete'
+[INSTANCES]
+WHEN 'Accepted'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 6000
+PROPERTY:END
+DO BerekenRest
+[END]
+[END]
+[END]
+EMBED %ProcedureRoutines
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+VulHuidigeCelLocatieQueue   ROUTINE
+	!CLEAR(Loc:HuidgeCelLocatieNamen)
+    FREE(Loc:HuidigeLocatieQ)
+	Clear(VPCL:Record)	
+	VPCL:PartijID = LOC:PartijID
+	VPCL:CelID = LOC:CelID
+	SET(VPCL:ViewPartijCelLocaties_PK,VPCL:ViewPartijCelLocaties_PK)
+	LOOP UNTIL Access:ViewPartijCelLocaties.Next()
+		IF NOT (VPCL:PartijID = LOC:PartijID AND VPCL:CelID = LOC:CelID) THEN BREAK.
+		
+!        IF NOT INSTRING(CLIP(VPCL:CelLocatienaam),Loc:HuidgeCelLocatieNamen,1,1)
+!            if Loc:HuidgeCelLocatieNamen=''
+!                Loc:HuidgeCelLocatieNamen=VPCL:CelLocatienaam
+!            ELSE
+!                Loc:HuidgeCelLocatieNamen=CLIP(Loc:HuidgeCelLocatieNamen)&','&VPCL:CelLocatienaam
+!            END
+!        END
+        HLQ:CelLocatieID=VPCL:CelLocatieID
+        HLQ:LocatieNaam=VPCL:CelLocatienaam
+        HLQ:KG=VPCL:KG
+        HLQ:Pallet=VPCL:Pallet
+        Add(Loc:HuidigeLocatieQ)
+	END	
+	
+
+	EXIT
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+ToonCelLocatieKG    ROUTINE
+    !Message(Loc:HuidgeCelLocatieNamen)
+    IF 0{PROP:AcceptAll}=FALSE
+        Loop i#=1 to Records(Loc:HuidigeLocatieQ)
+            Get(Loc:HuidigeLocatieQ,i#)
+            IF HLQ:LocatieNaam=Loc:HuidgeCelLocatieNamen
+                Loc:HuidigeCelLocatieID=HLQ:CelLocatieID
+                Loc:HuidigeKG=CHOOSE(HLQ:KG>Loc:CelKG,Loc:CelKG,HLQ:KG)
+                Loc:HuidigePallet=CHOOSE(HLQ:Pallet>Loc:CelPallet,Loc:CelPallet,HLQ:Pallet)
+                Loc:HuidigeKGWijzing=Loc:HuidigeKG
+                Display(?Loc:HuidigeKGWijzing)
+                Loc:HuidigePalletWijzig=Loc:HuidigePallet
+                Display(?Loc:HuidigePalletWijzig)
+                Loc:HuidigeKGRest=Loc:HuidigeKGWijzing
+                Loc:HuidigePalletRest=Loc:HuidigePalletWijzig
+                BREAK
+            END
+        END
+    !Message(Loc:HuidigeCelLocatieID)
+    END
+    EXIT
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+BerekenRest         ROUTINE
+    Loc:HuidigeKGRest=Loc:HuidigeKGWijzing
+    Loc:HuidigePalletRest=Loc:HuidigePalletWijzig
+    Loop i#=1 to Records(Loc:NaarLocatieQ)
+        Get(Loc:NaarLocatieQ,i#)
+        Loc:HuidigeKGRest-=NLQ:Kg
+        Loc:HuidigePalletRest-=NLQ:Pallet
+    END
+    IF Loc:HuidigeKGRest=0
+        ENABLE(?Ok)
+    ELSE
+        DISABLE(?Ok)
+    END
+[END]
+EMBED %QEIPFieldCreateControlCodeSection
+[INSTANCES]
+WHEN '3'
+[INSTANCES]
+WHEN 'NLQ:CelOmschrijving'
+[INSTANCES]
+WHEN 'CreateControl'
+[INSTANCES]
+WHEN '(),VIRTUAL,PROTECTED'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+    ! De Cel dropdown vullen
+Self.Feq{Prop:From}=LCQ:CelNaam
+Self.Feq{Prop:Drop}=20
+Self.Feq{PROP:Width}=100
+!Self.Feq{Prop:Use}=Loc:GekozenCel
+[END]
+[END]
+[END]
+[END]
+[END]
+EMBED %QEIPFieldTakeAcceptedCodeSection
+[INSTANCES]
+WHEN '3'
+[INSTANCES]
+WHEN 'NLQ:CelOmschrijving'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+! welke cel heb ik gekozen ?Loc:NaarLocatieQ.NLQ:CelOmschrijving
+LCQ:CelNaam=Loc:NaarLocatieQ.NLQ:CelOmschrijving
+Get(Loc:CelQ,+LCQ:CelNaam)
+IF ERROR()
+    Message('Error '&Loc:NaarLocatieQ.NLQ:CelOmschrijving&' error '&Error())
+END
+NLQ:CelID=LCQ:CelID
+Free(Loc:CelLocatieQ)
+Clear(CL:Record)
+CL:CelID=LCQ:CelID
+Set(CL:FK_CelLocatie,CL:FK_CelLocatie)
+Loop Until Access:CelLocatie.Next()
+    IF NOT CL:CelID=LCQ:CelID THEN BREAK.
+    CLQ:LocatieNaam=CL:Locatienaam
+    CLQ:CelLocatieID=CL:CelLocatieID
+    CLQ:CelID=LCQ:CelID
+    Add(Loc:CelLocatieQ)
+END
+
+QEIP3::NLQ:LocatieNaam.Feq{Prop:From}=CLQ:LocatieNaam
+QEIP3::NLQ:LocatieNaam.Feq{Prop:Drop}=20
+QEIP3::NLQ:LocatieNaam.Feq{PROP:Width}=100
+[END]
+WHEN 'NLQ:LocatieNaam'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+! welke cel heb ik gekozen ?Loc:NaarLocatieQ.NLQ:CelOmschrijving
+CLQ:LocatieNaam=Loc:NaarLocatieQ.NLQ:LocatieNaam
+Get(Loc:CelLocatieQ,+CLQ:LocatieNaam)
+IF ERROR()
+    Message('Error '&Loc:NaarLocatieQ.NLQ:LocatieNaam&' error '&Error())
+END
+NLQ:CelLocatieID=CLQ:CelLocatieID
+[END]
+[END]
+[END]
+EMBED %QEIPTakeCompletedCodeSection
+[INSTANCES]
+WHEN '3'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 500
+PROPERTY:END
+! controle of er niet te veel wordt afgeboekt
+IF SELF.Req = ChangeRecord
+    Loc:HuidigeKGRest=Loc:HuidigeKGRest+QEIP3:SaveEntry.Kg
+    Loc:HuidigePalletRest=Loc:HuidigePalletRest+QEIP3:SaveEntry.Pallet
+END
+
+IF NLQ:Kg > Loc:HuidigeKGRest AND NLQ:Pallet > Loc:HuidigePalletRest
+    Message('Er kan niet meer dan '&Loc:HuidigeKGRest&' Kg en '&Loc:HuidigePalletRest&' pallets gewijzigd worden')
+    NLQ:Kg = Loc:HuidigeKGRest
+    NLQ:Pallet= Loc:HuidigePalletRest
+    Put(Loc:NaarLocatieQ)
+ELSIF NLQ:Kg > Loc:HuidigeKGRest
+    Message('Er kan niet meer dan '&Loc:HuidigeKGRest&' Kg  gewijzigd worden')
+    NLQ:Kg = Loc:HuidigeKGRest
+    Put(Loc:NaarLocatieQ)
+ELSIF NLQ:Pallet > Loc:HuidigePalletRest
+    Message('Er kan niet meer dan '&Loc:HuidigePalletRest&' pallets gewijzigd worden')
+    NLQ:Pallet= Loc:HuidigePalletRest
+    Put(Loc:NaarLocatieQ)
+END
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 3000
+PROPERTY:END
+DO BerekenRest
+[END]
+[END]
+[END]
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 9
+OWNER 4
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 8
+OWNER 3
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME ABC CloseButton
+[INSTANCE]
+INSTANCE 1
+[ADDITION]
+NAME ABC CancelButton
+[INSTANCE]
+INSTANCE 2
+[ADDITION]
+NAME ABC WindowResize
+[FIELDPROMPT]
+%ResizeAnchorTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorBottom DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowBottom DEPEND %Control LONG TIMES 0
+
+[INSTANCE]
+INSTANCE 4
+[PROMPTS]
+%UseAppStrategy DEFAULT  ('1')
+%AppStrategy DEFAULT  ('Surface')
+%RestrictMinSize LONG  (1)
+%WindowMinWidth DEFAULT  ('0')
+%WindowMaxWidth DEFAULT  ('0')
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('WindowResizeClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)')
+
+%WindowMinHeight DEFAULT  ('')
+%RestrictMaxSize LONG  (0)
+%WindowMaxHeight DEFAULT  ('')
+%AutoFindParents DEFAULT  ('Default')
+%DeferMoves DEFAULT  ('Default')
+%OverrideControls MULTI LONG  ()
+%OverrideControl DEPEND %OverrideControls DEFAULT TIMES 0
+
+%DisableResize DEPEND %OverrideControls LONG TIMES 0
+
+%HorizResize DEPEND %OverrideControls DEFAULT TIMES 0
+
+%VertResize DEPEND %OverrideControls DEFAULT TIMES 0
+
+%HorizPositional DEPEND %OverrideControls DEFAULT TIMES 0
+
+%VertPositional DEPEND %OverrideControls DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Resizer')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[ADDITION]
+NAME KCR_QEIP KCR_QueueEIP
+[INSTANCE]
+INSTANCE 3
+[PROMPTS]
+%QueueEIPIncludePopupMenu LONG  (1)
+%QueueEIPContinuousInsert LONG  (1)
+%QueueEIPInsertionPoint DEFAULT  ('Append')
+%QueueEIPTabAction DEFAULT  ('Always')
+%QueueEIPTabRemain LONG  (1)
+%QueueEIPEnterAction DEFAULT  ('Always')
+%QueueEIPEnterRemain LONG  (1)
+%QueueEIPArrowAction DEFAULT  ('Always')
+%QueueEIPArrowRemain LONG  (1)
+%QueueEIPArrowRetain LONG  (0)
+%QueueEIPFocusAction DEFAULT  ('Always')
+%QueueEditInPlaceList MULTI LONG  (1, 2, 3, 4)
+%QueueEditInPlaceField DEPEND %QueueEditInPlaceList FIELD TIMES 4
+WHEN  (1) (NLQ:CelOmschrijving)
+WHEN  (2) (NLQ:LocatieNaam)
+WHEN  (3) (NLQ:Kg)
+WHEN  (4) (NLQ:Pallet)
+
+%QueueEditInPlaceFieldDefaultValue DEPEND %QueueEditInPlaceList DEFAULT TIMES 2
+WHEN  (3) ('Loc:HuidigeKGRest')
+WHEN  (4) ('Loc:HuidigePalletRest')
+
+%QueueAllowEIP DEPEND %QueueEditInPlaceList LONG TIMES 4
+WHEN  (1) (1)
+WHEN  (2) (1)
+WHEN  (3) (1)
+WHEN  (4) (1)
+
+%QueueEditClass DEPEND %QueueEditInPlaceList DEFAULT TIMES 4
+WHEN  (1) ('EditDropListClass')
+WHEN  (2) ('EditDropListClass')
+WHEN  (3) ('EditEntryClass')
+WHEN  (4) ('EditEntryClass')
+
+%QueueColorColumn DEPEND %QueueEditInPlaceList LONG TIMES 4
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+
+%QueueTextColor DEPEND %QueueEditInPlaceList LONG TIMES 4
+WHEN  (1) (16711680)
+WHEN  (2) (16711680)
+WHEN  (3) (16711680)
+WHEN  (4) (16711680)
+
+%QueueBackColor DEPEND %QueueEditInPlaceList LONG TIMES 4
+WHEN  (1) (-1)
+WHEN  (2) (-1)
+WHEN  (3) (-1)
+WHEN  (4) (-1)
+
+%QueueTextSelected DEPEND %QueueEditInPlaceList LONG TIMES 4
+WHEN  (1) (-1)
+WHEN  (2) (-1)
+WHEN  (3) (-1)
+WHEN  (4) (-1)
+
+%QueueBackSelected DEPEND %QueueEditInPlaceList LONG TIMES 4
+WHEN  (1) (-1)
+WHEN  (2) (-1)
+WHEN  (3) (-1)
+WHEN  (4) (-1)
+
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+[WINDOW]
+QuickWindow WINDOW('Cel / Locatie wijzigen'),AT(,,436,168),FONT('MS Sans Serif',8,,FONT:regular, |
+          CHARSET:DEFAULT),DOUBLE,CENTER,GRAY,IMM,HLP('WijzigLocatie'),SYSTEM
+          GROUP('Cel / Partij'),AT(4,4,169,46),USE(?GROUP1),BOXED,TRN,#ORDINAL(1)
+          END
+          PROMPT('Huidige Cel:'),AT(9,12),USE(?PROMPT3:2),#ORDINAL(2)
+          STRING(@s50),AT(61,12,103),USE(Loc:HuidigeCelNaam),FONT('Microsoft Sans Serif',, |
+            ,FONT:bold),#ORDINAL(3)
+          PROMPT('Huidige locatie:'),AT(9,57),USE(?PROMPT3),#ORDINAL(4)
+          BUTTON('&Cancel'),AT(379,148,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT, |
+            MSG('Cancel Operation'),TIP('Cancel Operation'),#ORIG(?Cancel),#SEQ(2),#ORDINAL(5)
+          BUTTON('&OK'),AT(327,148,49,14),USE(?Ok),LEFT,ICON('WAOK.ICO'),DISABLE,FLAT,MSG('Accept operation'), |
+            TIP('Accept Operation'),#ORIG(?Ok),#SEQ(1),#ORDINAL(6)
+          COMBO(@s254),AT(62,54,111),USE(Loc:HuidgeCelLocatieNamen),DROP(10,200),FORMAT('64L(2)|M~L' & |
+            'ocatie Naam~L(0)@s50@56R(2)|M~KG~R(1)@N-13`2@60R(2)|M~Pallet~R(1)@n-14@'),FROM(Loc:HuidigeLocatieQ), |
+            #FIELDS(HLQ:LocatieNaam,HLQ:KG,HLQ:Pallet),#ORDINAL(7)
+          PROMPT('KG:'),AT(9,74),USE(?PROMPT4),#ORDINAL(8)
+          PROMPT('Pallet:'),AT(9,92),USE(?PROMPT5),#ORDINAL(9)
+          STRING(@n-13`2),AT(43,74),USE(Loc:HuidigeKG),FONT('Microsoft Sans Serif',,,FONT:bold), |
+            #ORDINAL(10)
+          STRING(@n-14),AT(43,93),USE(Loc:HuidigePallet),FONT('Microsoft Sans Serif',,,FONT:bold), |
+            #ORDINAL(11)
+          STRING(@n-14),AT(104,39),USE(Loc:CelPallet),FONT('Microsoft Sans Serif',,,FONT:bold), |
+            #ORDINAL(12)
+          STRING(@N-13`2),AT(109,26),USE(Loc:CelKG),FONT('Microsoft Sans Serif',,,FONT:bold), |
+            #ORDINAL(13)
+          PROMPT('Pallet:'),AT(9,39),USE(?PROMPT5:2),#ORDINAL(14)
+          PROMPT('KG:'),AT(9,26),USE(?PROMPT4:2),#ORDINAL(15)
+          LIST,AT(185,22,241,84),USE(?List),VSCROLL,ALRT(MouseLeft2),FORMAT('58L(2)|M~C' & |
+            'el Omschrijving~@s20@50L(2)|M~Locatie Naam~L(0)@s50@55L(2)|M~Kg~L(1)@n-13`' & |
+            '2@60L(2)|M~Pallet~L(1)@n-14@'),FROM(Loc:NaarLocatieQ),#FIELDS(NLQ:CelOmschrijving, |
+            NLQ:LocatieNaam,NLQ:Kg,NLQ:Pallet),#ORIG(?List),#SEQ(3),#ORDINAL(16)
+          BUTTON('&Voeg toe'),AT(300,112,40,12),USE(?Insert),KEY(InsertKey),#ORIG(?Insert), |
+            #SEQ(3),#ORDINAL(17)
+          BUTTON('&Wijzig'),AT(345,112,40,12),USE(?Change),KEY(CtrlEnter),#ORIG(?Change),#SEQ(3), |
+            #ORDINAL(18)
+          BUTTON('&Verwijder'),AT(389,112,40,12),USE(?Delete),KEY(DeleteKey),#ORIG(?Delete), |
+            #SEQ(3),#ORDINAL(19)
+          ENTRY(@n-13`2),AT(114,74),USE(Loc:HuidigeKGWijzing),RIGHT,#ORDINAL(20)
+          ENTRY(@n-14),AT(109,92),USE(Loc:HuidigePalletWijzig),RIGHT,#ORDINAL(21)
+          STRING(@n-13`2),AT(291,128),USE(Loc:HuidigeKGRest),FONT('Microsoft Sans Serif',, |
+            ,FONT:bold),#ORDINAL(22)
+          STRING(@n-14),AT(367,128),USE(Loc:HuidigePalletRest),FONT('Microsoft Sans Serif', |
+            ,,FONT:bold),#ORDINAL(23)
+          GROUP('Nieuw Cel/Locatie'),AT(179,7,255,117),USE(?GROUP2),BOXED,TRN,#ORDINAL(10000)
+          END
+        END
+
+[END]

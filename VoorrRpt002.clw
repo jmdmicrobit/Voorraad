@@ -16,6 +16,7 @@
 !!! </summary>
 MainRpt PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 Window               WINDOW('Caption'),AT(,,260,100),GRAY
@@ -50,6 +51,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'MainRpt','VoorrRpt002.clw','VoorrRpt.DLL','01/10/2019 @ 12:09PM')    
+             
   GlobalErrors.SetProcedureName('MainRpt')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -65,6 +68,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(Window)                                        ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('MainRpt',Window)                           ! Restore window settings from non-volatile store
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
@@ -85,6 +89,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('MainRpt',Window)                        ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -107,6 +113,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('MainRpt',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'06/10/2011 @ 11:49AM','01/10/2019 @ 12:09PM','05/15/2020 @ 11:19AM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

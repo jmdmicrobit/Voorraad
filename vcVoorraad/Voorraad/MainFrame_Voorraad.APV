@@ -1393,7 +1393,7 @@ WHEN  ('?Voorraad')TIMES 0
 WHEN  ('?WindowTimingVerklaring')TIMES 0
 
 %ProcedureOneInstance LONG  (0)
-%FieldGradientColorType DEPEND %Control DEFAULT TIMES 17
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 18
 WHEN  ('') ('Off')
 WHEN  ('?ActieAfwijkingen') ('Off')
 WHEN  ('?CelLocatieVullenMutaties') ('Off')
@@ -1411,8 +1411,9 @@ WHEN  ('?StamgegevensDeliveryTerms') ('Off')
 WHEN  ('?StamgegevensKosten') ('Off')
 WHEN  ('?Uitvoerhavens') ('Off')
 WHEN  ('?Voorraad') ('Off')
+WHEN  ('?WindowTimingVerklaring') ('Off')
 
-%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 17
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 18
 WHEN  ('') ('')
 WHEN  ('?ActieAfwijkingen') ('')
 WHEN  ('?CelLocatieVullenMutaties') ('')
@@ -1430,8 +1431,9 @@ WHEN  ('?StamgegevensDeliveryTerms') ('')
 WHEN  ('?StamgegevensKosten') ('')
 WHEN  ('?Uitvoerhavens') ('')
 WHEN  ('?Voorraad') ('')
+WHEN  ('?WindowTimingVerklaring') ('')
 
-%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 17
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 18
 WHEN  ('') (0)
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
@@ -1449,8 +1451,9 @@ WHEN  ('?StamgegevensDeliveryTerms') (0)
 WHEN  ('?StamgegevensKosten') (0)
 WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
+WHEN  ('?WindowTimingVerklaring') (0)
 
-%FieldGradientColorFrom DEPEND %Control LONG TIMES 17
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 18
 WHEN  ('') (-1)
 WHEN  ('?ActieAfwijkingen') (-1)
 WHEN  ('?CelLocatieVullenMutaties') (-1)
@@ -1468,10 +1471,11 @@ WHEN  ('?StamgegevensDeliveryTerms') (-1)
 WHEN  ('?StamgegevensKosten') (-1)
 WHEN  ('?Uitvoerhavens') (-1)
 WHEN  ('?Voorraad') (-1)
+WHEN  ('?WindowTimingVerklaring') (-1)
 
 %FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 17
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 18
 WHEN  ('') (0)
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
@@ -1489,8 +1493,9 @@ WHEN  ('?StamgegevensDeliveryTerms') (0)
 WHEN  ('?StamgegevensKosten') (0)
 WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
+WHEN  ('?WindowTimingVerklaring') (0)
 
-%FieldGradientColorTo DEPEND %Control LONG TIMES 17
+%FieldGradientColorTo DEPEND %Control LONG TIMES 18
 WHEN  ('') (-1)
 WHEN  ('?ActieAfwijkingen') (-1)
 WHEN  ('?CelLocatieVullenMutaties') (-1)
@@ -1508,10 +1513,11 @@ WHEN  ('?StamgegevensDeliveryTerms') (-1)
 WHEN  ('?StamgegevensKosten') (-1)
 WHEN  ('?Uitvoerhavens') (-1)
 WHEN  ('?Voorraad') (-1)
+WHEN  ('?WindowTimingVerklaring') (-1)
 
 %FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 17
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 18
 WHEN  ('') (0)
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
@@ -1529,13 +1535,14 @@ WHEN  ('?StamgegevensDeliveryTerms') (0)
 WHEN  ('?StamgegevensKosten') (0)
 WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
+WHEN  ('?WindowTimingVerklaring') (0)
 
 %PreserveVarsLoc MULTI LONG  ()
 %PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
 
 %ActiveImageEnable DEPEND %Control LONG TIMES 0
 
-%AIObjectName DEPEND %Control DEFAULT TIMES 16
+%AIObjectName DEPEND %Control DEFAULT TIMES 17
 WHEN  ('') ('AIBtn0')
 WHEN  ('?ActieAfwijkingen') ('AIBtn59')
 WHEN  ('?CelLocatieVullenMutaties') ('AIBtn17')
@@ -1552,8 +1559,9 @@ WHEN  ('?StamgegevensDeliveryTerms') ('AIBtn27')
 WHEN  ('?StamgegevensKosten') ('AIBtn31')
 WHEN  ('?Uitvoerhavens') ('AIBtn35')
 WHEN  ('?Voorraad') ('AIBtn48')
+WHEN  ('?WindowTimingVerklaring') ('AIBtn78')
 
-%AIEnableMimicControl DEPEND %Control LONG TIMES 16
+%AIEnableMimicControl DEPEND %Control LONG TIMES 17
 WHEN  ('') (1)
 WHEN  ('?ActieAfwijkingen') (1)
 WHEN  ('?CelLocatieVullenMutaties') (1)
@@ -1570,8 +1578,9 @@ WHEN  ('?StamgegevensDeliveryTerms') (1)
 WHEN  ('?StamgegevensKosten') (1)
 WHEN  ('?Uitvoerhavens') (1)
 WHEN  ('?Voorraad') (1)
+WHEN  ('?WindowTimingVerklaring') (1)
 
-%AIMimicControl DEPEND %Control DEFAULT TIMES 16
+%AIMimicControl DEPEND %Control DEFAULT TIMES 17
 WHEN  ('') ('?MENUBAR1')
 WHEN  ('?ActieAfwijkingen') ('?MENUBAR1')
 WHEN  ('?CelLocatieVullenMutaties') ('?MENUBAR1')
@@ -1588,6 +1597,7 @@ WHEN  ('?StamgegevensDeliveryTerms') ('?MENUBAR1')
 WHEN  ('?StamgegevensKosten') ('?MENUBAR1')
 WHEN  ('?Uitvoerhavens') ('?MENUBAR1')
 WHEN  ('?Voorraad') ('?MENUBAR1')
+WHEN  ('?WindowTimingVerklaring') ('?MENUBAR1')
 
 %AIImgRound DEPEND %Control LONG TIMES 0
 
@@ -1595,7 +1605,7 @@ WHEN  ('?Voorraad') ('?MENUBAR1')
 
 %AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 16
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 17
 WHEN  ('') (0)
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
@@ -1612,12 +1622,13 @@ WHEN  ('?StamgegevensDeliveryTerms') (0)
 WHEN  ('?StamgegevensKosten') (0)
 WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
+WHEN  ('?WindowTimingVerklaring') (0)
 
 %AIDisableImg DEPEND %Control DEFAULT TIMES 0
 
 %AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIDisableImgIsVariable DEPEND %Control LONG TIMES 16
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 17
 WHEN  ('') (0)
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
@@ -1634,12 +1645,13 @@ WHEN  ('?StamgegevensDeliveryTerms') (0)
 WHEN  ('?StamgegevensKosten') (0)
 WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
+WHEN  ('?WindowTimingVerklaring') (0)
 
 %AIHotImg DEPEND %Control DEFAULT TIMES 0
 
 %AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIHotImgIsVariable DEPEND %Control LONG TIMES 16
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 17
 WHEN  ('') (0)
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
@@ -1656,12 +1668,13 @@ WHEN  ('?StamgegevensDeliveryTerms') (0)
 WHEN  ('?StamgegevensKosten') (0)
 WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
+WHEN  ('?WindowTimingVerklaring') (0)
 
 %AIPressedImg DEPEND %Control DEFAULT TIMES 0
 
 %AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIPressedImgIsVariable DEPEND %Control LONG TIMES 16
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 17
 WHEN  ('') (0)
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
@@ -1678,6 +1691,7 @@ WHEN  ('?StamgegevensDeliveryTerms') (0)
 WHEN  ('?StamgegevensKosten') (0)
 WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
+WHEN  ('?WindowTimingVerklaring') (0)
 
 [EMBED]
 EMBED %WindowManagerMethodCodeSection
@@ -1760,7 +1774,7 @@ WHEN '()'
 PROPERTY:BEGIN
 PRIORITY 4500
 PROPERTY:END
-0{Prop:Text}='JMD Voorraad '&CLIP(GLO:Versie)
+0{Prop:Text}=GETINI('SYSTEEM','Titel','JMD Voorraad','.\Voorraad.ini')&' '&CLIP(GLO:Versie)&' '&GV.GetVersion()
 Comma#=Instring(',',GLO:Owner,1,1)
 
 0{PROP:StatusText,3}=SUB(Glo:OWner,1,Comma#-1)
@@ -1768,6 +1782,7 @@ Comma#=Instring(',',GLO:Owner,1,1)
 
 TweedeComma#=Instring(',',GLO:Owner,1,Comma#+1)
 0{PROP:StatusText,2}=SUB(Glo:OWner,Comma#+1,TweedeComma#-Comma#-1)
+0{PROP:Background}=GETINI('SYSTEEM','Achtergond',Color:None,'.\Voorraad.ini')
 [END]
 [END]
 [END]

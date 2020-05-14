@@ -3,7 +3,8 @@
    MEMBER('VoorrStm.clw')                                  ! This is a MEMBER module
 
 
-   INCLUDE('ABDROPS.INC'),ONCE
+   INCLUDE('ABBROWSE.INC'),ONCE
+   INCLUDE('ABPOPUP.INC'),ONCE
    INCLUDE('ABRESIZE.INC'),ONCE
    INCLUDE('ABTOOLBA.INC'),ONCE
    INCLUDE('ABWINDOW.INC'),ONCE
@@ -15,48 +16,88 @@
 
 !!! <summary>
 !!! Generated from procedure template - Window
-!!! Form Rapporten
+!!! Form PalletBladSjabloon
 !!! </summary>
-UpdateRapporten PROCEDURE 
+UpdatePalletBladSjabloon PROCEDURE 
 
 CurrentTab           STRING(80)                            ! 
 ActionMessage        CSTRING(40)                           ! 
+BRW4::View:Browse    VIEW(PalletBladSjabloonCountry)
+                       PROJECT(PBSC:Country)
+                       PROJECT(PBSC:PalletBladSjabloonCountryID)
+                       PROJECT(PBSC:PalletBladSjabloonID)
+                     END
+Queue:Browse         QUEUE                            !Queue declaration for browse/combo box using ?List
+PBSC:Country           LIKE(PBSC:Country)             !List box control field - type derived from field
+PBSC:PalletBladSjabloonCountryID LIKE(PBSC:PalletBladSjabloonCountryID) !Primary key field - type derived from field
+PBSC:PalletBladSjabloonID LIKE(PBSC:PalletBladSjabloonID) !Browse key field - type derived from field
+Mark                   BYTE                           !Entry's marked status
+ViewPosition           STRING(1024)                   !Entry's view position
+                     END
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-History::Rap:Record  LIKE(Rap:RECORD),THREAD
-QuickWindow          WINDOW('Form Rapporten'),AT(,,358,214),FONT('Microsoft Sans Serif',8,,FONT:regular,CHARSET:DEFAULT), |
-  RESIZE,CENTER,GRAY,IMM,MDI,HLP('UpdateRapporten'),SYSTEM
-                       SHEET,AT(4,4,350,179),USE(?CurrentTab)
-                         TAB('&1) General'),USE(?Tab:1)
-                           PROMPT('Rapport ID:'),AT(8,20),USE(?Rap:RapportID:Prompt),TRN
-                           ENTRY(@n-14),AT(88,20,64,10),USE(Rap:RapportID),DISABLE
-                           PROMPT('Onderwerp:'),AT(8,34),USE(?Rap:Onderwerp:Prompt),TRN
-                           ENTRY(@s50),AT(88,34,204,10),USE(Rap:Onderwerp)
-                           PROMPT('Titel:'),AT(8,48),USE(?Rap:Titel:Prompt),TRN
-                           ENTRY(@s50),AT(88,48,204,10),USE(Rap:Titel)
-                           PROMPT('Emails:'),AT(8,62),USE(?Rap:Emails:Prompt),TRN
-                           ENTRY(@s255),AT(88,62,262,10),USE(Rap:Emails)
-                           CHECK('Maandag:'),AT(88,76,70,8),USE(Rap:Maandag)
-                           CHECK('Dinsdag:'),AT(162,76,70,8),USE(Rap:Dinsdag)
-                           CHECK('Woensdag:'),AT(236,76,70,8),USE(Rap:Woensdag)
-                           CHECK('Donderdag:'),AT(88,88,70,8),USE(Rap:Donderdag)
-                           CHECK('Vrijdag:'),AT(162,88,70,8),USE(Rap:Vrijdag)
-                           CHECK('Zaterdag:'),AT(236,88,70,8),USE(Rap:Zaterdag)
-                           CHECK('Zondag:'),AT(88,100,70,8),USE(Rap:Zondag)
-                           PROMPT('Lst Execution DATE:'),AT(8,112),USE(?Rap:LstExecution_DATE:Prompt),TRN
-                           ENTRY(@d17),AT(88,112,104,10),USE(Rap:LstExecution_DATE)
-                           PROMPT('Lst Execution TIME:'),AT(8,126),USE(?Rap:LstExecution_TIME:Prompt),TRN
-                           ENTRY(@t7),AT(88,126,104,10),USE(Rap:LstExecution_TIME)
-                           PROMPT('Lst Response:'),AT(8,140),USE(?Rap:LstResponse:Prompt),TRN
-                           ENTRY(@s255),AT(88,140,262,10),USE(Rap:LstResponse)
-                           PROMPT('Rapport Source:'),AT(8,157),USE(?Rap:RapportSource:Prompt)
-                           ENTRY(@s50),AT(88,157,262,10),USE(Rap:RapportSource,,?Rap:RapportSource:2)
-                         END
-                       END
-                       BUTTON('&OK'),AT(250,195,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
-  'a and close the window'),TIP('Accept data and close the window')
-                       BUTTON('&Cancel'),AT(303,195,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'), |
+History::PBS:Record  LIKE(PBS:RECORD),THREAD
+NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
+NetLocalRefreshTime     Long
+NetLocalDependancies    String('|PalletBladSjabloon|PalletBladSjabloonCountry|')
+QuickWindow          WINDOW('Form PalletBladSjabloon'),AT(,,449,413),FONT('Microsoft Sans Serif',8,,FONT:regular, |
+  CHARSET:DEFAULT),DOUBLE,CENTER,GRAY,IMM,MDI,HLP('UpdatePalletBladSjabloon'),SYSTEM
+                       PROMPT('ID:'),AT(359,2),USE(?PBS:PalletBladSjabloonID:Prompt),TRN
+                       ENTRY(@n_10),AT(375,3,53,10),USE(PBS:PalletBladSjabloonID),RIGHT(1),DISABLE
+                       PROMPT('Taal:'),AT(8,4),USE(?PROMPT1),TRN
+                       ENTRY(@s50),AT(33,5,198,10),USE(PBS:PalletBladSjabloonNaam)
+                       BUTTON('&Annuleren'),AT(385,391,60,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'), |
   TIP('Cancel operation')
+                       BUTTON('&OK'),AT(333,391,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
+  'a and close the window'),TIP('Accept data and close the window')
+                       GROUP('Palletblad'),AT(2,123,443,257),USE(?GROUP1),BOXED
+                         PROMPT('Leverancier:'),AT(9,139),USE(?PBS:Leverancier:Prompt),TRN
+                         ENTRY(@s100),AT(9,154,125,10),USE(PBS:Leverancier)
+                         PROMPT('Klant:'),AT(307,139,29),USE(?PBS:Klant:Prompt),TRN
+                         ENTRY(@s100),AT(308,154,125,10),USE(PBS:Klant)
+                         PROMPT('SSCC NVE (00):'),AT(9,173),USE(?PBS:SSCC_NVE_00:Prompt),TRN
+                         ENTRY(@s100),AT(9,188,210,10),USE(PBS:SSCC_NVE_00)
+                         PROMPT('Due Date (12):'),AT(225,173),USE(?PBS:DueDate_12:Prompt),TRN
+                         ENTRY(@s100),AT(227,188,100,10),USE(PBS:DueDate_12)
+                         PROMPT('Harvast Date 7007:'),AT(333,173),USE(?PBS:HarvastDate7007:Prompt)
+                         ENTRY(@s100),AT(333,187,100,10),USE(PBS:HarvastDate7007)
+                         PROMPT('Customer Purchase Order Number (400):'),AT(9,203),USE(?PBS:CustomerPurchaseOrderNumber_400:Prompt), |
+  TRN
+                         ENTRY(@s100),AT(9,218,210,10),USE(PBS:CustomerPurchaseOrderNumber_400)
+                         PROMPT('Production Date (11):'),AT(225,202),USE(?PBS:ProductionDate_11:Prompt),TRN
+                         ENTRY(@s100),AT(227,217,207,10),USE(PBS:ProductionDate_11)
+                         PROMPT('Customer Part Description:'),AT(9,231),USE(?PBS:ArtikelOms:Prompt),TRN
+                         ENTRY(@s100),AT(9,246,210,10),USE(PBS:ArtikelOms)
+                         PROMPT('Customer Part Number (24):'),AT(225,230),USE(?PBS:CustomerPartNumber_24:Prompt),TRN
+                         ENTRY(@s100),AT(227,246,207,10),USE(PBS:CustomerPartNumber_241)
+                         PROMPT('Na Ontdooien:'),AT(9,261),USE(?PBS:NaOntdooien:Prompt)
+                         ENTRY(@s50),AT(11,275,209,10),USE(PBS:NaOntdooien)
+                         PROMPT('Transport En Opslag:'),AT(225,261),USE(?PBS:TransportEnOpslag:Prompt)
+                         ENTRY(@s50),AT(227,275,207,10),USE(PBS:TransportEnOpslag)
+                         PROMPT('Batch Number (10):'),AT(9,292),USE(?PBS:BatchNumber_10:Prompt),TRN
+                         ENTRY(@s100),AT(9,306,100,10),USE(PBS:BatchNumber_10)
+                         PROMPT('Sell By Date (15):'),AT(119,290),USE(?PBS:SellByDate_15:Prompt),TRN
+                         ENTRY(@s100),AT(120,306,100,10),USE(PBS:SellByDate_15)
+                         PROMPT('Number Of Units Contained (37):'),AT(225,290),USE(?PBS:NumberOfUnitsContained_37:Prompt), |
+  TRN
+                         ENTRY(@s100),AT(227,306,100,10),USE(PBS:NumberOfUnitsContained_37)
+                         PROMPT('Product Net Weight (310):'),AT(333,290),USE(?PBS:ProductNetWeight_310:Prompt),TRN
+                         ENTRY(@s100),AT(333,306,100,10),USE(PBS:ProductNetWeight_310)
+                         PROMPT('Origin Live Bird:'),AT(9,325),USE(?PBS:OriginLiveBird:Prompt)
+                         ENTRY(@s50),AT(10,339,100,10),USE(PBS:OriginLiveBird)
+                         PROMPT('Origin Slauther House:'),AT(119,325),USE(?PBS:OriginSlautherHouse:Prompt)
+                         ENTRY(@s50),AT(119,339,100,10),USE(PBS:OriginSlautherHouse)
+                         PROMPT('Origin Processing:'),AT(225,325),USE(?PBS:OriginProcessing:Prompt)
+                         ENTRY(@s50),AT(226,339,100,10),USE(PBS:OriginProcessing)
+                         PROMPT('Origin Packing:'),AT(333,325),USE(?PBS:OriginPacking:Prompt)
+                         ENTRY(@s50),AT(334,339,100,10),USE(PBS:OriginPacking)
+                       END
+                       GROUP('Landen'),AT(30,18,203,100),USE(?GROUP2),BOXED
+                         LIST,AT(35,31,189,60),USE(?List),FORMAT('240L(2)|M@s60@'),FROM(Queue:Browse),IMM
+                         BUTTON('&Toevoegen'),AT(34,96,69,18),USE(?Insert),LEFT,ICON('WAINSERT.ICO'),FLAT
+                         BUTTON('&Wijzigen'),AT(105,96,55,18),USE(?Change),LEFT,ICON('WACHANGE.ICO'),FLAT
+                         BUTTON('&Verwijderen'),AT(161,96,64,18),USE(?Delete),LEFT,ICON('WADELETE.ICO'),FLAT
+                       END
                      END
 
     omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
@@ -68,7 +109,9 @@ Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 PrimeUpdate            PROCEDURE(),BYTE,PROC,DERIVED
+Reset                  PROCEDURE(BYTE Force=0),DERIVED
 Run                    PROCEDURE(),BYTE,PROC,DERIVED
+Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
@@ -80,6 +123,12 @@ Resizer              CLASS(WindowResizeClass)
 Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
                      END
 
+BRW4                 CLASS(BrowseClass)                    ! Browse using ?List
+Q                      &Queue:Browse                  !Reference to browse queue
+Init                   PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
+                     END
+
+BRW4::Sort0:Locator  StepLocatorClass                      ! Default Locator
 CurCtrlFeq          LONG
 FieldColorQueue     QUEUE
 Feq                   LONG
@@ -107,9 +156,6 @@ ThisWindow.Ask PROCEDURE
     ActionMessage = 'Record Will Be Added'
   OF ChangeRecord
     ActionMessage = 'Record Will Be Changed'
-  OF DeleteRecord
-    GlobalErrors.Throw(Msg:DeleteIllegal)
-    RETURN
   END
   QuickWindow{PROP:Text} = ActionMessage                   ! Display status message in title bar
   PARENT.Ask
@@ -120,38 +166,45 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-  GlobalErrors.SetProcedureName('UpdateRapporten')
+  GlobalErrors.SetProcedureName('UpdatePalletBladSjabloon')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
   IF ReturnValue THEN RETURN ReturnValue.
-  SELF.FirstField = ?Rap:RapportID:Prompt
+  SELF.FirstField = ?PBS:PalletBladSjabloonID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
   SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
-  SELF.AddHistoryFile(Rap:Record,History::Rap:Record)
-  SELF.AddHistoryField(?Rap:RapportID,1)
-  SELF.AddHistoryField(?Rap:Onderwerp,2)
-  SELF.AddHistoryField(?Rap:Titel,3)
-  SELF.AddHistoryField(?Rap:Emails,4)
-  SELF.AddHistoryField(?Rap:Maandag,5)
-  SELF.AddHistoryField(?Rap:Dinsdag,6)
-  SELF.AddHistoryField(?Rap:Woensdag,7)
-  SELF.AddHistoryField(?Rap:Donderdag,8)
-  SELF.AddHistoryField(?Rap:Vrijdag,9)
-  SELF.AddHistoryField(?Rap:Zaterdag,10)
-  SELF.AddHistoryField(?Rap:Zondag,11)
-  SELF.AddHistoryField(?Rap:LstExecution_DATE,14)
-  SELF.AddHistoryField(?Rap:LstExecution_TIME,15)
-  SELF.AddHistoryField(?Rap:LstResponse,16)
-  SELF.AddHistoryField(?Rap:RapportSource:2,17)
-  SELF.AddUpdateFile(Access:Rapporten)
+  SELF.AddHistoryFile(PBS:Record,History::PBS:Record)
+  SELF.AddHistoryField(?PBS:PalletBladSjabloonID,1)
+  SELF.AddHistoryField(?PBS:PalletBladSjabloonNaam,2)
+  SELF.AddHistoryField(?PBS:Leverancier,3)
+  SELF.AddHistoryField(?PBS:Klant,4)
+  SELF.AddHistoryField(?PBS:SSCC_NVE_00,5)
+  SELF.AddHistoryField(?PBS:DueDate_12,6)
+  SELF.AddHistoryField(?PBS:HarvastDate7007,21)
+  SELF.AddHistoryField(?PBS:CustomerPurchaseOrderNumber_400,7)
+  SELF.AddHistoryField(?PBS:ProductionDate_11,8)
+  SELF.AddHistoryField(?PBS:ArtikelOms,9)
+  SELF.AddHistoryField(?PBS:CustomerPartNumber_241,10)
+  SELF.AddHistoryField(?PBS:NaOntdooien,19)
+  SELF.AddHistoryField(?PBS:TransportEnOpslag,20)
+  SELF.AddHistoryField(?PBS:BatchNumber_10,11)
+  SELF.AddHistoryField(?PBS:SellByDate_15,12)
+  SELF.AddHistoryField(?PBS:NumberOfUnitsContained_37,13)
+  SELF.AddHistoryField(?PBS:ProductNetWeight_310,14)
+  SELF.AddHistoryField(?PBS:OriginLiveBird,15)
+  SELF.AddHistoryField(?PBS:OriginSlautherHouse,16)
+  SELF.AddHistoryField(?PBS:OriginProcessing,17)
+  SELF.AddHistoryField(?PBS:OriginPacking,18)
+  SELF.AddUpdateFile(Access:PalletBladSjabloon)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
-  Relate:Rapporten.Open                                    ! File Rapporten used by this procedure, so make sure it's RelationManager is open
+  Relate:PalletBladSjabloon.Open                           ! File PalletBladSjabloon used by this procedure, so make sure it's RelationManager is open
+  Relate:PalletBladSjabloonCountry.Open                    ! File PalletBladSjabloonCountry used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
-  SELF.Primary &= Relate:Rapporten
+  SELF.Primary &= Relate:PalletBladSjabloon
   IF SELF.Request = ViewRecord AND NOT SELF.BatchProcessing ! Setup actions for ViewOnly Mode
     SELF.InsertAction = Insert:None
     SELF.DeleteAction = Delete:None
@@ -159,30 +212,60 @@ ReturnValue          BYTE,AUTO
     SELF.CancelAction = Cancel:Cancel
     SELF.OkControl = 0
   ELSE
-    SELF.DeleteAction = Delete:None                        ! Deletes not allowed
     SELF.ChangeAction = Change:Caller                      ! Changes allowed
     SELF.CancelAction = Cancel:Cancel+Cancel:Query         ! Confirm cancel
     SELF.OkControl = ?OK
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
+  BRW4.Init(?List,Queue:Browse.ViewPosition,BRW4::View:Browse,Queue:Browse,Relate:PalletBladSjabloonCountry,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
-    ?Rap:RapportID{PROP:ReadOnly} = True
-    ?Rap:Onderwerp{PROP:ReadOnly} = True
-    ?Rap:Titel{PROP:ReadOnly} = True
-    ?Rap:Emails{PROP:ReadOnly} = True
-    ?Rap:LstExecution_DATE{PROP:ReadOnly} = True
-    ?Rap:LstExecution_TIME{PROP:ReadOnly} = True
-    ?Rap:LstResponse{PROP:ReadOnly} = True
-    ?Rap:RapportSource:2{PROP:ReadOnly} = True
+    ?PBS:PalletBladSjabloonID{PROP:ReadOnly} = True
+    ?PBS:PalletBladSjabloonNaam{PROP:ReadOnly} = True
+    ?PBS:Leverancier{PROP:ReadOnly} = True
+    ?PBS:Klant{PROP:ReadOnly} = True
+    ?PBS:SSCC_NVE_00{PROP:ReadOnly} = True
+    ?PBS:DueDate_12{PROP:ReadOnly} = True
+    ?PBS:HarvastDate7007{PROP:ReadOnly} = True
+    ?PBS:CustomerPurchaseOrderNumber_400{PROP:ReadOnly} = True
+    ?PBS:ProductionDate_11{PROP:ReadOnly} = True
+    ?PBS:ArtikelOms{PROP:ReadOnly} = True
+    ?PBS:CustomerPartNumber_241{PROP:ReadOnly} = True
+    ?PBS:NaOntdooien{PROP:ReadOnly} = True
+    ?PBS:TransportEnOpslag{PROP:ReadOnly} = True
+    ?PBS:BatchNumber_10{PROP:ReadOnly} = True
+    ?PBS:SellByDate_15{PROP:ReadOnly} = True
+    ?PBS:NumberOfUnitsContained_37{PROP:ReadOnly} = True
+    ?PBS:ProductNetWeight_310{PROP:ReadOnly} = True
+    ?PBS:OriginLiveBird{PROP:ReadOnly} = True
+    ?PBS:OriginSlautherHouse{PROP:ReadOnly} = True
+    ?PBS:OriginProcessing{PROP:ReadOnly} = True
+    ?PBS:OriginPacking{PROP:ReadOnly} = True
+    DISABLE(?Insert)
+    DISABLE(?Change)
+    DISABLE(?Delete)
   END
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
-  INIMgr.Fetch('UpdateRapporten',QuickWindow)              ! Restore window settings from non-volatile store
+  BRW4.Q &= Queue:Browse
+  BRW4.ActiveInvisible = 1
+  BRW4.RetainRow = 0
+  BRW4.AddSortOrder(,PBSC:FK1_PalletBladSjabloonCountry)   ! Add the sort order for PBSC:FK1_PalletBladSjabloonCountry for sort order 1
+  BRW4.AddRange(PBSC:PalletBladSjabloonID,PBS:PalletBladSjabloonID) ! Add single value range limit for sort order 1
+  BRW4.AddLocator(BRW4::Sort0:Locator)                     ! Browse has a locator for sort order 1
+  BRW4::Sort0:Locator.Init(,PBSC:Country,,BRW4)            ! Initialize the browse locator using  using key: PBSC:FK1_PalletBladSjabloonCountry , PBSC:Country
+  BRW4.AddField(PBSC:Country,BRW4.Q.PBSC:Country)          ! Field PBSC:Country is a hot field or requires assignment from browse
+  BRW4.AddField(PBSC:PalletBladSjabloonCountryID,BRW4.Q.PBSC:PalletBladSjabloonCountryID) ! Field PBSC:PalletBladSjabloonCountryID is a hot field or requires assignment from browse
+  BRW4.AddField(PBSC:PalletBladSjabloonID,BRW4.Q.PBSC:PalletBladSjabloonID) ! Field PBSC:PalletBladSjabloonID is a hot field or requires assignment from browse
+  INIMgr.Fetch('UpdatePalletBladSjabloon',QuickWindow)     ! Restore window settings from non-volatile store
   Resizer.Resize                                           ! Reset required after window size altered by INI manager
+  BRW4.AskProcedure = 1                                    ! Will call: UpdatePalletBladSjabloonCountry
+  BRW4.AddToolbarTarget(Toolbar)                           ! Browse accepts toolbar control
   SELF.SetAlerts()
+  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
+  NetLocalRefreshTime = clock()
   EnterByTabManager.ExcludeControl(?Cancel)
   EnterByTabManager.ExcludeControl(?OK)
   EnterByTabManager.Init(False)
@@ -197,10 +280,11 @@ ReturnValue          BYTE,AUTO
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
-    Relate:Rapporten.Close
+    Relate:PalletBladSjabloon.Close
+    Relate:PalletBladSjabloonCountry.Close
   END
   IF SELF.Opened
-    INIMgr.Update('UpdateRapporten',QuickWindow)           ! Save window data to non-volatile store
+    INIMgr.Update('UpdatePalletBladSjabloon',QuickWindow)  ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
   RETURN ReturnValue
@@ -213,9 +297,19 @@ ReturnValue          BYTE,AUTO
   CODE
   ReturnValue = PARENT.PrimeUpdate()
     If returnValue = Level:Fatal  ! delete just occured
-      ThisNetRefresh.Send('|Rapporten|') ! NetTalk (NetRefresh)
+      ThisNetRefresh.Send('|PalletBladSjabloon|PalletBladSjabloonCountry|PalletBladSjabloonCountry|') ! NetTalk (NetRefresh)
     End
   RETURN ReturnValue
+
+
+ThisWindow.Reset PROCEDURE(BYTE Force=0)
+
+  CODE
+  SELF.ForcedReset += Force
+  IF QuickWindow{Prop:AcceptAll} THEN RETURN.
+    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
+    NetLocalRefreshTime = clock()
+  PARENT.Reset(Force)
 
 
 ThisWindow.Run PROCEDURE
@@ -226,6 +320,22 @@ ReturnValue          BYTE,AUTO
   ReturnValue = PARENT.Run()
   IF SELF.Request = ViewRecord                             ! In View Only mode always signal RequestCancelled
     ReturnValue = RequestCancelled
+  END
+  RETURN ReturnValue
+
+
+ThisWindow.Run PROCEDURE(USHORT Number,BYTE Request)
+
+ReturnValue          BYTE,AUTO
+
+  CODE
+  ReturnValue = PARENT.Run(Number,Request)
+  IF SELF.Request = ViewRecord
+    ReturnValue = RequestCancelled                         ! Always return RequestCancelled if the form was opened in ViewRecord mode
+  ELSE
+    GlobalRequest = Request
+    UpdatePalletBladSjabloonCountry
+    ReturnValue = GlobalResponse
   END
   RETURN ReturnValue
 
@@ -269,7 +379,7 @@ Looped BYTE
       Looped = 1
     END
   ReturnValue = PARENT.TakeCompleted()
-    ThisNetRefresh.Send('|Rapporten|') ! NetTalk (NetRefresh)
+    ThisNetRefresh.Send('|PalletBladSjabloon|PalletBladSjabloonCountry|PalletBladSjabloonCountry|') ! NetTalk (NetRefresh)
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -282,6 +392,9 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
+    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
+      Self.Reset(1)                      ! NetTalk (NetRefresh)
+    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -341,247 +454,14 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   PARENT.Init(AppStrategy,SetWindowMinSize,SetWindowMaxSize)
   SELF.SetParentDefaults()                                 ! Calculate default control parent-child relationships based upon their positions on the window
 
-!!! <summary>
-!!! Generated from procedure template - Window
-!!! </summary>
-WindowVerpakkingSamenvoegen PROCEDURE 
 
-Loc:VerpakkingID     LONG                                  ! 
-Loc:NewVerpakkingID  LONG                                  ! 
-FDB3::View:FileDrop  VIEW(AVerpakking)
-                       PROJECT(AVP:VerpakkingID)
-                       PROJECT(AVP:VerpakkingOmschrijving)
-                       PROJECT(AVP:Description)
-                       PROJECT(AVP:InhoudKG)
-                     END
-Queue:FileDrop       QUEUE                            !
-AVP:VerpakkingID       LIKE(AVP:VerpakkingID)         !List box control field - type derived from field
-AVP:VerpakkingOmschrijving LIKE(AVP:VerpakkingOmschrijving) !List box control field - type derived from field
-AVP:Description        LIKE(AVP:Description)          !List box control field - type derived from field
-AVP:InhoudKG           LIKE(AVP:InhoudKG)             !List box control field - type derived from field
-Loc:VerpakkingID       LIKE(Loc:VerpakkingID)         !Browse hot field - type derived from local data
-Mark                   BYTE                           !Entry's marked status
-ViewPosition           STRING(1024)                   !Entry's view position
-                     END
-LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
-EnterByTabManager    EnterByTabClass
-Window               WINDOW('Verpakking samenvoegen:'),AT(,,588,100),FONT('Microsoft Sans Serif',8),GRAY
-                       PROMPT('Verpakking ID:'),AT(15,23),USE(?Ver:VerpakkingID:Prompt)
-                       ENTRY(@n4),AT(65,22,27,10),USE(Ver:VerpakkingID),DISABLE
-                       PROMPT('Verpakking Omschrijving:'),AT(99,23),USE(?Ver:VerpakkingOmschrijving:Prompt)
-                       ENTRY(@s50),AT(184,23,148,10),USE(Ver:VerpakkingOmschrijving),DISABLE
-                       PROMPT('Description'),AT(339,25),USE(?Ver:Description:Prompt)
-                       ENTRY(@s50),AT(379,24,97,10),USE(Ver:Description),DISABLE
-                       PROMPT('Inhoud KG:'),AT(483,24),USE(?Ver:InhoudKG:Prompt)
-                       ENTRY(@n-10.3),AT(533,23,47,10),USE(Ver:InhoudKG),DECIMAL(1),DISABLE
-                       STRING('Samenvoegen naar:'),AT(15,42),USE(?STRING1)
-                       LIST,AT(89,42,491,12),USE(?NewVerpakkingID),DROP(25,500),FORMAT('60L(2)|M~Verpakking ID' & |
-  '~L(0)@n4@127L(2)|M~Verpakking Omschrijving~L(0)@s50@119L(2)|M~Description~L(0)@s50@4' & |
-  '4L(2)|M~Inhoud KG~D(12)@n-10.3@'),FROM(Queue:FileDrop)
-                       BUTTON('SamenVoegen'),AT(518,71),USE(?Samenvoegen)
-                       BUTTON('Cancel'),AT(464,71),USE(?Cancel)
-                     END
-
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
-ThisWindow           CLASS(WindowManager)
-Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
-TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
-                     END
-
-Toolbar              ToolbarClass
-FDB3                 CLASS(FileDropClass)                  ! File drop manager
-Q                      &Queue:FileDrop                !Reference to display queue
-                     END
-
+BRW4.Init PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
 
   CODE
-  GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
-
-!---------------------------------------------------------------------------
-DefineListboxStyle ROUTINE
-!|
-!| This routine create all the styles to be shared in this window
-!| It`s called after the window open
-!|
-!---------------------------------------------------------------------------
-
-ThisWindow.Init PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  GlobalErrors.SetProcedureName('WindowVerpakkingSamenvoegen')
-  SELF.Request = GlobalRequest                             ! Store the incoming request
-  ReturnValue = PARENT.Init()
-  IF ReturnValue THEN RETURN ReturnValue.
-  SELF.FirstField = ?Ver:VerpakkingID:Prompt
-  SELF.VCRRequest &= VCRRequest
-  SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  BIND('Loc:VerpakkingID',Loc:VerpakkingID)                ! Added by: FileDrop(ABC)
-  CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
-  CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
-  Loc:VerpakkingID=Ver:VerpakkingID
-  Relate:AVerpakking.Open                                  ! File AVerpakking used by this procedure, so make sure it's RelationManager is open
-  Relate:BulkOverboeking.Open                              ! File BulkOverboeking used by this procedure, so make sure it's RelationManager is open
-  Relate:Partij.Open                                       ! File Partij used by this procedure, so make sure it's RelationManager is open
-  Relate:Planning.SetOpenRelated()
-  Relate:Planning.Open                                     ! File Planning used by this procedure, so make sure it's RelationManager is open
-  Relate:Verpakking.Open                                   ! File Verpakking used by this procedure, so make sure it's RelationManager is open
-  SELF.FilesOpened = True
-  SELF.Open(Window)                                        ! Open window
-  WinAlertMouseZoom()
-  Do DefineListboxStyle
-  INIMgr.Fetch('WindowVerpakkingSamenvoegen',Window)       ! Restore window settings from non-volatile store
-  FDB3.Init(?NewVerpakkingID,Queue:FileDrop.ViewPosition,FDB3::View:FileDrop,Queue:FileDrop,Relate:AVerpakking,ThisWindow)
-  FDB3.Q &= Queue:FileDrop
-  FDB3.AddSortOrder(AVP:Verpakking_PK)
-  FDB3.SetFilter('AVP:VerpakkingID<<>Loc:VerpakkingID')
-  FDB3.AddField(AVP:VerpakkingID,FDB3.Q.AVP:VerpakkingID) !List box control field - type derived from field
-  FDB3.AddField(AVP:VerpakkingOmschrijving,FDB3.Q.AVP:VerpakkingOmschrijving) !List box control field - type derived from field
-  FDB3.AddField(AVP:Description,FDB3.Q.AVP:Description) !List box control field - type derived from field
-  FDB3.AddField(AVP:InhoudKG,FDB3.Q.AVP:InhoudKG) !List box control field - type derived from field
-  FDB3.AddField(Loc:VerpakkingID,FDB3.Q.Loc:VerpakkingID) !Browse hot field - type derived from local data
-  FDB3.AddUpdateField(AVP:VerpakkingID,Loc:NewVerpakkingID)
-  ThisWindow.AddItem(FDB3.WindowComponent)
-  FDB3.DefaultFill = 0
-  SELF.SetAlerts()
-  EnterByTabManager.ExcludeControl(?Cancel)
-  EnterByTabManager.Init(False)
-  RETURN ReturnValue
-
-
-ThisWindow.Kill PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  ReturnValue = PARENT.Kill()
-  IF ReturnValue THEN RETURN ReturnValue.
-  IF SELF.FilesOpened
-    Relate:AVerpakking.Close
-    Relate:BulkOverboeking.Close
-    Relate:Partij.Close
-    Relate:Planning.Close
-    Relate:Verpakking.Close
+  PARENT.Init(ListBox,Posit,V,Q,RM,WM)
+  IF WM.Request <> ViewRecord                              ! If called for anything other than ViewMode, make the insert, change & delete controls available
+    SELF.InsertControl=?Insert
+    SELF.ChangeControl=?Change
+    SELF.DeleteControl=?Delete
   END
-  IF SELF.Opened
-    INIMgr.Update('WindowVerpakkingSamenvoegen',Window)    ! Save window data to non-volatile store
-  END
-  GlobalErrors.SetProcedureName
-  RETURN ReturnValue
-
-
-ThisWindow.TakeAccepted PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receive all EVENT:Accepted's
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  ReturnValue = PARENT.TakeAccepted()
-    CASE ACCEPTED()
-    OF ?Samenvoegen
-      ThisWindow.Update()
-      if Loc:NewVerpakkingID=0
-          Message('Naar verpakking invullen')
-          CYCLE
-      END
-      
-      !Message('Overboeken van '&Loc:VerpakkingID&' naar '&Loc:NewVerpakkingID)
-      SetCursor(CURSOR:Wait)
-      Verpakking{Prop:SQL}='UPDATE BulkOverboeking SET VerpakkingID='&Loc:NewVerpakkingID&' WHERE VerpakkingID='&Loc:VerpakkingID
-      IF Access:Verpakking.Next()=Level:Benign
-      END
-      Verpakking{Prop:SQL}='UPDATE Planning SET VerpakkingID='&Loc:NewVerpakkingID&' WHERE VerpakkingID='&Loc:VerpakkingID
-      IF Access:Verpakking.Next()=Level:Benign
-      END
-      Verpakking{Prop:SQL}='UPDATE Partij SET VerpakkingID='&Loc:NewVerpakkingID&' WHERE VerpakkingID='&Loc:VerpakkingID
-      IF Access:Verpakking.Next()=Level:Benign
-      END
-      
-      Clear(Ver:Record)
-      Ver:VerpakkingID=Loc:VerpakkingID
-      if Access:Verpakking.Fetch(Ver:Verpakking_PK)=Level:Benign
-          Access:Verpakking.DeleteRecord(False)
-      END
-      
-      SetCursor()
-      
-      Post(EVENT:CloseDown)
-    END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  IF EnterByTabManager.TakeEvent()
-     RETURN(Level:Notify)
-  END
-  ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
 

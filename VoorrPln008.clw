@@ -119,9 +119,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Pla:ArtikelID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
@@ -215,6 +215,16 @@ Looped BYTE
     END
     CASE ACCEPTED()
     OF ?Close
+      IF Loc:CelID=0
+          Message('Cel is verplicht','Invoer controle',ICON:Cross)
+          Return ReturnValue
+      ELSIF Loc:CelLokatieID=0 AND Records(FDB6.Q)>0
+          Message('Cellocatie is verplicht','Invoer controle',ICON:Cross)
+          Return ReturnValue
+          
+      END
+      
+      
       pRetourKG=Loc:RetourKG
       pRetourPallets=Loc:RetourPallets
       pCelID=Loc:CelID

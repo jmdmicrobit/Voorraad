@@ -16,6 +16,7 @@
 !!! </summary>
 ReportPalletStickers PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 Loc:AansturingsString STRING(256)                          ! 
 Loc:PalletNummer     LONG                                  ! 
@@ -88,6 +89,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ReportPalletStickers','VoorrRpt007.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+             
   GlobalErrors.SetProcedureName('ReportPalletStickers')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -113,6 +116,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportPalletStickers',ProgressWindow)      ! Restore window settings from non-volatile store
   ProgressMgr.Init(ScrollSort:AllowNumeric,)
   ThisReport.Init(Process:View, Relate:Partij, ?Progress:PctText, Progress:Thermometer, 0)
@@ -156,6 +160,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ReportPalletStickers',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:19AM')  
+    
+  END
   RETURN ReturnValue
 
 

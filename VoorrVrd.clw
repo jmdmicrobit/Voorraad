@@ -94,6 +94,8 @@ BrowsePartijVoorraadVIEW PROCEDURE   !Browse the ViewVoorraad file
      END
      MODULE('VOORRVRD013.CLW')
 BrowseVoorraadVIEW     PROCEDURE   !Browse the ViewVoorraad file
+     END
+     MODULE('VOORRVRD014.CLW')
 WijzigLocatie_Orgineel PROCEDURE(LONG, LONG)   !Cel / Lokatie wijzigen
      END
      include('eventmap.clw')
@@ -307,6 +309,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -451,6 +455,8 @@ UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate70
 UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
 UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
                             END                            !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -581,6 +587,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1146,6 +1157,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1449,6 +1465,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -1510,6 +1528,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 

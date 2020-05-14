@@ -87,6 +87,7 @@ event:WinEventTaskbarLoadIcon equate(0500h+5510)
    INCLUDE('CFILTBASE.INC'),ONCE
    INCLUDE('CFILTERLIST.INC'),ONCE
    INCLUDE('CSTRANSLATOR.INC'),ONCE
+   INCLUDE('CTFIELDQ.INC'),ONCE
    INCLUDE('CWSYNCHC.INC'),ONCE
    INCLUDE('MDISYNC.INC'),ONCE
    INCLUDE('NETFTP.INC'),ONCE
@@ -412,6 +413,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -556,6 +559,8 @@ UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate70
 UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
 UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
                             END                            !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -686,6 +691,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1854,6 +1864,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -2306,6 +2321,8 @@ UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate70
 UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
 UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
                             END                            !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -2426,6 +2443,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 
@@ -2576,6 +2595,11 @@ OverboekSoort               CSTRING(51)                    !
 OverboekCelLocatieID        LONG                           !                     
 NieuwKG                     DECIMAL(10,2)                  !                     
 NieuwPallets                LONG                           !                     
+UitslagPalletbladHarvastDate7007 STRING(8)                 !                     
+UitslagPalletbladHarvastDate7007_GROUP GROUP,OVER(UitslagPalletbladHarvastDate7007) !                     
+UitslagPalletbladHarvastDate7007_DATE DATE                 !                     
+UitslagPalletbladHarvastDate7007_TIME TIME                 !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -2626,6 +2650,8 @@ InslagQAIsGeurKleurProductEigen BYTE                       !
 InslagQAGeenGlasbreuk       BYTE                           !                     
 InslagQATemperatuurVervoermiddel CSTRING(21)               !                     
 CorrectieveMaatregel        CSTRING(2001)                  !                     
+Oorzaak                     CSTRING(2001)                  !                     
+TransportBedrijf            CSTRING(2001)                  !                     
                          END
                      END                       
 

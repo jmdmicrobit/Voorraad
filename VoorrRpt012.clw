@@ -19,6 +19,7 @@
 !!! </summary>
 UpdateSjabloon PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 ActionMessage        CSTRING(40)                           ! 
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
@@ -106,6 +107,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'UpdateSjabloon','VoorrRpt012.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+             
   GlobalErrors.SetProcedureName('UpdateSjabloon')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -142,6 +145,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?Sja:SjabloonID{PROP:ReadOnly} = True
     ?Sja:Bestandsnaam{PROP:ReadOnly} = True
@@ -179,6 +183,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('UpdateSjabloon',QuickWindow)            ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -275,6 +281,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('UpdateSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:19AM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

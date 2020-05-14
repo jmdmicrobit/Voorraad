@@ -33,7 +33,8 @@ ViewArtikel
 [INSTANCE]
 2
 [PROMPTS]
-%ButtonAction DEPEND %Control DEFAULT TIMES 4
+%ButtonAction DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('No Special Action')
 WHEN  ('?Cancel') ('No Special Action')
 WHEN  ('?List') ('No Special Action')
 WHEN  ('?List:2') ('No Special Action')
@@ -47,7 +48,8 @@ WHEN  ('?OK') ('No Special Action')
 
 %ButtonThread DEPEND %Control LONG TIMES 0
 
-%ButtonThreadStack DEPEND %Control DEFAULT TIMES 4
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('25000')
 WHEN  ('?Cancel') ('25000')
 WHEN  ('?List') ('25000')
 WHEN  ('?List:2') ('25000')
@@ -55,7 +57,8 @@ WHEN  ('?OK') ('25000')
 
 %ButtonParameters DEPEND %Control DEFAULT TIMES 0
 
-%ButtonRequest DEPEND %Control DEFAULT TIMES 4
+%ButtonRequest DEPEND %Control DEFAULT TIMES 5
+WHEN  ('') ('None')
 WHEN  ('?Cancel') ('None')
 WHEN  ('?List') ('None')
 WHEN  ('?List:2') ('None')
@@ -281,7 +284,8 @@ WHEN  (4) ('BrowseBox(ABC)')
 
 %ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
 
-%ExtUITabStyle DEPEND %Control DEFAULT TIMES 3
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Default')
 WHEN  ('?CurrentTab') ('Default')
 WHEN  ('?List') ('Default')
 WHEN  ('?List:2') ('Default')
@@ -298,7 +302,8 @@ WHEN  ('?List:2') ('Default')
 
 %PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
 
-%PostLookupDuringValidate DEPEND %Control LONG TIMES 4
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 5
+WHEN  ('') (1)
 WHEN  ('?Art:ArtikelID') (1)
 WHEN  ('?Art:ArtikelOms') (1)
 WHEN  ('?List') (1)
@@ -320,7 +325,8 @@ WHEN  ('?List:2') (1)
 
 %CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
 
-%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 2
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 3
+WHEN  ('')TIMES 0
 WHEN  ('?List')TIMES 0
 WHEN  ('?List:2')TIMES 0
 
@@ -328,7 +334,8 @@ WHEN  ('?List:2')TIMES 0
 
 %CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
 
-%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 2
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 3
+WHEN  ('')TIMES 0
 WHEN  ('?List')TIMES 0
 WHEN  ('?List:2')TIMES 0
 
@@ -342,7 +349,8 @@ WHEN  ('?List:2')TIMES 0
 
 %UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
 
-%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 2
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 3
+WHEN  ('')TIMES 0
 WHEN  ('?List')TIMES 0
 WHEN  ('?List:2')TIMES 0
 
@@ -350,7 +358,8 @@ WHEN  ('?List:2')TIMES 0
 
 %UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
 
-%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 2
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 3
+WHEN  ('')TIMES 0
 WHEN  ('?List')TIMES 0
 WHEN  ('?List:2')TIMES 0
 
@@ -358,7 +367,8 @@ WHEN  ('?List:2')TIMES 0
 
 %CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
 
-%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 2
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 3
+WHEN  ('')TIMES 0
 WHEN  ('?List')TIMES 0
 WHEN  ('?List:2')TIMES 0
 
@@ -366,40 +376,48 @@ WHEN  ('?List:2')TIMES 0
 
 %UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
 
-%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 2
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 3
+WHEN  ('')TIMES 0
 WHEN  ('?List')TIMES 0
 WHEN  ('?List:2')TIMES 0
 
 %ProcedureOneInstance LONG  (0)
-%FieldGradientColorType DEPEND %Control DEFAULT TIMES 2
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('Off')
 WHEN  ('?List') ('Off')
 WHEN  ('?List:2') ('Off')
 
-%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 2
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('')
 WHEN  ('?List') ('')
 WHEN  ('?List:2') ('')
 
-%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 2
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 3
+WHEN  ('') (0)
 WHEN  ('?List') (0)
 WHEN  ('?List:2') (0)
 
-%FieldGradientColorFrom DEPEND %Control LONG TIMES 2
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 3
+WHEN  ('') (-1)
 WHEN  ('?List') (-1)
 WHEN  ('?List:2') (-1)
 
 %FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 2
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 3
+WHEN  ('') (0)
 WHEN  ('?List') (0)
 WHEN  ('?List:2') (0)
 
-%FieldGradientColorTo DEPEND %Control LONG TIMES 2
+%FieldGradientColorTo DEPEND %Control LONG TIMES 3
+WHEN  ('') (-1)
 WHEN  ('?List') (-1)
 WHEN  ('?List:2') (-1)
 
 %FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 2
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 3
+WHEN  ('') (0)
 WHEN  ('?List') (0)
 WHEN  ('?List:2') (0)
 
@@ -408,15 +426,18 @@ WHEN  ('?List:2') (0)
 
 %ActiveImageEnable DEPEND %Control LONG TIMES 0
 
-%AIObjectName DEPEND %Control DEFAULT TIMES 2
+%AIObjectName DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('AIBtn0')
 WHEN  ('?List') ('AIBtn9')
 WHEN  ('?List:2') ('AIBtn10')
 
-%AIEnableMimicControl DEPEND %Control LONG TIMES 2
+%AIEnableMimicControl DEPEND %Control LONG TIMES 3
+WHEN  ('') (1)
 WHEN  ('?List') (1)
 WHEN  ('?List:2') (1)
 
-%AIMimicControl DEPEND %Control DEFAULT TIMES 2
+%AIMimicControl DEPEND %Control DEFAULT TIMES 3
+WHEN  ('') ('?CurrentTab')
 WHEN  ('?List') ('?CurrentTab')
 WHEN  ('?List:2') ('?CurrentTab')
 
@@ -426,7 +447,8 @@ WHEN  ('?List:2') ('?CurrentTab')
 
 %AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 2
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 3
+WHEN  ('') (0)
 WHEN  ('?List') (0)
 WHEN  ('?List:2') (0)
 
@@ -434,7 +456,8 @@ WHEN  ('?List:2') (0)
 
 %AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIDisableImgIsVariable DEPEND %Control LONG TIMES 2
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 3
+WHEN  ('') (0)
 WHEN  ('?List') (0)
 WHEN  ('?List:2') (0)
 
@@ -442,7 +465,8 @@ WHEN  ('?List:2') (0)
 
 %AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIHotImgIsVariable DEPEND %Control LONG TIMES 2
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 3
+WHEN  ('') (0)
 WHEN  ('?List') (0)
 WHEN  ('?List:2') (0)
 
@@ -450,7 +474,8 @@ WHEN  ('?List:2') (0)
 
 %AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIPressedImgIsVariable DEPEND %Control LONG TIMES 2
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 3
+WHEN  ('') (0)
 WHEN  ('?List') (0)
 WHEN  ('?List:2') (0)
 
@@ -564,7 +589,8 @@ NAME ABC ViewFormActions
 INSTANCE 5
 [PROMPTS]
 %ForceViewOnly LONG  (0)
-%ViewAction DEPEND %Control DEFAULT TIMES 10
+%ViewAction DEPEND %Control DEFAULT TIMES 11
+WHEN  ('') ('None')
 WHEN  ('?Art:ArtikelID') ('ReadOnly')
 WHEN  ('?Art:ArtikelID:Prompt') ('None')
 WHEN  ('?Art:ArtikelOms') ('ReadOnly')
@@ -950,35 +976,40 @@ WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (0)
 WHEN  ('Art2:ex_artcode') (0)
 WHEN  ('Art2:tekst') (0)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (0)
 
 %ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
 
@@ -986,75 +1017,87 @@ WHEN  ('?List:2')TIMES 0
 
 %ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (-1)
 WHEN  ('Art2:ex_artcode') (-1)
 WHEN  ('Art2:tekst') (-1)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (-1)
 
 %AllControlGreenBarColor LONG  (0)
 %AllControlGreenBarColorAlternate LONG  (0)
@@ -1099,21 +1142,24 @@ WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (0)
 WHEN  ('Art2:ex_artcode') (0)
 WHEN  ('Art2:tekst') (0)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (0)
 
 %GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') ('Local List')
 WHEN  ('Art2:ex_artcode') ('Local List')
 WHEN  ('Art2:tekst') ('Local List')
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') ('Local List')
 
 %GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') ('')
 WHEN  ('Art2:ex_artcode') ('')
 WHEN  ('Art2:tekst') ('')
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') ('')
 
 %GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
@@ -1122,14 +1168,16 @@ WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') ('Local List')
 WHEN  ('Art2:ex_artcode') ('Local List')
 WHEN  ('Art2:tekst') ('Local List')
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') ('Local List')
 
 %GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') ('')
 WHEN  ('Art2:ex_artcode') ('')
 WHEN  ('Art2:tekst') ('')
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') ('')
 
 %GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
@@ -1138,14 +1186,16 @@ WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') ('Local List')
 WHEN  ('Art2:ex_artcode') ('Local List')
 WHEN  ('Art2:tekst') ('Local List')
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') ('Local List')
 
 %ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') ('')
 WHEN  ('Art2:ex_artcode') ('')
 WHEN  ('Art2:tekst') ('')
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') ('')
 
 %ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
@@ -1155,11 +1205,13 @@ WHEN  ('?List:2')TIMES 0
 
 %ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
 
@@ -1208,21 +1260,24 @@ WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (0)
 WHEN  ('Art2:ex_artcode') (0)
 WHEN  ('Art2:tekst') (0)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (0)
 
 %ControlFieldSortHeaderOverride DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (0)
 WHEN  ('Art2:ex_artcode') (0)
 WHEN  ('Art2:tekst') (0)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (0)
 
 %ControlFieldSortHeaderDisableColumn DEPEND %Control DEPEND %ControlField LONG TIMES 2
 WHEN  ('?List')TIMES 3
 WHEN  ('Art2:artcode') (0)
 WHEN  ('Art2:ex_artcode') (0)
 WHEN  ('Art2:tekst') (0)
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('') (0)
 
 %ControlFieldSortHeaderFields DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
 
@@ -1230,11 +1285,13 @@ WHEN  ('?List:2')TIMES 0
 
 %ControlFieldSortHeaderFieldOrder DEPEND %ControlFieldSortHeaderFields DEFAULT TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ControlFieldSortHeaderFieldCase DEPEND %ControlFieldSortHeaderFields LONG TIMES 2
 WHEN  ('?List')TIMES 0
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %SortHeaderColumnsUseColor LONG  (0)
 %SortHeaderColorBkHdrAsc LONG  (10526303)
@@ -1516,27 +1573,32 @@ WHEN  ('Locator0')TIMES 0
 
 %UseSameColorForAll LONG  (0)
 %ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (0)
 WHEN  ('GNA:GNCode') (0)
 WHEN  ('GNC:Benaming_NL') (0)
 
 %ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
@@ -1545,54 +1607,66 @@ WHEN  ('GNC:Benaming_NL') (-1)
 %ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
 
 %ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
 %GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (-1)
 WHEN  ('GNA:GNCode') (-1)
 WHEN  ('GNC:Benaming_NL') (-1)
 
@@ -1635,41 +1709,48 @@ WHEN  ('GNC:Benaming_NL') (-1)
 
 %UseSameStyleForAll LONG  (0)
 %ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (0)
 WHEN  ('GNA:GNCode') (0)
 WHEN  ('GNC:Benaming_NL') (0)
 
 %GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') ('Local List')
 WHEN  ('GNA:GNCode') ('Local List')
 WHEN  ('GNC:Benaming_NL') ('Local List')
 
 %GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') ('')
 WHEN  ('GNA:GNCode') ('')
 WHEN  ('GNC:Benaming_NL') ('')
 
 %GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
 %GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') ('Local List')
 WHEN  ('GNA:GNCode') ('Local List')
 WHEN  ('GNC:Benaming_NL') ('Local List')
 
 %GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') ('')
 WHEN  ('GNA:GNCode') ('')
 WHEN  ('GNC:Benaming_NL') ('')
 
 %GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
 
 %ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') ('Local List')
 WHEN  ('GNA:GNCode') ('Local List')
 WHEN  ('GNC:Benaming_NL') ('Local List')
 
 %ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') ('')
 WHEN  ('GNA:GNCode') ('')
 WHEN  ('GNC:Benaming_NL') ('')
 
@@ -1680,10 +1761,12 @@ WHEN  ('GNC:Benaming_NL') ('')
 %StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
 
 %ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
 
@@ -1728,17 +1811,20 @@ WHEN  ('?List:2')TIMES 0
 %ControlFieldSortHeaderSave LONG  (0)
 %ControlFieldSortHeaderMulti LONG  (1)
 %ControlFieldSortHeaderOnlyAsc DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (0)
 WHEN  ('GNA:GNCode') (0)
 WHEN  ('GNC:Benaming_NL') (0)
 
 %ControlFieldSortHeaderOverride DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (0)
 WHEN  ('GNA:GNCode') (0)
 WHEN  ('GNC:Benaming_NL') (0)
 
 %ControlFieldSortHeaderDisableColumn DEPEND %Control DEPEND %ControlField LONG TIMES 1
-WHEN  ('?List:2')TIMES 2
+WHEN  ('?List:2')TIMES 3
+WHEN  ('') (0)
 WHEN  ('GNA:GNCode') (0)
 WHEN  ('GNC:Benaming_NL') (0)
 
@@ -1747,10 +1833,12 @@ WHEN  ('GNC:Benaming_NL') (0)
 %ControlFieldSortHeaderField DEPEND %ControlFieldSortHeaderFields FIELD TIMES 0
 
 %ControlFieldSortHeaderFieldOrder DEPEND %ControlFieldSortHeaderFields DEFAULT TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %ControlFieldSortHeaderFieldCase DEPEND %ControlFieldSortHeaderFields LONG TIMES 1
-WHEN  ('?List:2')TIMES 0
+WHEN  ('?List:2')TIMES 1
+WHEN  ('')TIMES 0
 
 %SortHeaderColumnsUseColor LONG  (0)
 %SortHeaderColorBkHdrAsc LONG  (10526303)

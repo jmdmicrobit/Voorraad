@@ -206,12 +206,12 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
 
 ExcelClass         Class
 InitOle                 Procedure()
-MaakExcel               Procedure()
-OpenExcel               Procedure(String)
-SluitExcel              Procedure(Byte)
-BepaalKolom             Procedure(LONG),String
-SchrijfExcel            Procedure(String, LONG, String)
-MaakWerkBlad            Procedure(<String>)
+MaakExcel               Procedure()         ! Lege worksheey toevoegen
+OpenExcel               Procedure(String pBestandsnaam)
+SluitExcel              Procedure(Byte pCloseExcel)
+BepaalKolom             Procedure(LONG pKolomNr),String
+SchrijfExcel            Procedure(String pKolom, LONG pRij, String pValue)
+MaakWerkBlad            Procedure(<String pWerkbladNaam>)
                    End
 Loc:Ole            CString(21)
 Loc:Rij            Long
@@ -506,26 +506,35 @@ Looped BYTE
   ReturnValue = Level:Fatal
   RETURN ReturnValue
 
-ExcelClass.SchrijfExcel         Procedure(String PRM:Kolom,LONG PRM:Rij, String PRM:Value)
+ExcelClass.SluitExcel       Procedure(Byte pCloseExcel)
    Code
-   Loc:Ole{'Application.Range('&Clip(PRM:Kolom)&Prm:Rij&').Value'}=PRM:Value
+   If pCloseExcel
+       Loc:Ole{'Application.Workbooks.Close'}
+   END     
+   Loc:Ole{'Application.Visible'}=true  ! nu pas excel laten zien
+   Loc:Ole{'Prop:Deactivate'}
+   Destroy(Loc:Ole)
    RETURN
-ExcelClass.MaakWerkBlad         Procedure(<String PRM:WerkBladNaam>)
+ExcelClass.SchrijfExcel         Procedure(String pKolom,LONG pRij, String pValue)
+   Code
+   Loc:Ole{'Application.Range('&Clip(pKolom)&pRij&').Value'}=pValue
+   RETURN
+ExcelClass.MaakWerkBlad         Procedure(<String pWerkbladNaam>)
    Code
    Loc:Ole{'Application.ActiveWorkBook.Sheets.Add'}
-   IF PRM:WerkBladNaam<>''
-    Loc:Ole{'Application.ActiveWorkBook.ActiveSheet.Name'}=Clip(PRM:WerkBladNaam)
+   IF pWerkbladNaam<>''
+    Loc:Ole{'Application.ActiveWorkBook.ActiveSheet.Name'}=Clip(pWerkbladNaam)
    End
    ! Loc:Ole{'Application.ActiveWorkBook.Sheets.Select'}
    RETURN
-ExcelClass.BepaalKolom    Procedure(LONG PRM:Kolom )
+ExcelClass.BepaalKolom    Procedure(LONG pKolomNr)
 PRM:KolomString  string(3)
 Loc:TweedeLetter    Long
 Loc:EersteLetter    Long
     CODE
-    PRM:Kolom-=1
-    Loc:TweedeLetter=PRM:Kolom  % 26
-    Loc:EersteLetter=Int(PRM:Kolom /26)
+    pKolomNr-=1
+    Loc:TweedeLetter=pKolomNr  % 26
+    Loc:EersteLetter=Int(pKolomNr /26)
 
     if Loc:EersteLetter<>0
        PRM:KolomString[1]=Chr(64+Loc:EersteLetter)       ! chr(65)= 'A'
@@ -548,19 +557,10 @@ ExcelClass.MaakExcel       Procedure
     CODE
     Loc:Ole{'Application.Workbooks.Add'}            ! leeg worksheet openen
     RETURN
-ExcelClass.OpenExcel       Procedure(String prm:Bestandsnaam)
+ExcelClass.OpenExcel       Procedure(String pBestandsnaam)
     Code
-    Loc:Ole{'Application.Workbooks.Open ("'&prm:Bestandsnaam&'")'}           ! leeg worksheet openen
+    Loc:Ole{'Application.Workbooks.Open ("'&pBestandsnaam&'")'}           ! leeg worksheet openen
     RETURN
-ExcelClass.SluitExcel       Procedure(Byte PRM:Close)
-   Code
-   If PRM:Close
-       Loc:Ole{'Application.Workbooks.Close'}
-   END     
-   Loc:Ole{'Application.Visible'}=true  ! nu pas excel laten zien
-   Loc:Ole{'Prop:Deactivate'}
-   Destroy(Loc:Ole)
-   RETURN
 
 BRW1.Fetch PROCEDURE(BYTE Direction)
 

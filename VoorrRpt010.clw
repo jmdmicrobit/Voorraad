@@ -18,6 +18,7 @@
 !!! </summary>
 ReportCMR PROCEDURE (PRM:PlanningID)
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 Loc:ArtikelQ         QUEUE,PRE(LAQ)                        ! 
 ArtikelID            CSTRING(31)                           ! 
@@ -843,6 +844,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ReportCMR','VoorrRpt010.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+             
   GlobalErrors.SetProcedureName('ReportCMR')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -949,7 +952,7 @@ ReturnValue          BYTE,AUTO
   		LOC:ExtraDocumenten=''
   		LOC:Transporteur='Transport:<13><10>Truck:<13><10>Container:'
   		LOC:TransporteurExtra=''
-  		LOC:OpmerkingenVervoerder=''
+  		LOC:OpmerkingenVervoerder='Geboekt<13><10>Aankomst<13><10>Vertrek'
   
   		DO VulArtikelQueue
           DO VulLocArtikel
@@ -1004,6 +1007,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   Resizer.Init(AppStrategy:Surface)                        ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
   ProgressMgr.Init(ScrollSort:AllowNumeric,)
@@ -1070,6 +1074,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ReportCMR',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:19AM')  
+    
+  END
   RETURN ReturnValue
 
 

@@ -52,27 +52,37 @@ FDCB9::View:FileDropCombo VIEW(Cel)
 FDCB4::View:FileDropCombo VIEW(ViewVoorraadPartij)
                        PROJECT(VVPar:PartijCelID)
                        PROJECT(VVPar:VoorraadKG)
-                       JOIN(ACel:CEL_PK)
+                       PROJECT(VVPar:CelID)
+                       PROJECT(VVPar:PartijID)
+                       JOIN(ACel:CEL_PK,VVPar:CelID)
                          PROJECT(ACel:CelOms)
+                         PROJECT(ACel:CelID)
                        END
-                       JOIN(Par:Partij_PK)
+                       JOIN(Par:Partij_PK,VVPar:PartijID)
                          PROJECT(Par:PartijID)
                          PROJECT(Par:ExternPartijnr)
                          PROJECT(Par:AanmaakDatum_DATE)
-                         JOIN(AREL:Relatie_PK)
+                         PROJECT(Par:Leverancier)
+                         PROJECT(Par:VerpakkingID)
+                         JOIN(AREL:Relatie_PK,Par:Leverancier)
                            PROJECT(AREL:FirmaNaam)
+                           PROJECT(AREL:RelatieID)
                          END
-                         JOIN(AVP:Verpakking_PK)
+                         JOIN(AVP:Verpakking_PK,Par:VerpakkingID)
                            PROJECT(AVP:VerpakkingOmschrijving)
+                           PROJECT(AVP:VerpakkingID)
                          END
                        END
-                       JOIN(VPPar:PartijCelID_K)
+                       JOIN(VPPar:PartijCelID_K,VVPar:PartijCelID)
+                         PROJECT(VPPar:PartijCelID)
                        END
-                       JOIN(VPParT:PK_ViewPlanningPartijTotaal)
+                       JOIN(VPParT:PK_ViewPlanningPartijTotaal,VVPar:PartijID)
                          PROJECT(VPParT:VerkoopKG)
+                         PROJECT(VPParT:PartijID)
                        END
-                       JOIN(VVParT:PK_ViewVoorraadPartijTotaal)
+                       JOIN(VVParT:PK_ViewVoorraadPartijTotaal,VVPar:PartijID)
                          PROJECT(VVParT:VoorraadKG)
+                         PROJECT(VVParT:PartijID)
                        END
                      END
 FDCB13::View:FileDropCombo VIEW(AAACel)
@@ -112,6 +122,12 @@ LOC:VerkoopKG          LIKE(LOC:VerkoopKG)            !List box control field - 
 LOC:BeschikbareVoorraad LIKE(LOC:BeschikbareVoorraad) !List box control field - type derived from local data
 AREL:FirmaNaam         LIKE(AREL:FirmaNaam)           !List box control field - type derived from field
 AVP:VerpakkingOmschrijving LIKE(AVP:VerpakkingOmschrijving) !List box control field - type derived from field
+ACel:CelID             LIKE(ACel:CelID)               !Related join file key field - type derived from field
+AREL:RelatieID         LIKE(AREL:RelatieID)           !Related join file key field - type derived from field
+AVP:VerpakkingID       LIKE(AVP:VerpakkingID)         !Related join file key field - type derived from field
+VPPar:PartijCelID      LIKE(VPPar:PartijCelID)        !Related join file key field - type derived from field
+VPParT:PartijID        LIKE(VPParT:PartijID)          !Related join file key field - type derived from field
+VVParT:PartijID        LIKE(VVParT:PartijID)          !Related join file key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -274,9 +290,10 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?APla:ArtikelID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:APlanning)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(APla:Record,History::APla:Record)
   SELF.AddHistoryField(?APla:KG,5)
@@ -286,7 +303,6 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?APla:Instructie:2,20)
   SELF.AddHistoryField(?APla:Transport:2,21)
   SELF.AddHistoryField(?APla:PlanningID,1)
-  SELF.AddUpdateFile(Access:APlanning)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAACel.Open                                       ! File AAACel used by this procedure, so make sure it's RelationManager is open
   Relate:ACelLocatie.Open                                  ! File ACelLocatie used by this procedure, so make sure it's RelationManager is open
@@ -469,6 +485,12 @@ ReturnValue          BYTE,AUTO
   FDCB4.AddField(LOC:BeschikbareVoorraad,FDCB4.Q.LOC:BeschikbareVoorraad) !List box control field - type derived from local data
   FDCB4.AddField(AREL:FirmaNaam,FDCB4.Q.AREL:FirmaNaam) !List box control field - type derived from field
   FDCB4.AddField(AVP:VerpakkingOmschrijving,FDCB4.Q.AVP:VerpakkingOmschrijving) !List box control field - type derived from field
+  FDCB4.AddField(ACel:CelID,FDCB4.Q.ACel:CelID) !Related join file key field - type derived from field
+  FDCB4.AddField(AREL:RelatieID,FDCB4.Q.AREL:RelatieID) !Related join file key field - type derived from field
+  FDCB4.AddField(AVP:VerpakkingID,FDCB4.Q.AVP:VerpakkingID) !Related join file key field - type derived from field
+  FDCB4.AddField(VPPar:PartijCelID,FDCB4.Q.VPPar:PartijCelID) !Related join file key field - type derived from field
+  FDCB4.AddField(VPParT:PartijID,FDCB4.Q.VPParT:PartijID) !Related join file key field - type derived from field
+  FDCB4.AddField(VVParT:PartijID,FDCB4.Q.VVParT:PartijID) !Related join file key field - type derived from field
   FDCB4.AddUpdateField(VVPar:PartijCelID,LOC:PartijCelID)
   FDCB4.AddUpdateField(Par:VerpakkingID,LOC:VerpakkingID)
   FDCB4.AddUpdateField(VVPar:CelID,LOC:CelID)

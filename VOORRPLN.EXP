@@ -11,10 +11,12 @@ EXPORTS
   UPDATEACTIVITEIT@Fl                                     @?
   WINDOWINSLAG@F                                          @?
   WINDOWREDENRETOUR@FsblRscRbd                            @?
+  UPDATEPARTIJKWALITEIT@F                                 @?
   UPDATEOVERBOEKMUTATIE@F                                 @?
   UPDATEVERKOOP@Fl                                        @?
   WINDOWCELLOCATIES@F                                     @?
   BROWSETRANSFERS@FObd                                    @?
+  UPDATEMUTATIEKWALITEIT@F                                @?
   UPDATEPLANNINGINKOOP@F                                  @?
   BROWSEOVERBOEKING@F                                     @?
   UPDATEEXTRAKOSTEN@F                                     @?

@@ -17,6 +17,7 @@
 !!! </summary>
 WindowCallSjabloonOUD PROCEDURE (PRM:SoortData,PRM:RelatieID)
 
+udpt            UltimateDebugProcedureTracker
 Loc:TempFile         CSTRING(256)                          ! 
 Loc:SjabloonID       CSTRING(20)                           ! 
 Loc:TempSjabllonID   STRING(20)                            ! 
@@ -82,6 +83,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'WindowCallSjabloonOUD','VoorrRpt015.clw','VoorrRpt.DLL','04/11/2014 @ 11:38AM')    
+             
   GlobalErrors.SetProcedureName('WindowCallSjabloonOUD')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -108,6 +111,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(Window)                                        ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('WindowCallSjabloonOUD',Window)             ! Restore window settings from non-volatile store
   FDCB1.Init(Loc:TempSjabllonID,?Loc:TempSjabllonID,Queue:FileDropCombo.ViewPosition,FDCB1::View:FileDropCombo,Queue:FileDropCombo,Relate:Sjabloon,ThisWindow,GlobalErrors,0,1,0)
   FDCB1.Q &= Queue:FileDropCombo
@@ -142,6 +146,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('WindowCallSjabloonOUD',Window)          ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -265,6 +271,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('WindowCallSjabloonOUD',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'09/09/2011 @ 04:33PM','04/11/2014 @ 11:38AM','05/15/2020 @ 11:19AM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

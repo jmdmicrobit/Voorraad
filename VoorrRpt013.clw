@@ -20,6 +20,7 @@
 !!! </summary>
 BrowseSjablonen PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 Loc:TempFile         CSTRING(199)                          ! 
 BRW1::View:Browse    VIEW(Sjabloon)
@@ -105,6 +106,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'BrowseSjablonen','VoorrRpt013.clw','VoorrRpt.DLL','04/11/2014 @ 11:38AM')    
+             
   GlobalErrors.SetProcedureName('BrowseSjablonen')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -126,6 +129,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.ActiveInvisible = 1
   BRW1.RetainRow = 0
@@ -163,6 +167,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowseSjablonen',QuickWindow)           ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -265,6 +271,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowseSjablonen',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','04/11/2014 @ 11:38AM','05/15/2020 @ 11:19AM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

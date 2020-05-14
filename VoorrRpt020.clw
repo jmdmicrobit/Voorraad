@@ -18,6 +18,7 @@
 !!! </summary>
 ReportPalletBladEnkel PROCEDURE (LONG PRM:WegingID,REAL PRM:NettoGewicht,BYTE PRM:Preview, BYTE PRM:AantalPrints)
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 LOC:SSCCNVE00        STRING(30)                            ! 
 LOC:DATE12           STRING(6)                             ! 
@@ -182,6 +183,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ReportPalletBladEnkel','VoorrRpt020.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+             
   GlobalErrors.SetProcedureName('ReportPalletBladEnkel')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -209,6 +212,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportPalletBladEnkel',ProgressWindow)     ! Restore window settings from non-volatile store
   TargetSelector.AddItem(PDFReporter.IReportGenerator)
   SELF.AddItem(TargetSelector)
@@ -262,6 +266,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ReportPalletBladEnkel',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/25/2013 @ 03:15PM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:20AM')  
+    
+  END
   RETURN ReturnValue
 
 

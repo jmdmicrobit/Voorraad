@@ -1,0 +1,2584 @@
+[MODULE]
+NAME 'UpdatePlanningInkoop_VoorrPln.clw'
+[COMMON]
+FROM ABC GENERATED
+[PROCEDURE]
+NAME UpdatePlanningInkoop
+[COMMON]
+DESCRIPTION 'Form Planning'
+FROM ABC Window
+CATEGORY 'Form'
+[DATA]
+CurrentTab               STRING(80)
+!!> GUID('7bdcc1c7-c97b-4aab-85d0-541ef0ddb175')
+ActionMessage            CSTRING(40)
+!!> GUID('0682e97a-c4bd-4f8c-af57-ccdbee0e250c')
+[SCREENCONTROLS]
+! PROMPT('Artikel ID:'),USE(?LOC:ArtikelID:Prompt)
+! ENTRY(@s30),USE(LOC:ArtikelID)
+[REPORTCONTROLS]
+! STRING(@s30),USE(LOC:ArtikelID)
+LOC:ArtikelID            CSTRING(31)
+!!> GUID('8ffabb8d-8b9a-4cfd-adfb-e0d13ead639f'),PROMPT('Artikel ID:'),HEADER('Artikel ID'),PICTURE(@s30),TYPEMODE(INS),FREEZE
+[QUICKCODE]
+!NOPOPULATE
+[SCREENCONTROLS]
+! PROMPT('Planning:'),USE(?LOC:Planning:Prompt)
+! ENTRY(@s8),USE(LOC:Planning)
+[REPORTCONTROLS]
+! STRING(@s8),USE(LOC:Planning)
+LOC:Planning             STRING(8)
+!!> GUID('75728d87-3c0f-4c65-8fb2-500c62016887'),PROMPT('Planning:'),HEADER('Planning'),PICTURE(@s8),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Cel Locatie ID:'),USE(?LOC:CelLocatieID:Prompt),RIGHT
+! ENTRY(@n-14),USE(LOC:CelLocatieID),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:CelLocatieID),RIGHT(1)
+LOC:CelLocatieID         LONG
+!!> GUID('a025e7a6-d58a-497e-93c7-c7f435306074'),PROMPT('LOC : Cel Locatie ID:'),HEADER('LOC : Cel Locatie ID'),PICTURE(@n-14),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('Verpakking ID:'),USE(?LOC:VerpakkingID:Prompt),CENTER
+! ENTRY(@n-14),USE(LOC:VerpakkingID),DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:VerpakkingID),DECIMAL
+LOC:VerpakkingID         LONG
+!!> GUID('319809ee-7861-45ba-bcc7-9dff66d49fe8'),PROMPT('Verpakking ID:'),HEADER('Verpakking ID'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Cel ID:'),USE(?LOC:CelID:Prompt),CENTER
+! ENTRY(@n-14),USE(LOC:CelID),DECIMAL
+[REPORTCONTROLS]
+! STRING(@n-14),USE(LOC:CelID),DECIMAL
+LOC:CelID                LONG
+!!> GUID('9eb4ac5e-1a43-45b4-8174-9f1e0dfe97fb'),PROMPT('Cel ID:'),HEADER('Cel ID'),PICTURE(@n-14),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Memo:'),USE(?LOC:Memo:Prompt)
+! ENTRY(@s100),USE(LOC:Memo)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:Memo)
+LOC:Memo                 CSTRING(101)
+!!> GUID('c84db51d-c5f7-4785-bdaf-0a74ccbec952'),PROMPT('Memo:'),HEADER('Memo'),PICTURE(@s100),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Instructie:'),USE(?LOC:Instructie:Prompt)
+! ENTRY(@s100),USE(LOC:Instructie)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:Instructie)
+LOC:Instructie           CSTRING(101)
+!!> GUID('101c37eb-45d1-46cd-894c-c165e9b3713b'),PROMPT('Instructie:'),HEADER('Instructie'),PICTURE(@s100),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('Transport:'),USE(?LOC:Transport:Prompt)
+! ENTRY(@s100),USE(LOC:Transport)
+[REPORTCONTROLS]
+! STRING(@s100),USE(LOC:Transport)
+LOC:Transport            CSTRING(101)
+!!> GUID('8c6a4073-6b72-497d-8f8b-8d87d669e209'),PROMPT('Transport:'),HEADER('Transport'),PICTURE(@s100),TYPEMODE(INS),FREEZE
+[SCREENCONTROLS]
+! PROMPT('LOC : Inkoop KGP rijs:'),USE(?LOC:InkoopKGPrijs:Prompt)
+! ENTRY(@n-12.3),USE(LOC:InkoopKGPrijs),DECIMAL(12)
+[REPORTCONTROLS]
+! STRING(@n-12.3),USE(LOC:InkoopKGPrijs),DECIMAL(12)
+LOC:InkoopKGPrijs        DECIMAL(9,3)
+!!> GUID('c8f48443-4ae3-4070-bda0-a69dd73d3383'),PROMPT('LOC : Inkoop KGP rijs:'),HEADER('LOC : Inkoop KGP rijs'),PICTURE(@n-12.3),TYPEMODE(INS),JUSTIFY(DECIMAL,12)
+[SCREENCONTROLS]
+! PROMPT('LOC : Saved Planning Buffer:'),USE(?LOC:SavedPlanningBuffer:Prompt),RIGHT
+! ENTRY(@n6),USE(LOC:SavedPlanningBuffer),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n6),USE(LOC:SavedPlanningBuffer),RIGHT(1)
+LOC:SavedPlanningBuffer  USHORT
+!!> GUID('797c457e-304a-4abc-bdd4-78a7d9d1a3c3'),PROMPT('LOC : Saved Planning Buffer:'),HEADER('LOC : Saved Planning Buffer'),PICTURE(@n6),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[SCREENCONTROLS]
+! PROMPT('LOC : Saved Planning File:'),USE(?LOC:SavedPlanningFile:Prompt),RIGHT
+! ENTRY(@n6),USE(LOC:SavedPlanningFile),RIGHT(1)
+[REPORTCONTROLS]
+! STRING(@n6),USE(LOC:SavedPlanningFile),RIGHT(1)
+LOC:SavedPlanningFile    USHORT
+!!> GUID('708f9c98-fa1c-4e5b-ab41-2e84ecc6b86d'),PROMPT('LOC : Saved Planning File:'),HEADER('LOC : Saved Planning File'),PICTURE(@n6),TYPEMODE(INS),JUSTIFY(RIGHT,1)
+[FILES]
+[PRIMARY]
+CelLocatie
+[INSTANCE]
+11
+[KEY]
+CL:FK_CelLocatie
+[PRIMARY]
+Cel
+[INSTANCE]
+9
+[KEY]
+CEL:CEL_PK
+[PRIMARY]
+Verpakking
+[INSTANCE]
+8
+[KEY]
+Ver:Verpakking_PK
+[PRIMARY]
+ViewArtikel
+[INSTANCE]
+7
+[KEY]
+Art:Artikel_FK01
+[PRIMARY]
+Planning
+[INSTANCE]
+2
+[OTHERS]
+Mutatie
+ACelLocatie
+Verkoop
+Inkoop
+[PROMPTS]
+%ButtonAction DEPEND %Control DEFAULT TIMES 7
+WHEN  ('') ('No Special Action')
+WHEN  ('?Art:ArtikelOms') ('No Special Action')
+WHEN  ('?CEL:CelOms') ('No Special Action')
+WHEN  ('?CL:Locatienaam') ('No Special Action')
+WHEN  ('?Cancel') ('No Special Action')
+WHEN  ('?OK') ('No Special Action')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('No Special Action')
+
+%ButtonRunName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?OK') ('')
+
+%ButtonRunParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?OK') ('')
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 1
+WHEN  ('?OK') ()
+
+%ButtonThread DEPEND %Control LONG TIMES 1
+WHEN  ('?OK') (0)
+
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 7
+WHEN  ('') ('25000')
+WHEN  ('?Art:ArtikelOms') ('25000')
+WHEN  ('?CEL:CelOms') ('25000')
+WHEN  ('?CL:Locatienaam') ('25000')
+WHEN  ('?Cancel') ('25000')
+WHEN  ('?OK') ('25000')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('25000')
+
+%ButtonParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?OK') ('')
+
+%ButtonRequest DEPEND %Control DEFAULT TIMES 7
+WHEN  ('') ('None')
+WHEN  ('?Art:ArtikelOms') ('None')
+WHEN  ('?CEL:CelOms') ('None')
+WHEN  ('?CL:Locatienaam') ('None')
+WHEN  ('?Cancel') ('None')
+WHEN  ('?OK') ('None')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('None')
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+
+%ClassItem UNIQUE DEFAULT  ('Default', 'WindowToolbar')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('WindowManager')
+WHEN  ('WindowToolbar') ('ToolbarClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('')
+WHEN  ('WindowToolbar') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Ask {20}PROCEDURE(),DERIVED', 'Init {19}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Kill {19}PROCEDURE(),BYTE,PROC,DERIVED', 'PrimeUpdate {12}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'Run {20}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeAccepted {11}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeCompleted {10}PROCEDURE(),BYTE,PROC,DERIVED', 'TakeEvent {14}PROCEDURE(),BYTE,PROC,DERIVED', |
+  'TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED')
+
+%ReturnValue FIELD  ()
+%WindowOperationMode DEFAULT  ('Use WINDOW setting')
+%INISaveWindow LONG  (1)
+%ProcedureDisableEnhanceFocus LONG  (0)
+%ProcedureUseEnterInsteadTabOverride LONG  (0)
+%WindowUseEnterInsteadTab LONG  (1)
+%ProcedureUseEnterInsteadTabExcludeListCombo LONG  (0)
+%ProcedureUseEnterInsteadTabEnableNextTabStop LONG  (0)
+%ProcedureUseEnterInsteadTabExcludeG LONG  (1)
+%WindowUseEnterInsteadTabExclude MULTI DEFAULT  ()
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('NO')
+WHEN  ('WindowToolbar') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ThisWindow')
+WHEN  ('WindowToolbar') ('Toolbar')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (1)
+WHEN  ('WindowToolbar') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 2
+WHEN  ('Default') ('ADOBlob')
+WHEN  ('WindowToolbar') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 2
+WHEN  ('Default') (0)
+WHEN  ('WindowToolbar') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('WindowToolbar')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%WindowStyles MULTI LONG  ()
+%WindowStyleFontName DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontNameIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontSize DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontSizeIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontStyle DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontStyleIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleFontColor DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleFontCharSet DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormal DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundNormalVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundNormalIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleForegroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleForegroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelected DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleBackgroundSelectedVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStyleBackgroundSelectedIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStylePicture DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureVariable DEPEND %WindowStyles DEFAULT TIMES 0
+
+%WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
+
+%WindowStyleOtherListboxes MULTI DEFAULT  ()
+%ProcedureAutoBindFields MULTI LONG  ()
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedures MULTI LONG  ()
+%ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindProcedureTPL DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
+
+%ProcedureAutoBindFieldsIgnored MULTI LONG  ()
+%ProcedureAutoBindFieldIgnored DEPEND %ProcedureAutoBindFieldsIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindProceduresIgnored MULTI LONG  ()
+%ProcedureAutoBindProcedureIgnored DEPEND %ProcedureAutoBindProceduresIgnored DEFAULT TIMES 0
+
+%ProcedureAutoBindValidToAddField LONG  (0)
+%ProcedureUserBindFields MULTI LONG  ()
+%ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
+
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+
+%ProcedureUserBindProcedures MULTI LONG  ()
+%ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
+
+%ProcedureAutoBindProcedureIgnore DEPEND %ProcedureAutoBindProcedures LONG TIMES 0
+
+%ProcedureUserBindExpressions MULTI LONG  ()
+%ProcedureUserBindExpressionName DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ProcedureUserBindExpression DEPEND %ProcedureUserBindExpressions DEFAULT TIMES 0
+
+%ExtUITabIcon DEPEND %Control DEFAULT TIMES 0
+
+%ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
+
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 8
+WHEN  ('') ('Default')
+WHEN  ('?Art:ArtikelOms') ('Default')
+WHEN  ('?CEL:CelOms') ('Default')
+WHEN  ('?CL:Locatienaam') ('Default')
+WHEN  ('?Cancel') ('Default')
+WHEN  ('?CurrentTab') ('Default')
+WHEN  ('?OK') ('Default')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Default')
+
+%ButtonReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?OK') ()
+
+%ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 1
+WHEN  ('?OK') (0)
+
+%ButtonThreadParameters DEPEND %Control DEFAULT TIMES 1
+WHEN  ('?OK') ('')
+
+%ButtonThreadReturnValueAssignment DEPEND %Control FIELD TIMES 1
+WHEN  ('?OK') ()
+
+%PreLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
+
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 13
+WHEN  ('') (1)
+WHEN  ('?Art:ArtikelOms') (1)
+WHEN  ('?CEL:CelOms') (1)
+WHEN  ('?CL:Locatienaam') (1)
+WHEN  ('?Cancel') (1)
+WHEN  ('?OK') (1)
+WHEN  ('?Pla:Aanvulling') (1)
+WHEN  ('?Pla:InkoopKGPrijs') (1)
+WHEN  ('?Pla:KG') (1)
+WHEN  ('?Pla:Pallets') (1)
+WHEN  ('?Pla:Planning_DATE') (1)
+WHEN  ('?Pla:Planning_TIME') (1)
+WHEN  ('?Ver:VerpakkingOmschrijving') (1)
+
+%LookupAssign DEPEND %Control MULTI LONG TIMES 0
+
+%MoreTarget DEPEND %LookupAssign FIELD TIMES 0
+
+%MoreField DEPEND %LookupAssign DEFAULT TIMES 0
+
+%CheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedAssignVariable DEPEND %CheckedAssigns FIELD TIMES 0
+
+%CheckedAssignValue DEPEND %CheckedAssigns DEFAULT TIMES 0
+
+%CheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
+
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 7
+WHEN  ('')TIMES 0
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?OK')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%CheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
+
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?OK')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%UncheckedAssigns DEPEND %Control MULTI LONG TIMES 0
+
+%UncheckedAssignVariable DEPEND %UncheckedAssigns FIELD TIMES 0
+
+%UncheckedAssignValue DEPEND %UncheckedAssigns DEFAULT TIMES 0
+
+%UnCheckedHides DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
+
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 7
+WHEN  ('')TIMES 0
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?OK')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%UnCheckedEnables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
+
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?OK')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%CheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
+
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?OK')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%UnCheckedDisables DEPEND %Control MULTI LONG TIMES 0
+
+%UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
+
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 0
+WHEN  ('?OK')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%ProcedureOneInstance LONG  (0)
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('Off')
+
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('')
+
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%FieldGradientColorTo DEPEND %Control LONG TIMES 1
+WHEN  ('') (-1)
+
+%FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
+
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%PreserveVarsLoc MULTI LONG  ()
+%PreserveVarLoc DEPEND %PreserveVarsLoc DEFAULT TIMES 0
+
+%ActiveImageEnable DEPEND %Control LONG TIMES 0
+
+%AIObjectName DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('AIBtn0')
+
+%AIEnableMimicControl DEPEND %Control LONG TIMES 1
+WHEN  ('') (1)
+
+%AIMimicControl DEPEND %Control DEFAULT TIMES 1
+WHEN  ('') ('?CurrentTab')
+
+%AIImgRound DEPEND %Control LONG TIMES 0
+
+%AIOverrideImg DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIDisableImg DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIHotImg DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+%AIPressedImg DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
+
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 1
+WHEN  ('') (0)
+
+[EMBED]
+EMBED %WindowManagerMethodCodeSection
+[INSTANCES]
+WHEN 'TakeCompleted'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4500
+PROPERTY:END
+	CLEAR(ACL:Record)
+	ACL:CelLocatieID=Pla:CelLocatieID
+	Access:ACelLocatie.TryFetch(ACL:PK_CelLocatie)
+	IF ACL:CelID <> Pla:CelID THEN Pla:CelLocatieID = 0.
+
+	LOC:ArtikelID = Pla:ArtikelID
+	LOC:Planning = Pla:Planning
+	LOC:VerpakkingID = Pla:VerpakkingID
+	LOC:CelID = Pla:CelID
+	LOC:CelLocatieID = Pla:CelLocatieID
+	LOC:Memo = Pla:Memo
+	LOC:Instructie = Pla:Instructie
+    LOC:Transport = Pla:Transport
+    LOC:InkoopKGPrijs = Pla:InkoopKGPrijs
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 5001
+PROPERTY:END
+    ! Gegevens van de vorige invoer worden niet meer overgekopieerd (verzoek Erik 19-3-2012)
+    Pla:ArtikelID = LOC:ArtikelID
+    Pla:Planning = LOC:Planning
+	Pla:VerpakkingID = LOC:VerpakkingID
+	Pla:CelID = LOC:CelID
+	Pla:CelLocatieID = LOC:CelLocatieID
+	Pla:Memo = LOC:Memo
+	Pla:Instructie = LOC:Instructie
+    Pla:Transport = LOC:Transport
+    Pla:InkoopKGPrijs = LOC:InkoopKGPrijs
+
+	LOC:SavedPlanningBuffer = Access:Planning.SaveBuffer()
+	LOC:SavedPlanningFile = Access:Planning.SaveFile()
+	VoorraadClass.BerekenPartijenInkoopPrijs()!Pla:InkoopID)
+	Access:Planning.RestoreBuffer(LOC:SavedPlanningBuffer)
+	Access:Planning.RestoreFile(LOC:SavedPlanningFile)
+		
+	ThisWindow.Reset(True)
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 6500
+PROPERTY:END
+	NetRefreshPlanningViews()
+[END]
+[END]
+WHEN 'PrimeUpdate'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 7800
+PROPERTY:END
+  	If returnValue = Level:Fatal  ! delete just occured
+		NetRefreshPlanningViews()
+	.
+[END]
+[END]
+WHEN 'Init'
+[INSTANCES]
+WHEN '(),BYTE'
+[DEFINITION]
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 8001
+PROPERTY:END
+IF (IGB:BekijkenPrijzen <> 1) THEN
+	HIDE(?Pla:InkoopKGPrijs)
+	HIDE(?Pla:InkoopKGPrijs:Prompt)
+END
+
+IF (GLO:HidePlanningInstructie = 1) THEN
+    HIDE(?Pla:Instructie:2)
+    HIDE(?Pla:Instructie:Prompt)
+
+    ?Pla:Transport:Prompt{Prop:YPos} = 126
+    ?Pla:Transport{Prop:YPos} = 126
+    ?Pla:Transport{Prop:Height} = 100
+END
+
+IF Ink:Verwerkt
+    DISABLE(?Pla:ArtikelID:Prompt,?Pla:Transport)
+END
+[END]
+[END]
+[END]
+[END]
+[ADDITION]
+NAME WinEvent WinEvent
+[INSTANCE]
+INSTANCE 10
+OWNER 4
+[PROMPTS]
+%DisableWinEvent LONG  (0)
+%AutoDown LONG  (0)
+%NoAutoDown LONG  (0)
+%LocWindowsVisible DEFAULT  ('0')
+%EnableWheelMouse LONG  (0)
+%AlertWinEventDebug LONG  (0)
+%DisplayCompileDate LONG  (0)
+%DisplayCompileDateFormat DEFAULT  ('@D6')
+%WinAlert MULTI LONG  ()
+%Mess DEPEND %WinAlert DEFAULT TIMES 0
+
+%Act1 DEPEND %WinAlert DEFAULT TIMES 0
+
+%act2 DEPEND %WinAlert DEFAULT TIMES 0
+
+%SortListbox MULTI LONG  ()
+%ThisListbox DEPEND %SortListbox DEFAULT TIMES 0
+
+%ThisListboxHeader DEPEND %SortListbox MULTI DEFAULT TIMES 0
+
+%gloWinEventTesting LONG  (0)
+%gloWinEventTestingColor1 LONG  (15728618)
+%gloWinEventTestingColor2 LONG  (16777215)
+%WindowsVisibleAfterOpen LONG  (1)
+%CheckForCantCloseNowSetHere LONG  (1)
+%locNoHandleCloseDown LONG  (0)
+%locCloseDownWhenWindowCloses LONG  (0)
+%locCloseDownWhenWindowClosesSet LONG  (0)
+%locCloseDownWhenWindowClosesCtrl DEFAULT  ('')
+[ADDITION]
+NAME NetTalk Local_Use_NetRefresh
+[INSTANCE]
+INSTANCE 4
+OWNER 2
+[PROMPTS]
+%NoNetRefreshHere LONG  (0)
+%NetRefreshFrame LONG  (0)
+%SendRefreshAtOK DEFAULT  ('Use Global Default')
+%RefreshAnyway LONG  (0)
+%DependOnAll LONG  (1)
+%DependFiles MULTI LONG  ()
+%DependFile DEPEND %DependFiles FILE TIMES 0
+
+%DependFileHC DEPEND %DependFiles DEFAULT TIMES 0
+
+%SendRefreshPrimary LONG  (1)
+%RefreshFiles MULTI LONG  ()
+%RefreshFile DEPEND %RefreshFiles FILE TIMES 0
+
+[ADDITION]
+NAME ABC RecordValidation
+[INSTANCE]
+INSTANCE 1
+PROCPROP
+[PROMPTS]
+%ValidateOnAccept LONG  (1)
+%ValidateOnNonStopSelect LONG  (1)
+%ControlsExcluded MULTI LONG  ()
+%ControlToExclude DEPEND %ControlsExcluded DEFAULT TIMES 0
+
+%ValidateUsingColoration LONG  (0)
+%InvalidFieldColor LONG  (255)
+%InvalidPromptColor LONG  (255)
+%UseValidateMessage LONG  (0)
+%ValidationMessage DEFAULT  ('The values of Colored Fields are invalid, Please correct this information.')
+%MessageControl FIELD  ()
+[ADDITION]
+NAME ABC SaveButton
+[INSTANCE]
+INSTANCE 2
+PROCPROP
+[PROMPTS]
+%InsertAllowed LONG  (1)
+%InsertMessage DEFAULT  ('Record Will Be Added')
+%ChangeAllowed LONG  (1)
+%ChangeMessage DEFAULT  ('Record Will Be Changed')
+%DeleteAllowed LONG  (1)
+%DeleteMessage DEFAULT  ('Record Will Be Deleted')
+%ViewMessage DEFAULT  ('View Record')
+%MessageHeader LONG  (0)
+%ActionOnDelete DEFAULT  ('Standard Warning')
+%PrimingFields MULTI LONG  ()
+%PrimedField DEPEND %PrimingFields FIELD TIMES 0
+
+%PrimedValue DEPEND %PrimingFields DEFAULT TIMES 0
+
+%ActionOnCancel DEFAULT  ('Confirm cancel')
+%MessageLocation DEFAULT  ('Title Bar')
+%MessageStatusSection DEFAULT  ('0')
+%HistoryKey DEFAULT  ('CtrlH')
+%AppendToTitle LONG  (0)
+%AppendToTitleID DEFAULT  ('')
+%AfterGoodInsert DEFAULT  ('Insert another record')
+%AskAfterAdd LONG  (1)
+[ADDITION]
+NAME ABC CancelButton
+[INSTANCE]
+INSTANCE 3
+[ADDITION]
+NAME ABC ViewFormActions
+[INSTANCE]
+INSTANCE 5
+[PROMPTS]
+%ForceViewOnly LONG  (0)
+%ViewAction DEPEND %Control DEFAULT TIMES 29
+WHEN  ('') ('None')
+WHEN  ('?Art:ArtikelOms') ('Disable')
+WHEN  ('?CEL:CelOms') ('Disable')
+WHEN  ('?CL:Locatienaam') ('Disable')
+WHEN  ('?Cancel') ('None')
+WHEN  ('?CurrentTab') ('None')
+WHEN  ('?OK') ('None')
+WHEN  ('?Pla:Aanvulling') ('ReadOnly')
+WHEN  ('?Pla:Aanvulling:Prompt') ('None')
+WHEN  ('?Pla:ArtikelID:Prompt') ('None')
+WHEN  ('?Pla:CelID:Prompt') ('None')
+WHEN  ('?Pla:InkoopKGPrijs') ('Disable')
+WHEN  ('?Pla:InkoopKGPrijs:Prompt') ('None')
+WHEN  ('?Pla:Instructie:2') ('Disable')
+WHEN  ('?Pla:Instructie:Prompt') ('None')
+WHEN  ('?Pla:KG') ('Disable')
+WHEN  ('?Pla:KG:Prompt') ('None')
+WHEN  ('?Pla:Pallets') ('Disable')
+WHEN  ('?Pla:Pallets:Prompt') ('None')
+WHEN  ('?Pla:Planning_DATE') ('Disable')
+WHEN  ('?Pla:Planning_DATE:Prompt') ('None')
+WHEN  ('?Pla:Planning_TIME') ('Disable')
+WHEN  ('?Pla:Planning_TIME:Prompt') ('None')
+WHEN  ('?Pla:Transport') ('Disable')
+WHEN  ('?Pla:Transport:Prompt') ('None')
+WHEN  ('?Pla:VerpakkingID:Prompt') ('None')
+WHEN  ('?STRING1') ('None')
+WHEN  ('?Tab:1') ('None')
+WHEN  ('?Ver:VerpakkingOmschrijving') ('Disable')
+
+%PropertyAssignments DEPEND %Control MULTI LONG TIMES 0
+
+%CtrlProperty DEPEND %PropertyAssignments DEFAULT TIMES 0
+
+%CtrlValue DEPEND %PropertyAssignments DEFAULT TIMES 0
+
+[ADDITION]
+NAME ABC FileDropCombo
+[INSTANCE]
+INSTANCE 7
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo {11}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (Art:ArtikelID)
+%TargetField FIELD  (Pla:ArtikelID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (1)
+%KeepViewSync LONG  (0)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (0)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (0)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('Local List')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('Local List')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('Local List')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 3
+WHEN  ('?Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB7')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[INSTANCE]
+INSTANCE 8
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo:1 {9}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (Ver:VerpakkingID)
+%TargetField FIELD  (Pla:VerpakkingID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (0)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (0)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (0)
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (-1)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (-1)
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') (0)
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') (0)
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('Local List')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') ('Local List')
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') ('')
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('Local List')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') ('Local List')
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') ('')
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('Local List')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') ('Local List')
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms') ('')
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 1
+WHEN  ('Ver:VerpakkingOmschrijving') ('')
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 4
+WHEN  ('?Art:ArtikelOms')TIMES 1
+WHEN  ('Art:ArtikelOms')TIMES 0
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+WHEN  ('?Ver:VerpakkingOmschrijving')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB8')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[INSTANCE]
+INSTANCE 9
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo:2 {9}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (CEL:CelID)
+%TargetField FIELD  (Pla:CelID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (0)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  ()
+%RangeLimitType DEFAULT  ('Current Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  ()
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  ()
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (0)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') (0)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') ('Local List')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') ('')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') ('Local List')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') ('')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') ('Local List')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 1
+WHEN  ('CEL:CelOms') ('')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('?CEL:CelOms')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB9')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[INSTANCE]
+INSTANCE 11
+[PROMPTS]
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FileDropComboClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Q {22}&Queue:FileDropCombo:3 {9}!Reference to browse queue type')
+
+%TableSchematicsDescription DEFAULT  ('')
+%FillField FIELD  (CL:CelLocatieID)
+%TargetField FIELD  (Pla:CelLocatieID)
+%MoreAssignments MULTI LONG  ()
+%MoreField DEPEND %MoreAssignments FIELD TIMES 0
+
+%MoreTarget DEPEND %MoreAssignments FIELD TIMES 0
+
+%RecordFilter DEFAULT  ('')
+%DefaultFill LONG  (0)
+%DropDoNotIncludePrimaryKey LONG  (0)
+%UseMRP LONG  (1)
+%RemoveDuplicates LONG  (0)
+%KeepViewSync LONG  (1)
+%EntryCompletion LONG  (1)
+%CaseSensitive LONG  (0)
+%RangeField COMPONENT  (CL:CelID)
+%RangeLimitType DEFAULT  ('Single Value')
+%HigherKeys MULTI LONG  ()
+%HigherKey DEPEND %HigherKeys COMPONENT TIMES 0
+
+%HigherKeyField DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueType DEPEND %HigherKeys DEFAULT TIMES 0
+
+%HigherKeyValueVariable DEPEND %HigherKeys FIELD TIMES 0
+
+%HigherKeyValueFixed DEPEND %HigherKeys DEFAULT TIMES 0
+
+%RangeLimit FIELD  (Pla:CelID)
+%RangeLow FIELD  ()
+%RangeHigh FIELD  ()
+%RangeFile FILE  (Cel)
+%UseSameColorForAll LONG  (0)
+%ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (0)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (-1)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (-1)
+
+%ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%ColorCondition DEPEND %ConditionalColors DEFAULT TIMES 0
+
+%ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%AllControlGreenBarColor LONG  (0)
+%AllControlGreenBarColorAlternate LONG  (0)
+%AllControlFieldForegroundNormal LONG  (-1)
+%AllControlFieldBackgroundNormal LONG  (-1)
+%AllControlFieldForegroundSelected LONG  (-1)
+%AllControlFieldBackgroundSelected LONG  (-1)
+%ConditionalColorsAll MULTI LONG  ()
+%ColorConditionAll DEPEND %ConditionalColorsAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldForegroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundNormal DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldForegroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%ConditionalAllControlFieldBackgroundSelected DEPEND %ConditionalColorsAll LONG TIMES 0
+
+%AllGreenBarOnForegroundNormal LONG  (-1)
+%AllGreenBarOnBackgroundNormal LONG  (-1)
+%AllGreenBarOnForegroundSelected LONG  (-1)
+%AllGreenBarOnBackgroundSelected LONG  (-1)
+%AllGreenBarOffForegroundNormal LONG  (-1)
+%AllGreenBarOffBackgroundNormal LONG  (-1)
+%AllGreenBarOffForegroundSelected LONG  (-1)
+%AllGreenBarOffBackgroundSelected LONG  (-1)
+%ControlFieldIcon DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldIconIsNumber DEPEND %Control DEPEND %ControlField LONG TIMES 0
+
+%ConditionalIcons DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%IconCondition DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIcon DEPEND %ConditionalIcons DEFAULT TIMES 0
+
+%ConditionalControlFieldIconIsNumber DEPEND %ConditionalIcons LONG TIMES 0
+
+%UseSameStyleForAll LONG  (0)
+%ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') (0)
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') (0)
+
+%GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') ('Local List')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') ('')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') ('Local List')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') ('')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') ('Local List')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('Local List')
+
+%ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 1
+WHEN  ('CL:Locatienaam') ('')
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('') ('')
+
+%ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
+
+%ConditionalStyles DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
+
+%StyleCondition DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 2
+WHEN  ('?CL:Locatienaam')TIMES 0
+WHEN  ('?Cancel')TIMES 1
+WHEN  ('')TIMES 0
+
+%ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
+
+%AllControlGreenBarStyle LONG  (0)
+%AllControlGreenBarStyleAlternate LONG  (0)
+%AllControlFieldStyleType DEFAULT  ('Local List')
+%AllControlFieldStyleLocalList DEFAULT  ('')
+%AllControlFieldStyle DEFAULT  ('')
+%ConditionalStylesAll MULTI LONG  ()
+%StyleConditionAll DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleType DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyleLocalList DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%ConditionalAllControlFieldStyle DEPEND %ConditionalStylesAll DEFAULT TIMES 0
+
+%AllGreenBarOnStyleType DEFAULT  ('Local List')
+%AllGreenBarOnStyleLocalList DEFAULT  ('')
+%AllGreenBarOnStyle DEFAULT  ('')
+%AllGreenBarOffStyleType DEFAULT  ('Local List')
+%AllGreenBarOffStyleLocalList DEFAULT  ('')
+%AllGreenBarOffStyle DEFAULT  ('')
+%ControlFieldTipField DEPEND %Control DEPEND %ControlField FIELD TIMES 0
+
+%AllowUpdate LONG  (0)
+%UpdateProcedure PROCEDURE  ()
+%SilentAutoAdd LONG  (0)
+%HotFields MULTI LONG  ()
+%HotField DEPEND %HotFields FIELD TIMES 0
+
+%HotFieldBound DEPEND %HotFields LONG TIMES 0
+
+%HotFieldBindOnly DEPEND %HotFields LONG TIMES 0
+
+%SortFields MULTI LONG  ()
+%SortField DEPEND %SortFields FIELD TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('FDCB11')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%DropIncludeEmpty LONG  (0)
+%DropIncludeAll LONG  (0)
+[ADDITION]
+NAME ABC WindowResize
+[FIELDPROMPT]
+%ResizeAnchorTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorBottom DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowTop DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowLeft DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowRight DEPEND %Control LONG TIMES 0
+
+%ResizeAnchorGrowBottom DEPEND %Control LONG TIMES 0
+
+[INSTANCE]
+INSTANCE 6
+[PROMPTS]
+%UseAppStrategy DEFAULT  ('1')
+%AppStrategy DEFAULT  ('Don''t alter controls')
+%RestrictMinSize LONG  (1)
+%WindowMinWidth DEFAULT  ('0')
+%WindowMaxWidth DEFAULT  ('0')
+%ClassItem UNIQUE DEFAULT  ('Default')
+%DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('WindowResizeClass')
+
+%ActualDefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('')
+
+%ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 1
+WHEN  ('Default') ('Init {19}PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)')
+
+%WindowMinHeight DEFAULT  ('')
+%RestrictMaxSize LONG  (0)
+%WindowMaxHeight DEFAULT  ('')
+%AutoFindParents DEFAULT  ('Default')
+%DeferMoves DEFAULT  ('Default')
+%OverrideControls MULTI LONG  ()
+%OverrideControl DEPEND %OverrideControls DEFAULT TIMES 0
+
+%DisableResize DEPEND %OverrideControls LONG TIMES 0
+
+%HorizResize DEPEND %OverrideControls DEFAULT TIMES 0
+
+%VertResize DEPEND %OverrideControls DEFAULT TIMES 0
+
+%HorizPositional DEPEND %OverrideControls DEFAULT TIMES 0
+
+%VertPositional DEPEND %OverrideControls DEFAULT TIMES 0
+
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('NO')
+
+%ThisObjectName DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('Resizer')
+
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (1)
+
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 1
+WHEN  ('Default') ('ADOBlob')
+
+%ExtBaseClass DEPEND %ClassItem DEFAULT TIMES 0
+
+%BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
+
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 1
+WHEN  ('Default') (0)
+
+%NewMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewMethodName DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewMethodPrototype DEPEND %NewMethods DEFAULT TIMES 0
+
+%NewClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%NewClassProperty DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataType DEPEND %NewClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%NewClassOtherType DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataIsRef DEPEND %NewClassPropertyItems LONG TIMES 0
+
+%NewClassDataSize DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim1 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim2 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim3 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%NewClassDataDim4 DEPEND %NewClassPropertyItems DEFAULT TIMES 0
+
+%ClassMethods DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassMethodName DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassMethodPrototype DEPEND %ClassMethods DEFAULT TIMES 0
+
+%ClassPropertyItems DEPEND %ClassItem MULTI LONG TIMES 0
+
+%ClassProperty DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataType DEPEND %ClassPropertyItems DEFAULT TIMES 1
+WHEN  ('Default')TIMES 0
+
+%ClassOtherType DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataIsRef DEPEND %ClassPropertyItems LONG TIMES 0
+
+%ClassDataSize DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim1 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim2 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim3 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+%ClassDataDim4 DEPEND %ClassPropertyItems DEFAULT TIMES 0
+
+[WINDOW]
+QuickWindow WINDOW('Form Planning'),AT(,,364,294),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT), |
+          DOUBLE,CENTER,GRAY,IMM,MDI,HLP('UpdatePlanning'),SYSTEM
+          SHEET,AT(4,4,356,265),USE(?CurrentTab),#ORIG(CurrentTab),#ORDINAL(1)
+            TAB('&1) General'),USE(?Tab:1),#ORDINAL(2)
+              PROMPT('Artikel:'),AT(9,26),USE(?Pla:ArtikelID:Prompt),TRN,#LINK(?Pla:ArtikelID), |
+                #ORIG(?Pla:ArtikelID:Prompt),#ORDINAL(3)
+              COMBO(@s60),AT(69,25,282,10),USE(Art:ArtikelOms),DROP(25),FORMAT('240L(2)~Ar' & |
+                'tikel~C(0)@s60@'),FROM(Queue:FileDropCombo),REQ,#FIELDS(Art:ArtikelOms),#ORIG(Art:ArtikelOms), |
+                #SEQ(7),#ORDINAL(4)
+              PROMPT('Aanvulling:'),AT(9,41),USE(?Pla:Aanvulling:Prompt),#ORDINAL(10000)
+              ENTRY(@s100),AT(69,40,282,10),USE(Pla:Aanvulling),#ORDINAL(10001)
+              PROMPT('KG:'),AT(9,57),USE(?Pla:KG:Prompt),TRN,#LINK(?Pla:KG),#ORIG(?Pla:KG:Prompt), |
+                #ORDINAL(5)
+              ENTRY(@N12_.2),AT(69,54,64,10),USE(Pla:KG),RIGHT(2),REQ,#LINK(?Pla:KG:Prompt), |
+                #ORIG(Pla:KG),#ORDINAL(6)
+              PROMPT('Pallets:'),AT(9,70),USE(?Pla:Pallets:Prompt),TRN,#LINK(?Pla:Pallets), |
+                #ORIG(?Pla:Pallets:Prompt),#ORDINAL(7)
+              ENTRY(@n14.),AT(69,70,64,10),USE(Pla:Pallets),RIGHT(2),#LINK(?Pla:Pallets:Prompt), |
+                #ORIG(Pla:Pallets),#ORDINAL(8)
+              PROMPT('Datum:'),AT(9,83),USE(?Pla:Planning_DATE:Prompt),HIDE,TRN,#LINK(?Pla:Planning_DATE), |
+                #ORIG(?Pla:Planning_DATE:Prompt),#ORDINAL(9)
+              ENTRY(@d6-),AT(69,83,64,10),USE(Pla:Planning_DATE),RIGHT(2),HIDE,#LINK(?Pla:Planning_DATE:Prompt), |
+                #ORIG(Pla:Planning_DATE),#ORDINAL(10)
+              PROMPT('Tijdstip:'),AT(173,84),USE(?Pla:Planning_TIME:Prompt),HIDE,TRN,#LINK(?Pla:Planning_TIME), |
+                #ORIG(?Pla:Planning_TIME:Prompt),#ORDINAL(11)
+              ENTRY(@t7),AT(205,84,64,10),USE(Pla:Planning_TIME),RIGHT(2),HIDE,#LINK(?Pla:Planning_TIME:Prompt), |
+                #ORIG(Pla:Planning_TIME),#ORDINAL(12)
+              PROMPT('Verpakking:'),AT(9,97),USE(?Pla:VerpakkingID:Prompt),TRN,#LINK(?Pla:VerpakkingID), |
+                #ORIG(?Pla:VerpakkingID:Prompt),#ORDINAL(13)
+              COMBO(@s50),AT(69,98,282,10),USE(Ver:VerpakkingOmschrijving),DROP(25),FORMAT('200L(2)~Ve' & |
+                'rpakking Omschrijving~L(0)@s50@'),FROM(Queue:FileDropCombo:1),IMM,#FIELDS(Ver:VerpakkingOmschrijving), |
+                #ORIG(Ver:VerpakkingOmschrijving),#SEQ(8),#ORDINAL(14)
+              PROMPT('Cel:'),AT(9,113),USE(?Pla:CelID:Prompt),TRN,#LINK(?Pla:CelID),#ORIG(?Pla:CelID:Prompt), |
+                #ORDINAL(15)
+              COMBO(@s50),AT(69,113,282,10),USE(CEL:CelOms),DROP(25),FORMAT('200L(2)~Om' & |
+                'schrijving~L(0)@s50@'),FROM(Queue:FileDropCombo:2),IMM,#FIELDS(CEL:CelOms), |
+                #ORIG(CEL:CelOms),#SEQ(9),#ORDINAL(16)
+              STRING('Cel-locatie:'),AT(9,126),USE(?STRING1),#ORDINAL(17)
+              COMBO(@s50),AT(69,126,282,10),USE(CL:Locatienaam),VSCROLL,DROP(5),FORMAT('200L(2)|M~' & |
+                'Locatienaam~L(0)@s50@'),FROM(Queue:FileDropCombo:3),IMM,#FIELDS(CL:Locatienaam), |
+                #ORIG(CL:Locatienaam),#SEQ(11),#ORDINAL(18)
+              PROMPT('Instructie:'),AT(9,138),USE(?Pla:Instructie:Prompt),CENTER,#ORDINAL(19)
+              TEXT,AT(69,140,282,48),USE(Pla:Instructie,,?Pla:Instructie:2),#ORDINAL(20)
+              PROMPT('Transport:'),AT(9,192),USE(?Pla:Transport:Prompt),#ORDINAL(21)
+              TEXT,AT(70,192,281,55),USE(?Pla:Transport),#ORDINAL(22)
+              PROMPT('Prijs per KG:'),AT(9,252),USE(?Pla:InkoopKGPrijs:Prompt),#ORDINAL(23)
+              ENTRY(@n-13`3),AT(69,251,60,10),USE(Pla:InkoopKGPrijs),RIGHT(2),#ORDINAL(24)
+            END
+          END
+          BUTTON('&OK'),AT(239,273,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
+            'a and close the window'),TIP('Accept data and close the window'),#ORIG(?OK),#SEQ(2), |
+            #ORDINAL(25)
+          BUTTON('&Annuleren'),AT(293,273,65,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT, |
+            MSG('Cancel operation'),TIP('Cancel operation'),#ORIG(?Cancel),#SEQ(3),#ORDINAL(26)
+        END
+
+[END]
