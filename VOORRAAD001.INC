@@ -1,3 +1,3 @@
   MODULE('VOORRAAD001.CLW')
-ProcessSyncRelatie     PROCEDURE
+ProcessSyncRelatie     PROCEDURE                      !TODO Omzetten naar TurboSQL
   END

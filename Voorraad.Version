@@ -1,8 +1,8 @@
 LANGUAGE 0x0413
 
 1 VERSIONINFO
- FILEVERSION 3,26,0,131
- PRODUCTVERSION 3,26,0,131
+ FILEVERSION 3,29,0,171
+ PRODUCTVERSION 3,29,0,171
  FILEFLAGSMASK 0x3FL
  FILEFLAGS 0
  FILEOS VOS__WINDOWS32
@@ -14,12 +14,12 @@ BEGIN
     BLOCK "041304E4"
       BEGIN 
         VALUE "CompanyName", "JMD Microbit Automatisering\0"
-        VALUE "FileVersion", "3.26.0.131\0"
+        VALUE "FileVersion", "3.29.0.171\0"
         VALUE "InternalName", "Voorraad\0"
         VALUE "LegalCopyright", "Copyright (c) 2020\0"
         VALUE "OriginalFilename", "Voorraad.EXE\0"
         VALUE "ProductName", "Voorraad\0"
-        VALUE "ProductVersion", "3.26.0.131\0"
+        VALUE "ProductVersion", "3.29.0.171\0"
         VALUE "ClarionVersion", "10000\0"
         VALUE "TemplateFamily", "ABC\0"
         VALUE "TemplateVersion", "v10.0\0"

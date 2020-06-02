@@ -19,6 +19,7 @@
 !!! </summary>
 UpdateGebruiker PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 ActionMessage        CSTRING(40)                           ! 
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
@@ -114,6 +115,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'UpdateGebruiker','Voorraad026.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+             
   GlobalErrors.SetProcedureName('UpdateGebruiker')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -121,9 +124,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Geb:WindowsInlog
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Geb:Record,History::Geb:Record)
   SELF.AddHistoryField(?Geb:WindowsInlog,2)
@@ -158,6 +161,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?Geb:WindowsInlog{PROP:ReadOnly} = True
     ?Geb:VolledigeNaam{PROP:ReadOnly} = True
@@ -196,6 +200,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('UpdateGebruiker',QuickWindow)           ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -292,6 +298,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('UpdateGebruiker',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:46PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

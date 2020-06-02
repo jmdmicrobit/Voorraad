@@ -13,9 +13,11 @@
 
 !!! <summary>
 !!! Generated from procedure template - Process
+!!! TODO Omzetten naar TurboSQL
 !!! </summary>
 ProcessSyncRelatie PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Loc:PalletBladLayout CSTRING(51)                           ! 
 Progress:Thermometer BYTE                                  ! 
 Loc:Note             CSTRING(4001)                         ! 
@@ -83,6 +85,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ProcessSyncRelatie','Voorraad001.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+             
   GlobalErrors.SetProcedureName('ProcessSyncRelatie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -100,6 +104,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ProcessSyncRelatie',ProgressWindow)        ! Restore window settings from non-volatile store
   ProgressWindow{Prop:Timer} = 10                          ! Assign timer interval
   ProgressMgr.Init(ScrollSort:AllowNumeric,)
@@ -177,6 +182,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ProcessSyncRelatie',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'02/11/2011 @ 10:53AM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:09PM')  
+    
+  END
   RETURN ReturnValue
 
 

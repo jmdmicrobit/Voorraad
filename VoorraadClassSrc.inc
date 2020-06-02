@@ -112,7 +112,7 @@ InkoopID                                        LONG
 VerkoopID                                        LONG
 PlanningVerwerkt                                BYTE
 CODE
-    db.DebugOut('VoorraadClass.VerwijderPlanningMutaties(' & PRM:PlanningID & ', ' & PRM:TestOnly & ')')
+    UD.Debug('VoorraadClass.VerwijderPlanningMutaties(' & PRM:PlanningID & ', ' & PRM:TestOnly & ')')
     CLEAR(Pla:Record)
     Pla:PlanningID = PRM:PlanningID
     IF (Access:Planning.Fetch(Pla:PK_Planning) = Level:Benign)
@@ -138,7 +138,7 @@ CODE
                 LOOP UNTIL Access:Mutatie.Next()
                     IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
 					
-                    db.DebugOut('VoorraadClass.VerwijderPlanningMutaties - Verwijderen UIT-mutaties (' & MUT:MutatieID & ', ' & MUT:PlanningID & ')')
+                    UD.Debug('VoorraadClass.VerwijderPlanningMutaties - Verwijderen UIT-mutaties (' & MUT:MutatieID & ', ' & MUT:PlanningID & ')')
                     Access:Mutatie.DeleteRecord(0)
                 END
                 Pla:MutatieGemaakt = 0
@@ -233,7 +233,7 @@ CODE
                     SET(Mut:Mutatie_FK02, Mut:Mutatie_FK02)
                     LOOP UNTIL Access:Mutatie.Next()
                         IF Mut:PlanningID <> Pla:PlanningID THEN BREAK.
-                        db.DebugOut('VoorraadClass.VerwijderPlanningMutaties - Verwijderen IN-mutaties (' & MUT:MutatieID & ', ' & MUT:PlanningID & ')')
+                        UD.Debug('VoorraadClass.VerwijderPlanningMutaties - Verwijderen IN-mutaties (' & MUT:MutatieID & ', ' & MUT:PlanningID & ')')
                         Access:Mutatie.DeleteRecord(0)
                     END
                 END
@@ -334,7 +334,7 @@ PlanningKG                                      DECIMAL(11,2)
 SavedInkoopBuffer                               USHORT
 SavedInkoopFile                                 USHORT
 CODE
-    db.DebugOut('VoorraadClass.BerekenPartijInkoopPrijs :'&PRM:PartijID)
+    UD.Debug('VoorraadClass.BerekenPartijInkoopPrijs :'&PRM:PartijID)
 	GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.BerekenPartijInkoopPrijs'
 	
 	SavedInkoopBuffer = Access:Inkoop.SaveBuffer()
@@ -374,7 +374,7 @@ CODE
 				PlanningKG = Pla:KG
 			END
 			
-			!db.DebugOut('BerekenInkoopPrijs - Planning: ' & PlanningKG & ', ' & Pla:InkoopID & '=' & Par:InkoopPlanningID)
+			!UD.Debug('BerekenInkoopPrijs - Planning: ' & PlanningKG & ', ' & Pla:InkoopID & '=' & Par:InkoopPlanningID)
 			
 			TotaalKG += PlanningKG
 			IF Pla:PlanningID = Par:InkoopPlanningID THEN
@@ -385,7 +385,7 @@ CODE
 		
 		Par:InkoopKGPrijs = PartijKGPrijs
 		Par:BerekendeInkoopKGPrijs = PartijKGPrijs + ((Ink:ExtraKosten + Ink:TransportKosten)/ TotaalKG)
-		db.DebugOut('BerekenInkoopPrijs: ' & Par:BerekendeInkoopKGPrijs & ', ' & Ink:ExtraKosten & ', ' & Ink:TransportKosten & ', ' & TotaalKG & ', ' & PartijKG & ', ' & PartijKGPrijs)
+		UD.Debug('BerekenInkoopPrijs: ' & Par:BerekendeInkoopKGPrijs & ', ' & Ink:ExtraKosten & ', ' & Ink:TransportKosten & ', ' & TotaalKG & ', ' & PartijKG & ', ' & PartijKGPrijs)
 	ELSE
 		Par:InkoopKGPrijs = 0
 		Par:BerekendeInkoopKGPrijs = 0
@@ -409,7 +409,7 @@ CODE
 		CLEAR(Ink:Record)
 		Ink:InkoopID = PRM:InkoopID
         IF (Access:Inkoop.Fetch(Ink:PK_Inkoop) <> Level:Benign) THEN 
-            db.DebugOut('VoorraadClass.BerekenPartijenInkoopPrijs met Inkoop kan niet gevonden worden:'&ERROR())
+            UD.Debug('VoorraadClass.BerekenPartijenInkoopPrijs met Inkoop kan niet gevonden worden:'&ERROR())
             RETURN
         END    
 	END
@@ -421,7 +421,7 @@ CODE
 	LOOP UNTIL Access:Planning.Next()
 		IF Pla:InkoopID <> Ink:InkoopID THEN BREAK.
 		
-        db.DebugOut('VoorraadClass.BerekenPartijenInkoopPrijs Pla:PlanningID'&Pla:PlanningID&' inkoopid '&Pla:InkoopId)
+        UD.Debug('VoorraadClass.BerekenPartijenInkoopPrijs Pla:PlanningID'&Pla:PlanningID&' inkoopid '&Pla:InkoopId)
         ! de eerste keer krijgen we errorcode()33 Record Not Available, eens kijken of ik kan testen of Mutatie bestand geopend is
 		CLEAR(Mut:Record)
         Mut:PlanningID = Pla:PlanningID
@@ -441,7 +441,7 @@ CODE
 			Access:Planning.RestoreBuffer(SavedPlanningBuffer)
 			Access:Planning.RestoreFile(SavedPlanningFile)
         END
-        db.DebugOut('VoorraadClass.BerekenPartijenInkoopPrijs Mutatieloop'&CLIP(ERROR())&'|'&CLIP(FileERROR()))
+        UD.Debug('VoorraadClass.BerekenPartijenInkoopPrijs Mutatieloop'&CLIP(ERROR())&'|'&CLIP(FileERROR()))
         
     END
 VoorraadClass.ControleerCelLocatie      PROCEDURE(LONG PRM:CelID, LONG PRM:CelLocatieID)
@@ -461,11 +461,11 @@ CODE
 !----------------------------------------
 VoorraadClass.ResetPartijCelControle        PROCEDURE()
 CODE
-    db.DebugOut('VoorraadClass.ResetPartijCelControle')
+    UD.Debug('VoorraadClass.ResetPartijCelControle')
     FREE(GLO:PartijCelControleQ)   
 VoorraadClass.AddPartijCelControle      PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID, REAL PRM:KG, REAL PRM:Pallets)
 CODE
-    db.DebugOut('VoorraadClass.ResetPartijCelControle')
+    UD.Debug('VoorraadClass.ResetPartijCelControle')
     PCC:PartijID = PRM:PartijID
     PCC:CelID = PRM:CelID
     GET(GLO:PartijCelControleQ, +PCC:PartijID, +PCC:CelID)
@@ -476,13 +476,13 @@ CODE
         PCC:Pallets = PRM:Pallets
         ADD(GLO:PartijCelControleQ, +PCC:PartijID, +PCC:CelID)
         
-        db.DebugOut('VoorraadClass.ResetPartijCelControle - ADD (' & RECORDS(GLO:PartijCelControleQ))
+        UD.Debug('VoorraadClass.ResetPartijCelControle - ADD (' & RECORDS(GLO:PartijCelControleQ))
     ELSE
         PCC:KG += PRM:KG
         PCC:Pallets += PRM:Pallets
         PUT(GLO:PartijCelControleQ, +PCC:PartijID, +PCC:CelID)
         
-        db.DebugOut('VoorraadClass.ResetPartijCelControle - PUT (' & RECORDS(GLO:PartijCelControleQ))
+        UD.Debug('VoorraadClass.ResetPartijCelControle - PUT (' & RECORDS(GLO:PartijCelControleQ))
     END
 VoorraadClass.AddPartijCelControleOverboeking       PROCEDURE(LONG PRM:PartijID, LONG PRM:VanCelID, LONG PRM:NaarCelID, REAL PRM:KG, REAL PRM:Pallets)
 CODE
@@ -504,7 +504,7 @@ CODE
         VVPar:PartijID = PCC:PartijID
         VVPar:CelID = PCC:CelID
         IF (Access:ViewVoorraadPartij.Fetch(VVPar:PartijID_CelID_K) = Level:Benign) THEN
-            db.DebugOut('Controle: ' & PCC:PartijID & '.' & PCC:CelID & ' = ' & VVPar:VoorraadKG & ' + ' & PCC:KG & ' / ' & VVPar:VoorraadPallets & ' + ' & PCC:Pallets)
+            UD.Debug('Controle: ' & PCC:PartijID & '.' & PCC:CelID & ' = ' & VVPar:VoorraadKG & ' + ' & PCC:KG & ' / ' & VVPar:VoorraadPallets & ' + ' & PCC:Pallets)
             IF VVPar:VoorraadKG + PCC:KG < 0 THEN
                 RETURN CLIP('Negatieve voorraad van ' & CLIP(LEFT(FORMAT(VVPar:VoorraadKG + PCC:KG, @n-12`2))) & ' KG voor partij/cel ' & CLIP(PCC:PartijID) & '.' & CLIP(PCC:CelID))
             END
@@ -516,7 +516,7 @@ CODE
         ELSE
             errorcode# = ERRORCODE()
 
-            db.DebugOut('Controle: ' & PCC:PartijID & '.' & PCC:CelID & ' = ' & PCC:KG & ' / ' & PCC:Pallets)
+            UD.Debug('Controle: ' & PCC:PartijID & '.' & PCC:CelID & ' = ' & PCC:KG & ' / ' & PCC:Pallets)
             
             IF errorcode# = 35 THEN! File Not Found
                 IF PCC:KG < 0 THEN

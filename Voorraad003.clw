@@ -13,9 +13,11 @@
 
 !!! <summary>
 !!! Generated from procedure template - Process
+!!! TODO Omzetten naar TurboSQL
 !!! </summary>
 ProcessSyncArtikel PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 SynchedArtikelQueue  QUEUE,PRE(SAQ)                        ! 
 ArtikelID            CSTRING('<0>{30}')                    ! 
@@ -66,6 +68,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ProcessSyncArtikel','Voorraad003.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+             
   GlobalErrors.SetProcedureName('ProcessSyncArtikel')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -82,6 +86,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ProcessSyncArtikel',ProgressWindow)        ! Restore window settings from non-volatile store
   ProgressWindow{Prop:Timer} = 10                          ! Assign timer interval
   ProgressMgr.Init(ScrollSort:AllowAlpha+ScrollSort:AllowNumeric,ScrollBy:RunTime)
@@ -119,10 +124,10 @@ ReturnValue          BYTE,AUTO
   	SAQ:ArtikelID = Art:ArtikelID
   	GET(SynchedArtikelQueue, +SAQ:ArtikelID)
   	IF ERROR() THEN
-  		db.DebugOut('ViewArtikel Verwijderen OK:' & Art:ArtikelID)
+  		UD.Debug('ViewArtikel Verwijderen OK:' & Art:ArtikelID)
   		Access:ViewArtikel.DeleteRecord(false)
   	ELSE
-  		db.DebugOut('ViewArtikel Verwijderen NO:' & Art:ArtikelID)
+  		UD.Debug('ViewArtikel Verwijderen NO:' & Art:ArtikelID)
   	END
   END
   IF ReturnValue THEN RETURN ReturnValue.
@@ -135,6 +140,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ProcessSyncArtikel',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'02/11/2011 @ 10:53AM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+    
+  END
   RETURN ReturnValue
 
 

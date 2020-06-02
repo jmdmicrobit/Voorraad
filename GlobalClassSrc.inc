@@ -6,11 +6,11 @@
 
 GlobalClass.InitWordOle     Procedure
 code
-	db.DebugOut('GlobalClass.InitWordOle(1)')
+	UD.Debug('GlobalClass.InitWordOle(1)')
 	Loc:Ole  = Create(0,Create:Ole)
-	db.DebugOut('GlobalClass.InitWordOle(2)')	
+	UD.Debug('GlobalClass.InitWordOle(2)')	
 	Loc:Ole{Prop:Create}='Word.Application'
-	db.DebugOut('GlobalClass.InitWordOle(3)')	
+	UD.Debug('GlobalClass.InitWordOle(3)')	
     Loc:Ole{Prop:ReportException}=False                   !  dwz fouten worden niet genegeerd
 
     Loc:Ole{Prop:DoVerb}=1                               !  dit doet iedereen dus ik ook

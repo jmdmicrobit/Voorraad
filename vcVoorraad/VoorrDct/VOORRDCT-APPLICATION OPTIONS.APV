@@ -4028,12 +4028,16 @@ WHEN  ('ViewVoorraadPlanning') ('Use Default')
 WHEN  ('VoorraadVerloop') ('Use Default')
 WHEN  ('Weging') ('Use Default')
 
-%StandardExternalModule DEPEND %Module LONG TIMES 5
+%StandardExternalModule DEPEND %Module LONG TIMES 9
 WHEN  ('') (1)
 WHEN  ('VoorrDct.clw') (1)
 WHEN  ('VoorrDct001.clw') (1)
 WHEN  ('VoorrDct002.clw') (1)
 WHEN  ('VoorrDct003.clw') (1)
+WHEN  ('VoorrDct004.clw') (1)
+WHEN  ('VoorrDct005.clw') (1)
+WHEN  ('VoorrDct006.clw') (1)
+WHEN  ('VoorrDct007.clw') (1)
 
 %NoGenerateGlobals LONG  (0)
 %WindowManagerType DEFAULT  ('WindowManager')
@@ -4327,13 +4331,6 @@ PARENT 2
 %NetRefreshResetFromBuffer LONG  (0)
 %ThisNetRefreshObject DEFAULT  ('ThisNetRefresh')
 %NetRefreshClass DEFAULT  ('NetRefresh')
-[ADDITION]
-NAME Debuger DebugerABC
-[INSTANCE]
-INSTANCE 4
-[PROMPTS]
-%debugtrue LONG  (0)
-%numdups DEFAULT  ('50')
 [ADDITION]
 NAME LSZipLibrary LSZipLibraryABC
 [INSTANCE]
@@ -4757,7 +4754,7 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80126')
+%dClassVersion DEFAULT  ('80137')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
@@ -4939,13 +4936,44 @@ INSTANCE 9
 %verUserValue3 DEFAULT  ('')
 %verUserLabel4 DEFAULT  ('')
 %verUserValue4 DEFAULT  ('')
+[ADDITION]
+NAME UltimateDebug UltimateDebugGlobal
+[INSTANCE]
+INSTANCE 10
+[PROMPTS]
+%CLSkelAppDisable LONG  (0)
+%gDumpTpl LONG  (0)
+%zDumpTpl LONG  (0)
+%gDumpVar LONG  (0)
+%zDumpVar LONG  (0)
+%LineWrap DEFAULT  ('0')
+%DisableProcedureDebug LONG  (0)
+%UDProcAlert DEFAULT  ('CtrlShiftP')
+%UDReportKeyState DEFAULT  ('KeyStateUD:Shift')
+%UDEntryExit LONG  (1)
+%CLSkelClass DEFAULT  ('UD')
+%CLSkelMultiDLL LONG  (1)
+%CLSkelMultiDLLData DEFAULT  ('1')
+%CLDebugPrefix DEFAULT  ('!')
+%DebugOffVariable DEFAULT  ('0')
+%SaveToFileVariable DEFAULT  ('0')
+%CLLogFileName DEFAULT  ('DebugLog.txt')
+%SaveToJSONFileVariable DEFAULT  ('0')
+%CLJSONLogFileName DEFAULT  ('JSONDebugLog.txt')
+%DoNotSplitLines LONG  (1)
+%SendWithoutFormatting LONG  (0)
+%CLSkelFamily DEFAULT  ('ABC')
 [PERSIST]
 %SaveCreateLocalMap DEFAULT  ('1')
-%GenerationCompleted DEPEND %Module DEFAULT TIMES 4
+%GenerationCompleted DEPEND %Module DEFAULT TIMES 8
 WHEN  ('VoorrDct.clw') ('1')
 WHEN  ('VoorrDct001.clw') ('1')
 WHEN  ('VoorrDct002.clw') ('1')
 WHEN  ('VoorrDct003.clw') ('1')
+WHEN  ('VoorrDct004.clw') ('1')
+WHEN  ('VoorrDct005.clw') ('1')
+WHEN  ('VoorrDct006.clw') ('1')
+WHEN  ('VoorrDct007.clw') ('1')
 
 %LastTarget32 DEFAULT  ('1')
 %LastProgramExtension DEFAULT  ('DLL')
@@ -4972,6 +5000,10 @@ WHEN  ('VoorrDct003.clw') ('1')
 #compile "VoorrDct001.clw" -- GENERATED
 #compile "VoorrDct002.clw" -- GENERATED
 #compile "VoorrDct003.clw" -- GENERATED
+#compile "VoorrDct004.clw" -- GENERATED
+#compile "VoorrDct005.clw" -- GENERATED
+#compile "VoorrDct006.clw" -- GENERATED
+#compile "VoorrDct007.clw" -- GENERATED
 #compile "CWUtil.CLW" -- GENERATED
 #compile "EFOCUS.CLW" -- GENERATED
 #compile "VoorrDct_BC0.CLW" -- GENERATED
@@ -4981,19 +5013,8 @@ WHEN  ('VoorrDct003.clw') ('1')
 #compile "VoorrDct_BC4.CLW" -- GENERATED
 #compile "VoorrDct_BC5.CLW" -- GENERATED
 #compile "VOORRDCT_BC.CLW" -- GENERATED
-#compile "VoorrDct004.clw" -- GENERATED
-#compile "VoorrDct005.clw" -- GENERATED
-#compile "VoorrDct006.clw" -- GENERATED
-#compile "VoorrDct007.clw" -- GENERATED
 #pragma link("C%V%asc%X%%L%.lib") -- GENERATED
 #pragma link("C%V%dos%X%%L%.lib") -- GENERATED
-#pragma link("clanet.lib") -- GENERATED
-#pragma link("LSPZIPX.LIB") -- GENERATED
-#pragma link("LSPUZIPX.LIB") -- GENERATED
-#pragma link("CLAFM3.lib") -- GENERATED
 #pragma link("C%V%tps%X%%L%.lib") -- GENERATED
-#pragma link("Win32Ext.LIB") -- GENERATED
-#pragma link("CLAWE.Lib") -- GENERATED
 #pragma link("C%V%mss%X%%L%.lib") -- GENERATED
-#pragma link("VoorrDct.Version") -- GENERATED
 #link "VoorrDct.DLL"

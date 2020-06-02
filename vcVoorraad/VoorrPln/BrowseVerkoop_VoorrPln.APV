@@ -525,7 +525,20 @@ WHEN  (13) ('BrowseBox(ABC)')
 %ProcedureUserBindFields MULTI LONG  ()
 %ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
 
-%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 13
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+WHEN  (5) (0)
+WHEN  (6) (0)
+WHEN  (7) (0)
+WHEN  (8) (0)
+WHEN  (9) (0)
+WHEN  (10) (0)
+WHEN  (11) (0)
+WHEN  (12) (0)
+WHEN  (13) (0)
 
 %ProcedureUserBindProcedures MULTI LONG  ()
 %ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0

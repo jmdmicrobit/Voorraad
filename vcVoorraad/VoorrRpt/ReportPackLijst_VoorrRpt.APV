@@ -610,20 +610,22 @@ WHEN  ('TargetSelector')TIMES 0
 %WindowStylePictureIsVariable DEPEND %WindowStyles LONG TIMES 0
 
 %WindowStyleOtherListboxes MULTI DEFAULT  ()
-%ProcedureAutoBindFields MULTI LONG  (1, 2, 3, 4, 5)
-%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 5
+%ProcedureAutoBindFields MULTI LONG  (1, 2, 3, 4, 5, 6)
+%ProcedureAutoBindField DEPEND %ProcedureAutoBindFields DEFAULT TIMES 6
 WHEN  (1) ('AREL:Postcode')
 WHEN  (2) ('AREL:Plaats')
 WHEN  (3) ('AREL:PaymentCondition')
 WHEN  (4) ('Ver2:ExpresseRelease')
 WHEN  (5) ('Ver2:ExternVerkoopID')
+WHEN  (6) ('Loc:BestemmingTekst')
 
-%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 5
+%ProcedureAutoBindFieldTPL DEPEND %ProcedureAutoBindFields DEFAULT TIMES 6
 WHEN  (1) ('Report')
 WHEN  (2) ('Report')
 WHEN  (3) ('Report')
 WHEN  (4) ('Report')
 WHEN  (5) ('Report')
+WHEN  (6) ('Report')
 
 %ProcedureAutoBindProcedures MULTI LONG  ()
 %ProcedureAutoBindProcedure DEPEND %ProcedureAutoBindProcedures DEFAULT TIMES 0
@@ -640,7 +642,13 @@ WHEN  (5) ('Report')
 %ProcedureUserBindFields MULTI LONG  ()
 %ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
 
-%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 6
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+WHEN  (5) (0)
+WHEN  (6) (0)
 
 %ProcedureUserBindProcedures MULTI LONG  ()
 %ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
@@ -834,33 +842,37 @@ WHEN  (1) ('')
 
 %BreakReportFooter DEPEND %ProcessBreaks DEFAULT TIMES 0
 
-%HotFields MULTI LONG  (1, 2, 3, 4, 5)
-%HotField DEPEND %HotFields FIELD TIMES 5
+%HotFields MULTI LONG  (1, 2, 3, 4, 5, 6)
+%HotField DEPEND %HotFields FIELD TIMES 6
 WHEN  (1) (AREL:Postcode)
 WHEN  (2) (AREL:Plaats)
 WHEN  (3) (AREL:PaymentCondition)
 WHEN  (4) (Ver2:ExpresseRelease)
 WHEN  (5) (Ver2:ExternVerkoopID)
+WHEN  (6) (Loc:BestemmingTekst)
 
-%HotFieldBound DEPEND %HotFields LONG TIMES 5
+%HotFieldBound DEPEND %HotFields LONG TIMES 6
 WHEN  (1) (1)
 WHEN  (2) (1)
 WHEN  (3) (1)
 WHEN  (4) (1)
 WHEN  (5) (1)
+WHEN  (6) (1)
 
-%HotFieldRestoreOnBreak DEPEND %HotFields LONG TIMES 5
+%HotFieldRestoreOnBreak DEPEND %HotFields LONG TIMES 6
 WHEN  (1) (0)
 WHEN  (2) (0)
 WHEN  (3) (0)
 WHEN  (4) (0)
 WHEN  (5) (0)
+WHEN  (6) (0)
 
 %DetailFilter DEPEND %ReportControl DEFAULT TIMES 0
 
 %DetailFilterExclusive DEPEND %ReportControl LONG TIMES 0
 
-%DetailFilterExternal DEPEND %ReportControl DEFAULT TIMES 178
+%DetailFilterExternal DEPEND %ReportControl DEFAULT TIMES 179
+WHEN  ('') ('')
 WHEN  ('?AREL:Adres1') ('')
 WHEN  ('?AREL:Adres1:2') ('')
 WHEN  ('?AREL:Country') ('')
@@ -1044,51 +1056,60 @@ WHEN  ('?boo') ('')
 
 %ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
 
-%ExtUITabStyle DEPEND %Control DEFAULT TIMES 3
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Default')
 WHEN  ('?Loc:Layout') ('Default')
 WHEN  ('?Pause') ('Default')
 WHEN  ('?Progress:Cancel') ('Default')
 
-%FieldGradientColorType DEPEND %Control DEFAULT TIMES 3
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('Off')
 WHEN  ('?Loc:Layout') ('Off')
 WHEN  ('?Pause') ('Off')
 WHEN  ('?Progress:Cancel') ('Off')
 
-%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 3
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('')
 WHEN  ('?Loc:Layout') ('')
 WHEN  ('?Pause') ('')
 WHEN  ('?Progress:Cancel') ('')
 
-%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 3
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
 WHEN  ('?Loc:Layout') (0)
 WHEN  ('?Pause') (0)
 WHEN  ('?Progress:Cancel') (0)
 
-%FieldGradientColorFrom DEPEND %Control LONG TIMES 3
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
 WHEN  ('?Loc:Layout') (-1)
 WHEN  ('?Pause') (-1)
 WHEN  ('?Progress:Cancel') (-1)
 
 %FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 3
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
 WHEN  ('?Loc:Layout') (0)
 WHEN  ('?Pause') (0)
 WHEN  ('?Progress:Cancel') (0)
 
-%FieldGradientColorTo DEPEND %Control LONG TIMES 3
+%FieldGradientColorTo DEPEND %Control LONG TIMES 4
+WHEN  ('') (-1)
 WHEN  ('?Loc:Layout') (-1)
 WHEN  ('?Pause') (-1)
 WHEN  ('?Progress:Cancel') (-1)
 
 %FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 3
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
 WHEN  ('?Loc:Layout') (0)
 WHEN  ('?Pause') (0)
 WHEN  ('?Progress:Cancel') (0)
 
-%ButtonAction DEPEND %Control DEFAULT TIMES 3
+%ButtonAction DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('No Special Action')
 WHEN  ('?Loc:Layout') ('No Special Action')
 WHEN  ('?Pause') ('No Special Action')
 WHEN  ('?Progress:Cancel') ('No Special Action')
@@ -1105,7 +1126,8 @@ WHEN  ('?Pause') ()
 %ButtonThread DEPEND %Control LONG TIMES 1
 WHEN  ('?Pause') (0)
 
-%ButtonThreadStack DEPEND %Control DEFAULT TIMES 3
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('25000')
 WHEN  ('?Loc:Layout') ('25000')
 WHEN  ('?Pause') ('25000')
 WHEN  ('?Progress:Cancel') ('25000')
@@ -1119,7 +1141,8 @@ WHEN  ('?Pause') ()
 %ButtonReturnValueReferenceAssign DEPEND %Control LONG TIMES 1
 WHEN  ('?Pause') (0)
 
-%ButtonRequest DEPEND %Control DEFAULT TIMES 3
+%ButtonRequest DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('None')
 WHEN  ('?Loc:Layout') ('None')
 WHEN  ('?Pause') ('None')
 WHEN  ('?Progress:Cancel') ('None')
@@ -1146,7 +1169,8 @@ WHEN  ('?Pause') ()
 
 %PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
 
-%PostLookupDuringValidate DEPEND %Control LONG TIMES 3
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 4
+WHEN  ('') (1)
 WHEN  ('?Loc:Layout') (1)
 WHEN  ('?Pause') (1)
 WHEN  ('?Progress:Cancel') (1)
@@ -1169,7 +1193,8 @@ WHEN  ('?Progress:Cancel') (1)
 
 %CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
 
-%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 3
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:Layout')TIMES 0
 WHEN  ('?Pause')TIMES 0
 WHEN  ('?Progress:Cancel')TIMES 0
@@ -1178,7 +1203,8 @@ WHEN  ('?Progress:Cancel')TIMES 0
 
 %CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
 
-%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 3
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:Layout')TIMES 0
 WHEN  ('?Pause')TIMES 0
 WHEN  ('?Progress:Cancel')TIMES 0
@@ -1193,7 +1219,8 @@ WHEN  ('?Progress:Cancel')TIMES 0
 
 %UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
 
-%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 3
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 4
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:Layout')TIMES 0
 WHEN  ('?Pause')TIMES 0
 WHEN  ('?Progress:Cancel')TIMES 0
@@ -1202,7 +1229,8 @@ WHEN  ('?Progress:Cancel')TIMES 0
 
 %UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
 
-%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 3
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:Layout')TIMES 0
 WHEN  ('?Pause')TIMES 0
 WHEN  ('?Progress:Cancel')TIMES 0
@@ -1211,7 +1239,8 @@ WHEN  ('?Progress:Cancel')TIMES 0
 
 %CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
 
-%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 3
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:Layout')TIMES 0
 WHEN  ('?Pause')TIMES 0
 WHEN  ('?Progress:Cancel')TIMES 0
@@ -1220,24 +1249,28 @@ WHEN  ('?Progress:Cancel')TIMES 0
 
 %UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
 
-%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 3
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 4
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:Layout')TIMES 0
 WHEN  ('?Pause')TIMES 0
 WHEN  ('?Progress:Cancel')TIMES 0
 
 %ActiveImageEnable DEPEND %Control LONG TIMES 0
 
-%AIObjectName DEPEND %Control DEFAULT TIMES 3
+%AIObjectName DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('AIBtn0')
 WHEN  ('?Loc:Layout') ('AIBtn10')
 WHEN  ('?Pause') ('AIBtn5')
 WHEN  ('?Progress:Cancel') ('AIBtn4')
 
-%AIEnableMimicControl DEPEND %Control LONG TIMES 3
+%AIEnableMimicControl DEPEND %Control LONG TIMES 4
+WHEN  ('') (1)
 WHEN  ('?Loc:Layout') (1)
 WHEN  ('?Pause') (1)
 WHEN  ('?Progress:Cancel') (1)
 
-%AIMimicControl DEPEND %Control DEFAULT TIMES 3
+%AIMimicControl DEPEND %Control DEFAULT TIMES 4
+WHEN  ('') ('?Progress:Thermometer')
 WHEN  ('?Loc:Layout') ('?Progress:Thermometer')
 WHEN  ('?Pause') ('?Progress:Thermometer')
 WHEN  ('?Progress:Cancel') ('?Progress:Thermometer')
@@ -1248,7 +1281,8 @@ WHEN  ('?Progress:Cancel') ('?Progress:Thermometer')
 
 %AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 3
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
 WHEN  ('?Loc:Layout') (0)
 WHEN  ('?Pause') (0)
 WHEN  ('?Progress:Cancel') (0)
@@ -1257,7 +1291,8 @@ WHEN  ('?Progress:Cancel') (0)
 
 %AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIDisableImgIsVariable DEPEND %Control LONG TIMES 3
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
 WHEN  ('?Loc:Layout') (0)
 WHEN  ('?Pause') (0)
 WHEN  ('?Progress:Cancel') (0)
@@ -1266,7 +1301,8 @@ WHEN  ('?Progress:Cancel') (0)
 
 %AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIHotImgIsVariable DEPEND %Control LONG TIMES 3
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
 WHEN  ('?Loc:Layout') (0)
 WHEN  ('?Pause') (0)
 WHEN  ('?Progress:Cancel') (0)
@@ -1275,7 +1311,8 @@ WHEN  ('?Progress:Cancel') (0)
 
 %AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIPressedImgIsVariable DEPEND %Control LONG TIMES 3
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 4
+WHEN  ('') (0)
 WHEN  ('?Loc:Layout') (0)
 WHEN  ('?Pause') (0)
 WHEN  ('?Progress:Cancel') (0)
@@ -1473,9 +1510,9 @@ DLT:DeliveryTermsID=Ver2:DeliveryTermsID
 If Access:DeliveryTerms.Fetch(DLT:PK_DeliveryTerms)=Level:Benign
     Loc:DeliveryTerms=DLT:Omschrijving
 END
-
 Loc:BestemmingTekst='Hier volgen de gegevens betreffende de verlading heden van container '&CLIP(Ver2:Containernr)&|
     'met bestemming '&Ver2:Loshaven
+!--------------------------------------------------------------------------------------------------------------------------------------------!
 
 IF Loc:ProForma
     LocalPrintClass.MarkeerEQ(?AREL:FirmaNaam, CHOOSE(AREL:FirmaNaam='', FALSE,TRUE))
@@ -1485,9 +1522,10 @@ IF Loc:ProForma
     LocalPrintClass.MarkeerEQ(?STRING2, CHOOSE(Loc:Invoice='', FALSE,TRUE))
     LocalPrintClass.MarkeerEQ(?Ver2:Planning_DATE, CHOOSE(Ver2:Planning_DATE=0, FALSE,TRUE))
     IF LocalPrintClass.ExportNaarExcel
-       LocalPrintClass.ExportDetailKop()
+        LocalPrintClass.ExportDetailKop()
+    ELSE
+        PRINT(RPT:detailKop)
     END
-    PRINT(RPT:detailKop)
 
     Report$?Productiondate{Prop:Hide}=TRUE
     Report$?Expirydate{Prop:Hide}=TRUE
@@ -1518,8 +1556,9 @@ IF Loc:ProForma
         END
         IF LocalPrintClass.ExportNaarExcel
             LocalPrintClass.ExportDetail()
+        ELSE
+            PRINT(RPT:Detail)
         END
-        PRINT(RPT:Detail)
     END
 
     IF LocalPrintClass.ExportNaarExcel
@@ -1528,21 +1567,69 @@ IF Loc:ProForma
         LocalPrintClass.ExportReportEQ('J',Loc:Rij,128)              ! Loc:Totalbedrag
         LocalPrintClass.ExportReportEQ('K',Loc:Rij,?Loc:Valuta:2)              !
         Loc:Rij+=1
+    ELSE
+        Print(RPT:detailBodyTotaal)
     END
-    Print(RPT:detailBodyTotaal)
-
     Loop i#=1 TO Records(Loc:TotaalQ)
         GET(Loc:TotaalQ,i#)
-        LocalPrintClass.PrintTotalQ(Loc:TotaalQ)
+        LocalPrintClass.PrintTotalQ(Loc:TotaalQ,1)              ! Proforma = true
     END
     IF Ver2:ProFormaMemo<>''
         IF LocalPrintClass.ExportNaarExcel
             Loc:Rij+=1
             LocalPrintClass.ExportReportEQ('A',Loc:Rij,43,12)       ! TODO Tekst control
+        ELSE
+            PRINT(RPT:DETAILMEMO)
         END
-        PRINT(RPT:DETAILMEMO)
     END
 
+    LocalPrintClass.MarkeerEQ(?Paymentterms, CHOOSE(Loc:BetaalConditie='', FALSE,TRUE))
+    LocalPrintClass.MarkeerEQ(?Deliveryterms, CHOOSE(Loc:DeliveryTerms='', FALSE,TRUE))
+    LocalPrintClass.MarkeerEQ(?Container, CHOOSE(Ver2:Containernr='', FALSE,TRUE))
+    LocalPrintClass.MarkeerEQ(?Seal, CHOOSE(Ver2:Sealnr='', FALSE,TRUE))
+    LocalPrintClass.MarkeerEQ(?Vessel, CHOOSE(Ver2:Vessel='', FALSE,TRUE))
+    IF LocalPrintClass.ExportNaarExcel
+        Loc:Rij+=1
+        LocalPrintClass.CheckPageLength(5)
+        !
+        LocalPrintClass.ExportDetailTotaal()
+
+        Loc:Rij=ExportSettings.PageLength * LocalPrintClass.CurrentPage
+        LocalPrintClass.ExportPageFooter()
+    ELSE
+        PRINT(RPT:DetailTotaal)
+    END
+END
+IF Loc:PackingList
+    ! 2e pagina
+    Report$?Productiondate{Prop:Hide}=FALSE
+    Report$?Expirydate{Prop:Hide}=FALSE
+    Report$?LTQ:ProductieDatum:2{Prop:Hide}=FALSE
+    Report$?LTQ:THTDatum:2{Prop:Hide}=FALSE
+    Report$?Paymentterms{Prop:Hide}=TRUE
+    Report$?Loc:BetaalConditie{Prop:Hide}=TRUE
+    Report$?Deliveryterms{Prop:Hide}=FALSE          ! Delivery terms laten zien op Packinglijst
+    Report$?Loc:DeliveryTerms{Prop:Hide}=FALSE
+    IF LocalPrintClass.ExportNaarExcel
+        LocalPrintClass.ExportPageHeader()
+        LocalPrintClass.ExportPackLijst()
+        LocalPrintClass.BlokTeller=0
+    ELSE
+        PRINT(RPT:detailPackList)
+    END
+
+    Loop i#=1 TO Records(Loc:TotaalQ)
+        GET(Loc:TotaalQ,i#)
+        LocalPrintClass.PrintTotalQ(Loc:TotaalQ,FALSE)
+    END
+    IF Ver2:ProFormaMemo<>''
+        IF LocalPrintClass.ExportNaarExcel
+            Loc:Rij+=1
+            LocalPrintClass.ExportReportEQ('A',Loc:Rij,43,12)
+        ELSE
+            PRINT(RPT:DETAILMEMO)
+        END
+    END
     LocalPrintClass.MarkeerEQ(?Paymentterms, CHOOSE(Loc:BetaalConditie='', FALSE,TRUE))
     LocalPrintClass.MarkeerEQ(?Deliveryterms, CHOOSE(Loc:DeliveryTerms='', FALSE,TRUE))
     LocalPrintClass.MarkeerEQ(?Container, CHOOSE(Ver2:Containernr='', FALSE,TRUE))
@@ -1555,36 +1642,9 @@ IF Loc:ProForma
 
         Loc:Rij=ExportSettings.PageLength * LocalPrintClass.CurrentPage
         LocalPrintClass.ExportPageFooter()
+    ELSE
+        PRINT(RPT:DetailTotaal)
     END
-
-    PRINT(RPT:DetailTotaal)
-END
-IF Loc:PackingList
-    ! 2e pagina
-    Report$?Productiondate{Prop:Hide}=FALSE
-    Report$?Expirydate{Prop:Hide}=FALSE
-    Report$?LTQ:ProductieDatum:2{Prop:Hide}=FALSE
-    Report$?LTQ:THTDatum:2{Prop:Hide}=FALSE
-    Report$?Paymentterms{Prop:Hide}=TRUE
-    Report$?Loc:BetaalConditie{Prop:Hide}=TRUE
-    Report$?Deliveryterms{Prop:Hide}=FALSE          ! Delivery terms laten zien op Packinglijst
-    Report$?Loc:DeliveryTerms{Prop:Hide}=FALSE
-    PRINT(RPT:detailPackList)
-
-    Loop i#=1 TO Records(Loc:TotaalQ)
-        GET(Loc:TotaalQ,i#)
-        LocalPrintClass.PrintTotalQ(Loc:TotaalQ)
-    END
-    IF Ver2:ProFormaMemo<>''
-        PRINT(RPT:DETAILMEMO)
-    END
-    LocalPrintClass.MarkeerEQ(?Paymentterms, CHOOSE(Loc:BetaalConditie='', FALSE,TRUE))
-    LocalPrintClass.MarkeerEQ(?Deliveryterms, CHOOSE(Loc:DeliveryTerms='', FALSE,TRUE))
-    LocalPrintClass.MarkeerEQ(?Container, CHOOSE(Ver2:Containernr='', FALSE,TRUE))
-    LocalPrintClass.MarkeerEQ(?Seal, CHOOSE(Ver2:Sealnr='', FALSE,TRUE))
-    LocalPrintClass.MarkeerEQ(?Vessel, CHOOSE(Ver2:Vessel='', FALSE,TRUE))
-    PRINT(RPT:DetailTotaal)
-
 END
 IF Loc:SeaWayBill
     ! 3e pagina
@@ -1599,10 +1659,17 @@ IF Loc:SeaWayBill
     OF 3
         Loc:ExpresseRelease= 'Ja, Telex release na akkoord Bart !!!!!!!<13,10>deze expresse Release dient in eerste instantie bij jullie vastgehouden te worden. Niet naar ons opsturen AUB|<13,10>Zodra Bart hiervoor toestemming geeft evt, via Marcel, dan pas de B/L oer telex release vrijgeven AUB'
     END
+    IF LocalPrintClass.ExportNaarExcel
+        LocalPrintClass.ExportPageHeader()
+        LocalPrintClass.ExportSeawayBill()
+        Loc:Rij=ExportSettings.PageLength * LocalPrintClass.CurrentPage
+        LocalPrintClass.ExportPageFooter()
+    ELSE
+        PRINT(RPT:detailBillKop)
+        PRINT(RPT:detailBillGoederen)
+        PRINT(RPT:detailBillVoet)
+    END
 
-    PRINT(RPT:detailBillKop)
-    PRINT(RPT:detailBillGoederen)
-    PRINT(RPT:detailBillVoet)
 END
 ! Op 1 pagina laten passen
     IF LocalPrintClass.ExportNaarExcel
@@ -1667,12 +1734,15 @@ PRIORITY 4000
 PROPERTY:END
 LocalPrintClass     CLASS
 MarkeerEQ               Procedure(LONG _equate, BOOL _gevuld)
-PrintTotalQ             Procedure(Loc:TotaalQ _ltq)
+PrintTotalQ             Procedure(Loc:TotaalQ _ltq, Byte pProforma)
 ExportDetailKop         PROCEDURE()
 ExportDetail            PROCEDURE()
 ExportDetailTotaal      PROCEDURE()
+ExportPackLijst         PROCEDURE()
+ExportSeawayBill        PROCEDURE()
 ExportPageHeader        PROCEDURE()
 ExportPageFooter        PROCEDURE()
+ExportLine              Procedure
 
 CheckPageLength         Procedure(LONG pRijenDezeBlok)
 ExportReportEQ          PROCEDURE(String pKolom, LONG pRij, LONG pEquate,<LONG pAantalKolommen>,<LONG pAlign>)
@@ -1681,15 +1751,11 @@ ExportNaarExcel         Byte
 BlokTeller              LONG
 BlokKolom               String(1)
 CurrentPage             LONG
-
-
                     END
-
 
 ExportSettings      GROUP
-PageLength              LONG(66)
+PageLength              LONG(67)
                     END
-
 
 xlLeft                    EQUATE(-4131)
 xlRight                   EQUATE(-4152)
@@ -1722,7 +1788,7 @@ CODE
 PROPERTY:BEGIN
 PRIORITY 4000
 PROPERTY:END
-LocalPrintClass.PrintTotalQ Procedure(Loc:TotaalQ _ltq)
+LocalPrintClass.PrintTotalQ Procedure(Loc:TotaalQ _ltq, Byte pProForma)
 YPosGNCode                      LONG(240)
 YPosGrossweight                 LONG(427)
 YPosNetweigt                    LONG(615)
@@ -1777,47 +1843,49 @@ CODE
     Report$?LTQ:PlantNumber{Prop:Ypos}=YPosOrigin+(Report$?LTQ:ArtikelOmsAlt{PROP:LineCount } - 1)*HoogteRegel
 
     IF LocalPrintClass.ExportNaarExcel
-
         LocalPrintClass.BlokTeller+=1
         IF LocalPrintClass.BlokTeller%3=1
+           Loc:Rij+=1
             LocalPrintClass.BlokKolom='A'
         ELSIF LocalPrintClass.BlokTeller%3=2
-            Loc:Rij-=8
+            Loc:Rij-=CHOOSE(pProForma,6,8)
             LocalPrintClass.BlokKolom='E'
         ELSE
-            Loc:Rij-=8
+            Loc:Rij-=CHOOSE(pProForma,6,8)
             LocalPrintClass.BlokKolom='I'
         END
-        LocalPrintClass.CheckPageLength(8)
+        LocalPrintClass.CheckPageLength(CHOOSE(pProForma,6,8))
 
         Loc:Rij+=1
         LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?STRING2:9)              ! Description
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,144,1)              ! Text!!!!!
+        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,144,2)              ! Text!!!!!
         Loc:Rij+=1
         LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?GNCode)              ! gncode
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,141,1)
+        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,141,2,xlRight)
         Loc:Rij+=1
         LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Grossweight)              ! grossweight
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,139,1)
+        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,139,2,xlRight)
         Loc:Rij+=1
         LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Netweight)              ! netweight
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,140,1)
+        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,140,2,xlRight)
         Loc:Rij+=1
         LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Cartons)              ! Cartons
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,138,1)
+        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,138,2,xlRight)
         Loc:Rij+=1
         LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Origin)              ! Origin
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,135,1)
-        Loc:Rij+=1
-        LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Productiondate)              ! Productiondate
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,142,1)
-        Loc:Rij+=1
-        LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Expirydate)              ! Expirydate
-        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,143,1)
-
+        LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,135,2,xlRight)
+        IF pProForma=FALSE
+            Loc:Rij+=1
+            LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Productiondate)              ! Productiondate
+            LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,142,2)
+            Loc:Rij+=1
+            LocalPrintClass.ExportReportEQ(LocalPrintClass.BlokKolom,Loc:Rij,?Expirydate)              ! Expirydate
+            LocalPrintClass.ExportReportEQ(CHR(VAL(LocalPrintClass.BlokKolom)+1),Loc:Rij,143,2)
+        END
+    ELSE
+        PRINT(RPT:DetailKaart)
     END
 
-    PRINT(RPT:DetailKaart)
     Return
 
 [SOURCE]
@@ -1828,7 +1896,7 @@ LocalPrintClass.ExportReportEQ      PROCEDURE(String pKolom, LONG pRij, LONG pEq
 
 _totKolom           String(1)
 CODE
-    UD.Debug('pKolom:'&pKolom&' pRij'&pRij &' pEquate'&pEquate&' Report$pEquate{{Prop:USE}'&Report$pEquate{Prop:USE}&' Report$pEquate{{Prop:Text}'&Report$pEquate{Prop:Text})
+    UD.Debug('pKolom:'&pKolom&' pRij:'&pRij &' pEquate:'&pEquate&' Report$pEquate{{Prop:USE}:'&Report$pEquate{Prop:USE}&' Report$pEquate{{Prop:Text}:'&Report$pEquate{Prop:Text}&' Report$pEquate{{PROP:Hide}:'&Report$pEquate{PROP:Hide})
 
     ! Ik kan de Equate properties uitlezen en dan bold en zo doen
     IF Report$pEquate{PROP:FontStyle}=FONT:bold
@@ -1837,17 +1905,27 @@ CODE
     IF Report$pEquate{PROP:FontStyle}=FONT:Underline
        Loc:Ole{'Application.Range('&pKolom&pRij&').Font.Underline'}=True
     END
+
     Loc:Ole{'Application.Range('&pKolom&pRij&').Font.Size'}=Report$pEquate{PROP:FontSize}
 
-    CASE Report$pEquate{Prop:USE}
-    of ''
-        IF NOT INSTRING('s10',Report$pEquate{Prop:Text},1,1)
+    IF Report$pEquate{PROP:Hide}=FALSE
+        CASE Report$pEquate{Prop:USE}
+        of ''
+            IF NOT INSTRING('s10',Report$pEquate{Prop:Text},1,1) AND NOT INSTRING('s50',Report$pEquate{Prop:Text},1,1)
+                ExcelClass.SchrijfExcel(pKolom,Loc:Rij,Report$pEquate{Prop:Text})
+            END
+        OF Report$pEquate{Prop:Text}               ! dit geldt voor Text controls
+            Ud.Debug('Tekst control:'&Report$pEquate{Prop:Text})
             ExcelClass.SchrijfExcel(pKolom,Loc:Rij,Report$pEquate{Prop:Text})
+        ELSE
+            Ud.Debug('Tekst control with format :'&Report$pEquate{Prop:Text}&' Report$pEquate{{Prop:USE}:'&Report$pEquate{Prop:USE})
+            IF Report$pEquate{Prop:Text}=''
+                ExcelClass.SchrijfExcel(pKolom,Loc:Rij,Report$pEquate{Prop:USE})
+            ELSE
+                ExcelClass.SchrijfExcel(pKolom,Loc:Rij,Format(Report$pEquate{Prop:USE},Report$pEquate{Prop:Text}))
+            END
+
         END
-    OF Report$pEquate{Prop:Text}               ! dit geldt voor Text controls
-        ExcelClass.SchrijfExcel(pKolom,Loc:Rij,Report$pEquate{Prop:Text})
-    ELSE
-        ExcelClass.SchrijfExcel(pKolom,Loc:Rij,Format(Report$pEquate{Prop:USE},Report$pEquate{Prop:Text}))
     END
 
     IF pAlign
@@ -1857,12 +1935,9 @@ CODE
 
     IF pAantalKolommen>1
         ! vanaf pKolom aantal kolommen er bij op tellen
-        _totKolom=CHR(VAL(pKolom)+pAantalKolommen)
-        UD.Debug('pKolom '&pKolom&' pAantalKolommen'&pAantalKolommen&' ' &pAantalKolommen)
+        _totKolom=CHR(VAL(pKolom)+pAantalKolommen-1)
+        UD.Debug('pKolom '&pKolom&' pAantalKolommen'&pAantalKolommen&' ' &_totKolom)
         Loc:Ole{'Application.Range('&pKolom&pRij&':'&_totKolom&pRij&').Select'}
-!        IF pAlign
-!           Loc:Ole{'Selection.HorizontalAlignment'}=pAlign
-!        END
        Loc:Ole{'Selection.Merge'}
     END
 
@@ -1882,7 +1957,9 @@ CODE
    ! Loc:Ole{'Selection.ShapeRange.IncrementLeft'}=17.25                     ! een beetje naar rechts en naar onder
    ! Loc:Ole{'Selection.ShapeRange.IncrementTop'}=6
     ! en dan de velden Mailadres etc in 8 kolommen
-    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING1,7)              ! Mail adress
+    IF Loc:Layout<>'BLANCO'
+        LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING1,7)              ! Mail adress
+    END
     LocalPrintClass.ExportReportEQ('I',Loc:Rij,7)
     Loc:Rij+=1
     LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING1:2,7)         ! P.O Box
@@ -1996,7 +2073,7 @@ LocalPrintClass.CheckPageLength      Procedure(LONG pRijenDezeBlok)
 
 CODE
 
-    IF Loc:Rij + pRijenDezeBlok >= (ExportSettings.PageLength * LocalPrintClass.CurrentPage)
+    IF Loc:Rij + pRijenDezeBlok > (ExportSettings.PageLength * LocalPrintClass.CurrentPage)
         ! nu moet ik de Footer onderaan zetten
         Loc:Rij=ExportSettings.PageLength * LocalPrintClass.CurrentPage
         LocalPrintClass.ExportPageFooter()
@@ -2017,8 +2094,12 @@ PROPERTY:END
 LocalPrintClass.ExportPageHeader        PROCEDURE()
 
 CODE
-    Loc:Ole{'Application.Range(A'&Loc:Rij&').Select'}
-    Loc:Ole{'ActiveSheet.Pictures.Insert("'&PATH()&'\VENBriefhoofd.jpg").Select'}            ! invoegen en selecteren
+    IF Loc:Rij=0 THEN LOC:Rij=1.
+    IF Loc:Layout<>'BLANCO'
+        Loc:Ole{'Application.Range(A'&Loc:Rij&').Select'}
+        Loc:Ole{'ActiveSheet.Pictures.Insert("'&PATH()&'\VENBriefhoofd.jpg").Select'}            ! invoegen en selecteren
+    END
+
     Loc:Rij+=9
     LocalPrintClass.CurrentPage+=1
 [SOURCE]
@@ -2028,15 +2109,167 @@ PROPERTY:END
 LocalPrintClass.ExportPageFooter        PROCEDURE()
 
 CODE
-    Loc:Ole{'Application.Range(J'&Loc:Rij&').Select'}
-    Loc:Ole{'ActiveSheet.Pictures.Insert("'&PATH()&'\IFS.jpg").Select'}            ! Todo lijnen trekken
-    Loc:Rij+=1
-    LocalPrintClass.ExportReportEQ('A',Loc:Rij,176,10)              ! Loc:Voettekst
-    Loc:Ole{'Application.Range(A'&Loc:Rij&').Select'}
+    IF Loc:Layout<>'BLANCO'
+        Loc:Rij-=1
+        Loc:Ole{'Application.Range(J'&Loc:Rij&').Select'}
+        Loc:Ole{'ActiveSheet.Pictures.Insert("'&PATH()&'\IFS.jpg").Select'}
+        Loc:Rij+=1
+        LocalPrintClass.ExportReportEQ('A',Loc:Rij,176,10)              ! Loc:Voettekst
+        Loc:Ole{'Application.Range(A'&Loc:Rij&').Select'}
+        Loc:Ole{'Application.Selection.Borders(8).Weight'}=2 ! xlEdgeTop
+        Loc:Rij+=1
+    ELSE
+        Loc:Rij+=1
+    END
+    RETURN
+
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalPrintClass.ExportLine   Procedure()
+
+CODE
+
+    Loc:Ole{'Application.Range(A'&Loc:Rij&':K'&Loc:Rij&').Select'}
     Loc:Ole{'Application.Selection.Borders(8).Weight'}=2 ! xlEdgeTop
 
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalPrintClass.ExportPackLijst     PROCEDURE()
+
+CODE
     Loc:Rij+=1
-    RETURN
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING4,10,xlCenter)         ! Packinglist
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING5)                    ! Receiver
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,157,5)                     ! Firmanaam
+    LocalPrintClass.ExportReportEQ('H',Loc:Rij,?STRING5:2)                    ! Sender
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7)                    ! VenPoultry
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,158,5)                     ! Adres1
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7:2)                    ! StipDonk
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,159,5)                     ! postcode
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7:3)                    ! 5751
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,160,5)                     ! Country
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7:4)                    ! StipDonk
+
+    Loc:Rij+=2
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING5:3)                    ! unloading
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,169,5)                     ! Firmanaam
+    LocalPrintClass.ExportReportEQ('H',Loc:Rij,?STRING5:4)                    ! Loading
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7:5)                    ! VenPoultry
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,170,5)                     ! Adres1
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7:6)                    ! StipDonk
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,171,5)                     ! postcode
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7:7)                    ! 5751
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,172,5)                     ! Country
+    LocalPrintClass.ExportReportEQ('I',Loc:Rij,?STRING7:8)                    ! StipDonk
+    Loc:Rij+=1
+    Loc:Ole{'Application.Range(J'&Loc:Rij&').Select'}
+    Loc:Ole{'ActiveSheet.Pictures.Insert("'&PATH()&'\NL5664EG.png").Select'}
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING6)                    ! DATE
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,173,5)                     ! Date
+    LocalPrintClass.ExportReportEQ('H',Loc:Rij,?STRING6:2)
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalPrintClass.ExportSeawayBill     PROCEDURE()
+
+CODE
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING18)                   ! Aan
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,?Ver2:Aan,3)                     ! Aan
+    LocalPrintClass.ExportReportEQ('F',Loc:Rij,?STRING23,4)                   ! Fax
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING18:2)                    ! Van
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,?String20,3)                     ! Ven
+    LocalPrintClass.ExportReportEQ('F',Loc:Rij,?STRING9)                    ! Sender
+    LocalPrintClass.ExportReportEQ('G',Loc:Rij,84)                          ! Planning Datum
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING19)                    ! BtreftVan
+    LocalPrintClass.ExportReportEQ('B',Loc:Rij,?String21,3)                     ! Seaywa bill
+    LocalPrintClass.ExportReportEQ('F',Loc:Rij,?STRING24)                    ! Pag
+    LocalPrintClass.ExportReportEQ('G',Loc:Rij,?STRING25)                          ! Planning Datum
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    UD.Debug('Loc:BestemmingTekst:'&Loc:BestemmingTekst)
+    UD.Debug('?Loc:BestemmingTekst'&?Loc:BestemmingTekst)
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?Loc:BestemmingTekst,11)                     ! Bestemmingstek (93)
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING8:2,2)                     ! Boeking
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,83,5)                     ! Ver2:Boeking
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING8,2)                     ! Referentie
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,82,5)                     ! Ver2:Firmanaam
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING8:7,2)                     ! Opdrachtgever
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,?STRING20,5)                     ! Ver2:Boeking
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,?STRING12,5)                     ! PO BOX
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,?STRING12:2,5)                     ! Postcode
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING8:8,2)                     ! Ontvanger
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,78,5)                     ! Unloadadress1
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,79,5)                     ! Unloadadress2
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,80,5)                     ! Unloadadress3
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,81,5)                     ! Unloadadress4
+
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,97,11)                     ! Omschrijving goederen
+
+    Loc:Rij+=1
+    LocalPrintClass.ExportLine()
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING8:6,2)                     ! GNCOdes
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,105,5)                     ! GNCode
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING11,2)                     ! Bootnaam
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,102,5)                     ! Vessel
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING8:3,2)                     ! Seal
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,100,5)                     !
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING13:3,2)                     ! Express Release
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,116,5)                     !
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING8:4,2)                     ! Uitvoerhaven
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,112,5)                     !
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING13:2,2)                     ! Becs Waver
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,115,5)                     !
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING13,2)                     ! Tarre
+    LocalPrintClass.ExportReportEQ('D',Loc:Rij,113)                     !
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING14,7)                     ! Draft
+    Loc:Rij+=1
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING16,2)                     ! MVG
+    Loc:Rij+=2
+    LocalPrintClass.ExportReportEQ('A',Loc:Rij,?STRING16:2,2)                     ! MVG
+
 
 
 [END]
@@ -6031,7 +6264,7 @@ INSTANCE 5
 [PROMPTS]
 %PauseText DEFAULT  ('Pause')
 %RestartText DEFAULT  ('Restart')
-%DeferOpen LONG  (1)
+%DeferOpen LONG  (0)
 %StartText DEFAULT  ('Start')
 %MultiStart LONG  (0)
 [ADDITION]
@@ -6110,7 +6343,7 @@ detailMemo DETAIL,AT(0,0,7042,250),USE(?DETAILMEMO),#ORDINAL(42)
           END
 detailTotaal DETAIL,AT(0,0,7042,1292),USE(?DETAILTotaal),PAGEAFTER(1),#ORDINAL(44)
             STRING('Delivery terms:'),AT(3312,333),USE(?Deliveryterms),#ORDINAL(45)
-            STRING(@s80),AT(4312,333),USE(Loc:DeliveryTerms),#ORDINAL(46)
+            STRING(@s100),AT(4312,333),USE(Loc:DeliveryTerms),#ORDINAL(46)
             STRING('Container:'),AT(3312,562,906,198),USE(?Container),#ORDINAL(47)
             STRING('Seal:'),AT(3312,802,906,198),USE(?Seal),#ORDINAL(48)
             STRING('Vessel:'),AT(3312,1031,906,198),USE(?Vessel),#ORDINAL(49)
@@ -6120,14 +6353,14 @@ detailTotaal DETAIL,AT(0,0,7042,1292),USE(?DETAILTotaal),PAGEAFTER(1),#ORDINAL(4
             STRING('Net weight:'),AT(31,562,906,198),USE(?STRING3:7),#ORDINAL(52)
             STRING(@s20),AT(31,802,906,198),USE(Loc:DozenPallet),#ORDINAL(53)
             STRING(@n-14.1),AT(1000,562),USE(Loc:TotaalKG),RIGHT(2),#ORDINAL(54)
-            STRING(@s50),AT(4312,562),USE(Ver2:Containernr),#ORDINAL(55)
-            STRING(@s50),AT(4312,802),USE(Ver2:Sealnr),#ORDINAL(56)
-            STRING(@s50),AT(4312,1031),USE(Ver2:Vessel),#ORDINAL(57)
+            STRING(@s100),AT(4312,562),USE(Ver2:Containernr),#ORDINAL(55)
+            STRING(@s100),AT(4312,802),USE(Ver2:Sealnr),#ORDINAL(56)
+            STRING(@s100),AT(4312,1031),USE(Ver2:Vessel),#ORDINAL(57)
             STRING(@n-14),AT(1000,802),USE(Loc:TotaalDozen),RIGHT(2),#ORDINAL(58)
             STRING(@n-14.1),AT(1000,333),USE(Loc:TotaalGrossWeight,,?Loc:TotaalGrossWeight:2), |
               RIGHT(2),#ORDINAL(59)
             STRING('Payment terms:'),AT(3312,83,1042,198),USE(?Paymentterms),#ORDINAL(60)
-            STRING(@s50),AT(4312,83),USE(Loc:BetaalConditie),#ORDINAL(61)
+            STRING(@s100),AT(4312,83),USE(Loc:BetaalConditie),#ORDINAL(61)
           END
 detailBillKop DETAIL,AT(0,0,7042,4156),USE(?DETAIL5),#ORDINAL(62)
             STRING('Referentie:'),AT(177,2156),USE(?STRING8),FONT(,,,FONT:regular),#ORDINAL(63)
@@ -6196,7 +6429,7 @@ detailBillVoet DETAIL,AT(0,0,7042,3125),USE(?DETAIL6),#ORDINAL(98)
             STRING(@s50),AT(1698,1365),USE(Ver2:Laadhaven),#ORDINAL(112)
             STRING(@n6),AT(1687,1875),USE(Ver2:TarraContainer),RIGHT(1),#ORDINAL(113)
             LINE,AT(198,73,6375,0),USE(?LINE2:8),#ORDINAL(114)
-            STRING(@s20),AT(1740,1625),USE(Ver2:BESCWaiver),#ORDINAL(115)
+            STRING(@s50),AT(1698,1625),USE(Ver2:BESCWaiver),#ORDINAL(115)
             TEXT,AT(1719,854,5250,490),USE(Loc:ExpresseRelease),#ORDINAL(116)
           END
 Detail    DETAIL,AT(0,0,7042,198),USE(?Detail),FONT(,10),#ORDINAL(117)
@@ -6226,7 +6459,7 @@ detailKaart DETAIL,AT(0,0,2323,2031),USE(?DETAIL1),#ORDINAL(129)
             STRING(@s50),AT(552,1021,1562),USE(LTQ:PlantNumber),FONT(,8),RIGHT,#ORDINAL(135)
             STRING('Production date:'),AT(31,1260),USE(?Productiondate),FONT(,8),#ORDINAL(136)
             STRING('Expiry date:'),AT(31,1458,,198),USE(?Expirydate),FONT(,8),#ORDINAL(137)
-            STRING(@s20),AT(1052,812,1062),USE(Loc:PrintDozen),FONT(,8),RIGHT,#ORDINAL(138)
+            STRING(@s100),AT(1052,812,1062),USE(Loc:PrintDozen),FONT(,8),RIGHT,#ORDINAL(138)
             STRING(@s20),AT(906,417,1208),USE(Loc:PrintGrossWeight),FONT(,8),RIGHT,#ORDINAL(139)
             STRING(@s20),AT(906,615,1208,198),USE(Loc:PrintNetWeight),FONT(,8),RIGHT,#ORDINAL(140)
             STRING(@s100),AT(562,240,1552),USE(LTQ:GNCode),FONT(,8),RIGHT,#ORDINAL(141)

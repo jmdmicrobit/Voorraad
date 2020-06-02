@@ -3503,7 +3503,7 @@ WHEN  ('ViewVoorraadPlanning') ('Use Default')
 WHEN  ('VoorraadVerloop') ('Use Default')
 WHEN  ('Weging') ('Use Default')
 
-%StandardExternalModule DEPEND %Module LONG TIMES 21
+%StandardExternalModule DEPEND %Module LONG TIMES 22
 WHEN  ('') (1)
 WHEN  ('VOORRPLN.LIB') (1)
 WHEN  ('VOORRRPT.LIB') (1)
@@ -3525,6 +3525,7 @@ WHEN  ('VoorrVrd010.clw') (1)
 WHEN  ('VoorrVrd011.clw') (1)
 WHEN  ('VoorrVrd012.clw') (1)
 WHEN  ('VoorrVrd013.clw') (1)
+WHEN  ('VoorrVrd014.clw') (1)
 
 %NoGenerateGlobals LONG  (0)
 %WindowManagerType DEFAULT  ('WindowManager')

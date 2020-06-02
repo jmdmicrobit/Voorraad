@@ -13,7 +13,12 @@
 !!! Generated from procedure template - Source
 !!! </summary>
 ConvertInkoopVerkoopStatus PROCEDURE                       ! Declare Procedure
+udpt            UltimateDebugProcedureTracker
 
   CODE
+        udpt.Init(UD,'ConvertInkoopVerkoopStatus','Voorraad014.clw','Voorraad.EXE','07/03/2014 @ 11:15AM')    
+             
 		ConvertInkoopStatus
 		ConvertVerkoopStatus
+           
+  

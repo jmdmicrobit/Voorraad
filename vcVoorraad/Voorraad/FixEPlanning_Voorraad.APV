@@ -556,9 +556,9 @@ IF Pla:PartijID > 0
 	Par:PartijID=Pla:PartijID
 	IF (Access:Partij.TryFetch(Par:Partij_PK) = Level:Benign)
 		IF Par:ArtikelID <> Pla:ArtikelID THEN
-			db.DebugOut('FixEPlanning - Geen Artikel Match' & Par:ArtikelID & '<>' & Pla:ArtikelID)
+			UD.Debug('FixEPlanning - Geen Artikel Match' & Par:ArtikelID & '<>' & Pla:ArtikelID)
 			Pla:PartijID = 0
-			db.DebugOut('FixEPlanning2')
+			UD.Debug('FixEPlanning2')
 		.
 	ELSE
 		Pla:PartijID = 0

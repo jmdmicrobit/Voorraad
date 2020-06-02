@@ -1,3 +1,3 @@
   MODULE('VOORRAAD003.CLW')
-ProcessSyncArtikel     PROCEDURE
+ProcessSyncArtikel     PROCEDURE                      !TODO Omzetten naar TurboSQL
   END

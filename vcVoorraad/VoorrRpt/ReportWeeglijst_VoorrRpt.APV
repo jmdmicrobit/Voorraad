@@ -465,7 +465,12 @@ WHEN  (5) ('SVReportToPDF(SVReportToPDFSupport)')
 %ProcedureUserBindFields MULTI LONG  ()
 %ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
 
-%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 5
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+WHEN  (5) (0)
 
 %ProcedureUserBindProcedures MULTI LONG  ()
 %ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0

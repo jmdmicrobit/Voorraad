@@ -32,9 +32,10 @@ event:WinEventTaskbarLoadIcon equate(0500h+5510)
    INCLUDE('CFILTBASE.INC'),ONCE
    INCLUDE('CFILTERLIST.INC'),ONCE
   include('cwsynchc.inc'),once  ! added by NetTalk
- Include('Debuger.INC'),once
   include('StringTheory.Inc'),ONCE
    INCLUDE('ultimateversion.inc'),ONCE  
+  INCLUDE('UltimateDebug.INC'),ONCE
+  INCLUDE('UltimateDebugProcedureTracker.INC'),ONCE
    Include('EventEqu.Clw'),Once
 
    MAP
@@ -102,6 +103,10 @@ MainFrame              PROCEDURE   !
      MODULE('Windows API')
      	GetComputerName(*CSTRING,*LONG),BOOL,RAW,PASCAL,NAME('GetComputerNameA'),PROC
      END
+
+DebugABCGlobalInformation_Voorraad PROCEDURE()                                           ! DEBUG Prototype
+DebugABCGlobalVariables_Voorraad PROCEDURE()                                             ! DEBUG Prototype
+
     ! Declare init functions defined in a different dll
      MODULE('VOORRSTM.DLL')
 VoorrStm:Init          PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>),DLL
@@ -998,6 +1003,16 @@ tekst                       STRING(160)                    !
                          END
                      END                       
 
+ArtikelOmschrijvingExtraGroep FILE,DRIVER('MSSQL'),PRE(Art3),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
+PK_ArtikelOmschrijvingExtraGroep KEY(Art3:ID),DUP,NOCASE   !                     
+FK_ArtikelOmschrijvingExtraGroep KEY(Art3:ex_artcode,Art3:ID),DUP,NOCASE !                     
+Record                   RECORD,PRE()
+ID                          LONG                           !                     
+ex_artcode                  STRING(2),NAME('"ex_artcode"') !                     
+Omschrijving                CSTRING(21)                    !                     
+                         END
+                     END                       
+
 PalletSoort          FILE,DRIVER('MSSQL'),PRE(PalSrt),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 PK_PalletSoort           KEY(PalSrt:PalletSoortID),PRIMARY !                     
 FK_PalletSoort           KEY(PalSrt:PalletOmschrijving,PalSrt:PalletSoortID),NOCASE ! Op PalletOmschrijving/PalletSoortID
@@ -1172,6 +1187,15 @@ Dummy                       STRING(1)                      !
                          END
                      END                       
 
+ViewBetcd            FILE,DRIVER('MSSQL'),PRE(BTC),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) ! Betalingscondities  
+ViewBetcd_PK             KEY(BTC:betcdID),NOCASE,PRIMARY   ! Op betcdID          
+Record                   RECORD,PRE()
+betcdID                     STRING(20)                     !                     
+Omschrijving                CSTRING(31)                    !                     
+Description                 CSTRING(31)                    !                     
+                         END
+                     END                       
+
 ARelatie             FILE,DRIVER('MSSQL'),PRE(AREL),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 Relatie_FK02             KEY(AREL:Country),DUP,NOCASE,OPT  !                     
 Relatie_FK01             KEY(AREL:FirmaNaam),DUP           !                     
@@ -1316,10 +1340,12 @@ Lengte                      LONG                           !
 
 !endregion
 
-db Debuger
 WE::MustClose       long,external,dll
 WE::CantCloseNow    long,external,dll
 gv         ultimateversion
+UD         CLASS(UltimateDebug),EXTERNAL,DLL(dll_mode)
+                     END   
+ 
 include('VoorraadClassDef.inc')
 include('GlobalClassDef.inc')
 ! GetComputerName()
@@ -1376,6 +1402,8 @@ Access:DubbeleInslagMutaties &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileMa
 Relate:DubbeleInslagMutaties &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for DubbeleInslagMutaties
 Access:ArtikelOmschrijvingExtra &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for ArtikelOmschrijvingExtra
 Relate:ArtikelOmschrijvingExtra &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for ArtikelOmschrijvingExtra
+Access:ArtikelOmschrijvingExtraGroep &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for ArtikelOmschrijvingExtraGroep
+Relate:ArtikelOmschrijvingExtraGroep &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for ArtikelOmschrijvingExtraGroep
 Access:PalletSoort   &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for PalletSoort
 Relate:PalletSoort   &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for PalletSoort
 Access:Weging        &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for Weging
@@ -1398,6 +1426,8 @@ Access:RelatieArtikelOmschrijving &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! F
 Relate:RelatieArtikelOmschrijving &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for RelatieArtikelOmschrijving
 Access:Pallet        &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for Pallet
 Relate:Pallet        &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for Pallet
+Access:ViewBetcd     &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for ViewBetcd
+Relate:ViewBetcd     &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for ViewBetcd
 Access:ARelatie      &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for ARelatie
 Relate:ARelatie      &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for ARelatie
 Access:APlanning     &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for APlanning
@@ -1421,6 +1451,16 @@ VCRRequest           LONG,EXTERNAL,DLL(dll_mode),THREAD    ! Exported from a dll
   FuzzyMatcher.SetOption(MatchOption:NoCase, 1)            ! Configure case matching
   FuzzyMatcher.SetOption(MatchOption:WordOnly, 0)          ! Configure 'word only' matching
   INIMgr.Init('JMDVoorr.ini', NVD_INI)                     ! Configure INIManager to use INI file
+  UD.DebugOff       =  0
+  UD.DebugPrefix    =  '!'
+  UD.SaveToFile     =  0
+  UD.ASCIIFileName  =  'DebugLog.txt'
+  UD.SaveToJson     =  0
+  UD.JSONFileName   =  'JSONDebugLog.txt'
+  UD.DebugNoCR      =  1
+  UD.LineWrap       =  0 
+  UD.UsePlainFormat =  0
+  
                              ! Begin Generated by NetTalk Extension Template
     if ~command ('/netnolog') and (command ('/nettalklog') or command ('/nettalklogerrors') or command ('/neterrors') or command ('/netall'))
       NetDebugTrace ('[Nettalk Template] NetTalk Template version 8.71')
@@ -1429,7 +1469,6 @@ VCRRequest           LONG,EXTERNAL,DLL(dll_mode),THREAD    ! Exported from a dll
       NetDebugTrace ('[Nettalk Template] ABC Template Chain')
     end
                              ! End Generated by Extension Template
-     db.init('Voorraad',0,50)  ! intiialize the debuger class 
   VoorrStm:Init(GlobalErrors, INIMgr)                      ! Initialise dll (ABC)
   VoorrRpt:Init(GlobalErrors, INIMgr)                      ! Initialise dll (ABC)
   VoorrPln:Init(GlobalErrors, INIMgr)                      ! Initialise dll (ABC)
@@ -1449,7 +1488,6 @@ VCRRequest           LONG,EXTERNAL,DLL(dll_mode),THREAD    ! Exported from a dll
       NetDebugTrace ('[Nettalk Template] Closing Down NetTalk (Object) version ' & NETTALK:VERSION)
     end
                              ! End Generated by Extension Template
-     db.kill
   INIMgr.Kill                                              ! Destroy INI manager
   FuzzyMatcher.Kill                                        ! Destroy fuzzy matcher
     
@@ -1463,4 +1501,28 @@ NetRefreshVoorraadViews PROCEDURE
 	!END
 include('VoorraadClassSrc.inc')
 include('GlobalClassSrc.inc')
+ 
+!BOE: DEBUG Global
+DebugABCGlobalInformation_Voorraad PROCEDURE()
+
+udpt            UltimateDebugProcedureTracker
+                     
+  CODE
+  
+  udpt.Init(UD,'DebugABCGlobalInformation_Voorraad')
+  
+ 
+  RETURN
+
+DebugABCGlobalVariables_Voorraad PROCEDURE()
+
+udpt            UltimateDebugProcedureTracker
+
+  CODE
+  
+  udpt.Init(UD,'DebugABCGlobalVariables_Voorraad')
+  
+  RETURN
+!EOE: DEBUG Global
+
 

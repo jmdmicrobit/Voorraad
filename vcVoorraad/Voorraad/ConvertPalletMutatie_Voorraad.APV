@@ -560,7 +560,7 @@ IF (Access:Planning.TryFetch(Pla:PK_Planning) = Level:Benign)
 	Ver2:VerkoopID = Pla:VerkoopID
 	IF (Access:Verkoop.TryFetch(Ver2:PK_Verkoop) = Level:Benign)
 		Pal:DatumTijd = Ver2:Planning
-		db.DebugOut('Converteren ' & Pal:PalletMutatieID)
+		UD.Debug('Converteren ' & Pal:PalletMutatieID)
 	.
 .
 [END]

@@ -21,6 +21,7 @@
 !!! </summary>
 BrowseGebruiker PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 BRW1::View:Browse    VIEW(Gebruiker)
                        PROJECT(Geb:ID)
@@ -97,6 +98,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'BrowseGebruiker','Voorraad024.clw','Voorraad.EXE','09/14/2018 @ 01:01PM')    
+             
   GlobalErrors.SetProcedureName('BrowseGebruiker')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -104,9 +107,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Browse:1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -118,6 +121,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.ActiveInvisible = 1
   BRW1.RetainRow = 0
@@ -154,6 +158,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowseGebruiker',QuickWindow)           ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -205,6 +211,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowseGebruiker',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:44PM','09/14/2018 @ 01:01PM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

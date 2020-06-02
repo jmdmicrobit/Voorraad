@@ -5,6 +5,7 @@ FROM ABC GENERATED
 [PROCEDURE]
 NAME ProcessSyncArtikel
 [COMMON]
+DESCRIPTION 'TODO Omzetten naar TurboSQL'
 FROM ABC Process
 [DATA]
 Progress:Thermometer     BYTE
@@ -610,10 +611,10 @@ LOOP UNTIL Access:ViewArtikel.Next()
 	SAQ:ArtikelID = Art:ArtikelID
 	GET(SynchedArtikelQueue, +SAQ:ArtikelID)
 	IF ERROR() THEN
-		db.DebugOut('ViewArtikel Verwijderen OK:' & Art:ArtikelID)
+		UD.Debug('ViewArtikel Verwijderen OK:' & Art:ArtikelID)
 		Access:ViewArtikel.DeleteRecord(false)
 	ELSE
-		db.DebugOut('ViewArtikel Verwijderen NO:' & Art:ArtikelID)
+		UD.Debug('ViewArtikel Verwijderen NO:' & Art:ArtikelID)
 	END
 END
 [END]

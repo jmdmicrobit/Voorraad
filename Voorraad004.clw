@@ -11,6 +11,7 @@
 !!! Generated from procedure template - Source
 !!! </summary>
 SourceCheckVersie    PROCEDURE                             ! Declare Procedure
+udpt            UltimateDebugProcedureTracker
 LOC:ToonWijziging    BYTE                                  ! 
 SQLCommando         CSTRING(65000)
 Loc:Versie			DECIMAL(7,2)
@@ -25,7 +26,9 @@ st                  StringTheory
 FilesOpened     BYTE(0)
 
   CODE
-    GLO:Versie = 3.27
+        udpt.Init(UD,'SourceCheckVersie','Voorraad004.clw','Voorraad.EXE','05/26/2020 @ 12:16AM')    
+             
+    GLO:Versie = 3.29
     IF GLO:Versie <= 3.22                   ! spelvouten....
         Glo:Owner=GETINI('SQL','OWNER','172.16.0.7\MS$DPM2007$,Voorraad,jmd,superjmd','.\vooraad.ini')&';APP=JMDVoorraad v'&Glo:Versie&';WSID='&GETUSERNAME()
     ELSE    
@@ -45,10 +48,85 @@ FilesOpened     BYTE(0)
 	END
 		
 	Loop while Loc:Versie < GLO:Versie
-		db.debugOut('Versie bijwerken ' & LOC:Versie)
+		UD.Debug('Versie bijwerken ' & LOC:Versie)
 		LOC:ToonWijziging = false
 		Loc:Versie += 0.01
 		Case Loc:Versie
+    of 3.29 ! 25-05-2020
+    Clear(VRS:Record)
+    VRS:Versie=Loc:Versie
+    if Access:Versie.Fetch(VRS:Versie_PK)
+        LocalClass.ExecuteSQLCommando('IF EXISTS(SELECT * FROM sys.objects WHERE Name = <39>ViewBetcd<39> AND Type=<39>V<39>) BEGIN '& |
+            ' DROP VIEW [dbo].[ViewBetcd]  ; '&|
+            ' END;')
+        LocalClass.ExecuteSQLCommando('IF EXISTS(SELECT * FROM sys.objects WHERE Name = <39>ViewBetcd<39> AND Type=<39>U<39>) BEGIN '& |
+            ' DROP TABLE [dbo].[ViewBetcd]  ; '&|
+            ' END;')
+        LocalClass.ExecuteSQLCommando('CREATE TABLE dbo.ViewBetcd('&|
+            'BetcdID char(20) NOT NULL ,'&|
+            'Omschrijving VARCHAR(30) NOT NULL ,'&|            
+            'Description  VARCHAR(30)'&|            
+            ' CONSTRAINT [ViewBetcd_PK] PRIMARY KEY CLUSTERED '&|
+            '( '&|
+            '	[betcdID] ASC '&|
+            ')WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY] '&|
+            ') ON [PRIMARY]')
+        
+       LocalClass.ExecuteSQLCommando('IF EXISTS(SELECT * FROM sys.objects WHERE Name = <39>ArtikelOmschrijvingExtra<39> AND Type=<39>V<39>) BEGIN '& |
+            ' DROP VIEW [dbo].[ArtikelOmschrijvingExtra]  ; '&|
+            ' END;')
+        LocalClass.ExecuteSQLCommando('IF EXISTS(SELECT * FROM sys.objects WHERE Name = <39>ArtikelOmschrijvingExtra<39> AND Type=<39>U<39>) BEGIN '& |
+            ' DROP TABLE [dbo].[ArtikelOmschrijvingExtra]  ; '&|
+            ' END;')
+        LocalClass.ExecuteSQLCommando('CREATE TABLE dbo.ArtikelOmschrijvingExtra('&|
+            'ID int NOT NULL ,'&|
+            'ex_artcode CHAR(2) NOT NULL ,'&|            
+            'artcode CHAR(30) NOT NULL ,'&|            
+            'tekst CHAR(160) '&|            
+            ' CONSTRAINT [PK_ArtikelOmschrijvingExtra] PRIMARY KEY CLUSTERED '&|
+            '( '&|
+            '	[ex_artcode] ASC, '&|
+            '	[artcode] ASC '&|
+            ')WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY] '&|
+            ') ON [PRIMARY]')
+
+       LocalClass.ExecuteSQLCommando('IF EXISTS(SELECT * FROM sys.objects WHERE Name = <39>ArtikelOmschrijvingExtraGroep<39> AND Type=<39>V<39>) BEGIN '& |
+            ' DROP VIEW [dbo].[ArtikelOmschrijvingExtraGroep]  ; '&|
+            ' END;')
+        LocalClass.ExecuteSQLCommando('IF EXISTS(SELECT * FROM sys.objects WHERE Name = <39>ArtikelOmschrijvingExtraGroep<39> AND Type=<39>U<39>) BEGIN '& |
+            ' DROP TABLE [dbo].[ArtikelOmschrijvingExtraGroep]  ; '&|
+            ' END;')
+        LocalClass.ExecuteSQLCommando('CREATE TABLE dbo.ArtikelOmschrijvingExtraGroep('&|
+            'ID int NOT NULL ,'&|
+            'ex_artcode CHAR(2) NOT NULL ,'&|            
+            'Omschrijving CHAR(20) NOT NULL '&|            
+            ' CONSTRAINT [Art3:PK_ArtikelOmschrijvingExtraGroep] PRIMARY KEY CLUSTERED '&|
+            '( '&|
+            '	[ID] ASC '&|
+            ')WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY] '&|
+            ') ON [PRIMARY]')
+        
+            LocalClass.ExecuteSQLCommando('CREATE UNIQUE INDEX [FK_ArtikelOmschrijvingExtraGroep] ON [dbo].[ArtikelOmschrijvingExtraGroep] '&|
+            '('&|
+	        '[ex_artcode] ASC, '&|
+	        '[ID] ASC'&|
+            ')WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]')
+
+        LocalClass.SchrijfVersie(Loc:Versie,'Betalingconditie, en ExtraArtikelOmschrijvingen view ombouwen naar table')   
+
+        LOC:ToonWijziging = false
+    End
+                
+    of 3.28 ! 25-05-2020
+    Clear(VRS:Record)
+    VRS:Versie=Loc:Versie
+    if Access:Versie.Fetch(VRS:Versie_PK)
+
+        LocalClass.SchrijfVersie(Loc:Versie,'Extra index toegevoegd op Mutatie tabel ')   
+
+        LOC:ToonWijziging = false
+    End
+                
     of 3.27 ! 09-04-2020
     Clear(VRS:Record)
     VRS:Versie=Loc:Versie
@@ -3325,7 +3403,7 @@ of 1.59 ! 11-2-2011
 	Clear(VRS:Record)
 	VRS:Versie=Loc:Versie
 	If Access:Versie.Fetch(VRS:Versie_PK)
-		db.debugOut( 'Conversie 1.59')
+		UD.Debug( 'Conversie 1.59')
 				
 		VRS:Versie = Loc:Versie
 		VRS:DatumTijd_DATE = Today()
@@ -3393,7 +3471,7 @@ of 1.55 ! 11-2-2011
 	Clear(VRS:Record)
 	VRS:Versie=Loc:Versie
 	If Access:Versie.Fetch(VRS:Versie_PK)
-		db.debugOut( 'Conversie 1.55')
+		UD.Debug( 'Conversie 1.55')
 				
 		VRS:Versie = Loc:Versie
 		VRS:DatumTijd_DATE = Today()
@@ -3824,6 +3902,8 @@ of 1.50 ! 12-1-2011
 	!IF Error() Then Stop(Error()&' bij het sluiten van de versie').
     DO CloseFiles
 	!GLO:Versie = VRS:Versie
+           
+  
 !--------------------------------------
 OpenFiles  ROUTINE
   Relate:Versie.Open()                                     ! File Versie used by this procedure, so make sure it's RelationManager is open

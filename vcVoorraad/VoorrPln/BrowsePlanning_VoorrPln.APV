@@ -896,7 +896,34 @@ WHEN  (27) ('BrowseBox(ABC)')
 %ProcedureUserBindFields MULTI LONG  ()
 %ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
 
-%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 27
+WHEN  (1) (0)
+WHEN  (2) (0)
+WHEN  (3) (0)
+WHEN  (4) (0)
+WHEN  (5) (0)
+WHEN  (6) (0)
+WHEN  (7) (0)
+WHEN  (8) (0)
+WHEN  (9) (0)
+WHEN  (10) (0)
+WHEN  (11) (0)
+WHEN  (12) (0)
+WHEN  (13) (0)
+WHEN  (14) (0)
+WHEN  (15) (0)
+WHEN  (16) (0)
+WHEN  (17) (0)
+WHEN  (18) (0)
+WHEN  (19) (0)
+WHEN  (20) (0)
+WHEN  (21) (0)
+WHEN  (22) (0)
+WHEN  (23) (0)
+WHEN  (24) (0)
+WHEN  (25) (0)
+WHEN  (26) (0)
+WHEN  (27) (0)
 
 %ProcedureUserBindProcedures MULTI LONG  ()
 %ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
@@ -13683,11 +13710,13 @@ INSTANCE 14
 PARENT 11
 [PROMPTS]
 %EditInPlace LONG  (0)
-%ClassItem UNIQUE DEFAULT  ('BrowseEIPManager', 'EIP_AAPla3:ArtikelOms', 'EIP_AAPla3:ExternPartijnr', |
-  'EIP_AAPla3:Geprint', 'EIP_AAPla3:Instructie', 'EIP_AAPla3:MutatieGemaakt', 'EIP_AAPla3:PlanningID', |
-  'EIP_AAPla3:Planning_DATE', 'EIP_AAPla3:Transport', 'EIP_AAPla3:Verwerkt', 'EIP_ACT:Datum', |
-  'EIP_ACT:Omschrijving', 'EIP_ACT:Tijd', 'EIP_ACT:Uitgevoerd', 'EIP_LOC:Locatienaam3', |
-  'EIP_LOC:VerkoopKG3', 'EIP_LOC:VerkoopPallets3')
+%ClassItem UNIQUE DEFAULT  ('BrowseEIPManager', 'EIP_AAPla3:ArtikelID', 'EIP_AAPla3:ArtikelOms', |
+  'EIP_AAPla3:CelOms', 'EIP_AAPla3:ExternPartijnr', 'EIP_AAPla3:FirmaNaam', 'EIP_AAPla3:Geprint', |
+  'EIP_AAPla3:Gewogen', 'EIP_AAPla3:Instructie', 'EIP_AAPla3:LeverancierFirmaNaam', |
+  'EIP_AAPla3:MutatieGemaakt', 'EIP_AAPla3:PartijID', 'EIP_AAPla3:PlanningID', 'EIP_AAPla3:Planning_DATE', |
+  'EIP_AAPla3:Planning_TIME', 'EIP_AAPla3:Transport', 'EIP_AAPla3:VerpakkingOmschrijving', |
+  'EIP_AAPla3:Verwerkt', 'EIP_ACT:Datum', 'EIP_ACT:Omschrijving', 'EIP_ACT:Tijd', |
+  'EIP_ACT:Uitgevoerd', 'EIP_LOC:Locatienaam3', 'EIP_LOC:VerkoopKG3', 'EIP_LOC:VerkoopPallets3')
 %DefaultBaseClassType DEPEND %ClassItem DEFAULT TIMES 8
 WHEN  ('BrowseEIPManager') ('BrowseEIPManager')
 WHEN  ('EIP_AAPla3:Planning_DATE') ('EditEntryClass')
@@ -13710,16 +13739,24 @@ WHEN  ('EIP_LOC:VerkoopPallets3') ('')
 
 %ClassLines DEPEND %ClassItem MULTI DEFAULT TIMES 0
 
-%GlobalObject DEPEND %ClassItem DEFAULT TIMES 17
+%GlobalObject DEPEND %ClassItem DEFAULT TIMES 25
 WHEN  ('BrowseEIPManager') ('NO')
+WHEN  ('EIP_AAPla3:ArtikelID') ('NO')
 WHEN  ('EIP_AAPla3:ArtikelOms') ('NO')
+WHEN  ('EIP_AAPla3:CelOms') ('NO')
 WHEN  ('EIP_AAPla3:ExternPartijnr') ('NO')
+WHEN  ('EIP_AAPla3:FirmaNaam') ('NO')
 WHEN  ('EIP_AAPla3:Geprint') ('NO')
+WHEN  ('EIP_AAPla3:Gewogen') ('NO')
 WHEN  ('EIP_AAPla3:Instructie') ('NO')
+WHEN  ('EIP_AAPla3:LeverancierFirmaNaam') ('NO')
 WHEN  ('EIP_AAPla3:MutatieGemaakt') ('NO')
+WHEN  ('EIP_AAPla3:PartijID') ('NO')
 WHEN  ('EIP_AAPla3:PlanningID') ('NO')
 WHEN  ('EIP_AAPla3:Planning_DATE') ('NO')
+WHEN  ('EIP_AAPla3:Planning_TIME') ('NO')
 WHEN  ('EIP_AAPla3:Transport') ('NO')
+WHEN  ('EIP_AAPla3:VerpakkingOmschrijving') ('NO')
 WHEN  ('EIP_AAPla3:Verwerkt') ('NO')
 WHEN  ('EIP_ACT:Datum') ('NO')
 WHEN  ('EIP_ACT:Omschrijving') ('NO')
@@ -13739,16 +13776,24 @@ WHEN  ('EIP_LOC:Locatienaam3') ('EditInPlace::LOC:Locatienaam3')
 WHEN  ('EIP_LOC:VerkoopKG3') ('EditInPlace::LOC:VerkoopKG3')
 WHEN  ('EIP_LOC:VerkoopPallets3') ('EditInPlace::LOC:VerkoopPallets3')
 
-%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 17
+%UseDefaultABCBaseClass DEPEND %ClassItem LONG TIMES 25
 WHEN  ('BrowseEIPManager') (1)
+WHEN  ('EIP_AAPla3:ArtikelID') (1)
 WHEN  ('EIP_AAPla3:ArtikelOms') (1)
+WHEN  ('EIP_AAPla3:CelOms') (1)
 WHEN  ('EIP_AAPla3:ExternPartijnr') (1)
+WHEN  ('EIP_AAPla3:FirmaNaam') (1)
 WHEN  ('EIP_AAPla3:Geprint') (1)
+WHEN  ('EIP_AAPla3:Gewogen') (1)
 WHEN  ('EIP_AAPla3:Instructie') (1)
+WHEN  ('EIP_AAPla3:LeverancierFirmaNaam') (1)
 WHEN  ('EIP_AAPla3:MutatieGemaakt') (1)
+WHEN  ('EIP_AAPla3:PartijID') (1)
 WHEN  ('EIP_AAPla3:PlanningID') (1)
 WHEN  ('EIP_AAPla3:Planning_DATE') (1)
+WHEN  ('EIP_AAPla3:Planning_TIME') (1)
 WHEN  ('EIP_AAPla3:Transport') (1)
+WHEN  ('EIP_AAPla3:VerpakkingOmschrijving') (1)
 WHEN  ('EIP_AAPla3:Verwerkt') (1)
 WHEN  ('EIP_ACT:Datum') (1)
 WHEN  ('EIP_ACT:Omschrijving') (1)
@@ -13758,16 +13803,24 @@ WHEN  ('EIP_LOC:Locatienaam3') (1)
 WHEN  ('EIP_LOC:VerkoopKG3') (1)
 WHEN  ('EIP_LOC:VerkoopPallets3') (1)
 
-%UseABCBaseClass DEPEND %ClassItem LONG TIMES 17
+%UseABCBaseClass DEPEND %ClassItem LONG TIMES 25
 WHEN  ('BrowseEIPManager') (1)
+WHEN  ('EIP_AAPla3:ArtikelID') (1)
 WHEN  ('EIP_AAPla3:ArtikelOms') (1)
+WHEN  ('EIP_AAPla3:CelOms') (1)
 WHEN  ('EIP_AAPla3:ExternPartijnr') (1)
+WHEN  ('EIP_AAPla3:FirmaNaam') (1)
 WHEN  ('EIP_AAPla3:Geprint') (1)
+WHEN  ('EIP_AAPla3:Gewogen') (1)
 WHEN  ('EIP_AAPla3:Instructie') (1)
+WHEN  ('EIP_AAPla3:LeverancierFirmaNaam') (1)
 WHEN  ('EIP_AAPla3:MutatieGemaakt') (1)
+WHEN  ('EIP_AAPla3:PartijID') (1)
 WHEN  ('EIP_AAPla3:PlanningID') (1)
 WHEN  ('EIP_AAPla3:Planning_DATE') (1)
+WHEN  ('EIP_AAPla3:Planning_TIME') (1)
 WHEN  ('EIP_AAPla3:Transport') (1)
+WHEN  ('EIP_AAPla3:VerpakkingOmschrijving') (1)
 WHEN  ('EIP_AAPla3:Verwerkt') (1)
 WHEN  ('EIP_ACT:Datum') (1)
 WHEN  ('EIP_ACT:Omschrijving') (1)
@@ -13777,16 +13830,24 @@ WHEN  ('EIP_LOC:Locatienaam3') (1)
 WHEN  ('EIP_LOC:VerkoopKG3') (1)
 WHEN  ('EIP_LOC:VerkoopPallets3') (1)
 
-%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 17
+%ABCBaseClass DEPEND %ClassItem DEFAULT TIMES 25
 WHEN  ('BrowseEIPManager') ('ADOBlob')
+WHEN  ('EIP_AAPla3:ArtikelID') ('')
 WHEN  ('EIP_AAPla3:ArtikelOms') ('ADOBlob')
+WHEN  ('EIP_AAPla3:CelOms') ('')
 WHEN  ('EIP_AAPla3:ExternPartijnr') ('ADOBlob')
+WHEN  ('EIP_AAPla3:FirmaNaam') ('')
 WHEN  ('EIP_AAPla3:Geprint') ('ADOBlob')
+WHEN  ('EIP_AAPla3:Gewogen') ('')
 WHEN  ('EIP_AAPla3:Instructie') ('ADOBlob')
+WHEN  ('EIP_AAPla3:LeverancierFirmaNaam') ('')
 WHEN  ('EIP_AAPla3:MutatieGemaakt') ('ADOBlob')
+WHEN  ('EIP_AAPla3:PartijID') ('')
 WHEN  ('EIP_AAPla3:PlanningID') ('ADOBlob')
 WHEN  ('EIP_AAPla3:Planning_DATE') ('ADOBlob')
+WHEN  ('EIP_AAPla3:Planning_TIME') ('')
 WHEN  ('EIP_AAPla3:Transport') ('ADOBlob')
+WHEN  ('EIP_AAPla3:VerpakkingOmschrijving') ('')
 WHEN  ('EIP_AAPla3:Verwerkt') ('ADOBlob')
 WHEN  ('EIP_ACT:Datum') ('')
 WHEN  ('EIP_ACT:Omschrijving') ('ADOBlob')
@@ -13800,16 +13861,24 @@ WHEN  ('EIP_LOC:VerkoopPallets3') ('ADOBlob')
 
 %BaseClassIncludeFile DEPEND %ClassItem DEFAULT TIMES 0
 
-%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 17
+%DeriveFromBaseClass DEPEND %ClassItem LONG TIMES 25
 WHEN  ('BrowseEIPManager') (0)
+WHEN  ('EIP_AAPla3:ArtikelID') (0)
 WHEN  ('EIP_AAPla3:ArtikelOms') (0)
+WHEN  ('EIP_AAPla3:CelOms') (0)
 WHEN  ('EIP_AAPla3:ExternPartijnr') (0)
+WHEN  ('EIP_AAPla3:FirmaNaam') (0)
 WHEN  ('EIP_AAPla3:Geprint') (0)
+WHEN  ('EIP_AAPla3:Gewogen') (0)
 WHEN  ('EIP_AAPla3:Instructie') (0)
+WHEN  ('EIP_AAPla3:LeverancierFirmaNaam') (0)
 WHEN  ('EIP_AAPla3:MutatieGemaakt') (0)
+WHEN  ('EIP_AAPla3:PartijID') (0)
 WHEN  ('EIP_AAPla3:PlanningID') (0)
 WHEN  ('EIP_AAPla3:Planning_DATE') (0)
+WHEN  ('EIP_AAPla3:Planning_TIME') (0)
 WHEN  ('EIP_AAPla3:Transport') (0)
+WHEN  ('EIP_AAPla3:VerpakkingOmschrijving') (0)
 WHEN  ('EIP_AAPla3:Verwerkt') (0)
 WHEN  ('EIP_ACT:Datum') (0)
 WHEN  ('EIP_ACT:Omschrijving') (0)

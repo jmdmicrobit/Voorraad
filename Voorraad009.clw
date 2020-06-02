@@ -20,6 +20,7 @@
 !!! </summary>
 BrowsePartijZonderInslag PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 BRW1::View:Browse    VIEW(Partij)
                        PROJECT(Par:PartijID)
@@ -107,6 +108,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'BrowsePartijZonderInslag','Voorraad009.clw','Voorraad.EXE','07/03/2014 @ 11:14AM')    
+             
   GlobalErrors.SetProcedureName('BrowsePartijZonderInslag')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -114,9 +117,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Browse:1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -129,6 +132,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
   BRW1.ActiveInvisible = 1
@@ -171,6 +175,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowsePartijZonderInslag',QuickWindow)  ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -206,6 +212,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowsePartijZonderInslag',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'08/17/2010 @ 03:32PM','07/03/2014 @ 11:14AM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

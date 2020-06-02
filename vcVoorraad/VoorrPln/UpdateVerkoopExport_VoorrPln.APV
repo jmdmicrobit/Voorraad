@@ -436,7 +436,8 @@ ARelatie Verkoop
 AAARelatie
 CMR
 [PROMPTS]
-%ButtonAction DEPEND %Control DEFAULT TIMES 12
+%ButtonAction DEPEND %Control DEFAULT TIMES 13
+WHEN  ('') ('No Special Action')
 WHEN  ('?BTC:Omschrijving') ('No Special Action')
 WHEN  ('?CMR') ('No Special Action')
 WHEN  ('?Cancel') ('No Special Action')
@@ -466,7 +467,8 @@ WHEN  ('?Print') (ReportPackLijst)
 WHEN  ('?Excel') (0)
 WHEN  ('?Print') (0)
 
-%ButtonThreadStack DEPEND %Control DEFAULT TIMES 12
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 13
+WHEN  ('') ('25000')
 WHEN  ('?BTC:Omschrijving') ('25000')
 WHEN  ('?CMR') ('25000')
 WHEN  ('?Cancel') ('25000')
@@ -484,7 +486,8 @@ WHEN  ('?TelTotalen') ('25000')
 WHEN  ('?Excel') ('Ver2:VerkoopID,Loc:Welke,Loc:Layout,1')
 WHEN  ('?Print') ('Ver2:VerkoopID,Loc:Welke,Loc:Layout')
 
-%ButtonRequest DEPEND %Control DEFAULT TIMES 12
+%ButtonRequest DEPEND %Control DEFAULT TIMES 13
+WHEN  ('') ('None')
 WHEN  ('?BTC:Omschrijving') ('None')
 WHEN  ('?CMR') ('None')
 WHEN  ('?Cancel') ('None')
@@ -698,7 +701,8 @@ WHEN  (1) ('BrowseBox(ABC)')
 %ProcedureUserBindFields MULTI LONG  ()
 %ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
 
-%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 1
+WHEN  (1) (0)
 
 %ProcedureUserBindProcedures MULTI LONG  ()
 %ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0
@@ -717,7 +721,8 @@ WHEN  (1) ('BrowseBox(ABC)')
 
 %ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
 
-%ExtUITabStyle DEPEND %Control DEFAULT TIMES 8
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 9
+WHEN  ('') ('Default')
 WHEN  ('?BTC:Omschrijving') ('Default')
 WHEN  ('?Change') ('Default')
 WHEN  ('?CurrentTab') ('Default')
@@ -727,7 +732,8 @@ WHEN  ('?Hav:Haven') ('Default')
 WHEN  ('?Print') ('Default')
 WHEN  ('?Regels') ('Default')
 
-%FieldGradientColorType DEPEND %Control DEFAULT TIMES 6
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 7
+WHEN  ('') ('Off')
 WHEN  ('?BTC:Omschrijving') ('Off')
 WHEN  ('?Change') ('Off')
 WHEN  ('?DLT:Omschrijving') ('Off')
@@ -735,7 +741,8 @@ WHEN  ('?Excel') ('Off')
 WHEN  ('?Hav:Haven') ('Off')
 WHEN  ('?Print') ('Off')
 
-%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 6
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 7
+WHEN  ('') ('')
 WHEN  ('?BTC:Omschrijving') ('')
 WHEN  ('?Change') ('')
 WHEN  ('?DLT:Omschrijving') ('')
@@ -743,7 +750,8 @@ WHEN  ('?Excel') ('')
 WHEN  ('?Hav:Haven') ('')
 WHEN  ('?Print') ('')
 
-%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 6
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 7
+WHEN  ('') (0)
 WHEN  ('?BTC:Omschrijving') (0)
 WHEN  ('?Change') (0)
 WHEN  ('?DLT:Omschrijving') (0)
@@ -751,7 +759,8 @@ WHEN  ('?Excel') (0)
 WHEN  ('?Hav:Haven') (0)
 WHEN  ('?Print') (0)
 
-%FieldGradientColorFrom DEPEND %Control LONG TIMES 6
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 7
+WHEN  ('') (-1)
 WHEN  ('?BTC:Omschrijving') (-1)
 WHEN  ('?Change') (-1)
 WHEN  ('?DLT:Omschrijving') (-1)
@@ -761,7 +770,8 @@ WHEN  ('?Print') (-1)
 
 %FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 6
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 7
+WHEN  ('') (0)
 WHEN  ('?BTC:Omschrijving') (0)
 WHEN  ('?Change') (0)
 WHEN  ('?DLT:Omschrijving') (0)
@@ -769,7 +779,8 @@ WHEN  ('?Excel') (0)
 WHEN  ('?Hav:Haven') (0)
 WHEN  ('?Print') (0)
 
-%FieldGradientColorTo DEPEND %Control LONG TIMES 6
+%FieldGradientColorTo DEPEND %Control LONG TIMES 7
+WHEN  ('') (-1)
 WHEN  ('?BTC:Omschrijving') (-1)
 WHEN  ('?Change') (-1)
 WHEN  ('?DLT:Omschrijving') (-1)
@@ -779,7 +790,8 @@ WHEN  ('?Print') (-1)
 
 %FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 6
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 7
+WHEN  ('') (0)
 WHEN  ('?BTC:Omschrijving') (0)
 WHEN  ('?Change') (0)
 WHEN  ('?DLT:Omschrijving') (0)
@@ -807,7 +819,8 @@ WHEN  ('?Print') ()
 
 %PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
 
-%PostLookupDuringValidate DEPEND %Control LONG TIMES 13
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 14
+WHEN  ('') (1)
 WHEN  ('?BTC:Omschrijving') (1)
 WHEN  ('?Change') (1)
 WHEN  ('?DLT:Omschrijving') (1)
@@ -838,7 +851,8 @@ WHEN  ('?Ver2:Vessel') (1)
 
 %CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
 
-%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 6
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 7
+WHEN  ('')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Change')TIMES 0
 WHEN  ('?DLT:Omschrijving')TIMES 0
@@ -850,7 +864,8 @@ WHEN  ('?Print')TIMES 0
 
 %CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
 
-%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 6
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Change')TIMES 0
 WHEN  ('?DLT:Omschrijving')TIMES 0
@@ -868,7 +883,8 @@ WHEN  ('?Print')TIMES 0
 
 %UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
 
-%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 6
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 7
+WHEN  ('')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Change')TIMES 0
 WHEN  ('?DLT:Omschrijving')TIMES 0
@@ -880,7 +896,8 @@ WHEN  ('?Print')TIMES 0
 
 %UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
 
-%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 6
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Change')TIMES 0
 WHEN  ('?DLT:Omschrijving')TIMES 0
@@ -892,7 +909,8 @@ WHEN  ('?Print')TIMES 0
 
 %CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
 
-%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 6
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Change')TIMES 0
 WHEN  ('?DLT:Omschrijving')TIMES 0
@@ -904,7 +922,8 @@ WHEN  ('?Print')TIMES 0
 
 %UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
 
-%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 6
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 7
+WHEN  ('')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Change')TIMES 0
 WHEN  ('?DLT:Omschrijving')TIMES 0
@@ -914,7 +933,8 @@ WHEN  ('?Print')TIMES 0
 
 %ActiveImageEnable DEPEND %Control LONG TIMES 0
 
-%AIObjectName DEPEND %Control DEFAULT TIMES 6
+%AIObjectName DEPEND %Control DEFAULT TIMES 7
+WHEN  ('') ('AIBtn0')
 WHEN  ('?BTC:Omschrijving') ('AIBtn36')
 WHEN  ('?Change') ('AIBtn33')
 WHEN  ('?DLT:Omschrijving') ('AIBtn45')
@@ -922,7 +942,8 @@ WHEN  ('?Excel') ('AIBtn55')
 WHEN  ('?Hav:Haven') ('AIBtn14')
 WHEN  ('?Print') ('AIBtn41')
 
-%AIEnableMimicControl DEPEND %Control LONG TIMES 6
+%AIEnableMimicControl DEPEND %Control LONG TIMES 7
+WHEN  ('') (1)
 WHEN  ('?BTC:Omschrijving') (1)
 WHEN  ('?Change') (1)
 WHEN  ('?DLT:Omschrijving') (1)
@@ -930,7 +951,8 @@ WHEN  ('?Excel') (1)
 WHEN  ('?Hav:Haven') (1)
 WHEN  ('?Print') (1)
 
-%AIMimicControl DEPEND %Control DEFAULT TIMES 6
+%AIMimicControl DEPEND %Control DEFAULT TIMES 7
+WHEN  ('') ('?CurrentTab')
 WHEN  ('?BTC:Omschrijving') ('?CurrentTab')
 WHEN  ('?Change') ('?CurrentTab')
 WHEN  ('?DLT:Omschrijving') ('?CurrentTab')
@@ -944,7 +966,8 @@ WHEN  ('?Print') ('?CurrentTab')
 
 %AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 6
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 7
+WHEN  ('') (0)
 WHEN  ('?BTC:Omschrijving') (0)
 WHEN  ('?Change') (0)
 WHEN  ('?DLT:Omschrijving') (0)
@@ -956,7 +979,8 @@ WHEN  ('?Print') (0)
 
 %AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIDisableImgIsVariable DEPEND %Control LONG TIMES 6
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 7
+WHEN  ('') (0)
 WHEN  ('?BTC:Omschrijving') (0)
 WHEN  ('?Change') (0)
 WHEN  ('?DLT:Omschrijving') (0)
@@ -968,7 +992,8 @@ WHEN  ('?Print') (0)
 
 %AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIHotImgIsVariable DEPEND %Control LONG TIMES 6
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 7
+WHEN  ('') (0)
 WHEN  ('?BTC:Omschrijving') (0)
 WHEN  ('?Change') (0)
 WHEN  ('?DLT:Omschrijving') (0)
@@ -980,7 +1005,8 @@ WHEN  ('?Print') (0)
 
 %AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIPressedImgIsVariable DEPEND %Control LONG TIMES 6
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 7
+WHEN  ('') (0)
 WHEN  ('?BTC:Omschrijving') (0)
 WHEN  ('?Change') (0)
 WHEN  ('?DLT:Omschrijving') (0)
@@ -1356,7 +1382,8 @@ NAME ABC ViewFormActions
 INSTANCE 5
 [PROMPTS]
 %ForceViewOnly LONG  (0)
-%ViewAction DEPEND %Control DEFAULT TIMES 55
+%ViewAction DEPEND %Control DEFAULT TIMES 56
+WHEN  ('') ('None')
 WHEN  ('?BTC:Omschrijving') ('Disable')
 WHEN  ('?CMR') ('Disable')
 WHEN  ('?Cancel') ('None')
@@ -1599,91 +1626,104 @@ WHEN  ('Default') ('Q {22}&Queue:FileDrop {16}!Reference to display queue')
 %UseSameColorForAll LONG  (0)
 %ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (0)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
@@ -1694,25 +1734,29 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Hav:Haven')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Hav:Haven')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Hav:Haven')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Hav:Haven')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
@@ -1756,21 +1800,24 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %UseSameStyleForAll LONG  (0)
 %ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') (0)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
@@ -1779,14 +1826,16 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
@@ -1795,14 +1844,16 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Hav:Haven')TIMES 1
 WHEN  ('Hav:Haven') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
@@ -1815,13 +1866,15 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Hav:Haven')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Hav:Haven')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
@@ -2169,7 +2222,8 @@ WHEN  ('Locator0')TIMES 0
 %UseSameColorForAll LONG  (0)
 %ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2180,7 +2234,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2191,7 +2246,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2202,7 +2258,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2213,7 +2270,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2228,27 +2286,32 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2259,7 +2322,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2270,7 +2334,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2281,7 +2346,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2292,7 +2358,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2303,7 +2370,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2314,7 +2382,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2325,7 +2394,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2374,7 +2444,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %UseSameStyleForAll LONG  (0)
 %ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2385,7 +2456,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Local List')
 WHEN  ('Pla:GrossWeight') ('Local List')
@@ -2396,7 +2468,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('')
 WHEN  ('Pla:GrossWeight') ('')
@@ -2409,7 +2482,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Local List')
 WHEN  ('Pla:GrossWeight') ('Local List')
@@ -2420,7 +2494,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('')
 WHEN  ('Pla:GrossWeight') ('')
@@ -2433,7 +2508,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Local List')
 WHEN  ('Pla:GrossWeight') ('Local List')
@@ -2444,7 +2520,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('')
 WHEN  ('Pla:GrossWeight') ('')
@@ -2461,12 +2538,14 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
@@ -2513,7 +2592,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %ControlFieldSortHeaderMulti LONG  (1)
 %ControlFieldSortHeaderOnlyAsc DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2524,7 +2604,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldSortHeaderOverride DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2535,7 +2616,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldSortHeaderDisableColumn DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2550,12 +2632,14 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldSortHeaderFieldOrder DEPEND %ControlFieldSortHeaderFields DEFAULT TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldSortHeaderFieldCase DEPEND %ControlFieldSortHeaderFields LONG TIMES 3
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %SortHeaderColumnsUseColor LONG  (0)
@@ -2748,7 +2832,8 @@ WHEN  ('EIP_Pla:PlantNumber')TIMES 0
 %AllowEIPExt DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (1)
 WHEN  ('Pla:GrossWeight') (1)
@@ -2760,7 +2845,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceTypeExt DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Entry')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Entry')
 WHEN  ('Pla:GrossWeight') ('Entry')
@@ -2774,7 +2860,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Default')
 WHEN  ('Pla:GrossWeight') ('Default')
@@ -2786,7 +2873,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQOffset DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('0')
 WHEN  ('Pla:GrossWeight') ('0')
@@ -2798,7 +2886,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQTransparent DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2810,7 +2899,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQReadOnly DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2822,7 +2912,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQRequired DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2834,7 +2925,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQDataSource DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Fixed')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Fixed')
 WHEN  ('Pla:GrossWeight') ('Fixed')
@@ -2850,7 +2942,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQFixedDataSourceSelected DEPEND %EditInPlaceFEQFixedDataSource LONG TIMES 4
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %EditInPlaceFEQQueueDataSourceQN DEPEND %Control DEPEND %ControlField FIELD TIMES 0
@@ -2862,7 +2955,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQAutoSerializeField DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2878,7 +2972,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %AllowLongFilenames DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (1)
 WHEN  ('Pla:GrossWeight') (1)
@@ -2890,7 +2985,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %DOSFileDialogType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Open')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Open')
 WHEN  ('Pla:GrossWeight') ('Open')
@@ -2902,7 +2998,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %AllowNoError DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -2916,7 +3013,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %DOSMaskDesc DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('All Files')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('All Files')
 WHEN  ('Pla:GrossWeight') ('All Files')
@@ -2928,7 +3026,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %DOSMask DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('*.*')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('*.*')
 WHEN  ('Pla:GrossWeight') ('*.*')
@@ -2946,7 +3045,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2958,7 +3058,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2970,7 +3071,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -2982,7 +3084,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (-1)
 WHEN  ('Pla:GrossWeight') (-1)
@@ -3002,7 +3105,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQDrop DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('0')
 WHEN  ('Pla:GrossWeight') ('0')
@@ -3014,7 +3118,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQWidth DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('0')
 WHEN  ('Pla:GrossWeight') ('0')
@@ -3026,7 +3131,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQCase DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Default')
 WHEN  ('Pla:GrossWeight') ('Default')
@@ -3038,7 +3144,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQFlat DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -3050,7 +3157,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQHorizontal DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -3062,7 +3170,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQVertical DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -3074,7 +3183,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQImmediate DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -3086,7 +3196,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQEntryCompletion DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -3106,7 +3217,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQCheckJust DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Default')
 WHEN  ('Pla:GrossWeight') ('Default')
@@ -3126,7 +3238,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQEntryMode DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Default')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Default')
 WHEN  ('Pla:GrossWeight') ('Default')
@@ -3138,7 +3251,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQLower DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('0')
 WHEN  ('Pla:GrossWeight') ('0')
@@ -3150,7 +3264,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQUpper DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('0')
 WHEN  ('Pla:GrossWeight') ('0')
@@ -3162,7 +3277,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQStep DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('0')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('0')
 WHEN  ('Pla:GrossWeight') ('0')
@@ -3174,7 +3290,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %EditInPlaceFEQPassword DEPEND %Control DEPEND %ControlField LONG TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') (0)
 WHEN  ('Pla:GrossWeight') (0)
@@ -3186,7 +3303,8 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %LookupType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 5
 WHEN  ('?Cancel')TIMES 0
 WHEN  ('?Change')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Related Field')
 WHEN  ('?List')TIMES 5
 WHEN  ('Pla:AlternatieveArtikelOms') ('Related Field')
 WHEN  ('Pla:GrossWeight') ('Related Field')
@@ -3278,91 +3396,104 @@ WHEN  ('Default') ('Q {22}&Queue:FileDropCombo {11}!Reference to browse queue ty
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (0)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (-1)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
@@ -3372,25 +3503,29 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %AllControlGreenBarColor LONG  (0)
@@ -3435,21 +3570,24 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') (0)
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') ('Local List')
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') ('')
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
@@ -3458,14 +3596,16 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') ('Local List')
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') ('')
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
@@ -3474,14 +3614,16 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') ('Local List')
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 1
 WHEN  ('BTC:Omschrijving') ('')
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
@@ -3493,13 +3635,15 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 4
 WHEN  ('?BTC:Omschrijving')TIMES 0
 WHEN  ('?Cancel')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0
@@ -3667,79 +3811,92 @@ WHEN  ('Default') ('Q {22}&Queue:FileDropCombo:1 {9}!Reference to browse queue t
 %ControlGreenBarColor DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (0)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundNormal DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldForegroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldBackgroundSelected DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (-1)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (-1)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalColors DEPEND %Control DEPEND %ControlField MULTI LONG TIMES 0
@@ -3748,22 +3905,26 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldForegroundNormal DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundNormal DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldForegroundSelected DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldBackgroundSelected DEPEND %ConditionalColors LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %AllControlGreenBarColor LONG  (0)
@@ -3807,19 +3968,22 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %ControlGreenBarStyle DEPEND %Control DEPEND %ControlField LONG TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') (0)
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') (0)
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') ('Local List')
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') ('')
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOnStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
@@ -3827,13 +3991,15 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %GreenBarOffStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') ('Local List')
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') ('')
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %GreenBarOffStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
@@ -3841,13 +4007,15 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 %ControlFieldStyleType DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') ('Local List')
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('Local List')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyleLocalList DEPEND %Control DEPEND %ControlField DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 1
 WHEN  ('DLT:Omschrijving') ('')
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('') ('')
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ControlFieldStyle DEPEND %Control DEPEND %ControlField DEFAULT TIMES 0
@@ -3858,12 +4026,14 @@ WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyleType DEPEND %ConditionalStyles DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyleLocalList DEPEND %ConditionalStyles DEFAULT TIMES 3
 WHEN  ('?DLT:Omschrijving')TIMES 0
-WHEN  ('?Excel')TIMES 0
+WHEN  ('?Excel')TIMES 1
+WHEN  ('')TIMES 0
 WHEN  ('?Loc:SeaWayBill')TIMES 0
 
 %ConditionalControlFieldStyle DEPEND %ConditionalStyles DEFAULT TIMES 0

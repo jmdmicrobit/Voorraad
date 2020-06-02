@@ -10,6 +10,8 @@
                        INCLUDE('VOORRDCT001.INC'),ONCE        !Local module procedure declarations
                        INCLUDE('VOORRDCT002.INC'),ONCE        !Req'd for module callout resolution
                        INCLUDE('VOORRDCT003.INC'),ONCE        !Req'd for module callout resolution
+                       INCLUDE('VOORRDCT004.INC'),ONCE        !Req'd for module callout resolution
+                       INCLUDE('VOORRDCT005.INC'),ONCE        !Req'd for module callout resolution
                      END
 
 
@@ -18,6 +20,7 @@
 !!! </summary>
 MainDCT PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 Window               WINDOW('Caption'),AT(,,260,100),GRAY
@@ -52,6 +55,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'MainDCT','VoorrDct001.clw','VoorrDct.DLL','10/02/2017 @ 11:47AM')    
+             
   GlobalErrors.SetProcedureName('MainDCT')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -59,14 +64,15 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = 1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   Relate:AVerpakking.Open                                  ! File AVerpakking used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('MainDCT',Window)                           ! Restore window settings from non-volatile store
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
@@ -87,6 +93,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('MainDCT',Window)                        ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -109,6 +117,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('MainDCT',UD.SetApplicationName('VoorrDct','DLL'),Window{PROP:Hlp},'06/09/2011 @ 12:13PM','10/02/2017 @ 11:47AM','05/25/2020 @ 09:33PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

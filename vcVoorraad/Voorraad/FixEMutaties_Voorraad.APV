@@ -564,9 +564,9 @@ ELSIF Mut:SoortMutatie = 'EUIT'
 				CLEAR(Pla:PlanningID)
 				Pla:PlanningID=Mut:PlanningID
 				IF (Access:Planning.TryFetch(Pla:PK_Planning) = Level:Benign)
-					db.DebugOut('FixEMutaties conversie ' & Mut:MutatieID)
+					UD.Debug('FixEMutaties conversie ' & Mut:MutatieID)
 					Mut:SoortMutatie = 'IN'
-					db.DebugOut('FixEMutaties')
+					UD.Debug('FixEMutaties')
 				ELSE
 					Mut:PartijID = 0
 				.

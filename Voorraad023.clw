@@ -17,6 +17,7 @@
 !!! </summary>
 ShowNewVersion PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Loc:Versie           DECIMAL(7,2)                          ! 
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
@@ -89,6 +90,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ShowNewVersion','Voorraad023.clw','Voorraad.EXE','09/14/2018 @ 01:16PM')    
+             
   GlobalErrors.SetProcedureName('ShowNewVersion')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -96,9 +99,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?PANEL1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   Relate:Versie.Open                                       ! File Versie used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(window)                                        ! Open window
@@ -107,6 +110,7 @@ ReturnValue          BYTE,AUTO
   ?String2{Prop:Text}='Voorraad versie '&GLO:Versie&' (laatste gebruikte versie '&Loc:Versie&')'
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ShowNewVersion',window)                    ! Restore window settings from non-volatile store
   TARGET{Prop:Timer} = 500                                 ! Close window on timer event, so configure timer
   TARGET{Prop:Alrt,255} = MouseLeft                        ! Alert mouse clicks that will close window
@@ -131,6 +135,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('ShowNewVersion',window)                 ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -153,6 +159,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('ShowNewVersion',UD.SetApplicationName('Voorraad','EXE'),window{PROP:Hlp},'12/24/2010 @ 12:19PM','09/14/2018 @ 01:16PM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

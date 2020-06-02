@@ -26,6 +26,7 @@
 !!! </summary>
 BrowseGebruikerLog PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 LOC:GebruikerID      LONG                                  ! 
 LOC:WindowsInlog     CSTRING(51)                           ! 
@@ -175,6 +176,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'BrowseGebruikerLog','Voorraad025.clw','Voorraad.EXE','05/25/2020 @ 08:55PM')    
+             
   GlobalErrors.SetProcedureName('BrowseGebruikerLog')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -183,9 +186,9 @@ ReturnValue          BYTE,AUTO
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:Datum',LOC:Datum)                              ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -218,6 +221,7 @@ ReturnValue          BYTE,AUTO
   FilterObj.IFilter.addCol('Record-Inhoud', 'Log:RecordInhoudPre', datatype:string, '', 0)
   ?checkCase:2{prop:use} = FilterObj_checkBox
   FilterObj_checkBox = 1
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.ActiveInvisible = 1
   BRW1.RetainRow = 0
@@ -285,6 +289,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowseGebruikerLog',QuickWindow)        ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -395,6 +401,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowseGebruikerLog',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:44PM','05/25/2020 @ 08:55PM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -468,20 +482,20 @@ Looped BYTE
   ReturnValue = Level:Fatal
   RETURN ReturnValue
 
-LocalClass.RestorePartij    PROCEDURE(Log:Record Log:Record)
+LocalClass.RestorePartij    PROCEDURE(Log:Record pLogRecord)
 Code 
   ! kan ik hier identity insert uitzetten
     Partij{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Partij ON'
     IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
     Clear(Par:Record)
 
-    St.SetValue(Log:RecordInhoudPre)
+    St.SetValue(pLogRecord.RecordInhoudPre)
     st.split('<13,10>') 
     loop i# = 1 to st.Records()
         Str.SetValue(St.GetLine(i#))      ! PAR:PARTIJID=30292            ,  5-12-1883            ,  0:05            , 3
         Str.Split(',')
         stVeld.SetValue(Str.GetLine(1))    ! PAR:PARTIJID=30292               
-        stVeld.After('=')
+        !stVeld.After('=')
     !SETCLIPBOARD(stVeld.Before('=')&'|'&stVeld.After('='))             !PAR:PARTIJID|30292              
         Case stVeld.Before('=')
         OF 'PAR:PARTIJID'
@@ -586,7 +600,7 @@ Code
         ', <39>'&Par:InslagQATemperatuurVervoermiddel&'<39>'&|
         ', <39>'&Par:CorrectieveMaatregel&'<39>'&|
         ')'
-    SetClipBoard(Loc:SQLCommando)
+    !SetClipBoard(Loc:SQLCommando)
     Partij{Prop:SQL}=Loc:SQLCommando
    !Access:Partij.Insert()
 !Add(Partij)
@@ -598,19 +612,19 @@ Code
 
     RETURN
 
-LocalClass.RestoreVerkoop    PROCEDURE(Log:Record Log:Record)
+LocalClass.RestoreVerkoop    PROCEDURE(Log:Record pLogRecord)
 Code 
     Verkoop{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Verkoop ON'
     IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
     Clear(Ver2:Record)
 
-    St.SetValue(Log:RecordInhoudPre)
+    St.SetValue(pLogRecord.RecordInhoudPre)
     st.split('<13,10>') 
     loop i# = 1 to st.Records()
         Str.SetValue(St.GetLine(i#))      ! VerkoopID | READONLY=37226            , 30-11-1902            ,  0:06            , 3
         Str.Split(',')
         stVeld.SetValue(Str.GetLine(1))    ! VerkoopID | READONLY=37226
-        stVeld.After('=')
+        !stVeld.After('=')
         Case stVeld.Before('=')
         OF 'VerkoopID | READONLY'
             Ver2:VerkoopID=stVeld.After('=')
@@ -753,7 +767,7 @@ Code
         ', <39>'&Ver2:Aan&'<39>'&|
         ', <39>'&Ver2:OmschrijvingGoederen&'<39>'&|
         ')'
-    SetClipBoard(Loc:SQLCommando)
+    !SetClipBoard(Loc:SQLCommando)
     Verkoop{Prop:SQL}=Loc:SQLCommando
    !Access:Partij.Insert()
 !Add(Partij)
@@ -764,19 +778,19 @@ Code
 
     RETURN
 
-LocalClass.RestorePlanning    PROCEDURE(Log:Record Log:Record)
+LocalClass.RestorePlanning    PROCEDURE(Log:Record pLogRecord)
 Code 
     Planning{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Planning ON'
     IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
     Clear(Par:Record)
 
-    St.SetValue(Log:RecordInhoudPre)
+    St.SetValue(pLogRecord.RecordInhoudPre)
     st.split('<13,10>') 
     loop i# = 1 to st.Records()
         Str.SetValue(St.GetLine(i#))      ! PAR:PARTIJID=30292            ,  5-12-1883            ,  0:05            , 3
         Str.Split(',')
         stVeld.SetValue(Str.GetLine(1))    ! PAR:PARTIJID=30292               
-        stVeld.After('=')
+       ! stVeld.After('=')
     !SETCLIPBOARD(stVeld.Before('=')&'|'&stVeld.After('='))             !PAR:PARTIJID|30292              
         Case stVeld.Before('=')
         OF 'PlanningID | READONLY'
@@ -997,7 +1011,7 @@ Code
         ', '&Pla:NieuwKG&|
         ', '&Pla:NieuwPallets&|
         ')'
-    SetClipBoard(Loc:SQLCommando)
+   ! SetClipBoard(Loc:SQLCommando)
     Planning{Prop:SQL}=Loc:SQLCommando
    !Access:Partij.Insert()
 !Add(Partij)
@@ -1007,18 +1021,18 @@ Code
     IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
     Return
 
-LocalClass.RestoreVerpakking        PROCEDURE(Log:Record Log:Record)
+LocalClass.RestoreVerpakking        PROCEDURE(Log:Record pLogRecord)
 Code 
     Verpakking{Prop:SQL}= 'SET IDENTITY_INSERT dbo.Verpakking ON'
     IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
     Clear(VER:Record)
-    St.SetValue(Log:RecordInhoudPre)
+    St.SetValue(pLogRecord.RecordInhoudPre)
     st.split('<13,10>') 
     loop i# = 1 to st.Records()
         Str.SetValue(St.GetLine(i#))      ! VER:VERPAKKINGID=208            , 24-07-1801            ,  0:00            , 2
         Str.Split(',')
         stVeld.SetValue(Str.GetLine(1))    ! VER:VERPAKKINGID=208               
-        stVeld.After('=')
+      !  stVeld.After('=')
         Case stVeld.Before('=')
         OF 'VER:VERPAKKINGID'
             Ver:VerpakkingID=stVeld.After('=')
@@ -1042,7 +1056,7 @@ Code
             ', <39>'&Ver:Description&'<39>'&|
             ', '&Ver:InhoudKG&|
             ')'
-?        SETCLIPBOARD(Loc:SQLCommando)
+?     !   SETCLIPBOARD(Loc:SQLCommando)
         Verpakking{Prop:SQL}=Loc:SQLCommando
         IF ERROR() THEN STOP('Error '&ERROR()&'|'&FILEERROR()).
        

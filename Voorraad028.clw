@@ -17,6 +17,7 @@
 !!! </summary>
 VulPlanning_MutatieKG PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 Process:View         VIEW(Planning)
                        PROJECT(Pla:InkoopID)
@@ -68,6 +69,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'VulPlanning_MutatieKG','Voorraad028.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+             
   GlobalErrors.SetProcedureName('VulPlanning_MutatieKG')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -84,6 +87,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('VulPlanning_MutatieKG',ProgressWindow)     ! Restore window settings from non-volatile store
   ProgressWindow{Prop:Timer} = 10                          ! Assign timer interval
   ProgressMgr.Init(ScrollSort:AllowNumeric,)
@@ -125,6 +129,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('VulPlanning_MutatieKG',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'09/14/2011 @ 05:15PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+    
+  END
   RETURN ReturnValue
 
 

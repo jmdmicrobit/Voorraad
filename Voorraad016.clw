@@ -17,6 +17,7 @@
 !!! </summary>
 ConvertPalletMutatie PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Progress:Thermometer BYTE                                  ! 
 Process:View         VIEW(PalletMutatie)
                      END
@@ -65,6 +66,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ConvertPalletMutatie','Voorraad016.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+             
   GlobalErrors.SetProcedureName('ConvertPalletMutatie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -82,6 +85,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(ProgressWindow)                                ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ConvertPalletMutatie',ProgressWindow)      ! Restore window settings from non-volatile store
   ProgressWindow{Prop:Timer} = 10                          ! Assign timer interval
   ProgressMgr.Init(ScrollSort:AllowNumeric,)
@@ -122,6 +126,12 @@ ReturnValue          BYTE,AUTO
   END
   ProgressMgr.Kill()
   GlobalErrors.SetProcedureName
+            
+   
+  IF BAND(Keystate(),KeyStateUD:Shift) 
+        UD.ShowProcedureInfo('ConvertPalletMutatie',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'06/14/2010 @ 05:08PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+    
+  END
   RETURN ReturnValue
 
 
@@ -205,7 +215,7 @@ ReturnValue          BYTE,AUTO
   	Ver2:VerkoopID = Pla:VerkoopID
   	IF (Access:Verkoop.TryFetch(Ver2:PK_Verkoop) = Level:Benign)
   		Pal:DatumTijd = Ver2:Planning
-  		db.DebugOut('Converteren ' & Pal:PalletMutatieID)
+  		UD.Debug('Converteren ' & Pal:PalletMutatieID)
   	.
   .
   ReturnValue = PARENT.TakeRecord()

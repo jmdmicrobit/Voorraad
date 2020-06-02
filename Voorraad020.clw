@@ -18,6 +18,7 @@
 !!! </summary>
 ViewVersie PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 ActionMessage        CSTRING(40)                           ! 
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
@@ -101,6 +102,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'ViewVersie','Voorraad020.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+             
   GlobalErrors.SetProcedureName('ViewVersie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -108,9 +111,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?VRS:Versie:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(VRS:Record,History::VRS:Record)
   SELF.AddHistoryField(?VRS:Versie,1)
@@ -139,6 +142,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(QuickWindow)                                   ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?VRS:Versie{PROP:ReadOnly} = True
     ?VRS:DatumTijd_DATE{PROP:ReadOnly} = True
@@ -169,6 +173,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('ViewVersie',QuickWindow)                ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -261,6 +267,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('ViewVersie',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'06/21/2011 @ 03:28PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

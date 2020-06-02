@@ -17,6 +17,7 @@
 !!! </summary>
 WindowSysteemgegevens PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Loc:PalletEtiketPrinter CSTRING(199)                       ! 
 Loc:ExcelMacroDirectory STRING(500)                        ! 
 LOC:CMRPrinter       CSTRING(199)                          ! 
@@ -182,6 +183,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'WindowSysteemgegevens','Voorraad005.clw','Voorraad.EXE','01/31/2020 @ 01:27PM')    
+             
   GlobalErrors.SetProcedureName('WindowSysteemgegevens')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -189,9 +192,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Loc:PalletEtiketPrinter:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
@@ -245,6 +248,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(Window)                                        ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('WindowSysteemgegevens',Window)             ! Restore window settings from non-volatile store
   FileLookup5.Init
   FileLookup5.ClearOnCancel = True
@@ -283,6 +287,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('WindowSysteemgegevens',Window)          ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -391,6 +397,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('WindowSysteemgegevens',UD.SetApplicationName('Voorraad','EXE'),Window{PROP:Hlp},'10/01/2009 @ 11:26AM','01/31/2020 @ 01:27PM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

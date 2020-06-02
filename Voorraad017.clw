@@ -16,6 +16,7 @@
 !!! </summary>
 WindowSQLBackup PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Loc:Connectie        STRING(100)                           ! 
 BestandsQ            QUEUE,PRE(BQ)                         ! 
 Bestandsnaam         CSTRING(51)                           ! 
@@ -76,6 +77,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'WindowSQLBackup','Voorraad017.clw','Voorraad.EXE','07/03/2014 @ 11:15AM')    
+             
   GlobalErrors.SetProcedureName('WindowSQLBackup')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -83,9 +86,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Loc:KleineBackup
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   Relate:BulkOverboeking.Open                              ! File BulkOverboeking used by this procedure, so make sure it's RelationManager is open
   Relate:CMR.Open                                          ! File CMR used by this procedure, so make sure it's RelationManager is open
   Relate:OverboekingRit.SetOpenRelated()
@@ -105,6 +108,7 @@ ReturnValue          BYTE,AUTO
   SELF.Open(Window)                                        ! Open window
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('WindowSQLBackup',Window)                   ! Restore window settings from non-volatile store
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
@@ -137,6 +141,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('WindowSQLBackup',Window)                ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -184,6 +190,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('WindowSQLBackup',UD.SetApplicationName('Voorraad','EXE'),Window{PROP:Hlp},'03/04/2011 @ 03:50PM','07/03/2014 @ 11:15AM','05/26/2020 @ 12:10PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

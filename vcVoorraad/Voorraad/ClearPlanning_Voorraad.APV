@@ -570,7 +570,7 @@ IF Pla:VerkoopID > 0
 	.
 .
 
-db.debugout('Verwijderen planning-record:'&CLIP(Pla:PlanningID))
+UD.Debug('Verwijderen planning-record:'&CLIP(Pla:PlanningID))
 [END]
 [END]
 [END]
