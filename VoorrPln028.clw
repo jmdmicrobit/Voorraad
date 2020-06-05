@@ -400,10 +400,9 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:ArtikelVoorraadKG',LOC:ArtikelVoorraadKG)      ! Added by: FileDropCombo(ABC)
   BIND('LOC:ArtikelVoorraadPallet',LOC:ArtikelVoorraadPallet) ! Added by: FileDropCombo(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:DatumTijd_DATE,4)
@@ -411,6 +410,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Mut:OverboekSoort,52)
   SELF.AddHistoryField(?Mut:UitslagKG,10)
   SELF.AddHistoryField(?Mut:UitslagPallet,11)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAAACelLocatie.Open                               ! File AAAACelLocatie used by this procedure, so make sure it's RelationManager is open
   Relate:AMutatie.Open                                     ! File AMutatie used by this procedure, so make sure it's RelationManager is open

@@ -576,9 +576,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Par:Referentie:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   SELF.AddUpdateFile(Access:Partij)
   Relate:AAAACelLocatie.Open                               ! File AAAACelLocatie used by this procedure, so make sure it's RelationManager is open
   Relate:AAACel.Open                                       ! File AAACel used by this procedure, so make sure it's RelationManager is open

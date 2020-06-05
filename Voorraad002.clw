@@ -10,8 +10,6 @@
 
                      MAP
                        INCLUDE('VOORRAAD002.INC'),ONCE        !Local module procedure declarations
-                       INCLUDE('VOORRAAD001.INC'),ONCE        !Req'd for module callout resolution
-                       INCLUDE('VOORRAAD003.INC'),ONCE        !Req'd for module callout resolution
                        INCLUDE('VOORRAAD004.INC'),ONCE        !Req'd for module callout resolution
                        INCLUDE('VOORRAAD005.INC'),ONCE        !Req'd for module callout resolution
                        INCLUDE('VOORRAAD006.INC'),ONCE        !Req'd for module callout resolution
@@ -359,7 +357,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'MainFrame','Voorraad002.clw','Voorraad.EXE','05/25/2020 @ 08:56PM')    
+        udpt.Init(UD,'MainFrame','Voorraad002.clw','Voorraad.EXE','06/05/2020 @ 03:18PM')    
              
   GlobalErrors.SetProcedureName('MainFrame')
   SourceCheckVersie()
@@ -450,8 +448,6 @@ ReturnValue          BYTE,AUTO
   ThisNetRefresh.Announce(NET:OnlyOncePerThread)   ! NetTalk (NetRefresh)
   !ProcedureTemplate = Frame
   INIMgr.Fetch('MainFrame',AppFrame)                       ! Restore window settings from non-volatile store
-  ProcessSyncArtikel()
-  ProcessSyncRelatie()
   ProcessExactViews()
   ds_SetApplicationWindow(AppFrame)
   SELF.SetAlerts()
@@ -555,7 +551,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('MainFrame',UD.SetApplicationName('Voorraad','EXE'),AppFrame{PROP:Hlp},'07/02/2009 @ 05:16PM','05/25/2020 @ 08:56PM','05/26/2020 @ 12:09PM')  
+        UD.ShowProcedureInfo('MainFrame',UD.SetApplicationName('Voorraad','EXE'),AppFrame{PROP:Hlp},'07/02/2009 @ 05:16PM','06/05/2020 @ 03:18PM','06/05/2020 @ 03:19PM')  
     
        CYCLE
      END

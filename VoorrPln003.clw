@@ -188,16 +188,16 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Mut:DatumTijd_DATE:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:DatumTijd_DATE,4)
   SELF.AddHistoryField(?Mut:DatumTijd_TIME,5)
   SELF.AddHistoryField(?Mut:InslagKG,8)
   SELF.AddHistoryField(?Mut:InslagPallet,9)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:ACel.Open                                         ! File ACel used by this procedure, so make sure it's RelationManager is open
   Relate:ACelLocatie.Open                                  ! File ACelLocatie used by this procedure, so make sure it's RelationManager is open

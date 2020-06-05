@@ -114,13 +114,13 @@ ReturnValue          BYTE,AUTO
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
   SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Versie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(VRS:Record,History::VRS:Record)
   SELF.AddHistoryField(?VRS:Versie,1)
   SELF.AddHistoryField(?VRS:DatumTijd_DATE,4)
   SELF.AddHistoryField(?VRS:DatumTijd_TIME,5)
   SELF.AddHistoryField(?VRS:Wijzigingen:2,6)
-  SELF.AddUpdateFile(Access:Versie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Versie.Open                                       ! File Versie used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
@@ -269,7 +269,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateVersie',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'12/24/2010 @ 12:19PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('UpdateVersie',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'12/24/2010 @ 12:19PM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
     
        CYCLE
      END

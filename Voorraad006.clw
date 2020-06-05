@@ -188,7 +188,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('BrowseDubbeleInslagMutaties',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'10/04/2010 @ 12:32PM','04/03/2014 @ 03:29PM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('BrowseDubbeleInslagMutaties',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'10/04/2010 @ 12:32PM','04/03/2014 @ 03:29PM','06/02/2020 @ 10:33PM')  
     
        CYCLE
      END

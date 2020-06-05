@@ -41,9 +41,6 @@
     <Compile Include="CWUtil.CLW">
       <Generated>true</Generated>
     </Compile>
-    <Compile Include="EFOCUS.CLW">
-      <Generated>true</Generated>
-    </Compile>
     <Compile Include="VoorrDct.clw">
       <Generated>true</Generated>
     </Compile>

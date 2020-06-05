@@ -361,9 +361,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:DatumVanSQL',LOC:DatumVanSQL)                  ! Added by: BrowseBox(ABC)
   BIND('LOC:DatumTMSQL',LOC:DatumTMSQL)                    ! Added by: BrowseBox(ABC)
   BIND('LOC:Datum',LOC:Datum)                              ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE

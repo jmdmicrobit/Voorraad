@@ -99,9 +99,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?OkButton
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   Relate:AAAACel.Open                                      ! File AAAACel used by this procedure, so make sure it's RelationManager is open
   Relate:AAAACelLocatie.Open                               ! File AAAACelLocatie used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True

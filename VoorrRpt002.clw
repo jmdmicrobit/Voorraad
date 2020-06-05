@@ -60,9 +60,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = 1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   Relate:ViewPartijCelLocaties.Open                        ! File ViewPartijCelLocaties used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
@@ -117,7 +117,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('MainRpt',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'06/10/2011 @ 11:49AM','01/10/2019 @ 12:09PM','05/15/2020 @ 11:19AM')  
+        UD.ShowProcedureInfo('MainRpt',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'06/10/2011 @ 11:49AM','01/10/2019 @ 12:09PM','06/03/2020 @ 11:38AM')  
     
        CYCLE
      END

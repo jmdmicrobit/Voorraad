@@ -194,7 +194,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('WindowSQLBackup',UD.SetApplicationName('Voorraad','EXE'),Window{PROP:Hlp},'03/04/2011 @ 03:50PM','07/03/2014 @ 11:15AM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('WindowSQLBackup',UD.SetApplicationName('Voorraad','EXE'),Window{PROP:Hlp},'03/04/2011 @ 03:50PM','07/03/2014 @ 11:15AM','06/02/2020 @ 10:33PM')  
     
        CYCLE
      END

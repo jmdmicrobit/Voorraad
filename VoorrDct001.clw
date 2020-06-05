@@ -64,9 +64,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = 1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   Relate:AVerpakking.Open                                  ! File AVerpakking used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
@@ -121,7 +121,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('MainDCT',UD.SetApplicationName('VoorrDct','DLL'),Window{PROP:Hlp},'06/09/2011 @ 12:13PM','10/02/2017 @ 11:47AM','05/25/2020 @ 09:33PM')  
+        UD.ShowProcedureInfo('MainDCT',UD.SetApplicationName('VoorrDct','DLL'),Window{PROP:Hlp},'06/09/2011 @ 12:13PM','10/02/2017 @ 11:47AM','06/02/2020 @ 10:31PM')  
     
        CYCLE
      END

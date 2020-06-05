@@ -95,9 +95,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Loc:RedenRetour
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   Relate:Inkoop.SetOpenRelated()
   Relate:Inkoop.Open                                       ! File Inkoop used by this procedure, so make sure it's RelationManager is open
   Relate:ViewArtikel.Open                                  ! File ViewArtikel used by this procedure, so make sure it's RelationManager is open

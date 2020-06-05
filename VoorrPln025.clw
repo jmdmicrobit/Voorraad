@@ -610,10 +610,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:PartijCelID4',LOC:PartijCelID4)                ! Added by: FileDropCombo(ABC)
   BIND('LOC:ArtikelVoorraadKG',LOC:ArtikelVoorraadKG)      ! Added by: FileDropCombo(ABC)
   BIND('LOC:ArtikelVoorraadPallet',LOC:ArtikelVoorraadPallet) ! Added by: FileDropCombo(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:DatumTijd_DATE,4)
@@ -637,6 +636,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Mut:Afgehandeld:2,47)
   SELF.AddHistoryField(?Mut:UitslagQAIsGeurKleurProductEigen,48)
   SELF.AddHistoryField(?Mut:UitslagQAGeenGlasbreuk,49)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAAAViewVoorraadPartij.Open                       ! File AAAAViewVoorraadPartij used by this procedure, so make sure it's RelationManager is open
   Relate:AAACelLocatie.Open                                ! File AAACelLocatie used by this procedure, so make sure it's RelationManager is open

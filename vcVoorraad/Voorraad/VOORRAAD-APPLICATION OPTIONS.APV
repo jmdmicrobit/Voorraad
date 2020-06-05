@@ -4451,7 +4451,7 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80145')
+%dClassVersion DEFAULT  ('80148')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
@@ -4477,7 +4477,7 @@ INSTANCE 8
 %verProdMinVer DEFAULT  ('29')
 %verProdSubVer DEFAULT  ('0')
 %verProdGenBuildNo LONG  (1)
-%verProdBuildNo DEFAULT  ('171')
+%verProdBuildNo DEFAULT  ('183')
 %verDesc DEFAULT  ('')
 %verFileAsProdVersion LONG  (1)
 %verIntName DEFAULT  ('Voorraad')
@@ -4485,7 +4485,7 @@ INSTANCE 8
 %verFileMinVer DEFAULT  ('29')
 %verFileSubVer DEFAULT  ('0')
 %verFileGenBuildNo LONG  (1)
-%verFileBuildNo DEFAULT  ('171')
+%verFileBuildNo DEFAULT  ('183')
 %verFilePreRelease LONG  (0)
 %verSelLangID DEFAULT  ('Dutch')
 %verSelCPID DEFAULT  ('Multilingual')
@@ -4578,6 +4578,21 @@ WHEN  ('Voorraad033.clw') ('1')
 -- NAMESPACE Voorraad
 #system win32 exe
 #model clarion dll
+#pragma define(NETTALKLOG=>1) -- GENERATED
+#pragma define(_ODDJOB_=>0) -- GENERATED
+#pragma define(_CRYPTONITE_=>0) -- GENERATED
+#pragma define(StringTheoryLinkMode=>0) -- GENERATED
+#pragma define(StringTheoryDllMode=>1) -- GENERATED
+#pragma define(_ABCDllMode_=>1) -- GENERATED
+#pragma define(_ABCLinkMode_=>0) -- GENERATED
+#pragma define(_NetTalkDllMode_=>1) -- GENERATED
+#pragma define(_NetTalkLinkMode_=>0) -- GENERATED
+#pragma define(_TBARDllMode_=>1) -- GENERATED
+#pragma define(_TBARLinkMode_=>0) -- GENERATED
+#pragma define(_svDllMode_=>1) -- GENERATED
+#pragma define(_svLinkMode_=>0) -- GENERATED
+#pragma define(_MSSQLDateTime_=>1) -- GENERATED
+#pragma define(_ORACLEDateTime_=>0) -- GENERATED
 #compile "Voorraad.clw" -- GENERATED
 #compile "Voorraad001.clw" -- GENERATED
 #compile "Voorraad002.clw" -- GENERATED
@@ -4612,8 +4627,10 @@ WHEN  ('Voorraad033.clw') ('1')
 #compile "Voorraad031.clw" -- GENERATED
 #compile "Voorraad032.clw" -- GENERATED
 #compile "Voorraad033.clw" -- GENERATED
+#compile "EFOCUS.CLW" -- GENERATED
 #pragma link("VoorrStm.lib") -- GENERATED
 #pragma link("VoorrRpt.lib") -- GENERATED
 #pragma link("VoorrPln.lib") -- GENERATED
 #pragma link("VoorrVrd.lib") -- GENERATED
+#pragma link("C%V%dos%X%%L%.lib") -- GENERATED
 #link "Voorraad.EXE"

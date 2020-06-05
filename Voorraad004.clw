@@ -26,7 +26,7 @@ st                  StringTheory
 FilesOpened     BYTE(0)
 
   CODE
-        udpt.Init(UD,'SourceCheckVersie','Voorraad004.clw','Voorraad.EXE','05/26/2020 @ 12:16AM')    
+        udpt.Init(UD,'SourceCheckVersie','Voorraad004.clw','Voorraad.EXE','06/02/2020 @ 02:24PM')    
              
     GLO:Versie = 3.29
     IF GLO:Versie <= 3.22                   ! spelvouten....

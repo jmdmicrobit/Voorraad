@@ -136,9 +136,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:Totaal',LOC:Totaal)                            ! Added by: BrowseBox(ABC)
   BIND('LOC:Dummy',LOC:Dummy)                              ! Added by: BrowseBox(ABC)
   BIND('FuzzyQuery3',FuzzyQuery3)                          ! Added by: BrowseFuzzyMatching(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE

@@ -127,6 +127,7 @@ ReturnValue          BYTE,AUTO
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
   SELF.AddItem(Toolbar)
+  SELF.AddUpdateFile(Access:Gebruiker)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Geb:Record,History::Geb:Record)
   SELF.AddHistoryField(?Geb:WindowsInlog,2)
@@ -139,7 +140,6 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Geb:res_id,9)
   SELF.AddHistoryField(?Geb:Email,10)
   SELF.AddHistoryField(?Geb:Telefoon,11)
-  SELF.AddUpdateFile(Access:Gebruiker)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Gebruiker.Open                                    ! File Gebruiker used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
@@ -302,7 +302,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateGebruiker',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:46PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('UpdateGebruiker',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:46PM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
     
        CYCLE
      END

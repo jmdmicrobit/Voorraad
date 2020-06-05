@@ -107,7 +107,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'UpdateSjabloon','VoorrRpt012.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+        udpt.Init(UD,'UpdateSjabloon','VoorrRpt012.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
              
   GlobalErrors.SetProcedureName('UpdateSjabloon')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -116,16 +116,16 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Sja:SjabloonID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Sjabloon)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Sja:Record,History::Sja:Record)
   SELF.AddHistoryField(?Sja:SjabloonID,1)
   SELF.AddHistoryField(?Sja:Bestandsnaam,2)
   SELF.AddHistoryField(?Sja:SoortSjabloon,3)
   SELF.AddHistoryField(?Sja:SoortData,4)
+  SELF.AddUpdateFile(Access:Sjabloon)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Sjabloon.Open                                     ! File Sjabloon used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
@@ -285,7 +285,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:19AM')  
+        UD.ShowProcedureInfo('UpdateSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
     
        CYCLE
      END

@@ -4276,7 +4276,7 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80127')
+%dClassVersion DEFAULT  ('80145')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
@@ -4433,4 +4433,10 @@ WHEN  ('VoorrStm041.clw') ('1')
 #compile "VoorrStm041.clw" -- GENERATED
 #compile "EFOCUS.CLW" -- GENERATED
 #pragma link("C%V%dos%X%%L%.lib") -- GENERATED
+#pragma link("clanet.lib") -- GENERATED
+#pragma link("Win32Ext.LIB") -- GENERATED
+#pragma link("CLAWE.Lib") -- GENERATED
+#pragma link("off.ico") -- GENERATED
+#pragma link("on.ico") -- GENERATED
+#pragma link("VoorrStm.Version") -- GENERATED
 #link "VoorrStm.DLL"

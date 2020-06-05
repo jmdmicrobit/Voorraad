@@ -558,10 +558,9 @@ ReturnValue          BYTE,AUTO
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('ACT:ActiviteitID',ACT:ActiviteitID)                ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Planning)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Pla:Record,History::Pla:Record)
   SELF.AddHistoryField(?Pla:AlternatieveArtikelOms,41)
@@ -589,6 +588,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Pla:PlantNumber,52)
   SELF.AddHistoryField(?Pla:DeliveryDate_DATE,55)
   SELF.AddHistoryField(?Pla:PlanningID,1)
+  SELF.AddUpdateFile(Access:Planning)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAPlanning.Open                                   ! File AAPlanning used by this procedure, so make sure it's RelationManager is open
   Relate:APlanning.Open                                    ! File APlanning used by this procedure, so make sure it's RelationManager is open

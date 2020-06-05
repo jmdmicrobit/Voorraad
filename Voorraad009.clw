@@ -216,7 +216,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('BrowsePartijZonderInslag',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'08/17/2010 @ 03:32PM','07/03/2014 @ 11:14AM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('BrowsePartijZonderInslag',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'08/17/2010 @ 03:32PM','07/03/2014 @ 11:14AM','06/02/2020 @ 10:33PM')  
     
        CYCLE
      END

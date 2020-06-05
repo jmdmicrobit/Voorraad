@@ -335,9 +335,9 @@ ReturnValue          BYTE,AUTO
   BIND('Pla:PlanningID',Pla:PlanningID)                    ! Added by: BrowseBox(ABC)
   BIND('AVE:VerkoopID',AVE:VerkoopID)                      ! Added by: BrowseBox(ABC)
   BIND('APla:PlanningID',APla:PlanningID)                  ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(VVP:Record,History::VVP:Record)
   SELF.AddHistoryField(?VVP:ArtikelID,1)

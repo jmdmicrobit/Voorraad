@@ -115,9 +115,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Browse:1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -275,7 +275,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('BrowseSjablonen',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','04/11/2014 @ 11:38AM','05/15/2020 @ 11:19AM')  
+        UD.ShowProcedureInfo('BrowseSjablonen',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','04/11/2014 @ 11:38AM','06/03/2020 @ 11:38AM')  
     
        CYCLE
      END

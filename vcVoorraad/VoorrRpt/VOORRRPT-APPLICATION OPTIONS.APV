@@ -4259,7 +4259,7 @@ WHEN  (9) ('DeformatDate {15}Procedure (String pValue,<<String pPicture>),Real,V
 WHEN  (10) ('DeformatDateText {11}Procedure (Long pNumberofParts, String pPart1, String pPart2, String pPart3, String pSep),Real,Virtual')
 WHEN  (11) ('DeformatUnixTimeStamp      PROCEDURE (String pValue,<<String pPicture>),Real,Virtual')
 
-%dClassVersion DEFAULT  ('80128')
+%dClassVersion DEFAULT  ('80146')
 %dAdditionalINCFiles MULTI LONG  ()
 %dAdditionalINCFile DEPEND %dAdditionalINCFiles DEFAULT TIMES 0
 
@@ -4334,7 +4334,7 @@ INSTANCE 9
 %UDReportKeyState DEFAULT  ('KeyStateUD:Shift')
 %UDEntryExit LONG  (1)
 %CLSkelClass DEFAULT  ('UD')
-%CLSkelMultiDLL LONG  (0)
+%CLSkelMultiDLL LONG  (1)
 %CLSkelMultiDLLData DEFAULT  ('0')
 %CLDebugPrefix DEFAULT  ('!')
 %DebugOffVariable DEFAULT  ('0')

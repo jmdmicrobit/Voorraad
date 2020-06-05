@@ -313,14 +313,7 @@ WHEN  (7) ('BrowseFuzzyMatching(ABC)')
 %ProcedureUserBindFields MULTI LONG  ()
 %ProcedureUserBindField DEPEND %ProcedureUserBindFields FIELD TIMES 0
 
-%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 7
-WHEN  (1) (0)
-WHEN  (2) (0)
-WHEN  (3) (0)
-WHEN  (4) (0)
-WHEN  (5) (0)
-WHEN  (6) (0)
-WHEN  (7) (0)
+%ProcedureAutoBindFieldIgnore DEPEND %ProcedureAutoBindFields LONG TIMES 0
 
 %ProcedureUserBindProcedures MULTI LONG  ()
 %ProcedureUserBindProcedure DEPEND %ProcedureUserBindProcedures PROCEDURE TIMES 0

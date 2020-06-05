@@ -290,10 +290,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?APla:ArtikelID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:APlanning)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(APla:Record,History::APla:Record)
   SELF.AddHistoryField(?APla:KG,5)
@@ -303,6 +302,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?APla:Instructie:2,20)
   SELF.AddHistoryField(?APla:Transport:2,21)
   SELF.AddHistoryField(?APla:PlanningID,1)
+  SELF.AddUpdateFile(Access:APlanning)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AAACel.Open                                       ! File AAACel used by this procedure, so make sure it's RelationManager is open
   Relate:ACelLocatie.Open                                  ! File ACelLocatie used by this procedure, so make sure it's RelationManager is open

@@ -27,8 +27,7 @@ Gebruiker
 Versie
 [PROMPTS]
 %INISaveWindow LONG  (1)
-%ButtonAction DEPEND %Control DEFAULT TIMES 64
-WHEN  ('') ('No Special Action')
+%ButtonAction DEPEND %Control DEFAULT TIMES 63
 WHEN  ('?ActieAfwijkingen') ('Call a Procedure')
 WHEN  ('?Activiteiten') ('Call a Procedure')
 WHEN  ('?Arrange') ('No Special Action')
@@ -292,8 +291,7 @@ WHEN  ('WindowToolbar')TIMES 0
 
 %ExtUITabStyleOverrideGlobal DEPEND %Control LONG TIMES 0
 
-%ExtUITabStyle DEPEND %Control DEFAULT TIMES 53
-WHEN  ('') ('Default')
+%ExtUITabStyle DEPEND %Control DEFAULT TIMES 52
 WHEN  ('?ActieAfwijkingen') ('Default')
 WHEN  ('?Activiteiten') ('Default')
 WHEN  ('?BrowseVersie') ('Default')
@@ -555,8 +553,7 @@ WHEN  ('?Uitvoerhavens') (1)
 WHEN  ('?Verkoop:2') (1)
 WHEN  ('?Voorraad') (1)
 
-%ButtonThreadStack DEPEND %Control DEFAULT TIMES 64
-WHEN  ('') ('25000')
+%ButtonThreadStack DEPEND %Control DEFAULT TIMES 63
 WHEN  ('?ActieAfwijkingen') ('25000')
 WHEN  ('?Activiteiten') ('25000')
 WHEN  ('?Arrange') ('25000')
@@ -777,8 +774,7 @@ WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Verkoop:2') (0)
 WHEN  ('?Voorraad') (0)
 
-%ButtonRequest DEPEND %Control DEFAULT TIMES 64
-WHEN  ('') ('None')
+%ButtonRequest DEPEND %Control DEFAULT TIMES 63
 WHEN  ('?ActieAfwijkingen') ('None')
 WHEN  ('?Activiteiten') ('None')
 WHEN  ('?Arrange') ('None')
@@ -963,8 +959,7 @@ WHEN  ('?Voorraad') ()
 
 %PostLookupProcedureParameters DEPEND %Control DEFAULT TIMES 0
 
-%PostLookupDuringValidate DEPEND %Control LONG TIMES 53
-WHEN  ('') (1)
+%PostLookupDuringValidate DEPEND %Control LONG TIMES 52
 WHEN  ('?ActieAfwijkingen') (1)
 WHEN  ('?Activiteiten') (1)
 WHEN  ('?BrowseVersie') (1)
@@ -1036,8 +1031,7 @@ WHEN  ('?WindowTimingVerklaring') (1)
 
 %CheckedControl DEPEND %CheckedHides DEFAULT TIMES 0
 
-%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 53
-WHEN  ('')TIMES 0
+%CheckedControlAction DEPEND %CheckedHides DEFAULT TIMES 52
 WHEN  ('?ActieAfwijkingen')TIMES 0
 WHEN  ('?Activiteiten')TIMES 0
 WHEN  ('?BrowseVersie')TIMES 0
@@ -1095,8 +1089,7 @@ WHEN  ('?WindowTimingVerklaring')TIMES 0
 
 %CheckedControl1 DEPEND %CheckedEnables DEFAULT TIMES 0
 
-%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 53
-WHEN  ('')TIMES 0
+%CheckedControl1Action DEPEND %CheckedEnables DEFAULT TIMES 52
 WHEN  ('?ActieAfwijkingen')TIMES 0
 WHEN  ('?Activiteiten')TIMES 0
 WHEN  ('?BrowseVersie')TIMES 0
@@ -1160,8 +1153,7 @@ WHEN  ('?WindowTimingVerklaring')TIMES 0
 
 %UnCheckedControl DEPEND %UnCheckedHides DEFAULT TIMES 0
 
-%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 53
-WHEN  ('')TIMES 0
+%UnCheckedControlAction DEPEND %UnCheckedHides DEFAULT TIMES 52
 WHEN  ('?ActieAfwijkingen')TIMES 0
 WHEN  ('?Activiteiten')TIMES 0
 WHEN  ('?BrowseVersie')TIMES 0
@@ -1219,8 +1211,7 @@ WHEN  ('?WindowTimingVerklaring')TIMES 0
 
 %UnCheckedControl1 DEPEND %UnCheckedEnables DEFAULT TIMES 0
 
-%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 53
-WHEN  ('')TIMES 0
+%UnCheckedControl1Action DEPEND %UnCheckedEnables DEFAULT TIMES 52
 WHEN  ('?ActieAfwijkingen')TIMES 0
 WHEN  ('?Activiteiten')TIMES 0
 WHEN  ('?BrowseVersie')TIMES 0
@@ -1278,8 +1269,7 @@ WHEN  ('?WindowTimingVerklaring')TIMES 0
 
 %CheckedDisableControl DEPEND %CheckedDisables DEFAULT TIMES 0
 
-%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 53
-WHEN  ('')TIMES 0
+%CheckedDisableControlAction DEPEND %CheckedDisables DEFAULT TIMES 52
 WHEN  ('?ActieAfwijkingen')TIMES 0
 WHEN  ('?Activiteiten')TIMES 0
 WHEN  ('?BrowseVersie')TIMES 0
@@ -1337,8 +1327,7 @@ WHEN  ('?WindowTimingVerklaring')TIMES 0
 
 %UnCheckedDisableControl DEPEND %UnCheckedDisables DEFAULT TIMES 0
 
-%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 53
-WHEN  ('')TIMES 0
+%UnCheckedDisableControlAction DEPEND %UnCheckedDisables DEFAULT TIMES 52
 WHEN  ('?ActieAfwijkingen')TIMES 0
 WHEN  ('?Activiteiten')TIMES 0
 WHEN  ('?BrowseVersie')TIMES 0
@@ -1393,8 +1382,7 @@ WHEN  ('?Voorraad')TIMES 0
 WHEN  ('?WindowTimingVerklaring')TIMES 0
 
 %ProcedureOneInstance LONG  (0)
-%FieldGradientColorType DEPEND %Control DEFAULT TIMES 18
-WHEN  ('') ('Off')
+%FieldGradientColorType DEPEND %Control DEFAULT TIMES 17
 WHEN  ('?ActieAfwijkingen') ('Off')
 WHEN  ('?CelLocatieVullenMutaties') ('Off')
 WHEN  ('?CelLocaties') ('Off')
@@ -1413,8 +1401,7 @@ WHEN  ('?Uitvoerhavens') ('Off')
 WHEN  ('?Voorraad') ('Off')
 WHEN  ('?WindowTimingVerklaring') ('Off')
 
-%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 18
-WHEN  ('') ('')
+%FieldGradientColorTypeVariable DEPEND %Control DEFAULT TIMES 17
 WHEN  ('?ActieAfwijkingen') ('')
 WHEN  ('?CelLocatieVullenMutaties') ('')
 WHEN  ('?CelLocaties') ('')
@@ -1433,8 +1420,7 @@ WHEN  ('?Uitvoerhavens') ('')
 WHEN  ('?Voorraad') ('')
 WHEN  ('?WindowTimingVerklaring') ('')
 
-%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 18
-WHEN  ('') (0)
+%FieldGradientColorTypeIsVariable DEPEND %Control LONG TIMES 17
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
 WHEN  ('?CelLocaties') (0)
@@ -1453,8 +1439,7 @@ WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
 WHEN  ('?WindowTimingVerklaring') (0)
 
-%FieldGradientColorFrom DEPEND %Control LONG TIMES 18
-WHEN  ('') (-1)
+%FieldGradientColorFrom DEPEND %Control LONG TIMES 17
 WHEN  ('?ActieAfwijkingen') (-1)
 WHEN  ('?CelLocatieVullenMutaties') (-1)
 WHEN  ('?CelLocaties') (-1)
@@ -1475,8 +1460,7 @@ WHEN  ('?WindowTimingVerklaring') (-1)
 
 %FieldGradientColorFromVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 18
-WHEN  ('') (0)
+%FieldGradientColorFromIsVariable DEPEND %Control LONG TIMES 17
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
 WHEN  ('?CelLocaties') (0)
@@ -1495,8 +1479,7 @@ WHEN  ('?Uitvoerhavens') (0)
 WHEN  ('?Voorraad') (0)
 WHEN  ('?WindowTimingVerklaring') (0)
 
-%FieldGradientColorTo DEPEND %Control LONG TIMES 18
-WHEN  ('') (-1)
+%FieldGradientColorTo DEPEND %Control LONG TIMES 17
 WHEN  ('?ActieAfwijkingen') (-1)
 WHEN  ('?CelLocatieVullenMutaties') (-1)
 WHEN  ('?CelLocaties') (-1)
@@ -1517,8 +1500,7 @@ WHEN  ('?WindowTimingVerklaring') (-1)
 
 %FieldGradientColorToVariable DEPEND %Control DEFAULT TIMES 0
 
-%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 18
-WHEN  ('') (0)
+%FieldGradientColorToIsVariable DEPEND %Control LONG TIMES 17
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
 WHEN  ('?CelLocaties') (0)
@@ -1542,8 +1524,7 @@ WHEN  ('?WindowTimingVerklaring') (0)
 
 %ActiveImageEnable DEPEND %Control LONG TIMES 0
 
-%AIObjectName DEPEND %Control DEFAULT TIMES 17
-WHEN  ('') ('AIBtn0')
+%AIObjectName DEPEND %Control DEFAULT TIMES 16
 WHEN  ('?ActieAfwijkingen') ('AIBtn59')
 WHEN  ('?CelLocatieVullenMutaties') ('AIBtn17')
 WHEN  ('?CelLocaties') ('AIBtn58')
@@ -1561,8 +1542,7 @@ WHEN  ('?Uitvoerhavens') ('AIBtn35')
 WHEN  ('?Voorraad') ('AIBtn48')
 WHEN  ('?WindowTimingVerklaring') ('AIBtn78')
 
-%AIEnableMimicControl DEPEND %Control LONG TIMES 17
-WHEN  ('') (1)
+%AIEnableMimicControl DEPEND %Control LONG TIMES 16
 WHEN  ('?ActieAfwijkingen') (1)
 WHEN  ('?CelLocatieVullenMutaties') (1)
 WHEN  ('?CelLocaties') (1)
@@ -1580,8 +1560,7 @@ WHEN  ('?Uitvoerhavens') (1)
 WHEN  ('?Voorraad') (1)
 WHEN  ('?WindowTimingVerklaring') (1)
 
-%AIMimicControl DEPEND %Control DEFAULT TIMES 17
-WHEN  ('') ('?MENUBAR1')
+%AIMimicControl DEPEND %Control DEFAULT TIMES 16
 WHEN  ('?ActieAfwijkingen') ('?MENUBAR1')
 WHEN  ('?CelLocatieVullenMutaties') ('?MENUBAR1')
 WHEN  ('?CelLocaties') ('?MENUBAR1')
@@ -1605,8 +1584,7 @@ WHEN  ('?WindowTimingVerklaring') ('?MENUBAR1')
 
 %AIOverrideImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 17
-WHEN  ('') (0)
+%AIOverrideImgIsVariable DEPEND %Control LONG TIMES 16
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
 WHEN  ('?CelLocaties') (0)
@@ -1628,8 +1606,7 @@ WHEN  ('?WindowTimingVerklaring') (0)
 
 %AIDisableImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIDisableImgIsVariable DEPEND %Control LONG TIMES 17
-WHEN  ('') (0)
+%AIDisableImgIsVariable DEPEND %Control LONG TIMES 16
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
 WHEN  ('?CelLocaties') (0)
@@ -1651,8 +1628,7 @@ WHEN  ('?WindowTimingVerklaring') (0)
 
 %AIHotImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIHotImgIsVariable DEPEND %Control LONG TIMES 17
-WHEN  ('') (0)
+%AIHotImgIsVariable DEPEND %Control LONG TIMES 16
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
 WHEN  ('?CelLocaties') (0)
@@ -1674,8 +1650,7 @@ WHEN  ('?WindowTimingVerklaring') (0)
 
 %AIPressedImgVariable DEPEND %Control DEFAULT TIMES 0
 
-%AIPressedImgIsVariable DEPEND %Control LONG TIMES 17
-WHEN  ('') (0)
+%AIPressedImgIsVariable DEPEND %Control LONG TIMES 16
 WHEN  ('?ActieAfwijkingen') (0)
 WHEN  ('?CelLocatieVullenMutaties') (0)
 WHEN  ('?CelLocaties') (0)
@@ -1758,12 +1733,6 @@ PROPERTY:BEGIN
 PRIORITY 8001
 PROPERTY:END
 	Alias(DecimalKey, 00BCH)
-[PROCEDURE]
-ProcessSyncArtikel()
-PRIORITY 8501
-[PROCEDURE]
-ProcessSyncRelatie()
-PRIORITY 8501
 [PROCEDURE]
 ProcessExactViews()
 PRIORITY 8501

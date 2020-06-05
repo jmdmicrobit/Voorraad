@@ -483,10 +483,9 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('Loc:KostKGPrijs',Loc:KostKGPrijs)                  ! Added by: BrowseBox(ABC)
   BIND('Pla:PlanningID',Pla:PlanningID)                    ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Verkoop)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Ver2:Record,History::Ver2:Record)
   SELF.AddHistoryField(?Ver2:Verwerkt,3)
@@ -500,6 +499,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Ver2:Transport,9)
   SELF.AddHistoryField(?Ver2:ExtraKostenTekst,12)
   SELF.AddHistoryField(?Ver2:VerkoopID,1)
+  SELF.AddUpdateFile(Access:Verkoop)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AMutatie.Open                                     ! File AMutatie used by this procedure, so make sure it's RelationManager is open
   Relate:APlanning.Open                                    ! File APlanning used by this procedure, so make sure it's RelationManager is open

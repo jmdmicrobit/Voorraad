@@ -375,10 +375,9 @@ ReturnValue          BYTE,AUTO
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('Pla:PlanningID',Pla:PlanningID)                    ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Inkoop)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Ink:Record,History::Ink:Record)
   SELF.AddHistoryField(?Ink:InkoopID,1)
@@ -392,6 +391,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Ink:ExtraKostenTekst,12)
   SELF.AddHistoryField(?Ink:ConfirmationDate_DATE,21)
   SELF.AddHistoryField(?Ink:LoadingDate,29)
+  SELF.AddUpdateFile(Access:Inkoop)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:ACelLocatie.Open                                  ! File ACelLocatie used by this procedure, so make sure it's RelationManager is open
   Relate:DeliveryTerms.Open                                ! File DeliveryTerms used by this procedure, so make sure it's RelationManager is open

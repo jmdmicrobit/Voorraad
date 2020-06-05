@@ -195,9 +195,9 @@ ReturnValue          BYTE,AUTO
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:Type',LOC:Type)                                ! Added by: FileDropCombo(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Pal:Record,History::Pal:Record)
   SELF.AddHistoryField(?Pal:DatumTijd_DATE,10)

@@ -1662,8 +1662,8 @@ UitslagPalletbladHarvastDate7007_TIME TIME                 !
 db Debuger
 WE::MustClose       long,external,dll
 WE::CantCloseNow    long,external,dll
-UD         CLASS(UltimateDebug)  
-                     END
+UD         CLASS(UltimateDebug),EXTERNAL,DLL(dll_mode)
+                     END   
  
 include('GlobalClassDef.inc')
 include('ExcelExportClassDef.inc')

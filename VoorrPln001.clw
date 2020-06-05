@@ -144,9 +144,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?CEL:CelOms
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   Relate:ACelLocatie.Open                                  ! File ACelLocatie used by this procedure, so make sure it's RelationManager is open
   Relate:Cel.SetOpenRelated()
   Relate:Cel.Open                                          ! File Cel used by this procedure, so make sure it's RelationManager is open

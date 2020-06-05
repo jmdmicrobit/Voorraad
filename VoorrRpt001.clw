@@ -92,9 +92,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?PROMPT1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   Relate:AAACel.Open                                       ! File AAACel used by this procedure, so make sure it's RelationManager is open
   Relate:AACel.Open                                        ! File AACel used by this procedure, so make sure it's RelationManager is open
   Relate:Inkoop.SetOpenRelated()
@@ -281,7 +281,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('WindowCallSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'06/10/2011 @ 11:53AM','06/20/2018 @ 03:56PM','05/15/2020 @ 11:19AM')  
+        UD.ShowProcedureInfo('WindowCallSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'06/10/2011 @ 11:53AM','06/20/2018 @ 03:56PM','06/03/2020 @ 11:38AM')  
     
        CYCLE
      END

@@ -163,7 +163,7 @@ Looped BYTE
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('ShowNewVersion',UD.SetApplicationName('Voorraad','EXE'),window{PROP:Hlp},'12/24/2010 @ 12:19PM','09/14/2018 @ 01:16PM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('ShowNewVersion',UD.SetApplicationName('Voorraad','EXE'),window{PROP:Hlp},'12/24/2010 @ 12:19PM','09/14/2018 @ 01:16PM','06/02/2020 @ 10:33PM')  
     
        CYCLE
      END

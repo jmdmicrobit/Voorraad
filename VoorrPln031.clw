@@ -360,16 +360,16 @@ ReturnValue          BYTE,AUTO
   BIND('APla:PlanningID',APla:PlanningID)                  ! Added by: BrowseBox(ABC)
   BIND('Ink:InkoopID',Ink:InkoopID)                        ! Added by: BrowseBox(ABC)
   BIND('AAPla:PlanningID',AAPla:PlanningID)                ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:OverboekingRit)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(OR:Record,History::OR:Record)
   SELF.AddHistoryField(?OR:DatumTijd_DATE,4)
   SELF.AddHistoryField(?OR:DatumTijd_TIME,5)
   SELF.AddHistoryField(?OR:Opmerking,6)
   SELF.AddHistoryField(?OR:OverboekingRitID,1)
+  SELF.AddUpdateFile(Access:OverboekingRit)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:AOverboekingRit.Open                              ! File AOverboekingRit used by this procedure, so make sure it's RelationManager is open
   Relate:AOverboekingRitRegel.Open                         ! File AOverboekingRitRegel used by this procedure, so make sure it's RelationManager is open

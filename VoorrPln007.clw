@@ -273,9 +273,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:Leverancier2',LOC:Leverancier2)                ! Added by: BrowseBox(ABC)
   BIND('Ver2:VerkoopID',Ver2:VerkoopID)                    ! Added by: BrowseBox(ABC)
   BIND('LOC:Artikelen',LOC:Artikelen)                      ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE

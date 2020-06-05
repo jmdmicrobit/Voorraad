@@ -1375,6 +1375,8 @@ Loc:Administratie        CSTRING(21)
 !!> GUID('11820bb0-e09c-41a4-9e3e-782172238f49'),PROMPT('Loc : Administratie:'),HEADER('Loc : Administratie'),PICTURE(@s20),TYPEMODE(INS)
 [FILES]
 [OTHERS]
+Relatie
+ViewArtikel
 ArtikelOmschrijvingExtra
 ArtikelOmschrijvingExtraGroep
 ViewBetcd
@@ -1754,9 +1756,11 @@ OF 50
     Loc:TimerExecution+=20
 OF 70
     Loc:ProgressText='Artikelen Groep ophalen'
+    LocalClass.ProcessArtikelen(Loc:Administratie)
     Loc:TimerExecution+=20
 OF 90
     Loc:ProgressText='Relaties Groep ophalen'
+    LocalClass.ProcessRelatie(Loc:Administratie)
     Loc:TimerExecution+=10
 ELSE
     Post(EVENT:CloseWindow)
@@ -1794,7 +1798,9 @@ PROPERTY:END
 LocalClass          CLASS
 ProcessBetCD            Procedure(string pAdministratie)
 ProcessExtraArtOms      Procedure(string pAdministratie)
-ProcessExtraArtOmsGroep  Procedure(string pAdministratie)
+ProcessExtraArtOmsGroep Procedure(string pAdministratie)
+ProcessRelatie          Procedure(string pAdministratie)
+ProcessArtikelen        Procedure(string pAdministratie)
                     END
 [END]
 EMBED %LocalProcedures
@@ -1963,6 +1969,281 @@ Code
 
     RETURN
 
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.ProcessArtikelen Procedure(string pAdministratie)
+
+SynchedArtikelQueue             QUEUE,PRE(SAQ)                        !
+ArtikelID                           CSTRING('<0>{30}')                    !
+                                END                                   !
+
+SQLFILE                         FILE,DRIVER('MSSQL','/TURBOSQL=True'),Pre(SBC),OWNER(GLO:OWNER)
+Record                              RECORD,PRE()
+ArtikelID                               CSTRING(31)
+ArtikelOms                              CSTRING(61)
+ArtikelGroep                            LONG
+Prijs                                   SREAL
+                                    END
+                                END
+Code
+    OPEN(SQLFILE)
+    IF UD.Error('Open')
+        Message('Fout bij openen SQFILE'&Error())
+    END
+    SQLFILE{Prop:SQL}='SELECT ItemCode AS ArtikelID, Description AS ArtikelOms, Assortment AS ArtikelGroep, CostPriceStandard AS Prijs '&|
+        ' FROM ['&pAdministratie&'].dbo.Items WHERE (Type = ''S'') AND (Condition = ''A'')'
+    IF UD.Error()
+        Message('Fout bij Execute SQLFILE:'&FileError(),'LocalClass.ProcessBetCD')
+    END
+    LOOP
+        Next(SQLFILE)
+        IF Errorcode()=33
+            Break
+        ELSIF Errorcode()
+            Message('Foutmelding bij Next'&Error()&' '&FileError())
+        END
+
+
+        Art:ArtikelID = SBC:ArtikelID
+        IF (Access:ViewArtikel.TryFetch(Art:Artikel_PK) = Level:Benign)
+?  	        UD.Debug('Gevonden bijwerken')
+            Art:Record = SBC:Record
+            Access:ViewArtikel.Update()
+        ELSE
+?  	        UD.Debug('NIET Gevonden Insert'&SBC:ArtikelID)
+            Art:Record = SBC:Record
+            Access:ViewArtikel.Insert()
+        END
+
+  ! Verwerkt, dus hoeft niet verwijderd te worden
+        SAQ:ArtikelID = SBC:ArtikelID
+        ADD(SynchedArtikelQueue, +SAQ:ArtikelID)
+
+    END
+      ! Niet gevonden artikel in ViewArtikel verwijderen
+    CLEAR(Art:ArtikelID)
+    SET(Art:Artikel_PK,Art:Artikel_PK)
+    LOOP UNTIL Access:ViewArtikel.Next()
+        SAQ:ArtikelID = Art:ArtikelID
+        GET(SynchedArtikelQueue, +SAQ:ArtikelID)
+        IF ERROR() THEN
+            UD.Debug('ViewArtikel Verwijderen OK:' & Art:ArtikelID)
+            Access:ViewArtikel.DeleteRecord(false)
+        ELSE
+?            UD.Debug('ViewArtikel Verwijderen NO:' & Art:ArtikelID)
+        END
+    END
+
+    RETURN
+
+
+[SOURCE]
+PROPERTY:BEGIN
+PRIORITY 4000
+PROPERTY:END
+LocalClass.ProcessRelatie   Procedure(string pAdministratie)
+
+SQLFILE                         FILE,DRIVER('MSSQL','/TURBOSQL=True'),Pre(SBC),OWNER(GLO:OWNER)
+Record                              RECORD,PRE()
+RelatieID                               LONG
+FirmaNaam                               STRING(50)
+Adres1                                  CSTRING(101)
+Adres2                                  CSTRING(101)
+Postcode                                CSTRING(21)
+Plaats                                  CSTRING(101)
+Telefoon                                STRING(25)
+Mobiel                                  CSTRING(31)
+Fax                                     STRING(25)
+Type                                    STRING(1)
+Country                                 CSTRING(61)
+ItemCode                                STRING(2)
+PaymentCondition                        STRING(2)
+Exact_Code                              STRING(20),Name('Code')
+CreditLine                              REAL
+Acc_Man                                 LONG
+VatCode                                 STRING(3)
+cmp_fctry                               STRING(3)
+                                    END
+                                END
+
+
+SQLFILE2                        FILE,DRIVER('MSSQL','/TURBOSQL=True'),Pre(SF),OWNER(GLO:OWNER)
+Record                              RECORD,PRE()
+DebtorCode                              String(20)
+Saldo                                   REAL
+DagenOud                                LONG
+                                    END
+                                END
+
+Loc:PalletBladLayout            CSTRING(51)                           !
+Loc:Note                        CSTRING(4001)                         !
+Loc:LotID                       LONG                                  !
+LOC:PalletBladRapportHeaderImage        CSTRING(513)              !
+OpenStaandSaldoQ                QUEUE,PRE(OPQ)                        !
+DebtorCode                          CSTRING(21)                           !
+Saldo                               REAL                                  !
+DagenOud                            LONG                                  !
+                                END                                   !
+SynchedRelatieQueue             QUEUE,PRE(SRQ)                        !
+RelatieID                           LONG                                  !
+                                END                                   !
+
+CODE
+    FREE(SynchedRelatieQueue)
+    Free(OpenStaandSaldoQ)
+
+    OPEN(SQLFile2)             ! Openstaand Saldo Inlezen
+    IF ERROR() THEN STOP(ERROR()&'bij het openen van GRV_DebtorOutstanding').
+
+    SQLFile2{Prop:SQL} ='CALL dbo.[OpenstaandSaldo]'
+    IF ERROR() THEN STOP(ERROR()&FILEERROR()&'bij het uitvoeren van de SQL ').
+    LOOP
+        Next(SQLFile2)
+      !IF ERROR() THEN STOP(ERROR()&FILEERROR()&'bij de Next op SQL ').
+        IF ERROR() THEN BREAK.
+        OPQ:DebtorCode=CLIP(LEFT(SQLFile2.DebtorCode))
+        OPQ:Saldo=SQLFile2.Saldo
+        OPQ:DagenOud=SQLFILE2.DagenOud
+        Add(OpenStaandSaldoQ,+OPQ:DebtorCode)
+    END
+
+    CLOSE(SQLFile2)             ! Openstaand Saldo Inlezen
+
+
+    OPEN(SQLFILE)
+    IF UD.Error('Open')
+        Message('Fout bij openen SQFILE'&Error())
+    END
+    SQLFILE{Prop:SQL}='SELECT ['&pAdministratie&'].dbo.cicmpy.ID AS RelatieID, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_name AS FirmaNaam, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_fadd1 AS Adres1, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_fadd2 AS Adres2, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_fpc AS Postcode, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_fcity AS Plaats, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_tel AS Telefoon, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_Directory AS Mobiel, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_fax AS Fax, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_type AS Type, '&|
+        '['&pAdministratie&'].dbo.land.oms60_0 AS Country, '&|
+        '['&pAdministratie&'].dbo.cicmpy.ItemCode, '&|
+        '['&pAdministratie&'].dbo.cicmpy.PaymentCondition, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_code AS Code, '&|
+        '['&pAdministratie&'].dbo.cicmpy.CreditLine AS CreditLine, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_acc_man AS Acc_Man, '&|
+        '['&pAdministratie&'].dbo.cicmpy.VatCode AS VatCode, '&|
+        '['&pAdministratie&'].dbo.cicmpy.cmp_fctry AS cmp_fctry '&|
+        ' FROM ['&pAdministratie&'].dbo.cicmpy '&|
+        ' INNER JOIN ['&pAdministratie&'].dbo.land '&|
+        ' ON ['&pAdministratie&'].dbo.cicmpy.cmp_fctry = ['&pAdministratie&'].dbo.land.landcode WHERE ['&pAdministratie&'].dbo.cicmpy.cmp_status NOT IN (''E'',''B'')'
+    IF UD.Error()
+        Message('Fout bij Execute SQLFILE:'&FileError(),'LocalClass.ProcessBetCD')
+    END
+    LOOP
+        Next(SQLFILE)
+        IF Errorcode()=33
+            Break
+        ELSIF Errorcode()
+            Message('Foutmelding bij Next'&Error()&' '&FileError())
+        END
+        Rel:RelatieID = SBC:RelatieID
+        IF (Access:Relatie.TryFetch(Rel:Relatie_PK) = Level:Benign)
+            LOC:PalletBladRapportHeaderImage = Rel:PalletBladRapportHeaderImage
+            Loc:Note=Rel:Note
+            Loc:LotID=Rel:LotID
+            Loc:PalletBladLayout=Rel:PalletBladLayout
+  	! Gevonden, dus updaten
+            Rel:RelatieID = SBC:RelatieID
+            Rel:FirmaNaam=SBC:FirmaNaam
+            Rel:Adres1=SBC:Adres1
+            Rel:Adres2=SBC:Adres2
+            Rel:Postcode=SBC:Postcode
+            Rel:Plaats=SBC:Plaats
+            Rel:Telefoon=SBC:Telefoon
+            Rel:Mobiel=SBC:Mobiel
+            Rel:Fax=SBC:Fax
+            Rel:Type=SBC:Type
+            Rel:Country=SBC:Country
+            Rel:ItemCode=SBC:ItemCode
+            Rel:PaymentCondition=SBC:PaymentCondition
+
+            Rel:PalletBladRapportHeaderImage = LOC:PalletBladRapportHeaderImage
+            Rel:Note=Loc:Note
+            Rel:LotID=Loc:LotID
+            Rel:PalletBladLayout=Loc:PalletBladLayout
+            Rel:CreditLine = SBC:CreditLine
+            OPQ:DebtorCode=CLIP(LEFT(SBC:Exact_Code))
+            GET(OpenStaandSaldoQ,+OPQ:DebtorCode)
+            IF ERROR()
+                Rel:OpenstaandSaldo= 0
+                Rel:DagenOud = 0
+            ELSE
+                Rel:OpenstaandSaldo= OPQ:Saldo
+                Rel:DagenOud = OPQ:DagenOud
+            END
+            Rel:Code=CLIP(LEFT(SBC:Exact_Code))
+            Rel:Acc_Man=SBC:Acc_Man
+            Rel:VatCode=SBC:VatCode
+            Rel:cmp_fctry=SBC:cmp_fctry
+            Access:Relatie.Update()
+?            UD.Debug('Update '&SBC:RelatieID)
+        ELSE
+      !Rel:Record = SBC:Record
+            Rel:RelatieID = SBC:RelatieID
+            Rel:FirmaNaam=SBC:FirmaNaam
+            Rel:Adres1=SBC:Adres1
+            Rel:Adres2=SBC:Adres2
+            Rel:Postcode=SBC:Postcode
+            Rel:Plaats=SBC:Plaats
+            Rel:Telefoon=SBC:Telefoon
+            Rel:Mobiel=SBC:Mobiel
+            Rel:Fax=SBC:Fax
+            Rel:Type=SBC:Type
+            Rel:Country=SBC:Country
+            Rel:ItemCode=SBC:ItemCode
+            Rel:PaymentCondition=SBC:PaymentCondition
+
+            Rel:PalletBladRapportHeaderImage = ''
+            Clear(Rel:Note)
+            Clear(Rel:LotID)
+            Clear(Rel:PalletBladLayout)
+            Rel:CreditLine = SBC:CreditLine
+            OPQ:DebtorCode=CLIP(LEFT(SBC:Exact_Code))
+            GET(OpenStaandSaldoQ,+OPQ:DebtorCode)
+            IF ERROR()
+                Rel:OpenstaandSaldo= 0
+                Rel:DagenOud = 0
+            ELSE
+                Rel:OpenstaandSaldo= OPQ:Saldo
+                Rel:DagenOud = OPQ:DagenOud
+            END
+            Rel:Code=CLIP(LEFT(SBC:Exact_Code))
+            Rel:Acc_Man=SBC:Acc_Man
+            Rel:VatCode=SBC:VatCode
+            Access:Relatie.TryInsert()
+?            UD.Debug('Insert '&SBC:RelatieID)
+        END
+       ! Verwerkt, dus hoeft niet verwijderd te worden
+        SRQ:RelatieID = Rel:RelatieID
+        ADD(SynchedRelatieQueue, +SRQ:RelatieID)
+
+    END
+  ! Niet gevonden artikel in Relatie verwijderen
+    CLEAR(Rel:RelatieID)
+    SET(Rel:Relatie_PK,Rel:Relatie_PK)
+    LOOP UNTIL Access:Relatie.Next()
+        SRQ:RelatieID = Rel:RelatieID
+        GET(SynchedRelatieQueue, +SRQ:RelatieID)
+        IF ERROR() THEN
+?  		UD.Debug('Relatie Verwijderen OK:' & Rel:RelatieID)
+            Access:Relatie.DeleteRecord(false)
+        ELSE
+?  		UD.Debug('Relatie Verwijderen NO:' & Rel:RelatieID)
+        END
+    END
+
+    RETURN
 [END]
 [END]
 [ADDITION]
@@ -2020,9 +2301,9 @@ OWNER 2
 %RefreshFile DEPEND %RefreshFiles FILE TIMES 0
 
 [WINDOW]
-Window  WINDOW('Exact View vullen'),AT(,,260,100),FONT('Microsoft Sans Serif',8),GRAY,TIMER(1)
-          PROGRESS,AT(21,29,218,22),USE(Loc:TimerExecution),RANGE(0,100),#ORDINAL(1)
-          STRING(@s99),AT(25,59,214,16),USE(Loc:ProgressText),#ORDINAL(2)
+Window  WINDOW('Exact View vullen'),AT(,,260,62),FONT('Microsoft Sans Serif',8),GRAY,TIMER(1)
+          PROGRESS,AT(21,9,218,22),USE(Loc:TimerExecution),RANGE(0,100),#ORDINAL(1)
+          STRING(@s99),AT(21,42,214,16),USE(Loc:ProgressText),#ORDINAL(2)
         END
 
 [END]

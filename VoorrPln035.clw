@@ -236,9 +236,9 @@ ReturnValue          BYTE,AUTO
   BIND('Ink:InkoopID',Ink:InkoopID)                        ! Added by: BrowseBox(ABC)
   BIND('Loc:Artikelen',Loc:Artikelen)                      ! Added by: BrowseBox(ABC)
   BIND('LOC:Firmanaam2',LOC:Firmanaam2)                    ! Added by: FileDropCombo(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE

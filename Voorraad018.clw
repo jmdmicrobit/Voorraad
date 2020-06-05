@@ -126,7 +126,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ConvertLegeExtPartijnr',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'10/05/2010 @ 03:54PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('ConvertLegeExtPartijnr',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'10/05/2010 @ 03:54PM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
     
   END
   RETURN ReturnValue

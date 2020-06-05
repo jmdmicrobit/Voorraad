@@ -1695,9 +1695,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:VerkoopPallets3',LOC:VerkoopPallets3)          ! Added by: BrowseBox(ABC)
   BIND('LOC:Locatienaam3',LOC:Locatienaam3)                ! Added by: BrowseBox(ABC)
   BIND('ACT:ActiviteitID',ACT:ActiviteitID)                ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -2014,7 +2014,7 @@ ReturnValue          BYTE,AUTO
   BRW11.AddField(ACT:DatumTijd,BRW11.Q.ACT:DatumTijd)      ! Field ACT:DatumTijd is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Resize,Resize:SetMinSize)       ! Controls will change size as the window gets bigger
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
-  BRW11.AskProcedure = 6                                   ! Will call: UpdateActiviteit((LOC:DatumNu))
+  BRW11.AskProcedure = 7                                   ! Will call: UpdateActiviteit((LOC:DatumNu))
   BRW12.AddToolbarTarget(Toolbar)                          ! Browse accepts toolbar control
   BRW11.AddToolbarTarget(Toolbar)                          ! Browse accepts toolbar control
   SELF.SetAlerts()
@@ -2093,6 +2093,7 @@ ReturnValue          BYTE,AUTO
   ELSE
     GlobalRequest = Request
     EXECUTE Number
+      UpdateActiviteit((LOC:DatumNu))
       UpdateActiviteit((LOC:DatumNu))
       UpdateActiviteit((LOC:DatumNu))
       UpdateActiviteit((LOC:DatumNu))

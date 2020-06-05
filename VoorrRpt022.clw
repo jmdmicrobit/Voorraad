@@ -94,7 +94,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportPalletBlad','VoorrRpt022.clw','VoorrRpt.DLL','05/14/2020 @ 05:27PM')    
+        udpt.Init(UD,'ReportPalletBlad','VoorrRpt022.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
              
   GlobalErrors.SetProcedureName('ReportPalletBlad')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -291,7 +291,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportPalletBlad',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/29/2013 @ 03:46PM','05/14/2020 @ 05:27PM','05/15/2020 @ 11:20AM')  
+        UD.ShowProcedureInfo('ReportPalletBlad',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/29/2013 @ 03:46PM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
     
   END
   RETURN ReturnValue

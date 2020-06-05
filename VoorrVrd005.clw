@@ -352,9 +352,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:Firmanaam',LOC:Firmanaam)                      ! Added by: BrowseBox(ABC)
   BIND('LOC:MatchingMutatie',LOC:MatchingMutatie)          ! Added by: BrowseBox(ABC)
   BIND('LOC:HandmatigMutatie',LOC:HandmatigMutatie)        ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE

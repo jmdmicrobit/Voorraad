@@ -130,7 +130,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('FixEMutaties',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'07/05/2010 @ 12:21PM','05/26/2020 @ 12:06PM','05/26/2020 @ 12:10PM')  
+        UD.ShowProcedureInfo('FixEMutaties',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'07/05/2010 @ 12:21PM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
     
   END
   RETURN ReturnValue

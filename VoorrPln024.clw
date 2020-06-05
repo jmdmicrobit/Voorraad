@@ -146,9 +146,9 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:PartijVoorraadKG',LOC:PartijVoorraadKG)        ! Added by: FileDropCombo(ABC)
   BIND('LOC:PartijVoorraadPallet',LOC:PartijVoorraadPallet) ! Added by: FileDropCombo(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Ok,RequestCancelled)                    ! Add the close control to the window manger
   ELSE

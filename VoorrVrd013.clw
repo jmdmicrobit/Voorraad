@@ -897,9 +897,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:VVCTVoorraadKG',LOC:VVCTVoorraadKG)            ! Added by: BrowseBox(ABC)
   BIND('LOC:VVCTVoorraadPallets',LOC:VVCTVoorraadPallets)  ! Added by: BrowseBox(ABC)
   BIND('LOC:CelLocatieNamen',LOC:CelLocatieNamen)          ! Added by: BrowseBox(ABC)
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
