@@ -62,6 +62,21 @@ KopieerView2Remote     PROCEDURE(FILE pFile)               ! New method added to
 Toolbar              ToolbarClass
 
   CODE
+? DEBUGHOOK(BulkOverboeking:Record)
+? DEBUGHOOK(CMR:Record)
+? DEBUGHOOK(OverboekingRit:Record)
+? DEBUGHOOK(OverboekingRitRegel:Record)
+? DEBUGHOOK(PalletSoort:Record)
+? DEBUGHOOK(PalletVerloop:Record)
+? DEBUGHOOK(PlanningInkoop:Record)
+? DEBUGHOOK(PlanningOverboeking:Record)
+? DEBUGHOOK(PlanningVerkoop:Record)
+? DEBUGHOOK(RelatieAdres:Record)
+? DEBUGHOOK(Transporteur:Record)
+? DEBUGHOOK(Verpakking:Record)
+? DEBUGHOOK(ViewArtikel:Record)
+? DEBUGHOOK(VoorraadVerloop:Record)
+? DEBUGHOOK(Weging:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -77,7 +92,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'WindowSQLBackup','Voorraad017.clw','Voorraad.EXE','07/03/2014 @ 11:15AM')    
+        udpt.Init(UD,'WindowSQLBackup','Voorraad017.clw','Voorraad.EXE','06/05/2020 @ 04:03PM')    
              
   GlobalErrors.SetProcedureName('WindowSQLBackup')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -86,9 +101,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Loc:KleineBackup
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   Relate:BulkOverboeking.Open                              ! File BulkOverboeking used by this procedure, so make sure it's RelationManager is open
   Relate:CMR.Open                                          ! File CMR used by this procedure, so make sure it's RelationManager is open
   Relate:OverboekingRit.SetOpenRelated()
@@ -101,13 +116,21 @@ ReturnValue          BYTE,AUTO
   Relate:RelatieAdres.Open                                 ! File RelatieAdres used by this procedure, so make sure it's RelationManager is open
   Relate:Transporteur.Open                                 ! File Transporteur used by this procedure, so make sure it's RelationManager is open
   Relate:Verpakking.Open                                   ! File Verpakking used by this procedure, so make sure it's RelationManager is open
+  Relate:ViewArtikel.Open                                  ! File ViewArtikel used by this procedure, so make sure it's RelationManager is open
   Relate:VoorraadVerloop.Open                              ! File VoorraadVerloop used by this procedure, so make sure it's RelationManager is open
   Relate:Weging.Open                                       ! File Weging used by this procedure, so make sure it's RelationManager is open
   Access:OverboekingRitRegel.UseFile                       ! File referenced in 'Other Files' so need to inform it's FileManager
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('WindowSQLBackup',Window)                   ! Restore window settings from non-volatile store
   SELF.SetAlerts()
@@ -120,6 +143,7 @@ ThisWindow.Kill PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -134,6 +158,7 @@ ReturnValue          BYTE,AUTO
     Relate:RelatieAdres.Close
     Relate:Transporteur.Close
     Relate:Verpakking.Close
+    Relate:ViewArtikel.Close
     Relate:VoorraadVerloop.Close
     Relate:Weging.Close
   END
@@ -187,14 +212,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('WindowSQLBackup',UD.SetApplicationName('Voorraad','EXE'),Window{PROP:Hlp},'03/04/2011 @ 03:50PM','07/03/2014 @ 11:15AM','06/02/2020 @ 10:33PM')  
+        UD.ShowProcedureInfo('WindowSQLBackup',UD.SetApplicationName('Voorraad','EXE'),Window{PROP:Hlp},'03/04/2011 @ 03:50PM','06/05/2020 @ 04:03PM','10/11/2024 @ 01:55PM')  
     
        CYCLE
      END
@@ -285,15 +310,13 @@ ThisWindow.Synchroniseer PROCEDURE()
   	ThisWindow.KopieerView2Remote(PlanningOverboeking)
   	ThisWindow.KopieerView2Remote(PlanningVerkoop)
   	ThisWindow.KopieerView2Remote(Relatie)
-  	ThisWindow.KopieerView2Remote(Relatie_Exact)
   	ThisWindow.KopieerFile2Remote(RelatieAdres)
   	!ThisWindow.KopieerFile2Remote(Sjabloon)
   	ThisWindow.KopieerFile2Remote(Transporteur)
   	ThisWindow.KopieerFile2Remote(Verkoop)
   	ThisWindow.KopieerFile2Remote(Verpakking)
   	ThisWindow.KopieerFile2Remote(Versie)
-  	ThisWindow.KopieerView2Remote(ViewArtikel)
-  	!ThisWindow.KopieerFile2Remote(ViewArtkel_Exact)
+  	ThisWindow.KopieerFile2Remote(ViewArtikel)
   	ThisWindow.KopieerView2Remote(Voorraadverloop)
   	ThisWindow.KopieerFile2Remote(Weging)
   END

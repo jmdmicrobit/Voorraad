@@ -125,21 +125,15 @@ Detail                 DETAIL,AT(0,500,7250,9760),USE(?Detail)
                        FOOTER,AT(521,11156,7250,156),USE(?Footer)
                        END
                      END
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 TBarcode                  BarcodeClass
 TBarcode:2                BarcodeClass
 TBarcode:3                BarcodeClass
 ThisWindow           CLASS(ReportManager)
 AskPreview             PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Init                   PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 OpenReport             PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 ThisReport           CLASS(ProcessClass)                   ! Process Manager
@@ -159,6 +153,19 @@ VertaalISCodes          Procedure(String), STRING
                     END
 
   CODE
+? DEBUGHOOK(AAPlanning:Record)
+? DEBUGHOOK(AARelatie:Record)
+? DEBUGHOOK(AAViewArtikel:Record)
+? DEBUGHOOK(ARelatie:Record)
+? DEBUGHOOK(AVerkoop:Record)
+? DEBUGHOOK(AViewArtikel:Record)
+? DEBUGHOOK(ArtikelOmschrijvingExtra:Record)
+? DEBUGHOOK(ISOCountries:Record)
+? DEBUGHOOK(PalletBladSjabloon:Record)
+? DEBUGHOOK(PalletBladSjabloonCountry:Record)
+? DEBUGHOOK(RelatieArtikelOmschrijving:Record)
+? DEBUGHOOK(Versie:Record)
+? DEBUGHOOK(Weging:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -183,7 +190,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportPalletBladEnkel','VoorrRpt020.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'ReportPalletBladEnkel','VoorrRpt020.clw','VoorrRpt.DLL','07/01/2024 @ 08:47PM')    
              
   GlobalErrors.SetProcedureName('ReportPalletBladEnkel')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -208,9 +215,8 @@ ReturnValue          BYTE,AUTO
   Relate:Versie.Open                                       ! File Versie used by this procedure, so make sure it's RelationManager is open
   Relate:Weging.Open                                       ! File Weging used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
-  LOC:CountryCompanySSCCNVE = GETINI('Palletblad','CountryCompanyPrefix','870123456','.\Voorraad.ini')
+  LOC:CountryCompanySSCCNVE = GETINI('Palletblad','CountryCompanyPrefix','870123456',PQ:IniFile)
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportPalletBladEnkel',ProgressWindow)     ! Restore window settings from non-volatile store
@@ -230,13 +236,6 @@ ReturnValue          BYTE,AUTO
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
   RETURN ReturnValue
-
-
-ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
-
-  CODE
-  PARENT.Init(PC,R,PV)
-  WinAlertMouseZoom()
 
 
 ThisWindow.Kill PROCEDURE
@@ -269,7 +268,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportPalletBladEnkel',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/25/2013 @ 03:15PM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('ReportPalletBladEnkel',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/25/2013 @ 03:15PM','07/01/2024 @ 08:47PM','10/11/2024 @ 01:54PM')  
     
   END
   RETURN ReturnValue
@@ -282,10 +281,11 @@ ReturnValue          BYTE,AUTO
   CODE
   SYSTEM{PROP:PrintMode} = 3
   SAV:Printer=PRINTER{PROPPRINT:Device}
-  IF CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini')) <> '' THEN
-        PRINTER{PROPPRINT:Device}=CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini'))
-        IF NOT PRINTER{PROPPRINT:Device}=CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini'))
-            Message('Let op palletprinter is niet gekozen.|Palletprinter='&CLIP(GETINI('Printer','Palletblad',,'.\Voorraad.ini'))&'|Huidige printer='&PRINTER{PROPPRINT:Device},'Bel JMD',Icon:Cross)
+  IF CLIP(GETINI('Printer','Palletblad',,PQ:IniFile)) <> '' THEN
+        PRINTER{PROPPRINT:Device}=CLIP(GETINI('Printer','Palletblad',,PQ:IniFile))
+        IF NOT PRINTER{PROPPRINT:Device}=CLIP(GETINI('Printer','Palletblad',,PQ:IniFile))
+          !  Message('Let op palletprinter is niet gekozen.|Palletprinter='&CLIP(GETINI('Printer','Palletblad',,PQ:IniFile))&'|Huidige printer='&PRINTER{PROPPRINT:Device},'Bel JMD',Icon:Cross)
+              ! melding uitgeschakeld 2020-8-10
         END
   END
   SAV:Copies = PRINTER{PROPPRINT:Copies}
@@ -326,42 +326,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -465,7 +429,7 @@ SkipDetails BYTE
       
       IF NOT(gevonden#)
           CLEAR(PBS:Record)
-          PBS:PalletBladSjabloonID = GETINI('Palletblad','StandaardVertaling',,'.\Voorraad.ini')
+          PBS:PalletBladSjabloonID = GETINI('Palletblad','StandaardVertaling',,PQ:IniFile)
           IF Access:PalletBladSjabloon.Fetch(PBS:PK_PalletBladSjabloon) <> Level:Benign THEN
               MESSAGE('Standaard palletblad vertaling (ID: ' & CLIP(PBS:PalletBladSjabloonID) & ') kan niet worden opgehaald.' , 'Ontbrekende vertaling', ICON:Exclamation)
               RETURN Level:Benign
@@ -476,6 +440,10 @@ SkipDetails BYTE
               MESSAGE('Palletblad vertaling (ID: ' & CLIP(PBS:PalletBladSjabloonID) & ' voor land (' & CLIP(PBSC:Country) & ') kan niet worden opgehaald.', 'Ontbrekende vertaling', ICON:Exclamation)
               RETURN Level:Benign
           END
+      END
+      IF AARel:PalletBladLayout='Abbelen'        
+          PBS:OriginLiveBird='Auf gezogen in'
+          PBS:OriginSlautherHouse='Geschlachtet in:'
       END
       
       !IF NOT(EXISTS(CLIP(AARel:PalletBladRapportHeaderImage))) THEN
@@ -493,7 +461,7 @@ SkipDetails BYTE
           SetTarget()
       ELSE
           SetTarget(Report)
-          ?HeaderImage{PROP:Text} = GETINI('Palletblad','StandaardLogo','','.\Voorraad.ini')
+          ?HeaderImage{PROP:Text} = GETINI('Palletblad','StandaardLogo','',PQ:IniFile)
           SetTarget()
       END
   !    SetTarget(Report)

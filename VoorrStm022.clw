@@ -37,9 +37,6 @@ ViewPosition           STRING(1024)                   !Entry's view position
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 History::PBS:Record  LIKE(PBS:RECORD),THREAD
-NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
-NetLocalRefreshTime     Long
-NetLocalDependancies    String('|PalletBladSjabloon|PalletBladSjabloonCountry|')
 QuickWindow          WINDOW('Form PalletBladSjabloon'),AT(,,449,413),FONT('Microsoft Sans Serif',8,,FONT:regular, |
   CHARSET:DEFAULT),DOUBLE,CENTER,GRAY,IMM,MDI,HLP('UpdatePalletBladSjabloon'),SYSTEM
                        PROMPT('ID:'),AT(359,2),USE(?PBS:PalletBladSjabloonID:Prompt),TRN
@@ -100,22 +97,14 @@ QuickWindow          WINDOW('Form PalletBladSjabloon'),AT(,,449,413),FONT('Micro
                        END
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-PrimeUpdate            PROCEDURE(),BYTE,PROC,DERIVED
-Reset                  PROCEDURE(BYTE Force=0),DERIVED
 Run                    PROCEDURE(),BYTE,PROC,DERIVED
 Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
-TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -136,6 +125,8 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(PalletBladSjabloon:Record)
+? DEBUGHOOK(PalletBladSjabloonCountry:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -219,7 +210,6 @@ ReturnValue          BYTE,AUTO
   END
   BRW4.Init(?List,Queue:Browse.ViewPosition,BRW4::View:Browse,Queue:Browse,Relate:PalletBladSjabloonCountry,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?PBS:PalletBladSjabloonID{PROP:ReadOnly} = True
@@ -264,8 +254,6 @@ ReturnValue          BYTE,AUTO
   BRW4.AskProcedure = 1                                    ! Will call: UpdatePalletBladSjabloonCountry
   BRW4.AddToolbarTarget(Toolbar)                           ! Browse accepts toolbar control
   SELF.SetAlerts()
-  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-  NetLocalRefreshTime = clock()
   EnterByTabManager.ExcludeControl(?Cancel)
   EnterByTabManager.ExcludeControl(?OK)
   EnterByTabManager.Init(False)
@@ -288,28 +276,6 @@ ReturnValue          BYTE,AUTO
   END
   GlobalErrors.SetProcedureName
   RETURN ReturnValue
-
-
-ThisWindow.PrimeUpdate PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  ReturnValue = PARENT.PrimeUpdate()
-    If returnValue = Level:Fatal  ! delete just occured
-      ThisNetRefresh.Send('|PalletBladSjabloon|PalletBladSjabloonCountry|PalletBladSjabloonCountry|') ! NetTalk (NetRefresh)
-    End
-  RETURN ReturnValue
-
-
-ThisWindow.Reset PROCEDURE(BYTE Force=0)
-
-  CODE
-  SELF.ForcedReset += Force
-  IF QuickWindow{Prop:AcceptAll} THEN RETURN.
-    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-    NetLocalRefreshTime = clock()
-  PARENT.Reset(Force)
 
 
 ThisWindow.Run PROCEDURE
@@ -366,35 +332,12 @@ Looped BYTE
   RETURN ReturnValue
 
 
-ThisWindow.TakeCompleted PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  ReturnValue = PARENT.TakeCompleted()
-    ThisNetRefresh.Send('|PalletBladSjabloon|PalletBladSjabloonCountry|PalletBladSjabloonCountry|') ! NetTalk (NetRefresh)
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
 ThisWindow.TakeEvent PROCEDURE
 
 ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
-    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
-      Self.Reset(1)                      ! NetTalk (NetRefresh)
-    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -405,42 +348,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

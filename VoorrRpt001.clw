@@ -41,16 +41,11 @@ Window               WINDOW('Call Sjabloon'),AT(,,230,65),FONT('MS Sans Serif',8
                        BUTTON('&Cancel'),AT(179,46,47,14),USE(?CancelButton),LEFT,ICON('WACancel.ico'),STD(STD:Close)
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -68,6 +63,17 @@ Overboeking             PROCEDURE(LONG)
 							
 
   CODE
+? DEBUGHOOK(AAACel:Record)
+? DEBUGHOOK(AACel:Record)
+? DEBUGHOOK(Inkoop:Record)
+? DEBUGHOOK(Partij:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(RelatieAdres:Record)
+? DEBUGHOOK(Sjabloon:Record)
+? DEBUGHOOK(Verkoop:Record)
+? DEBUGHOOK(Verpakking:Record)
+? DEBUGHOOK(ViewArtikel:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -92,9 +98,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?PROMPT1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   Relate:AAACel.Open                                       ! File AAACel used by this procedure, so make sure it's RelationManager is open
   Relate:AACel.Open                                        ! File AACel used by this procedure, so make sure it's RelationManager is open
   Relate:Inkoop.SetOpenRelated()
@@ -109,7 +115,6 @@ ReturnValue          BYTE,AUTO
   Access:Relatie.UseFile                                   ! File referenced in 'Other Files' so need to inform it's FileManager
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('WindowCallSjabloon',Window)                ! Restore window settings from non-volatile store
@@ -274,50 +279,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('WindowCallSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'06/10/2011 @ 11:53AM','06/20/2018 @ 03:56PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('WindowCallSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),Window{PROP:Hlp},'06/10/2011 @ 11:53AM','06/20/2018 @ 03:56PM','10/11/2024 @ 01:54PM')  
     
        CYCLE
      END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

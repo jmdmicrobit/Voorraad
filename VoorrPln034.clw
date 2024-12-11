@@ -4,6 +4,7 @@
 
 
    INCLUDE('ABBROWSE.INC'),ONCE
+   INCLUDE('ABDROPS.INC'),ONCE
    INCLUDE('ABPOPUP.INC'),ONCE
    INCLUDE('ABRESIZE.INC'),ONCE
    INCLUDE('ABTOOLBA.INC'),ONCE
@@ -16,148 +17,108 @@
 
 !!! <summary>
 !!! Generated from procedure template - Window
-!!! Browse the Planning file
+!!! Browse the Inkoop file
 !!! </summary>
-BrowseOverboeking PROCEDURE 
+BrowseInkoop PROCEDURE 
 
-CurrentTab           STRING(80)                            ! 
-LOC:MaxCelID         LONG                                  ! 
-LOC:MinCelID         LONG                                  ! 
+udpt            UltimateDebugProcedureTracker
+Loc:Leverancier      LONG                                  ! 
+LOC:Verwerkt         BYTE                                  ! 
 LOC:NietVerwerkt     BYTE                                  ! 
-BRW1::View:Browse    VIEW(Planning)
-                       PROJECT(Pla:OverboekingPlanningID)
-                       PROJECT(Pla:Planning_DATE)
-                       PROJECT(Pla:Planning_TIME)
-                       PROJECT(Pla:OverboekSoort)
-                       PROJECT(Pla:KG)
-                       PROJECT(Pla:Pallets)
-                       PROJECT(Pla:Instructie)
-                       PROJECT(Pla:Transport)
-                       PROJECT(Pla:OverboekCelLocatieID)
-                       PROJECT(Pla:PlanningID)
-                       PROJECT(Pla:OverboekingCelID)
-                       PROJECT(Pla:Planning)
-                       PROJECT(Pla:Verwerkt)
-                       PROJECT(Pla:ArtikelID)
-                       PROJECT(Pla:CelID)
-                       PROJECT(Pla:PartijID)
-                       PROJECT(Pla:CelLocatieID)
-                       JOIN(Art:Artikel_PK,Pla:ArtikelID)
-                         PROJECT(Art:ArtikelID)
-                         PROJECT(Art:ArtikelOms)
-                       END
-                       JOIN(CEL:CEL_PK,Pla:CelID)
-                         PROJECT(CEL:CelOms)
-                         PROJECT(CEL:CelID)
-                       END
-                       JOIN(ACel:CEL_PK,Pla:OverboekingCelID)
-                         PROJECT(ACel:CelOms)
-                         PROJECT(ACel:CelID)
-                       END
-                       JOIN(Par:Partij_PK,Pla:PartijID)
-                         PROJECT(Par:PartijID)
-                         PROJECT(Par:ExternPartijnr)
-                       END
-                       JOIN(CL:PK_CelLocatie,Pla:CelLocatieID)
-                         PROJECT(CL:Locatienaam)
-                         PROJECT(CL:CelLocatieID)
-                       END
-                       JOIN(ACL:PK_CelLocatie,Pla:OverboekCelLocatieID)
-                         PROJECT(ACL:Locatienaam)
-                         PROJECT(ACL:CelLocatieID)
+CurrentTab           STRING(80)                            ! 
+Loc:DatumLeeg        DATE                                  ! 
+Loc:Artikelen        STRING(250)                           ! 
+Loc:Leverancier2     LONG                                  ! 
+LOC:Firmanaam        STRING(250)                           ! 
+LOC:Firmanaam2       STRING(250)                           ! 
+LOC:CurrentLeverancier LONG                                ! 
+Loc:DatumVanaf       DATE                                  ! 
+Loc:NetRefreshByTimer BYTE                                 ! 
+Loc:Timer            LONG                                  ! 
+BRW1::View:Browse    VIEW(Inkoop)
+                       PROJECT(Ink:InkoopID)
+                       PROJECT(Ink:Planning_DATE)
+                       PROJECT(Ink:Planning_TIME)
+                       PROJECT(Ink:Verwerkt)
+                       PROJECT(Ink:Leverancier)
+                       PROJECT(Ink:Planning)
+                       JOIN(Rel:Relatie_PK,Ink:Leverancier)
+                         PROJECT(Rel:FirmaNaam)
+                         PROJECT(Rel:NietActief)
+                         PROJECT(Rel:RelatieID)
                        END
                      END
 Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?Browse:1
-Art:ArtikelID          LIKE(Art:ArtikelID)            !List box control field - type derived from field
-Art:ArtikelID_NormalFG LONG                           !Normal forground color
-Art:ArtikelID_NormalBG LONG                           !Normal background color
-Art:ArtikelID_SelectedFG LONG                         !Selected forground color
-Art:ArtikelID_SelectedBG LONG                         !Selected background color
-Art:ArtikelOms         LIKE(Art:ArtikelOms)           !List box control field - type derived from field
-Art:ArtikelOms_NormalFG LONG                          !Normal forground color
-Art:ArtikelOms_NormalBG LONG                          !Normal background color
-Art:ArtikelOms_SelectedFG LONG                        !Selected forground color
-Art:ArtikelOms_SelectedBG LONG                        !Selected background color
-Pla:OverboekingPlanningID LIKE(Pla:OverboekingPlanningID) !List box control field - type derived from field
-Pla:OverboekingPlanningID_NormalFG LONG               !Normal forground color
-Pla:OverboekingPlanningID_NormalBG LONG               !Normal background color
-Pla:OverboekingPlanningID_SelectedFG LONG             !Selected forground color
-Pla:OverboekingPlanningID_SelectedBG LONG             !Selected background color
-Pla:OverboekingPlanningID_Icon LONG                   !Entry's icon ID
-Pla:Planning_DATE      LIKE(Pla:Planning_DATE)        !List box control field - type derived from field
-Pla:Planning_DATE_NormalFG LONG                       !Normal forground color
-Pla:Planning_DATE_NormalBG LONG                       !Normal background color
-Pla:Planning_DATE_SelectedFG LONG                     !Selected forground color
-Pla:Planning_DATE_SelectedBG LONG                     !Selected background color
-Pla:Planning_TIME      LIKE(Pla:Planning_TIME)        !List box control field - type derived from field
-Pla:Planning_TIME_NormalFG LONG                       !Normal forground color
-Pla:Planning_TIME_NormalBG LONG                       !Normal background color
-Pla:Planning_TIME_SelectedFG LONG                     !Selected forground color
-Pla:Planning_TIME_SelectedBG LONG                     !Selected background color
-Pla:OverboekSoort      LIKE(Pla:OverboekSoort)        !List box control field - type derived from field
-Pla:OverboekSoort_NormalFG LONG                       !Normal forground color
-Pla:OverboekSoort_NormalBG LONG                       !Normal background color
-Pla:OverboekSoort_SelectedFG LONG                     !Selected forground color
-Pla:OverboekSoort_SelectedBG LONG                     !Selected background color
-Pla:KG                 LIKE(Pla:KG)                   !List box control field - type derived from field
-Pla:KG_NormalFG        LONG                           !Normal forground color
-Pla:KG_NormalBG        LONG                           !Normal background color
-Pla:KG_SelectedFG      LONG                           !Selected forground color
-Pla:KG_SelectedBG      LONG                           !Selected background color
-Pla:Pallets            LIKE(Pla:Pallets)              !List box control field - type derived from field
-Pla:Pallets_NormalFG   LONG                           !Normal forground color
-Pla:Pallets_NormalBG   LONG                           !Normal background color
-Pla:Pallets_SelectedFG LONG                           !Selected forground color
-Pla:Pallets_SelectedBG LONG                           !Selected background color
-Par:PartijID           LIKE(Par:PartijID)             !List box control field - type derived from field
-Par:PartijID_NormalFG  LONG                           !Normal forground color
-Par:PartijID_NormalBG  LONG                           !Normal background color
-Par:PartijID_SelectedFG LONG                          !Selected forground color
-Par:PartijID_SelectedBG LONG                          !Selected background color
-Par:ExternPartijnr     LIKE(Par:ExternPartijnr)       !List box control field - type derived from field
-Par:ExternPartijnr_NormalFG LONG                      !Normal forground color
-Par:ExternPartijnr_NormalBG LONG                      !Normal background color
-Par:ExternPartijnr_SelectedFG LONG                    !Selected forground color
-Par:ExternPartijnr_SelectedBG LONG                    !Selected background color
-CEL:CelOms             LIKE(CEL:CelOms)               !List box control field - type derived from field
-CEL:CelOms_NormalFG    LONG                           !Normal forground color
-CEL:CelOms_NormalBG    LONG                           !Normal background color
-CEL:CelOms_SelectedFG  LONG                           !Selected forground color
-CEL:CelOms_SelectedBG  LONG                           !Selected background color
-CL:Locatienaam         LIKE(CL:Locatienaam)           !List box control field - type derived from field
-CL:Locatienaam_NormalFG LONG                          !Normal forground color
-CL:Locatienaam_NormalBG LONG                          !Normal background color
-CL:Locatienaam_SelectedFG LONG                        !Selected forground color
-CL:Locatienaam_SelectedBG LONG                        !Selected background color
-ACel:CelOms            LIKE(ACel:CelOms)              !List box control field - type derived from field
-ACel:CelOms_NormalFG   LONG                           !Normal forground color
-ACel:CelOms_NormalBG   LONG                           !Normal background color
-ACel:CelOms_SelectedFG LONG                           !Selected forground color
-ACel:CelOms_SelectedBG LONG                           !Selected background color
-ACL:Locatienaam        LIKE(ACL:Locatienaam)          !List box control field - type derived from field
-ACL:Locatienaam_NormalFG LONG                         !Normal forground color
-ACL:Locatienaam_NormalBG LONG                         !Normal background color
-ACL:Locatienaam_SelectedFG LONG                       !Selected forground color
-ACL:Locatienaam_SelectedBG LONG                       !Selected background color
-Pla:Instructie         LIKE(Pla:Instructie)           !List box control field - type derived from field
-Pla:Instructie_NormalFG LONG                          !Normal forground color
-Pla:Instructie_NormalBG LONG                          !Normal background color
-Pla:Instructie_SelectedFG LONG                        !Selected forground color
-Pla:Instructie_SelectedBG LONG                        !Selected background color
-Pla:Transport          LIKE(Pla:Transport)            !List box control field - type derived from field
-Pla:Transport_NormalFG LONG                           !Normal forground color
-Pla:Transport_NormalBG LONG                           !Normal background color
-Pla:Transport_SelectedFG LONG                         !Selected forground color
-Pla:Transport_SelectedBG LONG                         !Selected background color
-Pla:OverboekCelLocatieID LIKE(Pla:OverboekCelLocatieID) !Browse hot field - type derived from field
-Pla:PlanningID         LIKE(Pla:PlanningID)           !Primary key field - type derived from field
-Pla:OverboekingCelID   LIKE(Pla:OverboekingCelID)     !Browse key field - type derived from field
-Pla:Planning           LIKE(Pla:Planning)             !Browse key field - type derived from field
-Pla:Verwerkt           LIKE(Pla:Verwerkt)             !Browse key field - type derived from field
-CEL:CelID              LIKE(CEL:CelID)                !Related join file key field - type derived from field
-ACel:CelID             LIKE(ACel:CelID)               !Related join file key field - type derived from field
-CL:CelLocatieID        LIKE(CL:CelLocatieID)          !Related join file key field - type derived from field
-ACL:CelLocatieID       LIKE(ACL:CelLocatieID)         !Related join file key field - type derived from field
+Ink:InkoopID           LIKE(Ink:InkoopID)             !List box control field - type derived from field
+Ink:InkoopID_NormalFG  LONG                           !Normal forground color
+Ink:InkoopID_NormalBG  LONG                           !Normal background color
+Ink:InkoopID_SelectedFG LONG                          !Selected forground color
+Ink:InkoopID_SelectedBG LONG                          !Selected background color
+Rel:FirmaNaam          LIKE(Rel:FirmaNaam)            !List box control field - type derived from field
+Rel:FirmaNaam_NormalFG LONG                           !Normal forground color
+Rel:FirmaNaam_NormalBG LONG                           !Normal background color
+Rel:FirmaNaam_SelectedFG LONG                         !Selected forground color
+Rel:FirmaNaam_SelectedBG LONG                         !Selected background color
+Rel:FirmaNaam_Style    LONG                           !Field style
+Ink:Planning_DATE      LIKE(Ink:Planning_DATE)        !List box control field - type derived from field
+Ink:Planning_DATE_NormalFG LONG                       !Normal forground color
+Ink:Planning_DATE_NormalBG LONG                       !Normal background color
+Ink:Planning_DATE_SelectedFG LONG                     !Selected forground color
+Ink:Planning_DATE_SelectedBG LONG                     !Selected background color
+Ink:Planning_TIME      LIKE(Ink:Planning_TIME)        !List box control field - type derived from field
+Ink:Planning_TIME_NormalFG LONG                       !Normal forground color
+Ink:Planning_TIME_NormalBG LONG                       !Normal background color
+Ink:Planning_TIME_SelectedFG LONG                     !Selected forground color
+Ink:Planning_TIME_SelectedBG LONG                     !Selected background color
+Ink:Verwerkt           LIKE(Ink:Verwerkt)             !List box control field - type derived from field
+Ink:Verwerkt_NormalFG  LONG                           !Normal forground color
+Ink:Verwerkt_NormalBG  LONG                           !Normal background color
+Ink:Verwerkt_SelectedFG LONG                          !Selected forground color
+Ink:Verwerkt_SelectedBG LONG                          !Selected background color
+Ink:Verwerkt_Icon      LONG                           !Entry's icon ID
+Loc:Artikelen          LIKE(Loc:Artikelen)            !List box control field - type derived from local data
+Loc:Artikelen_NormalFG LONG                           !Normal forground color
+Loc:Artikelen_NormalBG LONG                           !Normal background color
+Loc:Artikelen_SelectedFG LONG                         !Selected forground color
+Loc:Artikelen_SelectedBG LONG                         !Selected background color
+Ink:Leverancier        LIKE(Ink:Leverancier)          !Browse hot field - type derived from field
+Rel:NietActief         LIKE(Rel:NietActief)           !Browse hot field - type derived from field
+Ink:Planning           LIKE(Ink:Planning)             !Browse key field - type derived from field
+Rel:RelatieID          LIKE(Rel:RelatieID)            !Related join file key field - type derived from field
+Mark                   BYTE                           !Entry's marked status
+ViewPosition           STRING(1024)                   !Entry's view position
+                     END
+FDCB5::View:FileDropCombo VIEW(ARelatie)
+                       PROJECT(AREL:FirmaNaam)
+                       PROJECT(AREL:Type)
+                       PROJECT(AREL:NietActief)
+                     END
+FDCB2::View:FileDropCombo VIEW(AARelatie)
+                       PROJECT(AARel:FirmaNaam)
+                       PROJECT(AARel:Type)
+                       PROJECT(AARel:NietActief)
+                     END
+Queue:FileDropCombo  QUEUE                            !
+LOC:Firmanaam          LIKE(LOC:Firmanaam)            !List box control field - type derived from local data
+LOC:Firmanaam_NormalFG LONG                           !Normal forground color
+LOC:Firmanaam_NormalBG LONG                           !Normal background color
+LOC:Firmanaam_SelectedFG LONG                         !Selected forground color
+LOC:Firmanaam_SelectedBG LONG                         !Selected background color
+AREL:FirmaNaam         LIKE(AREL:FirmaNaam)           !Browse hot field - type derived from field
+AREL:Type              LIKE(AREL:Type)                !Browse hot field - type derived from field
+AREL:NietActief        LIKE(AREL:NietActief)          !Browse hot field - type derived from field
+Mark                   BYTE                           !Entry's marked status
+ViewPosition           STRING(1024)                   !Entry's view position
+                     END
+Queue:FileDropCombo:1 QUEUE                           !
+LOC:Firmanaam2         LIKE(LOC:Firmanaam2)           !List box control field - type derived from local data
+LOC:Firmanaam2_NormalFG LONG                          !Normal forground color
+LOC:Firmanaam2_NormalBG LONG                          !Normal background color
+LOC:Firmanaam2_SelectedFG LONG                        !Selected forground color
+LOC:Firmanaam2_SelectedBG LONG                        !Selected background color
+AARel:FirmaNaam        LIKE(AARel:FirmaNaam)          !Browse hot field - type derived from field
+AARel:Type             LIKE(AARel:Type)               !Browse hot field - type derived from field
+AARel:NietActief       LIKE(AARel:NietActief)         !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -165,28 +126,52 @@ LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER In
 EnterByTabManager    EnterByTabClass
 NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
 NetLocalRefreshTime     Long
-NetLocalDependancies    String('|Planning|ViewArtikel|Cel|ACel|Partij|CelLocatie|ACelLocatie|')
-QuickWindow          WINDOW('Overboekingen'),AT(,,358,208),FONT('MS Sans Serif',8,,FONT:regular,CHARSET:DEFAULT), |
-  RESIZE,MAXIMIZE,CENTER,GRAY,IMM,MAX,MDI,HLP('BrowseOverboeking'),SYSTEM
-                       LIST,AT(8,29,342,135),USE(?Browse:1),HVSCROLL,FORMAT('65L(2)|M*~Artikel ID~C(0)@s30@197' & |
-  'L(2)|M*~Artikel~C(0)@s60@40C(2)|M*I~Gekoppeld~C(0)@p p@[49R(2)|M*~Datum~C(0)@d6-@26R' & |
-  '(2)|M*~Tijd~C(0)@t7@]|~Planning~81C(2)|M*~Overboek Soort~L(0)@s50@44R(2)|M*~KG~C(0)@' & |
-  'n-15`2@41R(2)|M*~Pallets~C(0)@n-14.@[38R(2)|M*~Intern~C(0)@n_8B@60R(2)|M*~Extern~C(1' & |
-  ')@s20@](77)|~Partij~[40L(2)|M*~Van~C(0)@s50@55L(2)|M*~Locatie~C(0)@s50@40L(2)|M*~Naa' & |
-  'r~C(0)@s50@42L(2)|M*~Locatie~@s50@]|~Overboeking~100L(2)|M*~Instructie~C(0)@s100@100' & |
-  'L(2)|M*~Transport~C(0)@s100@'),FROM(Queue:Browse:1),IMM,MSG('Browsing the Planning file')
-                       SHEET,AT(4,4,350,182),USE(?CurrentTab)
-                         TAB('&Niet-verwerkte Overboekingen'),USE(?Tab:2)
+NetLocalDependancies    String('|Inkoop|Relatie|ARelatie|AARelatie|')
+QuickWindow          WINDOW('Inkoop'),AT(,,562,214),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),RESIZE,MAXIMIZE,CENTER, |
+  GRAY,IMM,MAX,MDI,HLP('BrowseInkoop'),SYSTEM,TIMER(100)
+                       LIST,AT(9,52,540,135),USE(?Browse:1),HVSCROLL,FORMAT('52R(4)|*~Inkoop-ID~C(0)@n_10@200L' & |
+  '(2)|*Y~Leverancier~C(0)@s50@[47R(2)|M*~Datum~C(0)@d6-B@29R(2)|M*~Tijd~C(0)@t7B@]|~Pl' & |
+  'anning~36R(2)|M*I~Verwerkt~C(0)@p p@186L(2)|M*~Artikelen~C(0)@s250@'),FROM(Queue:Browse:1), |
+  IMM,MSG('Browsing the Inkoop file')
+                       BUTTON('Rapport'),AT(192,34),USE(?SjabloonButton)
+                       BUTTON('Kopieer'),AT(282,34),USE(?KopieerButton)
+                       BUTTON('&Toevoegen'),AT(9,34,65,14),USE(?Insert:3),LEFT,ICON('WAINSERT.ICO'),FLAT,MSG('Insert a Record'), |
+  TIP('Insert a Record')
+                       BUTTON('&Wijzigen'),AT(75,34,49,14),USE(?Change:3),LEFT,ICON('WACHANGE.ICO'),DEFAULT,FLAT, |
+  MSG('Change the Record'),TIP('Change the Record')
+                       BUTTON('&Verwijderen'),AT(127,34,61,14),USE(?Delete:3),LEFT,ICON('WADELETE.ICO'),FLAT,MSG('Delete the Record'), |
+  TIP('Delete the Record')
+                       SHEET,AT(4,4,556,188),USE(?CurrentTab)
+                         TAB('&1) Onverwerkte inkopen'),USE(?Tab:2)
                          END
-                         TAB('&Verwerkte Overboekingen'),USE(?Tab:9)
+                         TAB('&2) Onverwerkte inkopen (zonder datum)'),USE(?TAB4)
+                         END
+                         TAB('&3) Onverwerkte inkopen gesorteerd op planning'),USE(?Tab:3)
+                         END
+                         TAB('&4) Onverwerkte inkopen per leverancier'),USE(?TAB1)
+                           COMBO(@s50),AT(327,36,155,10),USE(AREL:FirmaNaam),DROP(25),FORMAT('200L(2)M*~Firmanaam~' & |
+  'C(0)@s250@'),FROM(Queue:FileDropCombo),IMM
+                           BUTTON('...'),AT(487,36,29,11),USE(?LookupLeverancier)
+                         END
+                         TAB('&5) Verwerkte inkopen'),USE(?TAB2)
+                           ENTRY(@d6-),AT(501,36,46,10),USE(Loc:DatumVanaf),RIGHT
+                           PROMPT('Datum vanaf:'),AT(454,36),USE(?Loc:DatumVanaf:Prompt)
+                         END
+                         TAB('&6) Verwerkte inkopen per leverancier'),USE(?TAB3)
+                           COMBO(@s100),AT(328,35,168,11),USE(AARel:FirmaNaam),DROP(25),FORMAT('200L(2)|M*~Firmana' & |
+  'am~C(0)@s250@'),FROM(Queue:FileDropCombo:1),IMM
+                           BUTTON('...'),AT(501,34,,12),USE(?LookupAleverancier)
                          END
                        END
-                       BUTTON('&Close'),AT(302,190,49,14),USE(?Close),LEFT,ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'), |
+                       BUTTON('&Sluiten'),AT(509,196,49,14),USE(?Close),LEFT,ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'), |
   TIP('Close Window')
-                       BUTTON('Sjabloon'),AT(4,188,51,17),USE(?SjabloonButton)
-                       BUTTON('&Change'),AT(265,169,42,12),USE(?Change)
-                       BUTTON('&Insert'),AT(223,169,42,12),USE(?Insert)
-                       BUTTON('&Delete'),AT(307,169,42,12),USE(?Delete)
+                       BUTTON('Weeglijst'),AT(4,196,71),USE(?WeeglijstButton)
+                       BUTTON('Weeglijst (Excel)'),AT(79,196,80),USE(?WeeglijstExcelButton)
+                       BUTTON('Sjabloon'),AT(237,34,43,14),USE(?SjabloonButton:2)
+                       BUTTON('Ververs Scherm'),AT(419,197,79,14),USE(?RefreshButton),LEFT,ICON('REFRESH.ICO'),FLAT
+                       BUTTON('Retour Rapport'),AT(325,34,60,14),USE(?SjabloonButton:3)
+                       BUTTON('Inkoopbevestiging'),AT(389,34,60,14),USE(?Inkoopbevestiging)
+                       BUTTON('Export naar Exact'),AT(163,196),USE(?ExportnaarExact)
                      END
 
     omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
@@ -200,6 +185,7 @@ Reset                  PROCEDURE(BYTE Force=0),DERIVED
 Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
+TakeNewSelection       PROCEDURE(),BYTE,PROC,DERIVED
 TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
@@ -209,16 +195,37 @@ Q                      &Queue:Browse:1                !Reference to browse queue
 Ask                    PROCEDURE(BYTE Request),BYTE,PROC,DERIVED
 Fetch                  PROCEDURE(BYTE Direction),DERIVED
 Init                   PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
+ResetQueue             PROCEDURE(BYTE ResetMode),DERIVED
 ResetSort              PROCEDURE(BYTE Force),BYTE,PROC,DERIVED
 SetQueueRecord         PROCEDURE(),DERIVED
+SetSort                PROCEDURE(BYTE NewOrder,BYTE Force),BYTE,PROC,DERIVED
+ValidateRecord         PROCEDURE(),BYTE,DERIVED
                      END
 
+BRW1::Sort5:Locator  StepLocatorClass                      ! Conditional Locator - CHOICE(?CurrentTab) = 2
 Resizer              CLASS(WindowResizeClass)
 Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
                      END
 
+FDCB5                CLASS(FileDropComboClass)             ! File drop combo manager
+Q                      &Queue:FileDropCombo           !Reference to browse queue type
+SetQueueRecord         PROCEDURE(),DERIVED
+                     END
+
+FDCB2                CLASS(FileDropComboClass)             ! File drop combo manager
+Q                      &Queue:FileDropCombo:1         !Reference to browse queue type
+SetQueueRecord         PROCEDURE(),DERIVED
+                     END
+
 
   CODE
+? DEBUGHOOK(AARelatie:Record)
+? DEBUGHOOK(AInkoop:Record)
+? DEBUGHOOK(APlanning:Record)
+? DEBUGHOOK(ARelatie:Record)
+? DEBUGHOOK(Inkoop:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(ViewArtikel:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -227,22 +234,57 @@ DefineListboxStyle ROUTINE
 !| This routine create all the styles to be shared in this window
 !| It`s called after the window open
 !|
+!  ?Browse:1{PROPSTYLE:FontName, 1}      = 'Microsoft Sans Serif'
+!  ?Browse:1{PROPSTYLE:FontSize, 1}      = 10
+!  ?Browse:1{PROPSTYLE:FontStyle, 1}     = 400
+  ?Browse:1{PROPSTYLE:TextColor, 1}     = Color:Red
+  !?Browse:1{PROPSTYLE:BackColor, 1}     = Color:Red
+  !?Browse:1{PROPSTYLE:TextSelected, 1}  = Color:Red
+  !?Browse:1{PROPSTYLE:BackSelected, 1}  = -1
+  !------------------------------------
+  !?Browse:1{PROPSTYLE:FontName, 2}      = 'Microsoft Sans Serif'
+  !?Browse:1{PROPSTYLE:FontSize, 2}      = 8
+  !?Browse:1{PROPSTYLE:FontStyle, 2}     = 400
+  !?Browse:1{PROPSTYLE:TextColor, 2}     = -1
+  !?Browse:1{PROPSTYLE:BackColor, 2}     = -1
+  !?Browse:1{PROPSTYLE:TextSelected, 2}  = -1
+  !?Browse:1{PROPSTYLE:BackSelected, 2}  = -1
+  !------------------------------------
+  !Style for ?Browse:1
+  !------------------------------------
 !---------------------------------------------------------------------------
+VulCurrentLeverancier       ROUTINE
+    IF CHOICE(?CurrentTab) = 4 THEN
+        LOC:CurrentLeverancier = Loc:Leverancier
+    ELSIF CHOICE(?CurrentTab) = 6 THEN
+        LOC:CurrentLeverancier = Loc:Leverancier2
+    ELSE
+        LOC:CurrentLeverancier = 0
+    END
 
 ThisWindow.Init PROCEDURE
 
 ReturnValue          BYTE,AUTO
 
   CODE
-  GlobalErrors.SetProcedureName('BrowseOverboeking')
+        udpt.Init(UD,'BrowseInkoop','VoorrPln034.clw','VoorrPln.DLL','03/02/2023 @ 01:58PM')    
+             
+  GlobalErrors.SetProcedureName('BrowseInkoop')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
-  GLO:Overboeking_ThreadID = THREAD()
+  GLO:Inkoop_ThreadID = THREAD()
   IF ReturnValue THEN RETURN ReturnValue.
   SELF.FirstField = ?Browse:1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  BIND('Pla:PlanningID',Pla:PlanningID)                    ! Added by: BrowseBox(ABC)
+  BIND('LOC:NietVerwerkt',LOC:NietVerwerkt)                ! Added by: BrowseBox(ABC)
+  BIND('Loc:Leverancier',Loc:Leverancier)                  ! Added by: BrowseBox(ABC)
+  BIND('LOC:Verwerkt',LOC:Verwerkt)                        ! Added by: BrowseBox(ABC)
+  BIND('Loc:DatumVanaf',Loc:DatumVanaf)                    ! Added by: BrowseBox(ABC)
+  BIND('Loc:Leverancier2',Loc:Leverancier2)                ! Added by: BrowseBox(ABC)
+  BIND('Ink:InkoopID',Ink:InkoopID)                        ! Added by: BrowseBox(ABC)
+  BIND('Loc:Artikelen',Loc:Artikelen)                      ! Added by: BrowseBox(ABC)
+  BIND('LOC:Firmanaam2',LOC:Firmanaam2)                    ! Added by: FileDropCombo(ABC)
   SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
@@ -251,58 +293,90 @@ ReturnValue          BYTE,AUTO
   ELSE
      SELF.AddItem(?Close,RequestCompleted)                 ! Add the close control to the window manger
   END
+  	LOC:Verwerkt = 1
   	LOC:NietVerwerkt = 0
-  	LOC:MinCelID = 1
-  	CLEAR(LOC:MaxCelID,1)
-  Relate:Planning.SetOpenRelated()
-  Relate:Planning.Open                                     ! File Planning used by this procedure, so make sure it's RelationManager is open
+  Loc:DatumVanaf=Date(Month(Today()),Day(Today()),Year(today())-1)
+  
+  Loc:Timer = GETINI('TIMER','Inkoop',100,PQ:IniFile)
+  Relate:AARelatie.Open                                    ! File AARelatie used by this procedure, so make sure it's RelationManager is open
+  Relate:AInkoop.Open                                      ! File AInkoop used by this procedure, so make sure it's RelationManager is open
+  Relate:APlanning.Open                                    ! File APlanning used by this procedure, so make sure it's RelationManager is open
+  Relate:ARelatie.Open                                     ! File ARelatie used by this procedure, so make sure it's RelationManager is open
+  Relate:Inkoop.SetOpenRelated()
+  Relate:Inkoop.Open                                       ! File Inkoop used by this procedure, so make sure it's RelationManager is open
+  Relate:ViewArtikel.Open                                  ! File ViewArtikel used by this procedure, so make sure it's RelationManager is open
+  Access:Planning.UseFile                                  ! File referenced in 'Other Files' so need to inform it's FileManager
   SELF.FilesOpened = True
-  BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:Planning,SELF) ! Initialize the browse manager
+  BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:Inkoop,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  0{Prop:Text}=CLIP(0{Prop:Text}) !& ' (' & CLIP(LEFT(FORMAT(GLO:Overboeking_ThreadID,@N_10))) & ')'
-  IF GLO:HidePlanningInstructie = 1 THEN 
-      ?Browse:1{PROPLIST:Width, 16} = 0
-  END
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
-  BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
-  BRW1.AddSortOrder(,Pla:OverboekingCelID_Planning_K)      ! Add the sort order for Pla:OverboekingCelID_Planning_K for sort order 1
-  BRW1.SetFilter('(Pla:Verwerkt=1 AND Pla:OverboekingCelID>0)') ! Apply filter expression to browse
-  BRW1.AddSortOrder(,Pla:Verwerkt_OverboekingCelID_Planning_K) ! Add the sort order for Pla:Verwerkt_OverboekingCelID_Planning_K for sort order 2
-  BRW1.SetFilter('(Pla:Verwerkt=0 AND Pla:OverboekingCelID>0)') ! Apply filter expression to browse
+  BRW1.AddSortOrder(,Ink:Verwerkt_PlanningD_K)             ! Add the sort order for Ink:Verwerkt_PlanningD_K for sort order 1
+  BRW1.AddLocator(BRW1::Sort5:Locator)                     ! Browse has a locator for sort order 1
+  BRW1::Sort5:Locator.Init(,Ink:Verwerkt,1,BRW1)           ! Initialize the browse locator using  using key: Ink:Verwerkt_PlanningD_K , Ink:Verwerkt
+  BRW1.SetFilter('(Ink:Verwerkt = LOC:NietVerwerkt)')      ! Apply filter expression to browse
+  BRW1.AddSortOrder(,Ink:Verwerkt_PlanningD_K)             ! Add the sort order for Ink:Verwerkt_PlanningD_K for sort order 2
+  BRW1.SetFilter('(Ink:Verwerkt = LOC:NietVerwerkt AND Ink:Planning_DATE > DATE(1,1,1900))') ! Apply filter expression to browse
+  BRW1.AddSortOrder(,Ink:Verwerkt_InkoopIDD_K)             ! Add the sort order for Ink:Verwerkt_InkoopIDD_K for sort order 3
+  BRW1.SetFilter('(Ink:Verwerkt = LOC:NietVerwerkt AND Ink:Leverancier = Loc:Leverancier)') ! Apply filter expression to browse
+  BRW1.AddResetField(Loc:Leverancier)                      ! Apply the reset field
+  BRW1.AddSortOrder(,Ink:Verwerkt_PlanningD_K)             ! Add the sort order for Ink:Verwerkt_PlanningD_K for sort order 4
+  BRW1.SetFilter('(Ink:Verwerkt = LOC:Verwerkt AND Ink:Planning_DATE>Loc:DatumVanaf)') ! Apply filter expression to browse
+  BRW1.AddResetField(Loc:DatumVanaf)                       ! Apply the reset field
+  BRW1.AddSortOrder(,Ink:Verwerkt_PlanningD_K)             ! Add the sort order for Ink:Verwerkt_PlanningD_K for sort order 5
+  BRW1.SetFilter('(Ink:Verwerkt = LOC:Verwerkt AND Ink:Leverancier = Loc:Leverancier2)') ! Apply filter expression to browse
+  BRW1.AddResetField(Loc:Leverancier2)                     ! Apply the reset field
+  BRW1.AddSortOrder(,Ink:Verwerkt_InkoopIDD_K)             ! Add the sort order for Ink:Verwerkt_InkoopIDD_K for sort order 6
+  BRW1.SetFilter('(Ink:Verwerkt = LOC:NietVerwerkt)')      ! Apply filter expression to browse
   ?Browse:1{PROP:IconList,1} = '~off.ico'
   ?Browse:1{PROP:IconList,2} = '~on.ico'
-  BRW1.AddField(Art:ArtikelID,BRW1.Q.Art:ArtikelID)        ! Field Art:ArtikelID is a hot field or requires assignment from browse
-  BRW1.AddField(Art:ArtikelOms,BRW1.Q.Art:ArtikelOms)      ! Field Art:ArtikelOms is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:OverboekingPlanningID,BRW1.Q.Pla:OverboekingPlanningID) ! Field Pla:OverboekingPlanningID is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:Planning_DATE,BRW1.Q.Pla:Planning_DATE) ! Field Pla:Planning_DATE is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:Planning_TIME,BRW1.Q.Pla:Planning_TIME) ! Field Pla:Planning_TIME is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:OverboekSoort,BRW1.Q.Pla:OverboekSoort) ! Field Pla:OverboekSoort is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:KG,BRW1.Q.Pla:KG)                      ! Field Pla:KG is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:Pallets,BRW1.Q.Pla:Pallets)            ! Field Pla:Pallets is a hot field or requires assignment from browse
-  BRW1.AddField(Par:PartijID,BRW1.Q.Par:PartijID)          ! Field Par:PartijID is a hot field or requires assignment from browse
-  BRW1.AddField(Par:ExternPartijnr,BRW1.Q.Par:ExternPartijnr) ! Field Par:ExternPartijnr is a hot field or requires assignment from browse
-  BRW1.AddField(CEL:CelOms,BRW1.Q.CEL:CelOms)              ! Field CEL:CelOms is a hot field or requires assignment from browse
-  BRW1.AddField(CL:Locatienaam,BRW1.Q.CL:Locatienaam)      ! Field CL:Locatienaam is a hot field or requires assignment from browse
-  BRW1.AddField(ACel:CelOms,BRW1.Q.ACel:CelOms)            ! Field ACel:CelOms is a hot field or requires assignment from browse
-  BRW1.AddField(ACL:Locatienaam,BRW1.Q.ACL:Locatienaam)    ! Field ACL:Locatienaam is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:Instructie,BRW1.Q.Pla:Instructie)      ! Field Pla:Instructie is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:Transport,BRW1.Q.Pla:Transport)        ! Field Pla:Transport is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:OverboekCelLocatieID,BRW1.Q.Pla:OverboekCelLocatieID) ! Field Pla:OverboekCelLocatieID is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:PlanningID,BRW1.Q.Pla:PlanningID)      ! Field Pla:PlanningID is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:OverboekingCelID,BRW1.Q.Pla:OverboekingCelID) ! Field Pla:OverboekingCelID is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:Planning,BRW1.Q.Pla:Planning)          ! Field Pla:Planning is a hot field or requires assignment from browse
-  BRW1.AddField(Pla:Verwerkt,BRW1.Q.Pla:Verwerkt)          ! Field Pla:Verwerkt is a hot field or requires assignment from browse
-  BRW1.AddField(CEL:CelID,BRW1.Q.CEL:CelID)                ! Field CEL:CelID is a hot field or requires assignment from browse
-  BRW1.AddField(ACel:CelID,BRW1.Q.ACel:CelID)              ! Field ACel:CelID is a hot field or requires assignment from browse
-  BRW1.AddField(CL:CelLocatieID,BRW1.Q.CL:CelLocatieID)    ! Field CL:CelLocatieID is a hot field or requires assignment from browse
-  BRW1.AddField(ACL:CelLocatieID,BRW1.Q.ACL:CelLocatieID)  ! Field ACL:CelLocatieID is a hot field or requires assignment from browse
+  BRW1.AddField(Ink:InkoopID,BRW1.Q.Ink:InkoopID)          ! Field Ink:InkoopID is a hot field or requires assignment from browse
+  BRW1.AddField(Rel:FirmaNaam,BRW1.Q.Rel:FirmaNaam)        ! Field Rel:FirmaNaam is a hot field or requires assignment from browse
+  BRW1.AddField(Ink:Planning_DATE,BRW1.Q.Ink:Planning_DATE) ! Field Ink:Planning_DATE is a hot field or requires assignment from browse
+  BRW1.AddField(Ink:Planning_TIME,BRW1.Q.Ink:Planning_TIME) ! Field Ink:Planning_TIME is a hot field or requires assignment from browse
+  BRW1.AddField(Ink:Verwerkt,BRW1.Q.Ink:Verwerkt)          ! Field Ink:Verwerkt is a hot field or requires assignment from browse
+  BRW1.AddField(Loc:Artikelen,BRW1.Q.Loc:Artikelen)        ! Field Loc:Artikelen is a hot field or requires assignment from browse
+  BRW1.AddField(Ink:Leverancier,BRW1.Q.Ink:Leverancier)    ! Field Ink:Leverancier is a hot field or requires assignment from browse
+  BRW1.AddField(Rel:NietActief,BRW1.Q.Rel:NietActief)      ! Field Rel:NietActief is a hot field or requires assignment from browse
+  BRW1.AddField(Ink:Planning,BRW1.Q.Ink:Planning)          ! Field Ink:Planning is a hot field or requires assignment from browse
+  BRW1.AddField(Rel:RelatieID,BRW1.Q.Rel:RelatieID)        ! Field Rel:RelatieID is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
-  INIMgr.Fetch('BrowseOverboeking',QuickWindow)            ! Restore window settings from non-volatile store
+  INIMgr.Fetch('BrowseInkoop',QuickWindow)                 ! Restore window settings from non-volatile store
   Resizer.Resize                                           ! Reset required after window size altered by INI manager
-  BRW1.AskProcedure = 1                                    ! Will call: UpdateOverboeking
+  BRW1.AskProcedure = 1                                    ! Will call: UpdateInkoop((LOC:CurrentLeverancier))
+  FDCB5.Init(AREL:FirmaNaam,?AREL:FirmaNaam,Queue:FileDropCombo.ViewPosition,FDCB5::View:FileDropCombo,Queue:FileDropCombo,Relate:ARelatie,ThisWindow,GlobalErrors,0,0,0)
+  FDCB5.RemoveDuplicatesFlag = TRUE
+  FDCB5.Q &= Queue:FileDropCombo
+  FDCB5.AddSortOrder(AREL:Relatie_FK01)
+  FDCB5.SetFilter('AREL:Type=''S'' AND NOT AREL:NietActief')
+  FDCB5.AddField(LOC:Firmanaam,FDCB5.Q.LOC:Firmanaam) !List box control field - type derived from local data
+  FDCB5.AddField(AREL:FirmaNaam,FDCB5.Q.AREL:FirmaNaam) !Browse hot field - type derived from field
+  FDCB5.AddField(AREL:Type,FDCB5.Q.AREL:Type) !Browse hot field - type derived from field
+  FDCB5.AddField(AREL:NietActief,FDCB5.Q.AREL:NietActief) !Browse hot field - type derived from field
+  FDCB5.AddUpdateField(AREL:RelatieID,Loc:Leverancier)
+  ThisWindow.AddItem(FDCB5.WindowComponent)
+  FDCB5.DefaultFill = 0
+  FDCB2.Init(AARel:FirmaNaam,?AARel:FirmaNaam,Queue:FileDropCombo:1.ViewPosition,FDCB2::View:FileDropCombo,Queue:FileDropCombo:1,Relate:AARelatie,ThisWindow,GlobalErrors,0,0,0)
+  FDCB2.RemoveDuplicatesFlag = TRUE
+  FDCB2.Q &= Queue:FileDropCombo:1
+  FDCB2.AddSortOrder(AARel:Relatie_FK01)
+  FDCB2.SetFilter('AARel:Type=''S'' AND NOT AARel:NietActief')
+  FDCB2.AddField(LOC:Firmanaam2,FDCB2.Q.LOC:Firmanaam2) !List box control field - type derived from local data
+  FDCB2.AddField(AARel:FirmaNaam,FDCB2.Q.AARel:FirmaNaam) !Browse hot field - type derived from field
+  FDCB2.AddField(AARel:Type,FDCB2.Q.AARel:Type) !Browse hot field - type derived from field
+  FDCB2.AddField(AARel:NietActief,FDCB2.Q.AARel:NietActief) !Browse hot field - type derived from field
+  FDCB2.AddUpdateField(AARel:RelatieID,Loc:Leverancier2)
+  ThisWindow.AddItem(FDCB2.WindowComponent)
+  FDCB2.DefaultFill = 0
   SELF.SetAlerts()
   NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
   NetLocalRefreshTime = clock()
@@ -316,26 +390,40 @@ ReturnValue          BYTE,AUTO
 
   CODE
   ReturnValue = PARENT.Kill()
-  GLO:Overboeking_ThreadID = 0
+  GLO:Inkoop_ThreadID = 0
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
-    Relate:Planning.Close
+    Relate:AARelatie.Close
+    Relate:AInkoop.Close
+    Relate:APlanning.Close
+    Relate:ARelatie.Close
+    Relate:Inkoop.Close
+    Relate:ViewArtikel.Close
   END
   IF SELF.Opened
-    INIMgr.Update('BrowseOverboeking',QuickWindow)         ! Save window data to non-volatile store
+    INIMgr.Update('BrowseInkoop',QuickWindow)              ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
 ThisWindow.Reset PROCEDURE(BYTE Force=0)
 
   CODE
+   !     UD.Debug('ThisWindow.Reset('&Force&') NetLocalRefreshDate:'&Format(NetLocalRefreshDate,@D6-)&' NetLocalRefreshTime'&Format(NetLocalRefreshTime,@T4))
+        IF Force 
+            FREE(InkoopArtikelQueue)
+            UD.Debug('Na InkoopArtikelQueue')
+        END
+        
   SELF.ForcedReset += Force
   IF QuickWindow{Prop:AcceptAll} THEN RETURN.
     NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
     NetLocalRefreshTime = clock()
   PARENT.Reset(Force)
+   !     UD.Debug('Na PARENT.Reset(Force)')  
 
 
 ThisWindow.Run PROCEDURE(USHORT Number,BYTE Request)
@@ -348,7 +436,7 @@ ReturnValue          BYTE,AUTO
     ReturnValue = RequestCancelled                         ! Always return RequestCancelled if the form was opened in ViewRecord mode
   ELSE
     GlobalRequest = Request
-    UpdateOverboeking
+    UpdateInkoop((LOC:CurrentLeverancier))
     ReturnValue = GlobalResponse
   END
   RETURN ReturnValue
@@ -369,14 +457,169 @@ Looped BYTE
     CASE ACCEPTED()
     OF ?SjabloonButton
       Get(BRW1.Q,Choice(?Browse:1))
-      Pla:PlanningID = BRW1.Q.Pla:PlanningID
-      IF Access:Planning.TryFetch(Pla:PK_Planning) <> Level:Benign THEN
+      CLEAR(Ink:Record)
+      Ink:InkoopID = BRW1.Q.Ink:InkoopID
+      IF (Access:Inkoop.TryFetch(Ink:PK_Inkoop) <> Level:Benign)
       	RETURN ReturnValue
       .
       
-      ReportOverboeking(Pla:PlanningID)
+      ReportInkoop(Ink:InkoopID, FALSE)
+    OF ?LookupAleverancier
+      	AREL:FirmaNaam=AARel:FirmaNaam
+    OF ?WeeglijstButton
+      Get(BRW1.Q,Choice(?Browse:1))
+      ReportWeeglijst('Inkoop', BRW1.Q.Ink:InkoopID)
+    OF ?SjabloonButton:3
+      Get(BRW1.Q,Choice(?Browse:1))
+      CLEAR(Ink:Record)
+      Ink:InkoopID = BRW1.Q.Ink:InkoopID
+      IF (Access:Inkoop.TryFetch(Ink:PK_Inkoop) <> Level:Benign)
+      	RETURN ReturnValue
+      .
+      
+      ReportInkoop(Ink:InkoopID, TRUE)
     END
   ReturnValue = PARENT.TakeAccepted()
+    CASE ACCEPTED()
+    OF ?KopieerButton
+      ThisWindow.Update()
+      ! Kopieren
+      GLO:GebruikerLogHandelingOpmerking = 'Kopieren Inkoop'
+      
+      Get(BRW1.Q,Choice(?Browse:1))
+      
+      CLEAR(AInk:Record)
+      AInk:InkoopID = BRW1.Q.Ink:InkoopID
+      IF (Access:AInkoop.TryFetch(AInk:PK_Inkoop) = Level:Benign)
+      	Access:Inkoop.PrimeRecord(false)
+      	Ink:Leverancier=AInk:Leverancier
+      	!Ink:Planning_DATE=today()
+          !Uitgeschakeld 18-4-2017
+      	!Ink:Planning_DATE=AInk:Planning_DATE
+      	!Ink:Planning_TIME=AInk:Planning_TIME
+      	Ink:Instructie=CLIP(AInk:Instructie)
+      	Ink:Transport=CLIP(AInk:Transport)
+      	Ink:LeverancierAlternatiefAdres=AInk:LeverancierAlternatiefAdres
+      	Ink:TransportKosten=AInk:TransportKosten
+      	Ink:ExtraKosten=AInk:ExtraKosten
+      	Ink:ExtraKostenTekst=CLIP(AInk:ExtraKostenTekst)
+          IF Access:Inkoop.TryInsert() = Level:Benign
+              GLO:TimingMeting[1] = CLOCK() - timingmeting#
+              
+      		CLEAR(APla:Record)
+      		APla:InkoopID =	AInk:InkoopID
+      		SET(APla:Planning_FK01, APla:Planning_FK01)
+      		LOOP
+      			Access:APlanning.TryNext()
+      			IF ERROR() THEN BREAK.
+      			IF APla:InkoopID <> AInk:InkoopID THEN BREAK.
+      			
+      			Access:Planning.PrimeRecord(false)
+      			Pla:InkoopID = Ink:InkoopID
+      			Pla:ArtikelID = CLIP(APla:ArtikelID)
+      			Pla:KG = APla:KG
+      			Pla:Pallets = APla:Pallets
+      			Pla:VerpakkingID = APla:VerpakkingID
+      			Pla:CelID = APla:CelID
+      			Pla:Memo = CLIP(APla:Memo)
+      			Pla:Instructie = CLIP(APla:Instructie)
+      			Pla:Transport = CLIP(APla:Transport)
+      			Pla:InkoopKGPrijs = APla:InkoopKGPrijs
+      			Pla:VerkoopKGPrijs = APla:VerkoopKGPrijs
+      			Access:Planning.TryInsert()
+              .
+              
+              GLO:TimingMeting[2] = CLOCK() - timingmeting# - GLO:TimingMeting[1]
+      		
+      		Access:Inkoop.TryFetch(Ink:PK_Inkoop)
+      		inkoopid# = Ink:InkoopID
+      		
+      		GlobalRequest = ChangeRecord
+      		UpdateInkoop()
+      
+      		IF GlobalResponse = RequestCancelled THEN
+      !			CLEAR(Pla:Record)
+      !			Pla:InkoopID = inkoopid#
+      !			SET(Pla:Planning_FK01, Pla:Planning_FK01)
+      !			LOOP
+      !				Access:Planning.Next()
+      !				IF ERROR() THEN BREAK.
+      !				IF Pla:InkoopID <> inkoopid# THEN BREAK.
+      !				
+      !				db.DebugOut('Verwijderen planning:' & Pla:PlanningID)
+      !				Access:Planning.DeleteRecord(false)
+      !			.
+      			
+      			CLEAR(Ink:Record)
+      			Ink:InkoopID = inkoopid#
+      			Access:Inkoop.TryFetch(Ink:PK_Inkoop)
+      			Relate:Inkoop.Delete(false) ! Ook planning-records meenemen
+      		ELSE
+      			NetRefreshPlanningViews()
+      			GLO:TimingMeting[3] = CLOCK() - timingmeting# - GLO:TimingMeting[2]
+      			ThisWindow.Reset(1)
+      			GLO:TimingMeting[4] = CLOCK() - timingmeting# - GLO:TimingMeting[3]
+      			! ERVOOR ZORGEN DAT DE ORIGINELE REGEL WEER GESELECTEERD WORDT
+      			LOOP I#=1 TO RECORDS(BRW1.Q)
+      				GET(BRW1.Q,I#)
+      				IF BRW1.Q.Ink:InkoopID = inkoopid#
+      					SELECT(?Browse:1,I#)
+      					BREAK
+      				END
+      			END
+              .
+      	ELSE
+      		MESSAGE('Inkoop kon niet gekopieerd worden.' & ERRORCODE())
+      	.
+      .
+      
+      GLO:GebruikerLogHandelingOpmerking = ''
+    OF ?CurrentTab
+      ! Omdat het nu met filters werkt ipv range wordt de leverancier niet meer standaard ingevuld.
+      DO VulCurrentLeverancier
+    OF ?LookupLeverancier
+      ThisWindow.Update()
+      GlobalRequest = SelectRecord
+      SelectArelatie('S')
+      ThisWindow.Reset
+      	if globalresponse=RequestCompleted
+      		Loc:Leverancier = AREL:RelatieID
+              FDCB5.ResetQueue(True)
+              
+              DO VulCurrentLeverancier
+      	END
+      		
+    OF ?LookupAleverancier
+      ThisWindow.Update()
+      GlobalRequest = SelectRecord
+      SelectArelatie('S')
+      ThisWindow.Reset
+      	if globalresponse=RequestCompleted
+      		Loc:Leverancier2 = AREL:RelatieID
+              FDCB2.ResetQueue(True)
+              
+              DO VulCurrentLeverancier
+      	END
+    OF ?WeeglijstExcelButton
+      ThisWindow.Update()
+      Get(BRW1.Q,Choice(?Browse:1))
+      ReportWeeglijstExcel('Inkoop', BRW1.Q.Ink:InkoopID)
+    OF ?SjabloonButton:2
+      ThisWindow.Update()
+      WindowCallSjabloon('Inkoop',Ink:InkoopID)
+      ThisWindow.Reset
+    OF ?RefreshButton
+      ThisWindow.Update()
+      ThisWindow.Reset(1)
+    OF ?Inkoopbevestiging
+      ThisWindow.Update()
+      ReportInkoopBevestiging(Ink:InkoopID)
+      ThisWindow.Reset
+    OF ?ExportnaarExact
+      ThisWindow.Update()
+      ExportInvoiceXML(,Ink:Record, 'PurchaseOrder')
+      ThisWindow.Reset
+    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -389,6 +632,19 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
+    ! Afhandeling NetRefresh Event
+    IF Event()=1170           ! Refresh is Send
+       UD.DebugEvent()
+       ! welke dependencies zaijn nu meergestuurd
+        Loc:NetRefreshByTimer=RANDOM(1,5)
+        UD.Debug('NetLocalRefreshDate: '&Format(NetLocalRefreshDate,@d6-)&', NetLocalRefreshTime: '&Format(NetLocalRefreshTime,@t4)&|
+            ', ThisNetRefresh.Date: '&Format(ThisNetRefresh.Date,@d6-)&' ThisNetRefresh.Time: '& Format(ThisNetRefresh.Time,@t4)&|
+                ' WaitThisLong: '&ThisNetRefresh.WaitThisLong&' Loc:NetRefreshByTimer: '&Loc:NetRefreshByTimer)
+          
+          
+        RETURN Level:Notify
+    END  
+          
     If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
       Self.Reset(1)                      ! NetTalk (NetRefresh)
     End
@@ -402,9 +658,41 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowseInkoop',UD.SetApplicationName('VoorrPln','DLL'),QuickWindow{PROP:Hlp},'10/06/2011 @ 04:10PM','03/02/2023 @ 01:58PM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
+    RETURN ReturnValue
+  END
+  ReturnValue = Level:Fatal
+  RETURN ReturnValue
+
+
+ThisWindow.TakeNewSelection PROCEDURE
+
+ReturnValue          BYTE,AUTO
+
+Looped BYTE
+  CODE
+  LOOP                                                     ! This method receives all NewSelection events
+    IF Looped
+      RETURN Level:Notify
+    ELSE
+      Looped = 1
+    END
+  ReturnValue = PARENT.TakeNewSelection()
+    CASE FIELD()
+    OF ?CurrentTab
+      ! Omdat het nu met filters werkt ipv range wordt de leverancier niet meer standaard ingevuld.
+      DO VulCurrentLeverancier
+    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -432,17 +720,36 @@ Looped BYTE
         self.CancelAction = cancel:cancel
         self.response = requestcancelled
       end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
     OF EVENT:Notify
         ! Focus overnemen
         !NOTIFICATION(LOC:NotifyCode)
         !IF LOC:NotifyCode = 1 THEN
             ThisWindow{Prop:Active} = 1
         !END
+      
+          !NOTIFICATION(NotifyCode#)
+      	!IF NotifyCode# = 1
+      	!	0{Prop:Active}=TRUE
+      	!.	
+      	!ELSIF NotifyCode# = 2
+      		!ThisWindow.Reset(True)
+      	!	BRW1.ResetQueue(True)
+      	!.
+    END
+  ReturnValue = PARENT.TakeWindowEvent()
+    CASE EVENT()
     OF EVENT:OpenWindow
         post(event:visibleondesktop)
+    OF EVENT:Timer
+      IF Loc:NetRefreshByTimer
+          0{Prop:Timer}=0
+          UD.Debug('Loc:NetRefreshByTimer Set True')
+          
+          ThisWindow.Reset(1)
+          
+          Loc:NetRefreshByTimer = FALSE
+          0{Prop:Timer}=Loc:Timer
+      END
     END
     RETURN ReturnValue
   END
@@ -455,13 +762,17 @@ BRW1.Ask PROCEDURE(BYTE Request)
 ReturnValue          BYTE,AUTO
 
   CODE
-  IF Request = ChangeRecord AND Pla:Verwerkt THEN
-     !Request = ViewRecord
-  ELSIF Request = DeleteRecord AND Pla:Verwerkt THEN
-      MESSAGE('Geplande overboeking is al verwerkt. Kan dus niet meer verwijderd worden. Draai de mutatie eventueel eerst terug.', 'Al uitgevoerd', ICON:Exclamation)
+  IF Request = ChangeRecord AND Ink:Verwerkt AND IGB:Administrator=0 THEN
+    ! Request = ViewRecord         ! weer geactiveerd op 2018-1-29 omdat de verwerkte inkoop+verkoop aangepast kunnen worden
+      ! Uitgezet op 16 maart omdat de prijzen wel nog aangepast mogen worden
+  ELSIF Request = DeleteRecord AND Ink:Verwerkt THEN
+      MESSAGE('Geplande inkoop is al verwerkt. Kan dus niet meer verwijderd worden.', 'Al uitgevoerd', ICON:Exclamation)
       RETURN Level:Benign
   END
   ReturnValue = PARENT.Ask(Request)
+  IF ReturnValue = RequestCompleted THEN
+    !  ThisWindow.Reset(1)                   ! deze kan ik uitschakelen omdat de refresh ook al door de form wordt uitgevoerd via netrefresh
+  END
   RETURN ReturnValue
 
 
@@ -473,70 +784,30 @@ GreenBarIndex   LONG,AUTO
   !----------------------------------------------------------------------
     LOOP GreenBarIndex=1 TO RECORDS(SELF.Q)
       GET(SELF.Q,GreenBarIndex)
-      SELF.Q.Art:ArtikelID_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Art:ArtikelID
-      SELF.Q.Art:ArtikelID_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Art:ArtikelID_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Art:ArtikelID_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Art:ArtikelOms_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Art:ArtikelOms
-      SELF.Q.Art:ArtikelOms_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Art:ArtikelOms_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Art:ArtikelOms_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:OverboekingPlanningID_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:OverboekingPlanningID
-      SELF.Q.Pla:OverboekingPlanningID_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:OverboekingPlanningID_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:OverboekingPlanningID_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Planning_DATE_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:Planning_DATE
-      SELF.Q.Pla:Planning_DATE_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:Planning_DATE_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Planning_DATE_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Planning_TIME_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:Planning_TIME
-      SELF.Q.Pla:Planning_TIME_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:Planning_TIME_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Planning_TIME_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:OverboekSoort_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:OverboekSoort
-      SELF.Q.Pla:OverboekSoort_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:OverboekSoort_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:OverboekSoort_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:KG_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:KG
-      SELF.Q.Pla:KG_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:KG_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:KG_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Pallets_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:Pallets
-      SELF.Q.Pla:Pallets_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:Pallets_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Pallets_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Par:PartijID_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Par:PartijID
-      SELF.Q.Par:PartijID_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Par:PartijID_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Par:PartijID_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Par:ExternPartijnr_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Par:ExternPartijnr
-      SELF.Q.Par:ExternPartijnr_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Par:ExternPartijnr_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Par:ExternPartijnr_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.CEL:CelOms_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for CEL:CelOms
-      SELF.Q.CEL:CelOms_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.CEL:CelOms_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.CEL:CelOms_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.CL:Locatienaam_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for CL:Locatienaam
-      SELF.Q.CL:Locatienaam_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.CL:Locatienaam_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.CL:Locatienaam_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.ACel:CelOms_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for ACel:CelOms
-      SELF.Q.ACel:CelOms_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.ACel:CelOms_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.ACel:CelOms_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.ACL:Locatienaam_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for ACL:Locatienaam
-      SELF.Q.ACL:Locatienaam_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.ACL:Locatienaam_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.ACL:Locatienaam_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Instructie_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:Instructie
-      SELF.Q.Pla:Instructie_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:Instructie_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Instructie_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Transport_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pla:Transport
-      SELF.Q.Pla:Transport_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
-      SELF.Q.Pla:Transport_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
-      SELF.Q.Pla:Transport_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:InkoopID_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Ink:InkoopID
+      SELF.Q.Ink:InkoopID_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Ink:InkoopID_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:InkoopID_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Rel:FirmaNaam_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Rel:FirmaNaam
+      SELF.Q.Rel:FirmaNaam_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Rel:FirmaNaam_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Rel:FirmaNaam_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:Planning_DATE_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Ink:Planning_DATE
+      SELF.Q.Ink:Planning_DATE_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Ink:Planning_DATE_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:Planning_DATE_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:Planning_TIME_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Ink:Planning_TIME
+      SELF.Q.Ink:Planning_TIME_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Ink:Planning_TIME_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:Planning_TIME_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:Verwerkt_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Ink:Verwerkt
+      SELF.Q.Ink:Verwerkt_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Ink:Verwerkt_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Ink:Verwerkt_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Loc:Artikelen_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Loc:Artikelen
+      SELF.Q.Loc:Artikelen_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Loc:Artikelen_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Loc:Artikelen_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
       PUT(SELF.Q)
     END
   !----------------------------------------------------------------------
@@ -547,10 +818,19 @@ BRW1.Init PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager 
   CODE
   PARENT.Init(ListBox,Posit,V,Q,RM,WM)
   IF WM.Request <> ViewRecord                              ! If called for anything other than ViewMode, make the insert, change & delete controls available
-    SELF.InsertControl=?Insert
-    SELF.ChangeControl=?Change
-    SELF.DeleteControl=?Delete
+    SELF.InsertControl=?Insert:3
+    SELF.ChangeControl=?Change:3
+    SELF.DeleteControl=?Delete:3
   END
+
+
+BRW1.ResetQueue PROCEDURE(BYTE ResetMode)
+
+  CODE
+  DO VulCurrentLeverancier	
+  
+  
+  PARENT.ResetQueue(ResetMode)
 
 
 BRW1.ResetSort PROCEDURE(BYTE Force)
@@ -560,8 +840,16 @@ ReturnValue          BYTE,AUTO
   CODE
   IF CHOICE(?CurrentTab) = 2
     RETURN SELF.SetSort(1,Force)
-  ELSE
+  ELSIF CHOICE(?CurrentTab) = 3
     RETURN SELF.SetSort(2,Force)
+  ELSIF CHOICE(?CurrentTab) = 4
+    RETURN SELF.SetSort(3,Force)
+  ELSIF CHOICE(?CurrentTab) = 5
+    RETURN SELF.SetSort(4,Force)
+  ELSIF CHOICE(?CurrentTab) = 6
+    RETURN SELF.SetSort(5,Force)
+  ELSE
+    RETURN SELF.SetSort(6,Force)
   END
   ReturnValue = PARENT.ResetSort(Force)
   RETURN ReturnValue
@@ -570,79 +858,84 @@ ReturnValue          BYTE,AUTO
 BRW1.SetQueueRecord PROCEDURE
 
   CODE
+  LOC:Artikelen = CachingClass.GetInkoopArtikelen(Ink:InkoopID,Choice(?CurrentTab),Choose(Choice(?CurrentTab) = 6,Loc:Leverancier2,Loc:Leverancier),Loc:DatumVanaf)
   PARENT.SetQueueRecord
   
-  IF (Pla:OverboekingPlanningID > 0)
-    SELF.Q.Pla:OverboekingPlanningID_Icon = 2              ! Set icon from icon list
+  IF (AARel:NietActief)
+    SELF.Q.Rel:FirmaNaam_Style = 1 ! 1
   ELSE
-    SELF.Q.Pla:OverboekingPlanningID_Icon = 1              ! Set icon from icon list
+    SELF.Q.Rel:FirmaNaam_Style = 0 ! 0
+  END
+  IF (Ink:Verwerkt)
+    SELF.Q.Ink:Verwerkt_Icon = 2                           ! Set icon from icon list
+  ELSE
+    SELF.Q.Ink:Verwerkt_Icon = 1                           ! Set icon from icon list
   END
   !----------------------------------------------------------------------
-      SELF.Q.Art:ArtikelID_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Art:ArtikelID
-      SELF.Q.Art:ArtikelID_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Art:ArtikelID_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Art:ArtikelID_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Art:ArtikelOms_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Art:ArtikelOms
-      SELF.Q.Art:ArtikelOms_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Art:ArtikelOms_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Art:ArtikelOms_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:OverboekingPlanningID_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:OverboekingPlanningID
-      SELF.Q.Pla:OverboekingPlanningID_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:OverboekingPlanningID_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:OverboekingPlanningID_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Planning_DATE_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:Planning_DATE
-      SELF.Q.Pla:Planning_DATE_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:Planning_DATE_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Planning_DATE_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Planning_TIME_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:Planning_TIME
-      SELF.Q.Pla:Planning_TIME_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:Planning_TIME_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Planning_TIME_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:OverboekSoort_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:OverboekSoort
-      SELF.Q.Pla:OverboekSoort_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:OverboekSoort_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:OverboekSoort_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:KG_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:KG
-      SELF.Q.Pla:KG_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:KG_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:KG_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Pallets_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:Pallets
-      SELF.Q.Pla:Pallets_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:Pallets_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Pallets_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Par:PartijID_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Par:PartijID
-      SELF.Q.Par:PartijID_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Par:PartijID_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Par:PartijID_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Par:ExternPartijnr_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Par:ExternPartijnr
-      SELF.Q.Par:ExternPartijnr_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Par:ExternPartijnr_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Par:ExternPartijnr_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.CEL:CelOms_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for CEL:CelOms
-      SELF.Q.CEL:CelOms_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.CEL:CelOms_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.CEL:CelOms_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.CL:Locatienaam_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for CL:Locatienaam
-      SELF.Q.CL:Locatienaam_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.CL:Locatienaam_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.CL:Locatienaam_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.ACel:CelOms_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for ACel:CelOms
-      SELF.Q.ACel:CelOms_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.ACel:CelOms_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.ACel:CelOms_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.ACL:Locatienaam_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for ACL:Locatienaam
-      SELF.Q.ACL:Locatienaam_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.ACL:Locatienaam_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.ACL:Locatienaam_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Instructie_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:Instructie
-      SELF.Q.Pla:Instructie_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:Instructie_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Instructie_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Transport_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pla:Transport
-      SELF.Q.Pla:Transport_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
-      SELF.Q.Pla:Transport_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
-      SELF.Q.Pla:Transport_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:InkoopID_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Ink:InkoopID
+      SELF.Q.Ink:InkoopID_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Ink:InkoopID_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:InkoopID_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Rel:FirmaNaam_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Rel:FirmaNaam
+      SELF.Q.Rel:FirmaNaam_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Rel:FirmaNaam_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Rel:FirmaNaam_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:Planning_DATE_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Ink:Planning_DATE
+      SELF.Q.Ink:Planning_DATE_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Ink:Planning_DATE_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:Planning_DATE_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:Planning_TIME_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Ink:Planning_TIME
+      SELF.Q.Ink:Planning_TIME_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Ink:Planning_TIME_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:Planning_TIME_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:Verwerkt_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Ink:Verwerkt
+      SELF.Q.Ink:Verwerkt_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Ink:Verwerkt_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Ink:Verwerkt_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Loc:Artikelen_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Loc:Artikelen
+      SELF.Q.Loc:Artikelen_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Loc:Artikelen_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Loc:Artikelen_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
   !----------------------------------------------------------------------
+  IF Self.q.Rel:NietActief
+      Ud.Debug(SELF.Q.Ink:InkoopID)
+      Ud.Debug(Self.q.Rel:NietActief)
+      SELF.Q.Rel:FirmaNaam_NormalBG   = Color:Red
+      SELF.Q.Rel:FirmaNaam_SelectedFG = Color:Red
+  END
+    
+
+
+BRW1.SetSort PROCEDURE(BYTE NewOrder,BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+_starttijd              TIME
+  CODE
+  _starttijd = CLOCK()
+  ReturnValue = PARENT.SetSort(NewOrder,Force)
+  IF ReturnValue
+      LogSetSort('Inkoop','NewOrder: '&NewOrder&' Force: '&Force& ' ReturnValue: '&ReturnValue&' '&(Clock()-_starttijd)/100&' sec')
+  END
+  RETURN ReturnValue
+
+
+BRW1.ValidateRecord PROCEDURE
+
+ReturnValue          BYTE,AUTO
+
+BRW1::RecordStatus   BYTE,AUTO
+  CODE
+  ReturnValue = PARENT.ValidateRecord()
+  IF Ink:Leverancier = 0 THEN RETURN Record:Filtered. ! Records die een andere gebruiker aan het toevoegen is, niet tonen.
+  
+  IF CHOICE(?CurrentTab) = 2
+      IF Ink:Planning_DATE > DATE(1,1,1900) THEN
+          RETURN Record:Filtered
+      END
+  END
+  BRW1::RecordStatus=ReturnValue
+  RETURN ReturnValue
 
 
 Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
@@ -651,4 +944,64 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   CODE
   PARENT.Init(AppStrategy,SetWindowMinSize,SetWindowMaxSize)
   SELF.SetParentDefaults()                                 ! Calculate default control parent-child relationships based upon their positions on the window
+  SELF.SetStrategy(?Insert:3, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?Insert:3
+  SELF.SetStrategy(?Change:3, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?Change:3
+  SELF.SetStrategy(?Delete:3, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?Delete:3
+  SELF.SetStrategy(?AREL:FirmaNaam, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?AREL:FirmaNaam
+  SELF.SetStrategy(?AARel:FirmaNaam, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?AARel:FirmaNaam
+  SELF.SetStrategy(?WeeglijstButton, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?WeeglijstButton
+  SELF.SetStrategy(?SjabloonButton, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?SjabloonButton
+  SELF.SetStrategy(?KopieerButton, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?KopieerButton
+  SELF.SetStrategy(?SjabloonButton:2, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?SjabloonButton:2
+  SELF.SetStrategy(?RefreshButton, Resize:FixRight+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?RefreshButton
+  SELF.SetStrategy(?Loc:DatumVanaf, Resize:FixRight+Resize:FixTop, Resize:LockSize) ! Override strategy for ?Loc:DatumVanaf
+  SELF.SetStrategy(?Loc:DatumVanaf:Prompt, Resize:FixRight+Resize:FixTop, Resize:LockSize) ! Override strategy for ?Loc:DatumVanaf:Prompt
+
+
+FDCB5.SetQueueRecord PROCEDURE
+
+  CODE
+  	i#=INSTRING('<39>',AREL:FirmaNaam,1,1)
+  	IF i#
+  		Loc:Firmanaam = Sub(AREL:FirmaNaam,1,i#-1)&SUB(AREL:FirmaNaam,i#+1,51)
+  	ELSE
+  		Loc:Firmanaam = AREL:FirmaNaam
+  	END
+  PARENT.SetQueueRecord
+  
+  IF (AREL:NietActief)
+    SELF.Q.LOC:Firmanaam_NormalFG = -1                     ! Set conditional color values for LOC:Firmanaam
+    SELF.Q.LOC:Firmanaam_NormalBG = 255
+    SELF.Q.LOC:Firmanaam_SelectedFG = 255
+    SELF.Q.LOC:Firmanaam_SelectedBG = -1
+  ELSE
+    SELF.Q.LOC:Firmanaam_NormalFG = -1                     ! Set color values for LOC:Firmanaam
+    SELF.Q.LOC:Firmanaam_NormalBG = -1
+    SELF.Q.LOC:Firmanaam_SelectedFG = -1
+    SELF.Q.LOC:Firmanaam_SelectedBG = -1
+  END
+
+
+FDCB2.SetQueueRecord PROCEDURE
+
+  CODE
+  	i#=INSTRING('<39>',AAREL:FirmaNaam,1,1)
+  	IF i#
+  		Loc:Firmanaam2 = Sub(AAREL:FirmaNaam,1,i#-1)&SUB(AAREL:FirmaNaam,i#+1,51)
+  	ELSE
+  		Loc:Firmanaam2 = AAREL:FirmaNaam
+  	END
+  PARENT.SetQueueRecord
+  
+  IF (AARel:NietActief)
+    SELF.Q.LOC:Firmanaam2_NormalFG = -1                    ! Set conditional color values for LOC:Firmanaam2
+    SELF.Q.LOC:Firmanaam2_NormalBG = 255
+    SELF.Q.LOC:Firmanaam2_SelectedFG = 255
+    SELF.Q.LOC:Firmanaam2_SelectedBG = -1
+  ELSE
+    SELF.Q.LOC:Firmanaam2_NormalFG = -1                    ! Set color values for LOC:Firmanaam2
+    SELF.Q.LOC:Firmanaam2_NormalBG = -1
+    SELF.Q.LOC:Firmanaam2_SelectedFG = -1
+    SELF.Q.LOC:Firmanaam2_SelectedBG = -1
+  END
 

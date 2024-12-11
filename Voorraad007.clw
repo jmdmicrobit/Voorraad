@@ -96,6 +96,7 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(Mutatie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -126,7 +127,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'UpdateRareMutatie','Voorraad007.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+        udpt.Init(UD,'UpdateRareMutatie','Voorraad007.clw','Voorraad.EXE','07/01/2024 @ 05:23PM')    
              
   GlobalErrors.SetProcedureName('UpdateRareMutatie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -135,10 +136,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Mut:MutatieID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Mutatie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
   SELF.AddHistoryField(?Mut:MutatieID,1)
@@ -155,6 +155,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Mut:RedenAfboeking,15)
   SELF.AddHistoryField(?Mut:ArtikelID,16)
   SELF.AddHistoryField(?Mut:PlanningID,17)
+  SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Mutatie.Open                                      ! File Mutatie used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
@@ -172,8 +173,15 @@ ReturnValue          BYTE,AUTO
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?Mut:MutatieID{PROP:ReadOnly} = True
@@ -207,6 +215,7 @@ ThisWindow.Kill PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -307,14 +316,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateRareMutatie',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'07/06/2010 @ 11:12AM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
+        UD.ShowProcedureInfo('UpdateRareMutatie',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'07/06/2010 @ 11:12AM','07/01/2024 @ 05:23PM','10/11/2024 @ 01:55PM')  
     
        CYCLE
      END

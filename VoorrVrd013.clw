@@ -21,6 +21,7 @@
 !!! </summary>
 BrowseVoorraadVIEW PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 LOC:TempFormat       STRING(2000)                          ! 
 Loc:TotaalCelLocatie DECIMAL(11,2)                         ! 
 LOC:CelLocatieNamen  CSTRING(51)                           ! 
@@ -59,6 +60,9 @@ LOC:TotaalVoorraad   DECIMAL(12,2)                         !
 Loc:LegeVoorraadVerbergen BYTE                             ! 
 LOC:PeilDatum        DATE                                  ! 
 Loc:CelID3           LONG                                  ! 
+Loc:NetRefreshByTimer BYTE                                 ! 
+Loc:Timer            LONG                                  ! 
+Loc:CustomBackground LONG                                  ! 
 BRW1::View:Browse    VIEW(ViewVoorraadPlanning)
                        PROJECT(VVP:ArtikelID)
                        PROJECT(VVP:ArtikelOms)
@@ -251,6 +255,8 @@ BRW2::View:Browse    VIEW(ViewVoorraadPartij)
                        PROJECT(VVPar:AanmaakDatum_GROUP)
                        PROJECT(VVPar:CelID)
                        PROJECT(VVPar:PartijCelID)
+                       PROJECT(VVPar:Blokkade_DATE)
+                       PROJECT(VVPar:deBlokkade_DATE)
                        PROJECT(VVPar:ArtikelOms)
                        JOIN(AArt:Artikel_PK,VVPar:ArtikelID)
                          PROJECT(AArt:ArtikelOms)
@@ -277,6 +283,9 @@ VVPar:PartijID_NormalFG LONG                          !Normal forground color
 VVPar:PartijID_NormalBG LONG                          !Normal background color
 VVPar:PartijID_SelectedFG LONG                        !Selected forground color
 VVPar:PartijID_SelectedBG LONG                        !Selected background color
+VVPar:PartijID_Icon    LONG                           !Entry's icon ID
+VVPar:PartijID_Style   LONG                           !Field style
+VVPar:PartijID_Tip     STRING(80)                     !Field tooltip
 VVPar:ExternPartijnr   LIKE(VVPar:ExternPartijnr)     !List box control field - type derived from field
 VVPar:ExternPartijnr_NormalFG LONG                    !Normal forground color
 VVPar:ExternPartijnr_NormalBG LONG                    !Normal background color
@@ -320,6 +329,8 @@ VVPar:AanmaakDatum_DATE_SelectedBG LONG               !Selected background color
 VVPar:AanmaakDatum_GROUP STRING(SIZE(VVPar:AanmaakDatum_GROUP)) !Browse hot field - STRING defined to hold GROUP's contents
 VVPar:CelID            LIKE(VVPar:CelID)              !Browse hot field - type derived from field
 VVPar:PartijCelID      LIKE(VVPar:PartijCelID)        !Browse hot field - type derived from field
+VVPar:Blokkade_DATE    LIKE(VVPar:Blokkade_DATE)      !Browse hot field - type derived from field
+VVPar:deBlokkade_DATE  LIKE(VVPar:deBlokkade_DATE)    !Browse hot field - type derived from field
 VVPar:ArtikelOms       LIKE(VVPar:ArtikelOms)         !Browse key field - type derived from field
 AArt:ArtikelID         LIKE(AArt:ArtikelID)           !Related join file key field - type derived from field
 VVParT:PartijID        LIKE(VVParT:PartijID)          !Related join file key field - type derived from field
@@ -400,7 +411,7 @@ NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
 NetLocalRefreshTime     Long
 NetLocalDependancies    String('|ViewVoorraadPlanning|ViewArtikel|ViewVoorraadCelTotaal|ViewVoorraadPartij|AViewArtikel|ViewVoorraadPartijTotaal|ViewPartijCelLocaties|ACel|AACel|')
 QuickWindow          WINDOW('Voorraad'),AT(,,644,279),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),RESIZE,CENTER,GRAY, |
-  IMM,MAX,MDI,HLP('BrowseVoorraad'),SYSTEM
+  IMM,MAX,MDI,HLP('BrowseVoorraad'),SYSTEM,TIMER(100)
                        SHEET,AT(4,4,638,250),USE(?CurrentTab)
                          TAB('&1) Totale Voorraad'),USE(?Tab:2)
                            LIST,AT(9,41,628,194),USE(?Browse:1),HVSCROLL,ALRT(MouseLeft2),FORMAT('46L(2)|*~Artikel' & |
@@ -424,13 +435,13 @@ QuickWindow          WINDOW('Voorraad'),AT(,,644,279),FONT('MS Sans Serif',8,,,C
                            PROMPT('Peildatum:'),AT(477,25),USE(?LOC:PeilDatum:Prompt:2)
                          END
                          TAB('&2) Partij-voorraden'),USE(?TAB1)
-                           BUTTON('Partij-voorraad verloop'),AT(11,25),USE(?PartijVoorraadVerloop)
-                           BUTTON('Overboeken'),AT(104,25,52),USE(?Overboeken2)
+                           BUTTON('Partij-voorraad verloop'),AT(11,25,82),USE(?PartijVoorraadVerloop)
+                           BUTTON('Overboeken'),AT(96,25,52),USE(?Overboeken2)
                            LIST,AT(11,46,621,199),USE(?List),HVSCROLL,FORMAT('[50L(2)|M*~ID~C(0)@s30@240L(2)|M*~Om' & |
-  'schrijving~C(0)@s60@](150)|~Artikel~[43R(2)|M*~Intern~C(0)@n_10@40R(2)|M*~Extern~C(1' & |
-  ')@s20@56R(2)|M*~Voorraad (KG)~C(0)@n-15`2@]|~Partij~[30L(2)|M*~Cel~C(0)@s50@50L(2)|M' & |
-  '*~Locatie~C(0)@s50@56R(2)|M*~Voorraad (KG)~C(0)@n-15`2@]|~Cel~60L(2)|M*~Verpakking~C' & |
-  '(0)@s50@126L(2)|M*~Leverancier~C(0)@s50@40L(2)|M*~Aanmaakdatum~C(0)@d17@'),FROM(Queue:Browse), |
+  'schrijving~C(0)@s60@](150)|~Artikel~[43R(2)|M*JYP~Intern~C(0)@n_10@40R(2)|M*~Extern~' & |
+  'C(1)@s20@56R(2)|M*~Voorraad (KG)~C(0)@n-15`2@]|~Partij~[30L(2)|M*~Cel~C(0)@s50@50L(2' & |
+  ')|M*~Locatie~C(0)@s50@56R(2)|M*~Voorraad (KG)~C(0)@n-15`2@]|~Cel~60L(2)|M*~Verpakkin' & |
+  'g~C(0)@s50@126L(2)|M*~Leverancier~C(0)@s50@40L(2)|M*~Aanmaakdatum~C(0)@d17@'),FROM(Queue:Browse), |
   IMM
                            PROMPT('in sortering:'),AT(503,28),USE(?LOC:PartijVoorraadSortering:Prompt)
                            LIST,AT(542,25,90,13),USE(LOC:PartijVoorraadSortering),DROP(10),FROM('Op artikel|#Op ar' & |
@@ -438,9 +449,10 @@ QuickWindow          WINDOW('Voorraad'),AT(,,644,279),FONT('MS Sans Serif',8,,,C
   'nr.|Aanmaakdatum'),IMM
                            ENTRY(@s20),AT(410,25,88),USE(LOC:ZoekVak)
                            PROMPT('Zoeken:'),AT(378,28),USE(?PROMPT1)
-                           BUTTON('Extra stickers'),AT(161,25),USE(?ExtraStickers)
-                           BUTTON('Corrigeer cel/locatie'),AT(225,25),USE(?WijzigLocatie)
-                           BUTTON('Excel'),AT(307,25,39),USE(?ExcelPartij)
+                           BUTTON('Extra stickers'),AT(151,25,51),USE(?ExtraStickers)
+                           BUTTON('Corrigeer cel/locatie'),AT(204,25,73),USE(?WijzigLocatie)
+                           BUTTON('Excel'),AT(281,25,29),USE(?ExcelPartij)
+                           BUTTON('Blokkade'),AT(314,25,49,14),USE(?Blokkade)
                          END
                          TAB('&3) Voorraad per Cel'),USE(?TAB2)
                            LIST,AT(9,42,628,204),USE(?List:2),FORMAT('67L(2)|*~Artikel ID~C(0)@s30@194L(2)|*~Artik' & |
@@ -473,10 +485,6 @@ QuickWindow          WINDOW('Voorraad'),AT(,,644,279),FONT('MS Sans Serif',8,,,C
   MSG('Close Window'),TIP('Close Window')
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -501,6 +509,7 @@ Init                   PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,Rel
 ResetQueue             PROCEDURE(BYTE ResetMode),DERIVED
 SetAlerts              PROCEDURE(),DERIVED
 SetQueueRecord         PROCEDURE(),DERIVED
+SetSort                PROCEDURE(BYTE NewOrder,BYTE Force),BYTE,PROC,DERIVED
                      END
 
 BRW1::Sort0:Locator  IncrementalLocatorClass               ! Default Locator
@@ -509,6 +518,7 @@ Q                      &Queue:Browse:2                !Reference to browse queue
 Fetch                  PROCEDURE(BYTE Direction),DERIVED
 ResetFromView          PROCEDURE(),DERIVED
 SetQueueRecord         PROCEDURE(),DERIVED
+SetSort                PROCEDURE(BYTE NewOrder,BYTE Force),BYTE,PROC,DERIVED
 ValidateRecord         PROCEDURE(),BYTE,DERIVED
                      END
 
@@ -518,6 +528,7 @@ Q                      &Queue:Browse                  !Reference to browse queue
 Fetch                  PROCEDURE(BYTE Direction),DERIVED
 ResetSort              PROCEDURE(BYTE Force),BYTE,PROC,DERIVED
 SetQueueRecord         PROCEDURE(),DERIVED
+SetSort                PROCEDURE(BYTE NewOrder,BYTE Force),BYTE,PROC,DERIVED
                      END
 
 BRW2::Sort0:Locator  IncrementalLocatorClass               ! Default Locator
@@ -529,6 +540,7 @@ Q                      &Queue:Browse:3                !Reference to browse queue
 Fetch                  PROCEDURE(BYTE Direction),DERIVED
 ResetFromView          PROCEDURE(),DERIVED
 SetQueueRecord         PROCEDURE(),DERIVED
+SetSort                PROCEDURE(BYTE NewOrder,BYTE Force),BYTE,PROC,DERIVED
 ValidateRecord         PROCEDURE(),BYTE,DERIVED
                      END
 
@@ -560,6 +572,18 @@ Teller                          CString(256)
 Loc:SQL     CSTRING(4000)
 
   CODE
+? DEBUGHOOK(AACel:Record)
+? DEBUGHOOK(AAPartij:Record)
+? DEBUGHOOK(AAViewArtikel:Record)
+? DEBUGHOOK(ACel:Record)
+? DEBUGHOOK(AViewVoorraadCelTotaal:Record)
+? DEBUGHOOK(Partij:Record)
+? DEBUGHOOK(Sjabloon:Record)
+? DEBUGHOOK(ViewPartijCelLocaties:Record)
+? DEBUGHOOK(ViewVoorraadCelTotaal:Record)
+? DEBUGHOOK(ViewVoorraadPartij:Record)
+? DEBUGHOOK(ViewVoorraadPartijTotaal:Record)
+? DEBUGHOOK(ViewVoorraadPlanning:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -568,6 +592,20 @@ DefineListboxStyle ROUTINE
 !| This routine create all the styles to be shared in this window
 !| It`s called after the window open
 !|
+  !------------------------------------
+  !Style for ?List
+  !------------------------------------
+          ! Als partij is geblokkeeerd rode font selecteren
+          
+    ?Browse:1{PROPSTYLE:FontStyle, 1}     = FONT:Regular
+    ?Browse:1{PROPSTYLE:TextColor, 1}     = -1
+    ?Browse:1{PROPSTYLE:BackColor, 1}     = Color:Red
+    ?Browse:1{PROPSTYLE:TextSelected, 1}  = Color:Red
+    ?Browse:1{PROPSTYLE:BackSelected, 1}  = -1
+  
+    ! Blokkade icons:
+    ?Browse:1{Prop:Iconlist,1}= ICON:Cross
+          
 !---------------------------------------------------------------------------
 ExportExcel         ROUTINE
     SETCURSOR(CURSOR:Wait)
@@ -594,7 +632,7 @@ ExportExcel         ROUTINE
 	Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}='Geplande'
 	Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}='Geplande'
 	CLEAR(AACel:Record)
-	SET(AACel:CEL_PK,AACel:CEL_PK)
+	SET(AACel:CEL_FK1,AACel:CEL_FK1)
 	leeg# = 0
 	laatstecel# = 0
 	LOOP i# = 1 TO 15
@@ -866,6 +904,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'BrowseVoorraadVIEW','VoorrVrd013.clw','VoorrVrd.DLL','02/21/2023 @ 02:15PM')    
+             
   GlobalErrors.SetProcedureName('BrowseVoorraadVIEW')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -897,9 +937,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:VVCTVoorraadKG',LOC:VVCTVoorraadKG)            ! Added by: BrowseBox(ABC)
   BIND('LOC:VVCTVoorraadPallets',LOC:VVCTVoorraadPallets)  ! Added by: BrowseBox(ABC)
   BIND('LOC:CelLocatieNamen',LOC:CelLocatieNamen)          ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -910,6 +950,7 @@ ReturnValue          BYTE,AUTO
   Relate:AAViewArtikel.Open                                ! File AAViewArtikel used by this procedure, so make sure it's RelationManager is open
   Relate:ACel.Open                                         ! File ACel used by this procedure, so make sure it's RelationManager is open
   Relate:AViewVoorraadCelTotaal.Open                       ! File AViewVoorraadCelTotaal used by this procedure, so make sure it's RelationManager is open
+  Relate:Partij.Open                                       ! File Partij used by this procedure, so make sure it's RelationManager is open
   Relate:Sjabloon.Open                                     ! File Sjabloon used by this procedure, so make sure it's RelationManager is open
   Relate:ViewPartijCelLocaties.Open                        ! File ViewPartijCelLocaties used by this procedure, so make sure it's RelationManager is open
   Relate:ViewVoorraadCelTotaal.Open                        ! File ViewVoorraadCelTotaal used by this procedure, so make sure it's RelationManager is open
@@ -918,14 +959,16 @@ ReturnValue          BYTE,AUTO
   Relate:ViewVoorraadPlanning.Open                         ! File ViewVoorraadPlanning used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   LOC:PeilDatum = TODAY()
+  
+  Loc:Timer = GETINI('TIMER','Voorraad',100,PQ:IniFile)
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:ViewVoorraadPlanning,SELF) ! Initialize the browse manager
   BRW9.Init(?List:2,Queue:Browse:2.ViewPosition,BRW9::View:Browse,Queue:Browse:2,Relate:ViewVoorraadCelTotaal,SELF) ! Initialize the browse manager
   BRW2.Init(?List,Queue:Browse.ViewPosition,BRW2::View:Browse,Queue:Browse,Relate:ViewVoorraadPartij,SELF) ! Initialize the browse manager
   BRW3.Init(?List:3,Queue:Browse:3.ViewPosition,BRW3::View:Browse,Queue:Browse:3,Relate:ViewPartijCelLocaties,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  0{Prop:Text}=CLIP(0{Prop:Text}) !& ' (' & CLIP(LEFT(FORMAT(THREAD(),@N_10))) & ')'
-  WinAlertMouseZoom()
+  0{Prop:Timer}=Loc:Timer
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
   BRW1.AddSortOrder(,VVP:ViewVoorraad_PK)                  ! Add the sort order for VVP:ViewVoorraad_PK for sort order 1
@@ -992,6 +1035,7 @@ ReturnValue          BYTE,AUTO
   BRW2.AppendOrder('+VVPar:PartijCelID, +VVPar:CelLocatieID') ! Append an additional sort order
   BRW2.SetFilter('(VVPar:VoorraadKG<<>0)')                 ! Apply filter expression to browse
   BRW2.AddResetField(LOC:PartijVoorraadSortering)          ! Apply the reset field
+  ?List{PROP:IconList,1} = '~cancel.png'
   BRW2.AddField(VVPar:ArtikelID,BRW2.Q.VVPar:ArtikelID)    ! Field VVPar:ArtikelID is a hot field or requires assignment from browse
   BRW2.AddField(AArt:ArtikelOms,BRW2.Q.AArt:ArtikelOms)    ! Field AArt:ArtikelOms is a hot field or requires assignment from browse
   BRW2.AddField(VVPar:PartijID,BRW2.Q.VVPar:PartijID)      ! Field VVPar:PartijID is a hot field or requires assignment from browse
@@ -1006,6 +1050,8 @@ ReturnValue          BYTE,AUTO
   BRW2.AddField(VVPar:AanmaakDatum_GROUP,BRW2.Q.VVPar:AanmaakDatum_GROUP) ! Field VVPar:AanmaakDatum_GROUP is a hot field or requires assignment from browse
   BRW2.AddField(VVPar:CelID,BRW2.Q.VVPar:CelID)            ! Field VVPar:CelID is a hot field or requires assignment from browse
   BRW2.AddField(VVPar:PartijCelID,BRW2.Q.VVPar:PartijCelID) ! Field VVPar:PartijCelID is a hot field or requires assignment from browse
+  BRW2.AddField(VVPar:Blokkade_DATE,BRW2.Q.VVPar:Blokkade_DATE) ! Field VVPar:Blokkade_DATE is a hot field or requires assignment from browse
+  BRW2.AddField(VVPar:deBlokkade_DATE,BRW2.Q.VVPar:deBlokkade_DATE) ! Field VVPar:deBlokkade_DATE is a hot field or requires assignment from browse
   BRW2.AddField(VVPar:ArtikelOms,BRW2.Q.VVPar:ArtikelOms)  ! Field VVPar:ArtikelOms is a hot field or requires assignment from browse
   BRW2.AddField(AArt:ArtikelID,BRW2.Q.AArt:ArtikelID)      ! Field AArt:ArtikelID is a hot field or requires assignment from browse
   BRW2.AddField(VVParT:PartijID,BRW2.Q.VVParT:PartijID)    ! Field VVParT:PartijID is a hot field or requires assignment from browse
@@ -1068,6 +1114,7 @@ ReturnValue          BYTE,AUTO
     Relate:AAViewArtikel.Close
     Relate:ACel.Close
     Relate:AViewVoorraadCelTotaal.Close
+    Relate:Partij.Close
     Relate:Sjabloon.Close
     Relate:ViewPartijCelLocaties.Close
     Relate:ViewVoorraadCelTotaal.Close
@@ -1079,6 +1126,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowseVoorraadVIEW',QuickWindow)        ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -1184,6 +1233,16 @@ Looped BYTE
       GlobalRequest = InsertRecord
       UpdateOverboeking(LOC:ArtikelID, LOC:PartijCelID,Loc:CelLocatieID)
       ThisWindow.Reset
+    OF ?List
+      db.Debugout('Accepted: Welke partij heb ik hier '&BRW2.Q.VVPar:PartijID&' Blokkade_DATE:'&BRW2.Q.VVPar:Blokkade_DATE&' deBlokkade_DATE:'&BRW2.Q.VVPar:deBlokkade_DATE)
+      
+      IF BRW2.Q.VVPar:Blokkade_DATE=0 OR (BRW2.Q.VVPar:Blokkade_DATE>0 AND BRW2.Q.VVPar:deBlokkade_DATE>0)
+          ?Blokkade{Prop:Text}='Blokkade'
+          ?Blokkade{Prop:Hide}=FALSE
+      ELSIF BRW2.Q.VVPar:Blokkade_DATE>0 AND BRW2.Q.VVPar:deBlokkade_DATE=0
+          ?Blokkade{Prop:Text}='Vrijgeven'
+          ?Blokkade{Prop:Hide}=FALSE
+      END
     OF ?ExtraStickers
       ThisWindow.Update()
       ! Planningrecord inlezen
@@ -1202,6 +1261,69 @@ Looped BYTE
     OF ?ExcelPartij
       ThisWindow.Update()
       DO ExportExcelPartij
+    OF ?Blokkade
+      ThisWindow.Update()
+      i#= Choice(?List)
+      GET(BRW2.Q,i#)
+      CLEAR(Par:Record)
+      Par:PartijID=BRW2.Q.VVPar:PartijID
+      IF Access:Partij.Fetch(Par:Partij_PK)=Level:Benign
+          IF Par:Blokkade_DATE = 0
+              Case Message('Weet u zeker dat u partij '&Par:PartijID&' wilt blokkeren?', 'Partij blokkeren',ICON:Question,BUTTON:NO+BUTTON:YES)
+              OF BUTTON:YES
+                  Par:Blokkade_DATE=TODAY()
+                  Par:Blokkade_TIME=CLOCK()
+                  IF Not Access:Partij.Update()=Level:Benign
+                      Message('Fout bij wegschrijven :'&Error()&' '&Fileerror())
+                  END           
+                  BRW2.Q.VVPar:Blokkade_DATE=TODAY()
+                  BRW2.Q.VVPar:PartijID_NormalBG=Color:Red
+                  BRW2.Q.VVPar:PartijID_SelectedFG=Color:Red
+                  BRW2.Q.VVPar:PartijID_Icon=1
+                  BRW2.Q.VVPar:PartijID_Style=1
+                  Put(BRW2.Q)
+                  DISPLAY()
+                  ?Blokkade{Prop:Text}='Vrijgeven'
+              END    
+          ELSIF Par:Blokkade_DATE > 0 AND Par:deBlokkade_DATE = 0
+              Case Message('Weet u zeker dat u partij '&Par:PartijID&' weer wil vrijgeven?', 'Partij vrijgeven',ICON:Question,BUTTON:NO+BUTTON:YES)
+              OF BUTTON:YES
+                  Par:deBlokkade_DATE=TODAY()
+                  Par:deBlokkade_TIME=CLOCK()
+                  IF Not Access:Partij.Update()=Level:Benign
+                      Message('Fout bij wegschrijven :'&Error()&' '&Fileerror())
+                  END
+                  BRW2.Q.VVPar:Blokkade_DATE=TODAY()
+                  BRW2.Q.VVPar:PartijID_NormalBG=Color:None
+                  BRW2.Q.VVPar:PartijID_SelectedFG=Color:None
+                  BRW2.Q.VVPar:PartijID_Icon=0
+                  BRW2.Q.VVPar:PartijID_Style=0
+                  Put(BRW2.Q)
+                  ?Blokkade{Prop:Text}='Blokkade'
+              END    
+          ELSIF Par:Blokkade_DATE > 0 AND Par:deBlokkade_DATE > 0
+              Case Message('Weet u zeker dat u partij '&Par:PartijID&' opnieuw wilt blokkeren. De vorige blokkade '&Format(Par:Blokkade_DATE,@d6-)&' wordt verwijderd?', 'Partij vrijgeven',ICON:Question,BUTTON:NO+BUTTON:YES)
+              OF BUTTON:YES
+                  Par:Blokkade_DATE=TODAY()
+                  Par:Blokkade_TIME=CLOCK()
+                  SETNULL(Par:deBlokkade_DATE)
+                  SETNULL(Par:deBlokkade_TIME)
+                  IF Not Access:Partij.Update()=Level:Benign
+                      Message('Fout bij wegschrijven :'&Error()&' '&Fileerror())
+                  END
+                  IF Not Access:Partij.Update()=Level:Benign
+                      Message('Fout bij wegschrijven :'&Error()&' '&Fileerror())
+                  END
+                  BRW2.Q.VVPar:Blokkade_DATE=TODAY()
+                  BRW2.Q.VVPar:PartijID_NormalBG=Color:Red
+                  BRW2.Q.VVPar:PartijID_SelectedFG=Color:Red
+                  BRW2.Q.VVPar:PartijID_Icon=1
+                  BRW2.Q.VVPar:PartijID_Style=1
+                  Put(BRW2.Q)
+                  ?Blokkade{Prop:Text}='Vrijgeven'
+              END    
+          END
+      END
     OF ?AACel:CelOms
       BRW3.ResetQueue(true)
       Sort(BRW3.Q,+BRW3.Q.VPCL:CelLocatienaam)
@@ -1220,6 +1342,8 @@ Looped BYTE
           BRW3.ResetQueue(0)
       END
       0{Prop:Text}=Loc:CelID3
+      
+      ?Ververs{PROP:FontColor}=COLOR:None
     END
     RETURN ReturnValue
   END
@@ -1233,6 +1357,21 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
+    ! Netrefresh event
+    IF Event()=1170           ! Refresh is Send
+       UD.DebugEvent()
+       ! welke dependencies zaijn nu meergestuurd
+        Loc:NetRefreshByTimer=RANDOM(1,5)
+        UD.Debug('NetLocalRefreshDate: '&Format(NetLocalRefreshDate,@d6-)&', NetLocalRefreshTime: '&Format(NetLocalRefreshTime,@t4)&|
+            ', ThisNetRefresh.Date: '&Format(ThisNetRefresh.Date,@d6-)&' ThisNetRefresh.Time: '& Format(ThisNetRefresh.Time,@t4)&|
+            ', ThisNetRefresh.NetLocalDependancies: '&NetLocalDependancies&' Event(): '& Event()&|
+                ' WaitThisLong: '&ThisNetRefresh.WaitThisLong&' Loc:NetRefreshByTimer: '&Loc:NetRefreshByTimer&' Loc:Timer: '&Loc:Timer)
+          ?Ververs{PROP:FontColor}=COLOR:Red
+          
+          
+        RETURN Level:Notify
+    END  
+    ! als het goed is wordt onderstaande regel niet uitgevoerd omdat we deze via Event hebben gefilterd
     If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
       Self.Reset(1)                      ! NetTalk (NetRefresh)
     End
@@ -1246,9 +1385,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowseVoorraadVIEW',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/05/2012 @ 03:04PM','02/21/2023 @ 02:15PM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -1354,14 +1498,6 @@ Looped BYTE
       Looped = 1
     END
     CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
     OF EVENT:Notify
             ! Focus overnemen
             !NOTIFICATION(LOC:NotifyCode)
@@ -1378,8 +1514,19 @@ Looped BYTE
     END
   ReturnValue = PARENT.TakeWindowEvent()
     CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
+    OF EVENT:Timer
+      IF Loc:NetRefreshByTimer
+          0{Prop:Timer}=0
+          UD.Debug('Loc:NetRefreshByTimer Set True')
+          
+          ?Ververs{PROP:FontColor}=COLOR:None
+          !?Ververs{PROP:Background}=COLOR:None
+          
+          ThisWindow.Reset(1)
+          
+          Loc:NetRefreshByTimer = FALSE
+          0{Prop:Timer}=Loc:Timer
+      END
     END
     RETURN ReturnValue
   END
@@ -1430,7 +1577,7 @@ ThisWindow.GetCelVoorraad PROCEDURE(STRING PRM:ArtikelID, LONG PRM:CelID)
   	db.DebugOut('GetCelVoorraad - Begin')
   	CelCounter# = -1
   	CLEAR(AACel:Record)
-  	SET(AACel:CEL_PK, AACel:CEL_PK)
+  	SET(AACel:CEL_FK1, AACel:CEL_FK1)
   	LOOP UNTIL Access:AACel.Next()
   		IF (CelCounter# = -1 OR CelID# <> AACel:CelID) THEN CelCounter# += 1.
   		db.DebugOut('VulViewVoorraad1 ' & CelCounter#)
@@ -1489,11 +1636,11 @@ ThisWindow.VulAViewVoorraadCelTotaal PROCEDURE(LONG PRM:CelID, LONG PRM:Datum)
   CODE
   CLEAR(AVVCT:Record)
   AViewVoorraadCelTotaal{PROP:SQL} = 'SELECT TOP (100) PERCENT dbo.Mutatie.ArtikelID, dbo.Mutatie.CelID, SUM(dbo.Mutatie.InslagKG) AS kg, SUM(dbo.Mutatie.InslagPallet) AS pallets, SUM(dbo.Mutatie.UitslagKG) ' & |
-  	'AS VerkoopKG, SUM(dbo.Mutatie.UitslagPallet) AS VerkoopPallet, dbo.ViewArtikel.ArtikelOms FROM dbo.Mutatie INNER JOIN ' & |
-  	'dbo.ViewArtikel ON dbo.Mutatie.ArtikelID = dbo.ViewArtikel.ArtikelID LEFT OUTER JOIN ' & |
+  	'AS VerkoopKG, SUM(dbo.Mutatie.UitslagPallet) AS VerkoopPallet, dbo.Artikel_SyncExact.ArtikelOms FROM dbo.Mutatie INNER JOIN ' & |
+  	'dbo.Artikel_SyncExact ON dbo.Mutatie.ArtikelID = dbo.Artikel_SyncExact.ArtikelID LEFT OUTER JOIN ' & |
   	'dbo.Partij ON dbo.Mutatie.PartijID = dbo.Partij.PartijID ' & |
   	'WHERE dbo.Mutatie.CelID = ' & FORMAT(PRM:CelID, @N_7) & ' AND (dbo.Mutatie.DatumTijd is NULL OR dbo.Mutatie.DatumTijd <= ' & CHR(39) & CLIP(FORMAT(LOC:PeilDatum,@d2-)) & ' 23:59' & CHR(39) & ') ' & |
-  	'GROUP BY dbo.Mutatie.CelID, dbo.Mutatie.ArtikelID, dbo.ViewArtikel.ArtikelOms ' & |
+  	'GROUP BY dbo.Mutatie.CelID, dbo.Mutatie.ArtikelID, dbo.Artikel_SyncExact.ArtikelOms ' & |
   	'Having Sum(dbo.Mutatie.InslagKG) > SUM(dbo.Mutatie.UitslagKG) ' & |
   	'ORDER BY dbo.Mutatie.CelID'
 
@@ -1509,22 +1656,22 @@ Partijwaarde                REAL
           Loc:SQL='SELECT TOP (100) PERCENT  '&|
               '(SUM(dbo.Mutatie.InslagKG)  - SUM(dbo.Mutatie.UitslagKG) )* AVG(dbo.Partij.[BerekendeInkoopKGPrijs])  '&|        
               ' FROM dbo.Mutatie INNER JOIN ' & |
-              'dbo.ViewArtikel ON dbo.Mutatie.ArtikelID = dbo.ViewArtikel.ArtikelID LEFT OUTER JOIN ' & |
+              'dbo.Artikel_SyncExact ON dbo.Mutatie.ArtikelID = dbo.Artikel_SyncExact.ArtikelID LEFT OUTER JOIN ' & |
               'dbo.Partij ON dbo.Mutatie.PartijID = dbo.Partij.PartijID ' & |
               'WHERE dbo.Mutatie.DatumTijd <= ' & CHR(39) & CLIP(FORMAT(LOC:PeilDatum,@d2-)) & ' 23:59' & CHR(39) & ' ' & |
               ' AND dbo.Mutatie.ArtikelID = <39>'&PRM:ArtikelID&'<39> '&|
-              'GROUP BY dbo.Mutatie.PartijID, dbo.Partij.ExternPartijnr, dbo.Mutatie.ArtikelID, dbo.ViewArtikel.ArtikelOms ' & |
+              'GROUP BY dbo.Mutatie.PartijID, dbo.Partij.ExternPartijnr, dbo.Mutatie.ArtikelID, dbo.Artikel_SyncExact.ArtikelOms ' & |
               'HAVING SUM(Mutatie.InslagKG) > SUM(Mutatie.UitslagKG) ' & |      
               'ORDER BY dbo.Mutatie.PartijID'
       ELSE
           Loc:SQL='SELECT TOP (100) PERCENT  '&|
               '(SUM(dbo.Mutatie.InslagKG)  - SUM(dbo.Mutatie.UitslagKG) )* AVG(dbo.Partij.[InkoopKGPrijs])  '&|        
               ' FROM dbo.Mutatie INNER JOIN ' & |
-              'dbo.ViewArtikel ON dbo.Mutatie.ArtikelID = dbo.ViewArtikel.ArtikelID LEFT OUTER JOIN ' & |
+              'dbo.Artikel_SyncExact ON dbo.Mutatie.ArtikelID = dbo.Artikel_SyncExact.ArtikelID LEFT OUTER JOIN ' & |
               'dbo.Partij ON dbo.Mutatie.PartijID = dbo.Partij.PartijID ' & |
               'WHERE dbo.Mutatie.DatumTijd <= ' & CHR(39) & CLIP(FORMAT(LOC:PeilDatum,@d2-)) & ' 23:59' & CHR(39) & ' ' & |
               ' AND dbo.Mutatie.ArtikelID = <39>'&PRM:ArtikelID&'<39> '&|
-              'GROUP BY dbo.Mutatie.PartijID, dbo.Partij.ExternPartijnr, dbo.Mutatie.ArtikelID, dbo.ViewArtikel.ArtikelOms ' & |
+              'GROUP BY dbo.Mutatie.PartijID, dbo.Partij.ExternPartijnr, dbo.Mutatie.ArtikelID, dbo.Artikel_SyncExact.ArtikelOms ' & |
               'HAVING SUM(Mutatie.InslagKG) > SUM(Mutatie.UitslagKG) ' & |      
               'ORDER BY dbo.Mutatie.PartijID'
       END
@@ -1651,7 +1798,7 @@ BRW1.ResetQueue PROCEDURE(BYTE ResetMode)
 
   CODE
       CLEAR(AACel:Record)
-  	SET(AACel:CEL_PK,AACel:CEL_PK)
+  	SET(AACel:CEL_FK1,AACel:CEL_FK1)
   	LOOP
   		Access:AACel.TryNext()
   		IF ERROR() THEN BREAK.
@@ -1887,6 +2034,20 @@ BRW1.SetQueueRecord PROCEDURE
   !----------------------------------------------------------------------
 
 
+BRW1.SetSort PROCEDURE(BYTE NewOrder,BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+_starttijd              TIME
+  CODE
+  _starttijd = CLOCK()
+  ReturnValue = PARENT.SetSort(NewOrder,Force)
+  IF ReturnValue
+      LogSetSort('Voorraad','NewOrder: '&NewOrder&' Force: '&Force& ' ReturnValue: '&ReturnValue&' '&(Clock()-_starttijd)/100&' sec')
+  END
+  RETURN ReturnValue
+
+
 BRW9.Fetch PROCEDURE(BYTE Direction)
 
 GreenBarIndex   LONG,AUTO
@@ -2010,6 +2171,20 @@ BRW9.SetQueueRecord PROCEDURE
   !----------------------------------------------------------------------
 
 
+BRW9.SetSort PROCEDURE(BYTE NewOrder,BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+_starttijd              TIME
+  CODE
+  _starttijd = CLOCK()
+  ReturnValue = PARENT.SetSort(NewOrder,Force)
+  IF ReturnValue
+      LogSetSort('Voorraad','NewOrder: '&NewOrder&' Force: '&Force& ' ReturnValue: '&ReturnValue&' '&(Clock()-_starttijd)/100&' sec')
+  END
+  RETURN ReturnValue
+
+
 BRW9.ValidateRecord PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -2105,6 +2280,17 @@ BRW2.SetQueueRecord PROCEDURE
   LOC:CelLocatieNamen = CachingClass.GetCelLocatieNaam(VVPar:PartijID, VVPar:CelID)
   PARENT.SetQueueRecord
   
+  IF (VVPar:Blokkade_DATE>0 AND VVPar:deBlokkade_DATE=0)
+    SELF.Q.VVPar:PartijID_Icon = 1                         ! Set icon from icon list
+  ELSE
+    SELF.Q.VVPar:PartijID_Icon = 0
+  END
+  IF (VVPar:Blokkade_DATE>0 AND VVPar:deBlokkade_DATE=0)
+    SELF.Q.VVPar:PartijID_Style = 1 ! 1
+  ELSE
+    SELF.Q.VVPar:PartijID_Style = 0 ! 
+  END
+  CLEAR (SELF.Q.VVPar:PartijID_Tip)
   !----------------------------------------------------------------------
       SELF.Q.VVPar:ArtikelID_NormalFG   = CHOOSE(CHOICE(?List) % 2,-1,-1) ! Set color values for VVPar:ArtikelID
       SELF.Q.VVPar:ArtikelID_NormalBG   = CHOOSE(CHOICE(?List) % 2,-1,8454143)
@@ -2151,6 +2337,30 @@ BRW2.SetQueueRecord PROCEDURE
       SELF.Q.VVPar:AanmaakDatum_DATE_SelectedFG = CHOOSE(CHOICE(?List) % 2,-1,-1)
       SELF.Q.VVPar:AanmaakDatum_DATE_SelectedBG = CHOOSE(CHOICE(?List) % 2,-1,-1)
   !----------------------------------------------------------------------
+      IF SELF.Q.VVPar:Blokkade_DATE <> 0 AND SELF.Q.VVPar:deBlokkade_DATE=0
+          SELF.Q.VVPar:PartijID_Style = 1 
+          Self.Q.VVPar:PartijID_Icon = 1
+         SELF.Q.VVPar:PartijID_NormalBG   = COLOR:Red
+         SELF.Q.VVPar:PartijID_SelectedFG = COLOR:Red
+        SELF.Q.VVPar:PartijID_Tip='Blokkade : '&Format(SELF.Q.VVPar:Blokkade_DATE,@d6-)
+    ELSIF SELF.Q.VVPar:Blokkade_DATE <> 0 AND SELF.Q.VVPar:deBlokkade_DATE<>0
+        SELF.Q.VVPar:PartijID_Tip='Blokkade : '&Format(SELF.Q.VVPar:Blokkade_DATE,@d6-)&' De-Blokkade : '&FORMAT(SELF.Q.VVPar:deBlokkade_DATE,@d6-)
+    END
+    
+
+
+BRW2.SetSort PROCEDURE(BYTE NewOrder,BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+_starttijd              TIME
+  CODE
+  _starttijd = CLOCK()
+  ReturnValue = PARENT.SetSort(NewOrder,Force)
+  IF ReturnValue
+      LogSetSort('Voorraad','NewOrder: '&NewOrder&' Force: '&Force& ' ReturnValue: '&ReturnValue&' '&(Clock()-_starttijd)/100&' sec')
+  END
+  RETURN ReturnValue
 
 
 BRW3.Fetch PROCEDURE(BYTE Direction)
@@ -2273,6 +2483,20 @@ BRW3.SetQueueRecord PROCEDURE
   !----------------------------------------------------------------------
 
 
+BRW3.SetSort PROCEDURE(BYTE NewOrder,BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+_starttijd              TIME
+  CODE
+  _starttijd = CLOCK()
+  ReturnValue = PARENT.SetSort(NewOrder,Force)
+  IF ReturnValue
+      LogSetSort('Voorraad','NewOrder: '&NewOrder&' Force: '&Force& ' ReturnValue: '&ReturnValue&' '&(Clock()-_starttijd)/100&' sec')
+  END
+  RETURN ReturnValue
+
+
 BRW3.ValidateRecord PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -2319,4 +2543,5 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   SELF.SetStrategy(?VandaagButton, Resize:FixRight+Resize:FixTop, Resize:LockSize) ! Override strategy for ?VandaagButton
   SELF.SetStrategy(?ExcelPartij, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?ExcelPartij
   SELF.SetStrategy(?AACel:CelOms, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?AACel:CelOms
+  SELF.SetStrategy(?Blokkade, Resize:FixLeft+Resize:FixTop, Resize:LockSize) ! Override strategy for ?Blokkade
 

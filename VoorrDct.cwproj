@@ -8,7 +8,7 @@
     <AssemblyName>VoorrDct</AssemblyName>
     <OutputName>VoorrDct</OutputName>
     <CWOutputType>Exe</CWOutputType>
-    <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bStringTheoryLinkMode=&gt;1%3bStringTheoryDllMode=&gt;0%3bMD5=&gt;0%3bFM2=&gt;1%3b_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1%3b_NetTalkDllMode_=&gt;0%3b_NetTalkLinkMode_=&gt;1%3b_TBARDllMode_=&gt;0%3b_TBARLinkMode_=&gt;1</DefineConstants>
+    <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bStringTheoryLinkMode=&gt;1%3bStringTheoryDllMode=&gt;0%3bMD5=&gt;0%3bFM2=&gt;1%3bWinEventLinkMode=&gt;1%3bWinEventDLLMode=&gt;0%3bGPFReporterLinkMode=&gt;1%3bGPFReporterDllMode=&gt;0%3bHyperLM=&gt;1%3bHyperDM=&gt;0%3b_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1%3b_NetTalkDllMode_=&gt;0%3b_NetTalkLinkMode_=&gt;1%3b_TBARDllMode_=&gt;0%3b_TBARLinkMode_=&gt;1</DefineConstants>
     <Model>Dll</Model>
     <stack_size>16384</stack_size>
     <CopyCore>False</CopyCore>
@@ -41,7 +41,37 @@
     <Compile Include="CWUtil.CLW">
       <Generated>true</Generated>
     </Compile>
+    <Compile Include="EFOCUS.CLW">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="RefreshTijdSlotClass_SRC.clw">
+      <Generated>true</Generated>
+    </Compile>
     <Compile Include="VoorrDct.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct003.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct004.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrDct008.CLW">
       <Generated>true</Generated>
     </Compile>
     <Compile Include="VOORRDCT_BC.CLW">
@@ -66,10 +96,9 @@
       <Generated>true</Generated>
     </Compile>
     <Library Include="c%25V%25net.lib" />
-    <Library Include="C%25V%25WE%25X%25%25L%25.Lib" />
     <Library Include="CLAFM3.lib" />
     <Library Include="clanet.lib" />
-    <Library Include="CLAWE.Lib" />
+    <Library Include="hand2.cur" />
     <Library Include="LSPUZIPX.LIB" />
     <Library Include="LSPZIPX.LIB" />
     <Library Include="Send.ico" />
@@ -81,11 +110,6 @@
       <ProjectGenerated>True</ProjectGenerated>
     </None>
     <None Include="clafm3.Dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Generated>True</Generated>
-      <ProjectGenerated>True</ProjectGenerated>
-    </None>
-    <None Include="clawe.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generated>True</Generated>
       <ProjectGenerated>True</ProjectGenerated>
@@ -118,6 +142,6 @@
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /as /fd sha256 /f "H:\Certificates\info@microbit_nl\info@microbit_nl.p12" /tr http://timestamp.digicert.com /td sha256 $(SolutionDir)werk\VoorrDct.dll</PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /t http://timestamp.digicert.com $(SolutionDir)ontw\VoorrDct.dll</PostBuildEvent>
   </PropertyGroup>
 </Project>

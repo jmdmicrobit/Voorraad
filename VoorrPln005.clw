@@ -17,8 +17,9 @@
 !!! Generated from procedure template - Window
 !!! Form Mutatie
 !!! </summary>
-UpdateEUitslagMutatie PROCEDURE 
+UpdateEInslagMutatie PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 ActionMessage        CSTRING(40)                           ! 
 FDCB8::View:FileDropCombo VIEW(Cel)
@@ -40,12 +41,10 @@ QuickWindow          WINDOW('Form Mutatie'),AT(,,249,93),FONT('MS Sans Serif',8,
   'a and close the window'),TIP('Accept data and close the window')
                        BUTTON('&Cancel'),AT(189,68,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'), |
   TIP('Cancel operation')
-                       ENTRY(@s39),AT(77,54,160,10),USE(Mut:RedenAfboeking)
-                       PROMPT('Reden Afboeking:'),AT(9,54),USE(?Mut:RedenAfboeking:Prompt),TRN
-                       ENTRY(@n12`2),AT(76,9,64,10),USE(Mut:UitslagKG),RIGHT
-                       PROMPT('Uitslag KG:'),AT(9,9),USE(?Mut:UitslagKG:Prompt),TRN
-                       ENTRY(@n14.),AT(76,24,64,10),USE(Mut:UitslagPallet),RIGHT
-                       PROMPT('Uitslag Pallet:'),AT(9,24),USE(?Mut:UitslagPallet:Prompt),TRN
+                       ENTRY(@n12`2),AT(76,9,64,10),USE(Mut:InslagKG),RIGHT
+                       PROMPT('Inslag KG:'),AT(9,9),USE(?Mut:UitslagKG:Prompt),TRN
+                       ENTRY(@n14.),AT(76,24,64,10),USE(Mut:InslagPallet),RIGHT
+                       PROMPT('Inslag Pallet:'),AT(9,24),USE(?Mut:UitslagPallet:Prompt),TRN
                        PROMPT('Cel:'),AT(9,38),USE(?PROMPT1)
                        COMBO(@s50),AT(77,39,160,10),USE(CEL:CelOms),DROP(5),FORMAT('200L(2)|M~Omschrijving~@s50@'), |
   FROM(Queue:FileDropCombo),IMM
@@ -83,6 +82,8 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(Cel:Record)
+? DEBUGHOOK(Mutatie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -113,7 +114,9 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-  GlobalErrors.SetProcedureName('UpdateEUitslagMutatie')
+        udpt.Init(UD,'UpdateEInslagMutatie','VoorrPln005.clw','VoorrPln.DLL','06/28/2024 @ 01:22PM')    
+             
+  GlobalErrors.SetProcedureName('UpdateEInslagMutatie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
   IF ReturnValue THEN RETURN ReturnValue.
@@ -125,9 +128,8 @@ ReturnValue          BYTE,AUTO
   CLEAR(GlobalResponse)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Mut:Record,History::Mut:Record)
-  SELF.AddHistoryField(?Mut:RedenAfboeking,15)
-  SELF.AddHistoryField(?Mut:UitslagKG,10)
-  SELF.AddHistoryField(?Mut:UitslagPallet,11)
+  SELF.AddHistoryField(?Mut:InslagKG,8)
+  SELF.AddHistoryField(?Mut:InslagPallet,9)
   SELF.AddUpdateFile(Access:Mutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Cel.SetOpenRelated()
@@ -148,17 +150,23 @@ ReturnValue          BYTE,AUTO
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
-    ?Mut:RedenAfboeking{PROP:ReadOnly} = True
-    ?Mut:UitslagKG{PROP:ReadOnly} = True
-    ?Mut:UitslagPallet{PROP:ReadOnly} = True
+    ?Mut:InslagKG{PROP:ReadOnly} = True
+    ?Mut:InslagPallet{PROP:ReadOnly} = True
     DISABLE(?CEL:CelOms)
   END
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
-  INIMgr.Fetch('UpdateEUitslagMutatie',QuickWindow)        ! Restore window settings from non-volatile store
+  INIMgr.Fetch('UpdateEInslagMutatie',QuickWindow)         ! Restore window settings from non-volatile store
   Resizer.Resize                                           ! Reset required after window size altered by INI manager
   FDCB8.Init(CEL:CelOms,?CEL:CelOms,Queue:FileDropCombo.ViewPosition,FDCB8::View:FileDropCombo,Queue:FileDropCombo,Relate:Cel,ThisWindow,GlobalErrors,0,1,0)
   FDCB8.Q &= Queue:FileDropCombo
@@ -187,9 +195,11 @@ ReturnValue          BYTE,AUTO
     Relate:Mutatie.Close
   END
   IF SELF.Opened
-    INIMgr.Update('UpdateEUitslagMutatie',QuickWindow)     ! Save window data to non-volatile store
+    INIMgr.Update('UpdateEInslagMutatie',QuickWindow)      ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -279,9 +289,17 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('UpdateEInslagMutatie',UD.SetApplicationName('VoorrPln','DLL'),QuickWindow{PROP:Hlp},'10/06/2011 @ 04:10PM','06/28/2024 @ 01:22PM','10/11/2024 @ 01:54PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

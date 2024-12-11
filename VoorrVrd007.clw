@@ -20,6 +20,7 @@
 !!! </summary>
 BrowsePartijVoorraad_WORDTNIETGEBRUIKT PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 LOC:TempFormat       STRING(2000)                          ! 
 Loc:Start            LONG                                  ! 
 LOC:CelLocatieNamen  CSTRING('<0>{50}')                    ! 
@@ -300,6 +301,8 @@ ReturnValue          BYTE,AUTO
 
 TempFormat CSTRING(10000)
   CODE
+        udpt.Init(UD,'BrowsePartijVoorraad_WORDTNIETGEBRUIKT','VoorrVrd007.clw','VoorrVrd.DLL','06/05/2020 @ 08:47PM')    
+             
   GlobalErrors.SetProcedureName('BrowsePartijVoorraad_WORDTNIETGEBRUIKT')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -345,6 +348,7 @@ TempFormat CSTRING(10000)
   END
   WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW2.Q &= Queue:Browse
   BRW2.AddSortOrder(,PCV:FK3_PartijCelVoorraad)            ! Add the sort order for PCV:FK3_PartijCelVoorraad for sort order 1
   BRW2.AddLocator(BRW2::Sort1:Locator)                     ! Browse has a locator for sort order 1
@@ -420,6 +424,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowsePartijVoorraad_WORDTNIETGEBRUIKT',QuickWindow) ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -528,6 +534,14 @@ Looped BYTE
   if event() = event:VisibleOnDesktop
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowsePartijVoorraad_WORDTNIETGEBRUIKT',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/07/2011 @ 08:55AM','06/05/2020 @ 08:47PM','06/05/2020 @ 08:51PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

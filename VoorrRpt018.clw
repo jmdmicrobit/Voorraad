@@ -81,17 +81,11 @@ Detail                 DETAIL,AT(0,0,7292,6104),USE(?Detail)
                        FOOTER,AT(479,10927,7312,260),USE(?Footer)
                        END
                      END
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(ReportManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Init                   PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 OpenReport             PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 ThisReport           CLASS(ProcessClass)                   ! Process Manager
@@ -111,6 +105,12 @@ SetUp                  PROCEDURE(),DERIVED
 
 
   CODE
+? DEBUGHOOK(AAACel:Record)
+? DEBUGHOOK(AACel:Record)
+? DEBUGHOOK(Partij:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(Verpakking:Record)
+? DEBUGHOOK(ViewArtikel:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -126,7 +126,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportOverboeking','VoorrRpt018.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'ReportOverboeking','VoorrRpt018.clw','VoorrRpt.DLL','06/28/2024 @ 02:30PM')    
              
   GlobalErrors.SetProcedureName('ReportOverboeking')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -147,7 +147,6 @@ ReturnValue          BYTE,AUTO
   Relate:ViewArtikel.Open                                  ! File ViewArtikel used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportOverboeking',ProgressWindow)         ! Restore window settings from non-volatile store
@@ -168,13 +167,6 @@ ReturnValue          BYTE,AUTO
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
   RETURN ReturnValue
-
-
-ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
-
-  CODE
-  PARENT.Init(PC,R,PV)
-  WinAlertMouseZoom()
 
 
 ThisWindow.Kill PROCEDURE
@@ -200,7 +192,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportOverboeking',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'09/14/2011 @ 01:05PM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('ReportOverboeking',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'09/14/2011 @ 01:05PM','06/28/2024 @ 02:30PM','10/11/2024 @ 01:54PM')  
     
   END
   RETURN ReturnValue
@@ -235,42 +227,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

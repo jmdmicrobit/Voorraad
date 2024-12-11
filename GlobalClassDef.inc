@@ -22,6 +22,7 @@ InitMailOle     	Procedure()
 DataSource          Procedure(String),String
 RefreshTiming       Procedure()
 CMRArtikelOms       Procedure(Long, String), String
+ReplaceKG           Procedure(String), String
                      END ! CLASS: GlobalClass
 
 

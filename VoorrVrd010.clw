@@ -21,6 +21,7 @@
 !!! </summary>
 BrowseVoorraadVerloopPerArtikelCel PROCEDURE (ArtikelID, CelID)
 
+udpt            UltimateDebugProcedureTracker
 LOC:ArtikelID        CSTRING(31)                           ! 
 LOC:CelID            LONG                                  ! 
 LOC:LeverancierID    LONG                                  ! 
@@ -267,10 +268,6 @@ QuickWindow          WINDOW('Voorraad-verloop'),AT(,,586,322),FONT('MS Sans Seri
                        STRING(@N-15`2),AT(513,284),USE(LOC:TotaalUitslagKG,,?LOC:TotaalUitslagKG:2),RIGHT
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -305,6 +302,16 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
 
 
   CODE
+? DEBUGHOOK(AARelatie:Record)
+? DEBUGHOOK(ARelatie:Record)
+? DEBUGHOOK(AVoorraadVerloop:Record)
+? DEBUGHOOK(Inkoop:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(Verpakking:Record)
+? DEBUGHOOK(ViewArtikel:Record)
+? DEBUGHOOK(VoorraadVerloop:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -490,6 +497,8 @@ ReturnValue          BYTE,AUTO
 TempFormat          CSTRING(10000)
 SearchString        CSTRING(1000)
   CODE
+        udpt.Init(UD,'BrowseVoorraadVerloopPerArtikelCel','VoorrVrd010.clw','VoorrVrd.DLL','06/25/2020 @ 10:57AM')    
+             
   GlobalErrors.SetProcedureName('BrowseVoorraadVerloopPerArtikelCel')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -507,9 +516,9 @@ SearchString        CSTRING(1000)
   BIND('LOC:VerpakkingOmschrijving',LOC:VerpakkingOmschrijving) ! Added by: BrowseBox(ABC)
   BIND('LOC:TotaalKG',LOC:TotaalKG)                        ! Added by: BrowseBox(ABC)
   BIND('LOC:TotaalPallets',LOC:TotaalPallets)              ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -531,7 +540,7 @@ SearchString        CSTRING(1000)
   LOC:CelID = CelID
   LOC:LeverancierID = 0
   
-  StandaardVoorraadverloopPeriode#=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,'.\Voorraad.ini')
+  StandaardVoorraadverloopPeriode#=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,PQ:IniFile)
   LOC:VanDatum = TODAY() - StandaardVoorraadverloopPeriode#
   LOC:TMDatum = TODAY()
   
@@ -560,8 +569,8 @@ SearchString        CSTRING(1000)
           !C7 ?Browse:1{PROP:Format} = SUB(TempFormat, 1, (startidx# - LEN(CLIP(SearchString))) - 1) & '0' & SUB(TempFormat, (startidx# - LEN(CLIP(SearchString))) + 2, LEN(TempFormat) - (startidx# - LEN(CLIP(SearchString))) + 2)
       END
   END
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
   BRW1.AddSortOrder(,VVL:ArtikelID_CelID_DatumTijdD_MutatieIDD_K) ! Add the sort order for VVL:ArtikelID_CelID_DatumTijdD_MutatieIDD_K for sort order 1
@@ -671,6 +680,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowseVoorraadVerloopPerArtikelCel',QuickWindow) ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -853,9 +864,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowseVoorraadVerloopPerArtikelCel',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/07/2011 @ 08:55AM','06/25/2020 @ 10:57AM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -875,14 +891,6 @@ Looped BYTE
       Looped = 1
     END
     CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
     OF EVENT:Notify
       	!NOTIFICATION(NotifyCode#)
       	!db.DebugOut('BrowseVoorraadVerloop.Notify('&NotifyCode#&')')
@@ -894,10 +902,6 @@ Looped BYTE
       	!.
     END
   ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

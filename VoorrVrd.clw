@@ -16,10 +16,7 @@ ActivateNetTalk   EQUATE(1)
   include('NetEmail.inc'),once
   include('NetFile.inc'),once
   include('NetWebSms.inc'),once
-StringTheory:TemplateVersion equate('3.13')
-WINEVENT:Version              equate ('3.97')   !Deprecated
-WinEvent:TemplateVersion      equate('3.97')
-event:WinEventTaskbarLoadIcon equate(0500h+5510)
+StringTheory:TemplateVersion equate('3.46')
 
    INCLUDE('ABERROR.INC'),ONCE
    INCLUDE('ABFILE.INC'),ONCE
@@ -31,7 +28,11 @@ event:WinEventTaskbarLoadIcon equate(0500h+5510)
  Include('Debuger.INC'),once
   include('cwsynchc.inc'),once  ! added by NetTalk
   include('StringTheory.Inc'),ONCE
-   Include('EventEqu.Clw'),Once
+  INCLUDE('UltimateDebug.INC'),ONCE
+  INCLUDE('UltimateDebugProcedureTracker.INC'),ONCE
+    Include('CachingClass_Src.inc')
+    Include('RefreshTijdSlotClass_SRC.inc')
+ 
    INCLUDE('ABEIP.INC')
    INCLUDE('KCRQEIP.INC')
 
@@ -55,6 +56,9 @@ UpdateUitslagMutatie   PROCEDURE,DLL                       !
 WindowInslag           PROCEDURE,DLL                       ! 
 UpdateOverboeking      PROCEDURE(<STRING>,<STRING>,<LONG>,<LONG>,<REAL>),DLL ! 
     END
+    MODULE('VOORRDCT.DLL')
+LogSetSort             PROCEDURE(String pTabel, String pBericht),DLL ! 
+    END
 !--- Application Global and Exported Procedure Definitions --------------------------------------------
      MODULE('VOORRVRD001.CLW')
 VoorrVrd               PROCEDURE   !
@@ -69,13 +73,10 @@ BrowseVoorraadVerloop  PROCEDURE(STRING)   !Browse the VoorraadVerloop file
 UpdateViewVoorraad     PROCEDURE   !Form ViewVoorraad
      END
      MODULE('VOORRVRD005.CLW')
-BrowsePallets          PROCEDURE   !Browse the PalletVerloop file
+BrowsePallets          PROCEDURE   !PalletAdministratie Verloop
      END
      MODULE('VOORRVRD006.CLW')
 UpdateVoorraadVerloop  PROCEDURE   !Form Mutatie
-     END
-     MODULE('VOORRVRD007.CLW')
-BrowsePartijVoorraad_WORDTNIETGEBRUIKT PROCEDURE   !Browse the ViewVoorraad file
      END
      MODULE('VOORRVRD008.CLW')
 UpdatePalletMutatie    PROCEDURE(LONG, LONG, LONG, LONG, LONG)   !Form PalletMutatie
@@ -98,7 +99,6 @@ BrowseVoorraadVIEW     PROCEDURE   !Browse the ViewVoorraad file
      MODULE('VOORRVRD014.CLW')
 WijzigLocatie_Orgineel PROCEDURE(LONG, LONG)   !Cel / Lokatie wijzigen
      END
-     include('eventmap.clw')
        MODULE('win32')
      
              OMIT('***',_WIDTH32_)
@@ -131,6 +131,10 @@ WijzigLocatie_Orgineel PROCEDURE(LONG, LONG)   !Cel / Lokatie wijzigen
      !EventFunc procedure(*SHORT Reference,SIGNED OleControl,LONG CurrentEvent),LONG
      !PropChange PROCEDURE(SIGNED OleControl,STRING CurrentProp)
      !PropEdit   PROCEDURE(SIGNED OleControl,STRING CurrentProp),LONG
+
+DebugABCGlobalInformation_VoorrVrd PROCEDURE()                                           ! DEBUG Prototype
+DebugABCGlobalVariables_VoorrVrd PROCEDURE()                                             ! DEBUG Prototype
+
     ! Declare functions defined in this DLL
 VoorrVrd:Init          PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>)
 VoorrVrd:Kill          PROCEDURE
@@ -147,10 +151,14 @@ VOORRRPT:Kill          PROCEDURE,DLL
 VOORRPLN:Init          PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>),DLL
 VOORRPLN:Kill          PROCEDURE,DLL
      END
+     MODULE('VOORRDCT.DLL')
+VoorrDCT:Init          PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>),DLL
+VoorrDCT:Kill          PROCEDURE,DLL
+     END
    END
 
   include('StringTheory.Inc'),ONCE
-GLO:OWNER            CSTRING(199),EXTERNAL,DLL(_ABCDllMode_)
+GLO:OWNER            STRING(200),EXTERNAL,DLL(_ABCDllMode_)
 GLO:Versie           CSTRING(10),EXTERNAL,DLL(_ABCDllMode_)
 GLO:BepaalTotaal     LONG,THREAD,EXTERNAL,DLL(_ABCDllMode_)
 GLO:TotaalWegingKG   DECIMAL(10,2),THREAD,EXTERNAL,DLL(_ABCDllMode_)
@@ -164,6 +172,9 @@ NettoGewichtKG         DECIMAL(10,2)
 Datum                  DATE
 Tijd                   TIME
 PalletID               LONG
+ProductionDate         DATE
+THTDate                DATE
+HarvastDate            DATE
                      END
 GLO:WegingQueue      QUEUE,PRE(WGQ),THREAD,EXTERNAL,DLL(_ABCDllMode_)
 BrutoGewichtKG         DECIMAL(10,2)
@@ -173,6 +184,9 @@ NettoGewichtKG         DECIMAL(10,2)
 Datum                  DATE
 Tijd                   TIME
 PalletID               LONG
+ProductionDate         DATE
+THTDate                DATE
+HarvastDate            DATE
                      END
 GLO:UitslagMutatieQueue QUEUE,PRE(UMQ),THREAD,EXTERNAL,DLL(_ABCDllMode_)
 PartijCelID            STRING(25)
@@ -236,6 +250,17 @@ KG                     DECIMAL(9,2)
 Pallets                LONG
                      END
 GLO:HidePlanningInstructie BYTE,EXTERNAL,DLL(_ABCDllMode_)
+GLO:PartnerQ         QUEUE,PRE(PQ),EXTERNAL,DLL(_ABCDllMode_)
+PartnerID              LONG
+PartnerName            CSTRING(100)
+ConnectionString       CSTRING(255)
+ArtikelEval            CSTRING(255)
+RelatieEval            CSTRING(255)
+Titel                  CSTRING(100)
+Achtergrond            LONG
+IniFile                CSTRING(256)
+StandaardEenheid       CSTRING(21)
+                     END
 LOC:OrigineelPartijCelID STRING(25),DIM(100),EXTERNAL,DLL(_ABCDllMode_)
 LOC:OrigineelKG      DECIMAL(10,2),DIM(100),EXTERNAL,DLL(_ABCDllMode_)
 LOC:OrigineelPallets LONG,DIM(100),EXTERNAL,DLL(_ABCDllMode_)
@@ -311,6 +336,16 @@ InslagQATemperatuurVervoermiddel CSTRING(21)               !
 CorrectieveMaatregel        CSTRING(2001)                  !                     
 Oorzaak                     CSTRING(2001)                  !                     
 TransportBedrijf            CSTRING(2001)                  !                     
+Blokkade                    STRING(8)                      !                     
+Blokkade_GROUP              GROUP,OVER(Blokkade)           !                     
+Blokkade_DATE                 DATE                         !                     
+Blokkade_TIME                 TIME                         !                     
+                            END                            !                     
+deBlokkade                  STRING(8)                      !                     
+deBlokkade_GROUP            GROUP,OVER(deBlokkade)         !                     
+deBlokkade_DATE               DATE                         !                     
+deBlokkade_TIME               TIME                         !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -344,6 +379,7 @@ VatCode                     STRING(3)                      !
 cmp_fctry                   STRING(3)                      !                     
 CMROpmerking                CSTRING(1001)                  !                     
 PalletBladLayout            CSTRING(51)                    !                     
+NietActief                  BYTE                           !                     
                          END
                      END                       
 
@@ -376,11 +412,13 @@ VerkoopPallets              LONG                           !
 
 Cel                  FILE,DRIVER('MSSQL'),PRE(CEL),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 CEL_PK                   KEY(CEL:CelID),NOCASE,PRIMARY     !                     
+Cel_FK1                  KEY(CEL:Volgnr,CEL:CelID),NOCASE  ! Op Volgnr, CelID    
 Record                   RECORD,PRE()
 CelID                       LONG                           !                     
 CelOms                      CSTRING(51)                    !                     
 Breedte                     LONG                           !                     
 Lengte                      LONG                           !                     
+Volgnr                      LONG                           !                     
                          END
                      END                       
 
@@ -504,6 +542,8 @@ BevestigingGeprint_TIME       TIME                         !
                             END                            !                     
 DeliveryTermsID             LONG                           !                     
 LoadingDate                 CSTRING(51)                    !                     
+Valuta                      CSTRING(51)                    !                     
+Koersverschil               DECIMAL(11,3)                  !                     
                          END
                      END                       
 
@@ -514,6 +554,8 @@ PK_Planning              KEY(Pla:PlanningID),PRIMARY       !
 Planning_FK01            KEY(Pla:InkoopID,Pla:PlanningID),DUP,NOCASE ! Op InkoopID/Planning
 Planning_FK02            KEY(Pla:VerkoopID,Pla:PlanningID),DUP ! Op VerkoopID. PlanningID
 Planning_FK03            KEY(Pla:Planning),DUP             ! Op Planning         
+Planning_FK04            KEY(Pla:OverboekingPlanningID),DUP,NOCASE !                     
+Planning_FK05            KEY(Pla:InkoopID),DUP,NOCASE      !                     
 Verwerkt_Artikel_Planning_K KEY(Pla:Verwerkt,Pla:ArtikelID,Pla:PlanningID),DUP !                     
 Verwerkt_OverboekingCelID_Planning_K KEY(Pla:Verwerkt,Pla:OverboekingCelID,Pla:Planning,Pla:PlanningID),DUP !                     
 Record                   RECORD,PRE()
@@ -597,7 +639,7 @@ UitslagPalletbladHarvastDate7007_TIME TIME                 !
 
 Verkoop              FILE,DRIVER('MSSQL'),PRE(Ver2),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 Verkoop_FK2              KEY(Ver2:Exported,Ver2:VerkoopID),DUP ! Op Exported/VerkoopID
-Verkoop_FK3              KEY(Ver2:Exported,Ver2:Klant,-Ver2:VerkoopID),DUP ! Op Exported, Klant, Verkoop
+Verkoop_FK3              KEY(Ver2:Exported,Ver2:Klant,-Ver2:Planning),DUP ! Op Exported, Klant, Verkoop
 PK_Verkoop               KEY(Ver2:VerkoopID),PRIMARY       !                     
 Verkoop_FK01             KEY(Ver2:Planning),DUP            !                     
 Klant_Verwerkt_Planning_K KEY(Ver2:Klant,Ver2:Verwerkt,Ver2:Planning,Ver2:VerkoopID),DUP,NOCASE !                     
@@ -830,6 +872,16 @@ PartijCelID                 CSTRING(26)                    !
 CelLocatieID                LONG                           !                     
 Locatienaam                 CSTRING(51)                    !                     
 BerekendeInkoopKGPrijs      DECIMAL(10,3)                  !                     
+Blokkade                    STRING(8)                      !                     
+Blokkade_GROUP              GROUP,OVER(Blokkade)           !                     
+Blokkade_DATE                 DATE                         !                     
+Blokkade_TIME                 TIME                         !                     
+                            END                            !                     
+deBlokkade                  STRING(8)                      !                     
+deBlokkade_GROUP            GROUP,OVER(deBlokkade)         !                     
+deBlokkade_DATE               DATE                         !                     
+deBlokkade_TIME               TIME                         !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1012,25 +1064,6 @@ SWaarde7                    CSTRING(1001)                  !
                          END
                      END                       
 
-PartijCelVoorraad    FILE,DRIVER('MSSQL'),PRE(PCV),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
-PK_PartijCelVoorraad     KEY(PCV:PartijCelVoorraadID),PRIMARY !                     
-FK1_PartijCelVoorraad    KEY(PCV:PartijID,PCV:CelID),NOCASE ! Op PartijID / CelID 
-FK2_PartijCelVoorraad    KEY(PCV:CelID,PCV:PartijID),NOCASE ! Op CelID / PartijID 
-FK3_PartijCelVoorraad    KEY(PCV:ExternPartijnr,PCV:PartijID,PCV:CelID),DUP,NOCASE ! Op ExternPartijnr/PartijID/CelID
-FK4_PartijCelVoorraad    KEY(PCV:ArtikelOms,PCV:PartijID,PCV:CelID),DUP,NOCASE ! Op ArtikelOms/PartijID/CelID
-Record                   RECORD,PRE()
-PartijCelVoorraadID         DECIMAL(19)                    !                     
-PartijID                    LONG                           !                     
-CelID                       LONG                           !                     
-PartijCelVoorraadKG         LONG                           !                     
-PartijCelVerkochtKG         LONG                           !                     
-PartijVoorraadKG            LONG                           !                     
-PartijVerkochtKG            LONG                           !                     
-ExternPartijnr              CSTRING(21)                    !                     
-ArtikelOms                  CSTRING(61)                    !                     
-                         END
-                     END                       
-
 RelatieArtikelOmschrijving FILE,DRIVER('MSSQL'),PRE(RAO),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 PK_RelatieArtikelOmschrijving KEY(RAO:RelatieArtikelOmschrijvingID),NOCASE,PRIMARY !                     
 FK1_RelatieArtikelOmschrijving KEY(RAO:RelatieID,RAO:ArtikelID),NOCASE !                     
@@ -1074,6 +1107,7 @@ VatCode                     STRING(3)                      !
 cmp_fctry                   STRING(3)                      !                     
 CMROpmerking                CSTRING(1001)                  !                     
 PalletBladLayout            CSTRING(51)                    !                     
+NietActief                  BYTE                           !                     
                          END
                      END                       
 
@@ -1084,6 +1118,8 @@ PK_Planning              KEY(APla:PlanningID),PRIMARY      !
 Planning_FK01            KEY(APla:InkoopID,APla:PlanningID),DUP,NOCASE ! Op InkoopID/Planning
 Planning_FK02            KEY(APla:VerkoopID,APla:PlanningID),DUP ! Op VerkoopID. PlanningID
 Planning_FK03            KEY(APla:Planning),DUP            ! Op Planning         
+Planning_FK04            KEY(APla:OverboekingPlanningID),DUP,NOCASE !                     
+Planning_FK05            KEY(APla:InkoopID),DUP,NOCASE     !                     
 Verwerkt_Artikel_Planning_K KEY(APla:Verwerkt,APla:ArtikelID,APla:PlanningID),DUP !                     
 Verwerkt_OverboekingCelID_Planning_K KEY(APla:Verwerkt,APla:OverboekingCelID,APla:Planning,APla:PlanningID),DUP !                     
 Record                   RECORD,PRE()
@@ -1167,7 +1203,7 @@ UitslagPalletbladHarvastDate7007_TIME TIME                 !
 
 AVerkoop             FILE,DRIVER('MSSQL'),PRE(AVE),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 Verkoop_FK2              KEY(AVE:Exported,AVE:VerkoopID),DUP ! Op Exported/VerkoopID
-Verkoop_FK3              KEY(AVE:Exported,AVE:Klant,-AVE:VerkoopID),DUP ! Op Exported, Klant, Verkoop
+Verkoop_FK3              KEY(AVE:Exported,AVE:Klant,-AVE:Planning),DUP ! Op Exported, Klant, Verkoop
 PK_Verkoop               KEY(AVE:VerkoopID),PRIMARY        !                     
 Verkoop_FK01             KEY(AVE:Planning),DUP             !                     
 Klant_Verwerkt_Planning_K KEY(AVE:Klant,AVE:Verwerkt,AVE:Planning,AVE:VerkoopID),DUP,NOCASE !                     
@@ -1271,26 +1307,31 @@ VatCode                     STRING(3)                      !
 cmp_fctry                   STRING(3)                      !                     
 CMROpmerking                CSTRING(1001)                  !                     
 PalletBladLayout            CSTRING(51)                    !                     
+NietActief                  BYTE                           !                     
                          END
                      END                       
 
 ACel                 FILE,DRIVER('MSSQL'),PRE(ACel),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 CEL_PK                   KEY(ACel:CelID),NOCASE,PRIMARY    !                     
+Cel_FK1                  KEY(ACel:Volgnr,ACel:CelID),NOCASE ! Op Volgnr, CelID    
 Record                   RECORD,PRE()
 CelID                       LONG                           !                     
 CelOms                      CSTRING(51)                    !                     
 Breedte                     LONG                           !                     
 Lengte                      LONG                           !                     
+Volgnr                      LONG                           !                     
                          END
                      END                       
 
 AACel                FILE,DRIVER('MSSQL'),PRE(AACel),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 CEL_PK                   KEY(AACel:CelID),NOCASE,PRIMARY   !                     
+Cel_FK1                  KEY(AACel:Volgnr,AACel:CelID),NOCASE ! Op Volgnr, CelID    
 Record                   RECORD,PRE()
 CelID                       LONG                           !                     
 CelOms                      CSTRING(51)                    !                     
 Breedte                     LONG                           !                     
 Lengte                      LONG                           !                     
+Volgnr                      LONG                           !                     
                          END
                      END                       
 
@@ -1347,6 +1388,7 @@ VatCode                     STRING(3)                      !
 cmp_fctry                   STRING(3)                      !                     
 CMROpmerking                CSTRING(1001)                  !                     
 PalletBladLayout            CSTRING(51)                    !                     
+NietActief                  BYTE                           !                     
                          END
                      END                       
 
@@ -1467,6 +1509,16 @@ InslagQATemperatuurVervoermiddel CSTRING(21)               !
 CorrectieveMaatregel        CSTRING(2001)                  !                     
 Oorzaak                     CSTRING(2001)                  !                     
 TransportBedrijf            CSTRING(2001)                  !                     
+Blokkade                    STRING(8)                      !                     
+Blokkade_GROUP              GROUP,OVER(Blokkade)           !                     
+Blokkade_DATE                 DATE                         !                     
+Blokkade_TIME                 TIME                         !                     
+                            END                            !                     
+deBlokkade                  STRING(8)                      !                     
+deBlokkade_GROUP            GROUP,OVER(deBlokkade)         !                     
+deBlokkade_DATE               DATE                         !                     
+deBlokkade_TIME               TIME                         !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1530,6 +1582,16 @@ InslagQATemperatuurVervoermiddel CSTRING(21)               !
 CorrectieveMaatregel        CSTRING(2001)                  !                     
 Oorzaak                     CSTRING(2001)                  !                     
 TransportBedrijf            CSTRING(2001)                  !                     
+Blokkade                    STRING(8)                      !                     
+Blokkade_GROUP              GROUP,OVER(Blokkade)           !                     
+Blokkade_DATE                 DATE                         !                     
+Blokkade_TIME                 TIME                         !                     
+                            END                            !                     
+deBlokkade                  STRING(8)                      !                     
+deBlokkade_GROUP            GROUP,OVER(deBlokkade)         !                     
+deBlokkade_DATE               DATE                         !                     
+deBlokkade_TIME               TIME                         !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1600,11 +1662,12 @@ Fax                         STRING(25)                     !
 !endregion
 
 db Debuger
-WE::MustClose       long,external,dll
-WE::CantCloseNow    long,external,dll
+UD         CLASS(UltimateDebug),EXTERNAL,DLL(dll_mode)
+                     END   
+ 
 include('GlobalClassDef.inc')
-include('CachingClassDef.inc')
-include('SnelheidLogClassDef.inc')
+!include('CachingClassDef.inc')
+!include('SnelheidLogClassDef.inc')
 Access:ViewArtikel   &FileManager,THREAD,EXTERNAL,DLL      ! FileManager for ViewArtikel
 Relate:ViewArtikel   &RelationManager,THREAD,EXTERNAL,DLL  ! RelationManager for ViewArtikel
 Access:Partij        &FileManager,THREAD,EXTERNAL,DLL      ! FileManager for Partij
@@ -1657,8 +1720,6 @@ Access:ViewVoorraadPartijTotaal &FileManager,THREAD,EXTERNAL,DLL ! FileManager f
 Relate:ViewVoorraadPartijTotaal &RelationManager,THREAD,EXTERNAL,DLL ! RelationManager for ViewVoorraadPartijTotaal
 Access:SnelheidLogging &FileManager,THREAD,EXTERNAL,DLL    ! FileManager for SnelheidLogging
 Relate:SnelheidLogging &RelationManager,THREAD,EXTERNAL,DLL ! RelationManager for SnelheidLogging
-Access:PartijCelVoorraad &FileManager,THREAD,EXTERNAL,DLL  ! FileManager for PartijCelVoorraad
-Relate:PartijCelVoorraad &RelationManager,THREAD,EXTERNAL,DLL ! RelationManager for PartijCelVoorraad
 Access:RelatieArtikelOmschrijving &FileManager,THREAD,EXTERNAL,DLL ! FileManager for RelatieArtikelOmschrijving
 Relate:RelatieArtikelOmschrijving &RelationManager,THREAD,EXTERNAL,DLL ! RelationManager for RelatieArtikelOmschrijving
 Access:ARelatie      &FileManager,THREAD,EXTERNAL,DLL      ! FileManager for ARelatie
@@ -1745,8 +1806,8 @@ NetRefreshVoorraadViews PROCEDURE
 		ThisNetRefresh.Send('|Partij|APartij|Mutatie|AMutatie|ViewVoorraadCelTotaal|AViewVoorraadCelTotaal|ViewVoorraadPartij|AViewVoorraadPartij|AAViewVoorraadPartij|AAAViewVoorraadPartij|AAAAViewVoorraadPartij|ViewVoorraadPlanning|VoorraadVerloop|') ! NetTalk (NetRefresh)
 	!END
 include('GlobalClassSrc.inc')
-include('CachingClassSrc.inc')
-include('SnelheidLogClassSrc.inc')
+!include('CachingClassSrc.inc')
+!include('SnelheidLogClassSrc.inc')
 !These procedures are used to initialize the DLL. It must be called by the main executable when it starts up
 VoorrVrd:Init PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>)
 VoorrVrd:Init_Called    BYTE,STATIC
@@ -1789,7 +1850,6 @@ VoorrVrd:Init_Called    BYTE,STATIC
   Access:ViewPlanningPartijTotaal.SetErrors(GlobalErrors)
   Access:ViewVoorraadPartijTotaal.SetErrors(GlobalErrors)
   Access:SnelheidLogging.SetErrors(GlobalErrors)
-  Access:PartijCelVoorraad.SetErrors(GlobalErrors)
   Access:RelatieArtikelOmschrijving.SetErrors(GlobalErrors)
   Access:ARelatie.SetErrors(GlobalErrors)
   Access:APlanning.SetErrors(GlobalErrors)
@@ -1812,6 +1872,7 @@ VoorrVrd:Init_Called    BYTE,STATIC
   VOORRSTM:Init(curGlobalErrors, curINIMgr)                ! Initialise dll - (ABC) -
   VOORRRPT:Init(curGlobalErrors, curINIMgr)                ! Initialise dll - (ABC) -
   VOORRPLN:Init(curGlobalErrors, curINIMgr)                ! Initialise dll - (ABC) -
+  VoorrDCT:Init(curGlobalErrors, curINIMgr)                ! Initialise dll - (ABC) -
 
 !This procedure is used to shutdown the DLL. It must be called by the main executable before it closes down
 
@@ -1827,6 +1888,31 @@ VoorrVrd:Kill_Called    BYTE,STATIC
   VOORRSTM:Kill()                                          ! Kill dll - (ABC) -
   VOORRRPT:Kill()                                          ! Kill dll - (ABC) -
   VOORRPLN:Kill()                                          ! Kill dll - (ABC) -
+  VoorrDCT:Kill()                                          ! Kill dll - (ABC) -
+ 
+!BOE: DEBUG Global
+DebugABCGlobalInformation_VoorrVrd PROCEDURE()
+
+udpt            UltimateDebugProcedureTracker
+                     
+  CODE
+  
+  udpt.Init(UD,'DebugABCGlobalInformation_VoorrVrd')
+  
+ 
+  RETURN
+
+DebugABCGlobalVariables_VoorrVrd PROCEDURE()
+
+udpt            UltimateDebugProcedureTracker
+
+  CODE
+  
+  udpt.Init(UD,'DebugABCGlobalVariables_VoorrVrd')
+  
+  RETURN
+!EOE: DEBUG Global
+
   
 
 DLLInitializer.Destruct PROCEDURE

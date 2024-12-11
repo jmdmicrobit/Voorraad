@@ -43,6 +43,7 @@ EXPORTS
       $RELATE:VIEWVOORRAADPLANNING                            @?
   $CEL                                                    @?
   CEL$CEL:CEL_PK                                          @?
+  CEL$CEL:CEL_FK1                                         @?
       CEL$CEL:RECORD                                          @?
       CEL$TYPE$CEL:RECORD                                     @?
       $ACCESS:CEL                                             @?
@@ -78,6 +79,8 @@ EXPORTS
   PLANNING$PLA:PLANNING_FK01                              @?
   PLANNING$PLA:PLANNING_FK02                              @?
   PLANNING$PLA:PLANNING_FK03                              @?
+  PLANNING$PLA:PLANNING_FK04                              @?
+  PLANNING$PLA:PLANNING_FK05                              @?
   PLANNING$PLA:VERWERKT_ARTIKEL_PLANNING_K                @?
   PLANNING$PLA:VERWERKT_OVERBOEKINGCELID_PLANNING_K       @?
       PLANNING$PLA:RECORD                                     @?
@@ -306,20 +309,6 @@ EXPORTS
       VIEWVOORRAADPARTIJ_INDEXED$TYPE$VVPARI:RECORD           @?
       $ACCESS:VIEWVOORRAADPARTIJ_INDEXED                      @?
       $RELATE:VIEWVOORRAADPARTIJ_INDEXED                      @?
-  $VIEWARTIKEL_EXACT                                      @?
-  VIEWARTIKEL_EXACT$ARTE:ARTIKEL_PK                       @?
-  VIEWARTIKEL_EXACT$ARTE:ARTIKEL_FK01                     @?
-      VIEWARTIKEL_EXACT$ARTE:RECORD                           @?
-      VIEWARTIKEL_EXACT$TYPE$ARTE:RECORD                      @?
-      $ACCESS:VIEWARTIKEL_EXACT                               @?
-      $RELATE:VIEWARTIKEL_EXACT                               @?
-  $RELATIE_EXACT                                          @?
-  RELATIE_EXACT$RELE:RELATIE_FK01                         @?
-  RELATIE_EXACT$RELE:RELATIE_PK                           @?
-      RELATIE_EXACT$RELE:RECORD                               @?
-      RELATIE_EXACT$TYPE$RELE:RECORD                          @?
-      $ACCESS:RELATIE_EXACT                                   @?
-      $RELATE:RELATIE_EXACT                                   @?
   $VIEWPALLETTEGOEDEN                                     @?
   VIEWPALLETTEGOEDEN$PTG:VIEWPALLETTEGOEDEN_PK            @?
       VIEWPALLETTEGOEDEN$PTG:RECORD                           @?
@@ -504,6 +493,12 @@ EXPORTS
       RAPPORTEN$TYPE$RAP:RECORD                               @?
       $ACCESS:RAPPORTEN                                       @?
       $RELATE:RAPPORTEN                                       @?
+  $REFRESHTIJDSLOT                                        @?
+  REFRESHTIJDSLOT$RTS:REFRESHTIJDSLOT_PK                  @?
+      REFRESHTIJDSLOT$RTS:RECORD                              @?
+      REFRESHTIJDSLOT$TYPE$RTS:RECORD                         @?
+      $ACCESS:REFRESHTIJDSLOT                                 @?
+      $RELATE:REFRESHTIJDSLOT                                 @?
   $ARELATIE                                               @?
   ARELATIE$AREL:RELATIE_FK02                              @?
   ARELATIE$AREL:RELATIE_FK01                              @?
@@ -519,6 +514,8 @@ EXPORTS
   APLANNING$APLA:PLANNING_FK01                            @?
   APLANNING$APLA:PLANNING_FK02                            @?
   APLANNING$APLA:PLANNING_FK03                            @?
+  APLANNING$APLA:PLANNING_FK04                            @?
+  APLANNING$APLA:PLANNING_FK05                            @?
   APLANNING$APLA:VERWERKT_ARTIKEL_PLANNING_K              @?
   APLANNING$APLA:VERWERKT_OVERBOEKINGCELID_PLANNING_K     @?
       APLANNING$APLA:RECORD                                   @?
@@ -572,12 +569,14 @@ EXPORTS
       $RELATE:AARELATIE                                       @?
   $ACEL                                                   @?
   ACEL$ACEL:CEL_PK                                        @?
+  ACEL$ACEL:CEL_FK1                                       @?
       ACEL$ACEL:RECORD                                        @?
       ACEL$TYPE$ACEL:RECORD                                   @?
       $ACCESS:ACEL                                            @?
       $RELATE:ACEL                                            @?
   $AACEL                                                  @?
   AACEL$AACEL:CEL_PK                                      @?
+  AACEL$AACEL:CEL_FK1                                     @?
       AACEL$AACEL:RECORD                                      @?
       AACEL$TYPE$AACEL:RECORD                                 @?
       $ACCESS:AACEL                                           @?
@@ -630,6 +629,7 @@ EXPORTS
       $RELATE:APALLETMUTATIE                                  @?
   $AAACEL                                                 @?
   AAACEL$AAACEL:CEL_PK                                    @?
+  AAACEL$AAACEL:CEL_FK1                                   @?
       AAACEL$AAACEL:RECORD                                    @?
       AAACEL$TYPE$AAACEL:RECORD                               @?
       $ACCESS:AAACEL                                          @?
@@ -733,6 +733,8 @@ EXPORTS
   AAPLANNING$AAPLA:PLANNING_FK01                          @?
   AAPLANNING$AAPLA:PLANNING_FK02                          @?
   AAPLANNING$AAPLA:PLANNING_FK03                          @?
+  AAPLANNING$AAPLA:PLANNING_FK04                          @?
+  AAPLANNING$AAPLA:PLANNING_FK05                          @?
   AAPLANNING$AAPLA:VERWERKT_ARTIKEL_PLANNING_K            @?
   AAPLANNING$AAPLA:VERWERKT_OVERBOEKINGCELID_PLANNING_K   @?
       AAPLANNING$AAPLA:RECORD                                 @?
@@ -750,6 +752,7 @@ EXPORTS
       $RELATE:AAPARTIJ                                        @?
   $AAAACEL                                                @?
   AAAACEL$AAAACEL:CEL_PK                                  @?
+  AAAACEL$AAAACEL:CEL_FK1                                 @?
       AAAACEL$AAAACEL:RECORD                                  @?
       AAAACEL$TYPE$AAAACEL:RECORD                             @?
       $ACCESS:AAAACEL                                         @?
@@ -5103,6 +5106,7 @@ EXPORTS
 ;Start of Exported Procedures
   PACKLIJSTCLASSSOURCE@F                                  @?
   EXPORTINVOICEXML@F10VER:RECORD10INK:RECORDsb            @?
+  LOGSETSORT@Fsbsb                                        @?
 ;End of Exported Procedures
 
 ;Start of Exported Global Data
@@ -5155,6 +5159,9 @@ EXPORTS
   TCB$GLO:PARTIJCELCONTROLEQ                              @?
   $GLO:PARTIJCELCONTROLEQ                                 @?
   $GLO:HIDEPLANNINGINSTRUCTIE                             @?
+  TYPE$GLO:PARTNERQ                                       @?
+  TCB$GLO:PARTNERQ                                        @?
+  $GLO:PARTNERQ                                           @?
   $LOC:ORIGINEELPARTIJCELID                               @?
   $LOC:ORIGINEELKG                                        @?
   $LOC:ORIGINEELPALLETS                                   @?
@@ -5200,29 +5207,41 @@ EXPORTS
   VALIDATEOLE@FlOsbOsb @?
   WINDOWEXISTS@Fsb @?
 ;End of CWUtils library exports
-   ; Start of exporting WinEvent variables
-  $WE::MustClose                                          @?
-  $WE::CantCloseNow                                       @?
-   ; end of exporting WinEvent variables
    $ThisNetRefresh   @?
   ; exporting classes from StringTheory.Inc
   VMT$STRINGTHEORY                                              @?
   TYPE$STRINGTHEORY                                             @?
-  DESTRUCT@F12STRINGTHEORY   @?
   CONSTRUCT@F12STRINGTHEORY   @?
-  START@F12STRINGTHEORY   @?
+  DESTRUCT@F12STRINGTHEORY   @?
+  START@F12STRINGTHEORYl   @?
+  STREAM@F12STRINGTHEORYsbll   @?
+  NOSTREAM@F12STRINGTHEORY   @?
+  FLUSHANDKEEP@F12STRINGTHEORY   @?
+  FLUSH@F12STRINGTHEORY   @?
+  FLUSH@F12STRINGTHEORYsb   @?
+  FLUSH@F12STRINGTHEORYRsb   @?
+  FLUSH@F12STRINGTHEORY12STRINGTHEORY   @?
   APPENDA@F12STRINGTHEORYsblOsb   @?
   APPENDBINARY@F12STRINGTHEORYll   @?
-  APPEND@F12STRINGTHEORYsblOsb   @?
-  APPEND@F12STRINGTHEORYRsblOsb   @?
+  APPEND@F12STRINGTHEORYsb   @?
+  APPEND@F12STRINGTHEORYRsb   @?
+  APPEND@F12STRINGTHEORYsbl   @?
+  APPEND@F12STRINGTHEORYRsbl   @?
+  APPEND@F12STRINGTHEORYsblsb   @?
+  APPEND@F12STRINGTHEORYRsblsb   @?
   APPEND@F12STRINGTHEORY12STRINGTHEORYlsb   @?
   APPEND@F12STRINGTHEORY12STRINGTHEORYsb   @?
   APPEND@F12STRINGTHEORY12STRINGTHEORY   @?
+  CAT@F12STRINGTHEORY12STRINGTHEORY   @?
+  CAT@F12STRINGTHEORY12STRINGTHEORYl   @?
+  CAT@F12STRINGTHEORYsb   @?
   CAT@F12STRINGTHEORYsbl   @?
+  CAT@F12STRINGTHEORYRsb   @?
   CAT@F12STRINGTHEORYRsbl   @?
   CATADDR@F12STRINGTHEORYll   @?
   SETVALUE@F12STRINGTHEORY12STRINGTHEORY   @?
   SETVALUE@F12STRINGTHEORYsbl   @?
+  SETVALUE@F12STRINGTHEORYRsbl   @?
   SETVALUEBYADDRESS@F12STRINGTHEORYll   @?
   _EQUALSUNICODE@F12STRINGTHEORYRsbl   @?
   _EQUALSUNICODE@F12STRINGTHEORY12STRINGTHEORYl   @?
@@ -5230,20 +5249,21 @@ EXPORTS
   EQUALS@F12STRINGTHEORYsbl   @?
   _GETNEXTBUFFERSIZE@F12STRINGTHEORYl   @?
   _SETVALUEPOINTER@F12STRINGTHEORYllll   @?
+  _STEALVALUE@F12STRINGTHEORY12STRINGTHEORY   @?
   ASSIGN@F12STRINGTHEORYRsb   @?
   ASSIGN@F12STRINGTHEORYsb   @?
   ABBREVIATE@F12STRINGTHEORYlll   @?
   GETVALUEPTR@F12STRINGTHEORY   @?
   GETADDRESS@F12STRINGTHEORY   @?
-  SETVALUE@F12STRINGTHEORYRsbl   @?
   BASE64ENCODE@F12STRINGTHEORYl   @?
   BASE64ENCODE@F12STRINGTHEORYRsbRl   @?
   BASE64DECODE@F12STRINGTHEORY   @?
   BASE64DECODE@F12STRINGTHEORYRsbRl   @?
+  BASE85ENCODE@F12STRINGTHEORYl   @?
+  BASE85DECODE@F12STRINGTHEORY   @?
   QUOTEDPRINTABLEENCODE@F12STRINGTHEORY   @?
   QUOTEDPRINTABLEDECODE@F12STRINGTHEORY   @?
   ENCODEDWORDDECODE@F12STRINGTHEORY   @?
-  _ENCODEDWORDDECODEWORK@F12STRINGTHEORY   @?
   ENCODEDWORDENCODE@F12STRINGTHEORYOsbl   @?
   JSONENCODE@F12STRINGTHEORYl   @?
   JSONDECODE@F12STRINGTHEORY   @?
@@ -5255,14 +5275,23 @@ EXPORTS
   FREELINES@F12STRINGTHEORY   @?
   CLIPLEN@F12STRINGTHEORY   @?
   CLIPLENGTH@F12STRINGTHEORY   @?
-  CROP@F12STRINGTHEORYUlUl   @?
+  CROP@F12STRINGTHEORYll   @?
+  INSTRING@F12STRINGTHEORYsb   @?
+  INSTRING@F12STRINGTHEORYRsb   @?
+  INSTRING@F12STRINGTHEORYsbl   @?
+  INSTRING@F12STRINGTHEORYRsbl   @?
+  INSTRING@F12STRINGTHEORYsbll   @?
+  INSTRING@F12STRINGTHEORYRsbll   @?
+  INSTRING@F12STRINGTHEORYsblll   @?
+  INSTRING@F12STRINGTHEORYRsblll   @?
+  INSTRING@F12STRINGTHEORYsbllll   @?
   INSTRING@F12STRINGTHEORYsblllll   @?
   MATCH@F12STRINGTHEORYsbllll   @?
   FINDMATCH@F12STRINGTHEORYsbRlRlll   @?
   FINDMATCHPOSITION@F12STRINGTHEORYsbRlRlll   @?
   COUNT@F12STRINGTHEORYsbllllll   @?
   CAPITALIZE@F12STRINGTHEORYlllOsb   @?
-  ERRORTRAP@F12STRINGTHEORYsbsb   @?
+  ERRORTRAP@F12STRINGTHEORYsbsbUc   @?
   EXTENSIONONLY@F12STRINGTHEORYOsb   @?
   FORMATMESSAGE@F12STRINGTHEORYl   @?
   GETVALUE@F12STRINGTHEORY   @?
@@ -5273,8 +5302,11 @@ EXPORTS
   INLINE@F12STRINGTHEORYsblllllll   @?
   SETLINE@F12STRINGTHEORYlsb   @?
   SETLINE@F12STRINGTHEORYlRsb   @?
+  SETLINE@F12STRINGTHEORYl12STRINGTHEORY   @?
   ADDLINE@F12STRINGTHEORYlsb   @?
   ADDLINE@F12STRINGTHEORYlRsb   @?
+  ADDLINE@F12STRINGTHEORYsb   @?
+  ADDLINE@F12STRINGTHEORYRsb   @?
   DELETELINE@F12STRINGTHEORYl   @?
   REMOVELINES@F12STRINGTHEORYOsb   @?
   SERIALIZEQUEUE@F12STRINGTHEORYBqOsbOsbOsbOsbll   @?
@@ -5288,17 +5320,26 @@ EXPORTS
   CHARS@F12STRINGTHEORYlOsb   @?
   _MALLOC@F12STRINGTHEORYlll   @?
   MD5@F12STRINGTHEORYlPsbl   @?
-  PREPEND@F12STRINGTHEORYsblOsb   @?
-  PREPEND@F12STRINGTHEORY12STRINGTHEORYOsb   @?
+  PREPEND@F12STRINGTHEORYsbl   @?
+  PREPEND@F12STRINGTHEORYsblsb   @?
+  PREPEND@F12STRINGTHEORYsb   @?
+  PREPEND@F12STRINGTHEORYRsb   @?
+  PREPEND@F12STRINGTHEORY12STRINGTHEORYsb   @?
+  PREPEND@F12STRINGTHEORY12STRINGTHEORY   @?
+  SEEDRANDOM@F12STRINGTHEORY   @?
   RANDOM@F12STRINGTHEORYllOsb   @?
+  SETRANDOM@F12STRINGTHEORYllOsb   @?
   MAKEGUID@F12STRINGTHEORYll   @?
   RECORDS@F12STRINGTHEORY   @?
   REPLACE@F12STRINGTHEORYsbsblllll   @?
-  REPLACEBETWEEN@F12STRINGTHEORYsbsbsbsblllll   @?
+  REPLACE@F12STRINGTHEORYsbsbllll   @?
+  REPLACEBETWEEN@F12STRINGTHEORYsbOsbsbsblllll   @?
+  REPLACEEXCEPTBETWEEN@F12STRINGTHEORYsbOsbsbsbllll   @?
   REPLACESINGLECHARS@F12STRINGTHEORYsbsb   @?
   REPLACESINGLECHARS@F12STRINGTHEORYsbsbl   @?
   REMOVEHTML@F12STRINGTHEORY   @?
   SETLENGTH@F12STRINGTHEORYll   @?
+  ADJUSTLENGTH@F12STRINGTHEORYl   @?
   SLICE@F12STRINGTHEORYll   @?
   SPLIT@F12STRINGTHEORYsbOsbOsblllOsbl   @?
   SPLITEVERY@F12STRINGTHEORYl   @?
@@ -5331,10 +5372,21 @@ EXPORTS
   SETENCODINGFROMBOM@F12STRINGTHEORYl   @?
   ADDBOM@F12STRINGTHEORYl   @?
   BEFORE@F12STRINGTHEORYsblll   @?
+  BEFORELAST@F12STRINGTHEORYsblll   @?
+  BEFORENTH@F12STRINGTHEORYsbllll   @?
+  SETBEFORE@F12STRINGTHEORYsbllll   @?
+  SETBEFORELAST@F12STRINGTHEORYsbllll   @?
+  SETBEFORENTH@F12STRINGTHEORYsblllll   @?
   BETWEEN@F12STRINGTHEORYsbsbllll   @?
   FINDBETWEEN@F12STRINGTHEORYsbsbRlRlll   @?
+  SETBETWEEN@F12STRINGTHEORYsbsblllll   @?
   FINDBETWEENPOSITION@F12STRINGTHEORYsbsbRlRlll   @?
   AFTER@F12STRINGTHEORYsblll   @?
+  AFTERLAST@F12STRINGTHEORYsblll   @?
+  AFTERNTH@F12STRINGTHEORYsbllll   @?
+  SETAFTER@F12STRINGTHEORYsbllll   @?
+  SETAFTERLAST@F12STRINGTHEORYsbllll   @?
+  SETAFTERNTH@F12STRINGTHEORYsblllll   @?
   TOBLOB@F12STRINGTHEORYBb   @?
   FROMBLOB@F12STRINGTHEORYBb   @?
   CHANGEBASE@F12STRINGTHEORYll   @?
@@ -5343,15 +5395,15 @@ EXPORTS
   UTF16TOANSI@F12STRINGTHEORYRsbRllUl   @?
   UTF8TO16@F12STRINGTHEORYRsbRl   @?
   UTF16TO8@F12STRINGTHEORYRsbRll   @?
-  UTF8TOANSI@F12STRINGTHEORYRsbRlUl   @?
-  ANSITOUTF8@F12STRINGTHEORYRsbRlUl   @?
+  UTF8TOANSI@F12STRINGTHEORYRsbRll   @?
+  ANSITOUTF8@F12STRINGTHEORYRsbRll   @?
   APIUTF8TOANSI@F12STRINGTHEORYRsbRl   @?
   APIANSITOUTF8@F12STRINGTHEORYRsbRl   @?
-  TOANSI@F12STRINGTHEORYlUl   @?
-  TOANSI@F12STRINGTHEORYlUll   @?
-  TOUNICODE@F12STRINGTHEORYlUl   @?
-  DECODEHEXINLINE@F12STRINGTHEORYUl   @?
-  DECODEHEXINLINE@F12STRINGTHEORYsblUl   @?
+  TOANSI@F12STRINGTHEORYll   @?
+  TOANSI@F12STRINGTHEORYlll   @?
+  TOUNICODE@F12STRINGTHEORYll   @?
+  DECODEHEXINLINE@F12STRINGTHEORYl   @?
+  DECODEHEXINLINE@F12STRINGTHEORYsbll   @?
   UTF16TOUTF8CHAR@F12STRINGTHEORYsbRl   @?
   NORMALIZE@F12STRINGTHEORYll   @?
   DECTOBASE@F12STRINGTHEORYlll   @?
@@ -5359,6 +5411,7 @@ EXPORTS
   BYTETOHEX@F12STRINGTHEORYUc   @?
   HEXTOBYTE@F12STRINGTHEORYsb   @?
   LONGTOHEX@F12STRINGTHEORYl   @?
+  STRINGTOHEX@F12STRINGTHEORYRsbll   @?
   STRINGTOHEX@F12STRINGTHEORYsbll   @?
   HEXTOSTRING@F12STRINGTHEORYsb   @?
   TOHEX@F12STRINGTHEORYll   @?
@@ -5411,17 +5464,19 @@ EXPORTS
   GETBYTES@F12STRINGTHEORYRspl   @?
   SETBYTES@F12STRINGTHEORYRusbl   @?
   GETBYTES@F12STRINGTHEORYRusbl   @?
-  FINDWORD@F12STRINGTHEORYlllRlRlOsb   @?
-  GETWORD@F12STRINGTHEORYlllOsb   @?
+  FINDWORD@F12STRINGTHEORYlllRlRlOsbl   @?
+  GETWORD@F12STRINGTHEORYlllOsbl   @?
   WORDSTART@F12STRINGTHEORYlllOsb   @?
   WORDEND@F12STRINGTHEORYllOsbl   @?
-  COUNTWORDS@F12STRINGTHEORYllOsb   @?
+  COUNTWORDS@F12STRINGTHEORYllOsbl   @?
   REMOVEATTRIBUTES@F12STRINGTHEORYsbl   @?
   REMOVEXMLPREFIXES@F12STRINGTHEORY   @?
   HTMLENTITYTODEC@F12STRINGTHEORY   @?
   DECENTITYTOCHAR@F12STRINGTHEORY   @?
   REMOVE@F12STRINGTHEORYsbOsblll   @?
   REMOVEFROMPOSITION@F12STRINGTHEORYll   @?
+  TOP@F12STRINGTHEORYl   @?
+  TAIL@F12STRINGTHEORYl   @?
   CLIP@F12STRINGTHEORY   @?
   TRIM@F12STRINGTHEORYOsb   @?
   REVERSE@F12STRINGTHEORYsb   @?
@@ -5432,7 +5487,7 @@ EXPORTS
   SETRIGHT@F12STRINGTHEORYllOsb   @?
   ALL@F12STRINGTHEORYl   @?
   SETALL@F12STRINGTHEORYl   @?
-  SQUEEZE@F12STRINGTHEORYlOsb   @?
+  SQUEEZE@F12STRINGTHEORYlOsbl   @?
   CONTAINSADIGIT@F12STRINGTHEORY   @?
   ISALLDIGITS@F12STRINGTHEORY   @?
   CONTAINSA@F12STRINGTHEORYsbOsbl   @?
@@ -5442,6 +5497,7 @@ EXPORTS
   ISASCII@F12STRINGTHEORY   @?
   ISALL@F12STRINGTHEORYsbOsbl   @?
   REMOVECHARS@F12STRINGTHEORYsb   @?
+  KEEPCHARS@F12STRINGTHEORYsbsb   @?
   KEEPCHARS@F12STRINGTHEORYsb   @?
   MATCHBRACKETS@F12STRINGTHEORYsbsbl   @?
   _SWITCHENDIAN@F12STRINGTHEORY   @?
@@ -5454,13 +5510,34 @@ EXPORTS
   STR@F12STRINGTHEORY   @?
   STR@F12STRINGTHEORYsb   @?
   STR@F12STRINGTHEORYRsb   @?
-  SETSLICE@F12STRINGTHEORYUlUlsb   @?
+  SETSLICE@F12STRINGTHEORYllsb   @?
+  INSERT@F12STRINGTHEORYl12STRINGTHEORY   @?
   INSERT@F12STRINGTHEORYlsb   @?
+  INSERT@F12STRINGTHEORYlRsb   @?
   QUOTE@F12STRINGTHEORYOsbOsb   @?
   UNQUOTE@F12STRINGTHEORYOsbOsb   @?
-  FINDCHAR@F12STRINGTHEORYsbllOsb   @?
-  FINDCHARS@F12STRINGTHEORYRsbllOsb   @?
-  FINDCHARS@F12STRINGTHEORYsbllOsb   @?
+  FINDCHAR@F12STRINGTHEORYsb   @?
+  FINDCHAR@F12STRINGTHEORYsbl   @?
+  FINDCHAR@F12STRINGTHEORYsbll   @?
+  FINDCHAR@F12STRINGTHEORYsbllsb   @?
+  _MEMCHRS@F12STRINGTHEORYRsbll   @?
+  _MEMICHRS@F12STRINGTHEORYRsbll   @?
+  _MEMICHR@F12STRINGTHEORYlll   @?
+  FINDENDOFSTRING@F12STRINGTHEORYlll   @?
+  FINDCHARSADDR@F12STRINGTHEORYRsbll   @?
+  FINDCHARS@F12STRINGTHEORYRsb   @?
+  FINDCHARS@F12STRINGTHEORYsb   @?
+  FINDCHARS@F12STRINGTHEORYRsbl   @?
+  FINDCHARS@F12STRINGTHEORYsbl   @?
+  FINDCHARS@F12STRINGTHEORYRsbll   @?
+  FINDCHARS@F12STRINGTHEORYsbll   @?
+  FINDCHARS@F12STRINGTHEORYRsbllRsb   @?
+  FINDCHARS@F12STRINGTHEORYsbllRsb   @?
+  FINDCHARS@F12STRINGTHEORYsbllsb   @?
+  FINDNTH@F12STRINGTHEORYsbllll   @?
+  REPLACENTH@F12STRINGTHEORYsbsbllll   @?
+  FINDLAST@F12STRINGTHEORYsblll   @?
+  REPLACELAST@F12STRINGTHEORYsbsblll   @?
   COLORTOHEX@F12STRINGTHEORYsbl   @?
   COLORFROMHEX@F12STRINGTHEORYsb   @?
   COLORTOLONG@F12STRINGTHEORYsb   @?
@@ -5473,6 +5550,7 @@ EXPORTS
   CLEANFILENAME@F12STRINGTHEORYOsbOsb   @?
   PEEKRAM@F12STRINGTHEORYl   @?
   PEEKRAM@F12STRINGTHEORYUlll   @?
+  PEEKRAM@F12STRINGTHEORY12STRINGTHEORYUlll   @?
   LOADLIBS@F12STRINGTHEORY   @?
   LOADNORMALIZE@F12STRINGTHEORY   @?
   GZIP@F12STRINGTHEORYl   @?
@@ -5492,6 +5570,7 @@ EXPORTS
   ASNDECODE@F12STRINGTHEORYRl12STRINGTHEORYPsb   @?
   ASNENCODE@F12STRINGTHEORYsbOsb   @?
   ASNENCODENUMBER@F12STRINGTHEORYsbl   @?
+  FORMATHTML@F12STRINGTHEORY   @?
   _IANANAMETONUMBER@F12STRINGTHEORYsb   @?
   VMT$STRINGPICTURE                                              @?
   TYPE$STRINGPICTURE                                             @?
@@ -5544,6 +5623,7 @@ EXPORTS
   FORMATVALUE@F12STRINGFORMATsbOsbl   @?
   FORMATDATE@F12STRINGFORMATdsbl   @?
   FORMATDATE@F12STRINGFORMATd13STRINGPICTUREl   @?
+  WEEK@F12STRINGFORMATlRlRlRl   @?
   FORMATTIME@F12STRINGFORMATdsbl   @?
   FORMATTIME@F12STRINGFORMATd13STRINGPICTUREl   @?
   FORMATTIMEHOURS@F12STRINGFORMATdsbl   @?
@@ -5554,6 +5634,7 @@ EXPORTS
   VMT$STRINGDEFORMAT                                              @?
   TYPE$STRINGDEFORMAT                                             @?
   TRANSLATE@F14STRINGDEFORMATsb   @?
+  DATEFROMWEEK@F14STRINGDEFORMATsbll   @?
   DEFORMATVALUE@F14STRINGDEFORMATsbOsb   @?
   DEFORMATSCIENTIFIC@F14STRINGDEFORMATsbOsb   @?
   DEFORMATPATTERN@F14STRINGDEFORMATsbOsb   @?
@@ -5601,8 +5682,6 @@ $GLO:CelLocatie_Name      @?
 $GLO:Versie_Name      @?
 $GLO:ViewPartijCelLocaties_Name      @?
 $GLO:ViewVoorraadPartij_INDEXED_Name      @?
-$GLO:ViewArtikel_Exact_Name      @?
-$GLO:Relatie_Exact_Name      @?
 $GLO:ViewPalletTegoeden_Name      @?
 $GLO:ViewPlanningPartijTotaal_Name      @?
 $GLO:ViewVoorraadPartijTotaal_Name      @?
@@ -5629,6 +5708,7 @@ $GLO:GNCode_Name      @?
 $GLO:GNCodeArtikelen_Name      @?
 $GLO:Havens_Name      @?
 $GLO:Rapporten_Name      @?
+$GLO:RefreshTijdSlot_Name      @?
 $GLO:ARelatie_Name      @?
 $GLO:APlanning_Name      @?
 $GLO:AInkoop_Name      @?
@@ -5676,5 +5756,259 @@ $GLO:APalletBladSjabloon_Name      @?
 $GLO:ARelatieArtikelOmschrijving_Name      @?
 $GLO:AAViewTransporteur_Name      @?
   $UD  @?
+   ; Start of exporting WinEvent variables
+  $WE::MustClose                                          @?
+  $WE::CantCloseNow                                       @?
+   ; end of exporting WinEvent variables
+   ; Start of exporting WinEvent functions
+  WinEvent                                     @?
+  WinParam1                                    @?
+  WinParam2                                    @?
+  WinControl                                   @?
+  WinHelpControl                               @?
+  WinSysEvent                                  @?
+  WinSysParam1                                 @?
+  WinSysParam2                                 @?
+  WinAlert                                     @?
+  WinChangeUserEvent                           @?
+  JustEzHelp                                   @?
+  SetWatchMessages                             @?
+  ds_AddQ                                      @?
+  ds_BuildWMQ                                  @?
+  ds_SetService                                @?
+  ds_GetService                                @?
+  ds_WTSCallBack                               @?
+  WinWtsEvent                                  @?
+  WinWtsID                                     @?
+  ds_VisibleOnDesktop                          @?
+  WinBringToFront                              @?
+  WinOnTop                                     @?
+  WinNotOnTop                                  @?
+  ds_WinTransparent                            @?
+  ScreenDepth                                  @?
+  ScreenWidth                                  @?
+  ScreenHeight                                 @?
+  WindowsVersion                               @?
+  DosVersion                                   @?
+  WindowsRelease                               @?
+  DosRelease                                   @?
+  ThisMachineName                              @?
+  GetWindowsDir                                @?
+  GetSystemDir                                 @?
+  GetFreeDiskSpace                             @?
+  GetDiskSpace                                 @?
+  Sound                                        @?
+  ds_GetDiskMegs                               @?
+  WinTaskbarAddIcon                            @?
+  WinTaskbarRemoveIcon                         @?
+  WinTaskbarChangeIcon                         @?
+  WinNotOnTaskbar                              @?
+  NewPort                                      @?
+  ReSetPort                                    @?
+  KillAllPorts                                 @?
+  WritePort                                    @?
+  ReadPort                                     @?
+  ErrorPort                                    @?
+  SetHandShake                                 @?
+  GetCommStatus                                @?
+  CtsHigh                                      @?
+  DsrHigh                                      @?
+  RingHigh                                     @?
+  CdHigh                                       @?
+  SetRts                                       @?
+  SetDtr                                       @?
+  ClosePort                                    @?
+  UseCommEvents                                @?
+  MonitorCommEvents                            @?
+  ds_FastClock                                 @?
+  ds_FormatFastTime                            @?
+  ds_FormatHex                                 @?
+  ds_SetClipboardEx1                           @?
+  ds_SetClipboardEx2                           @?
+  ds_DeleteFile                                @?
+  ds_GetFileDirEntry                           @?
+  ds_SetFileAttributes                         @?
+  ds_CreateDirectory                           @?
+  ds_RemoveDirectory                           @?
+  ds_SetFileDateTime                           @?
+  ds_MoveFile                                  @?
+  ds_StatusRectangle                           @?
+  ds_StatusProgress                            @?
+  ds_StatusIcon                                @?
+  ds_Memory                                    @?
+  ds_ShutDown                                  @?
+  ds_GetWinVersion                             @?
+  ds_WheelMouse                                @?
+  ds_Timer                                     @?
+  ds_WeekDay                                   @?
+  ds_WineventVersion                           @?
+  ds_LoadDLLProc                               @?
+  ds_UnloadDLLProc                             @?
+  ds_Sleep                                     @?
+  ds_GetFolderPath                             @?
+  ds_GetTempPath                               @?
+  ds_WineventDebug                             @?
+  ds_ViewDebug                                 @?
+  ds_ViewDebugClose                            @?
+  ds_Debug                                     @?
+  ds_GetReg                                    @?
+  ds_PutReg                                    @?
+  ds_GSMSendSMS                                @?
+  ds_GSMEnterPin                               @?
+  ds_GSMEchoOFF                                @?
+  ds_GSMSetSMSTextmode                         @?
+  ds_GSMGetReply                               @?
+  ds_EmptyPort                                 @?
+  ds_GSMReadSMS                                @?
+  ds_GSMDeleteSMS                              @?
+  ds_GSMReadSMSInit                            @?
+  ds_GSMSetSMSReporting                        @?
+  ds_GSMReadSMSReport                          @?
+  ds_GSMDeleteSMSReport                        @?
+  ds_GSMReadSMSReportInit                      @?
+  ds_GSMSelectSR                               @?
+  ds_GSMReadEvents                             @?
+  ds_PagerSend                                 @?
+  ds_PAGERGetReply                             @?
+  ds_String2File                               @?
+  ds_File2String                               @?
+  ds_Error                                     @?
+  ds_ErrorCode                                 @?
+  ds_ErrorReset                                @?
+  ds_ErrorSet                                  @?
+  ds_GSMSetEvents                              @?
+  ds_WinTaskbarBalloon                         @?
+  ds_GSMReset                                  @?
+  ds_SetOkToEndSessionHandler                  @?
+  ds_SetEndSessionHandler                      @?
+  ds_SetNoEndSession                           @?
+  ds_GetDLLVersion                             @?
+  ds_GetIDETemperature                         @?
+  ds_GetHIcon                                  @?
+  ds_GetWindowsColour                          @?
+  ds_StatusGrip                                @?
+  ds_GetHModule                                @?
+  ds_CreateShortcut                            @?
+  ds_GetScreenDPI                              @?
+  ds_OutputDebugString                         @?
+  ds_WinError                                  @?
+  ds_GetFileVersionInfo                        @?
+  _ASM_SaveStack                               @?
+  _ASM_TestStack                               @?
+  _ASM_GetCurrentRegisters                     @?
+  _ASM_Int3                                    @?
+  _ASM_Ulong64ToReal                           @?
+  ds_QueryPerformance                          @?
+  ds_SetRealTimePriority                       @?
+  ds_ShowWindow                                @?
+  ds_HideWindow                                @?
+  _ASM_ReadCPUTimeStamp                        @?
+  _ASM_ReadCPUTimeStampDelta                   @?
+  _ASM_CPUID                                   @?
+  ds_GetProcessTime                            @?
+  ds_GetThreadTime                             @?
+  ds_GetCurrentProcess                         @?
+  ds_GetCurrentThread                          @?
+  ds_DestroyIcon                               @?
+  ds_CreateShortcutEx                          @?
+  ds_GetWorkstationName                        @?
+  ds_GetUserName                               @?
+  ds_IsTerminalServer                          @?
+  ds_IsMediaCenter                             @?
+  ds_OnNetwork                                 @?
+  ds_IsTablet                                  @?
+  ds_IsStarter                                 @?
+  ds_RefreshDesktop                            @?
+  ds_GetSystemTime                             @?
+  ds_GetLocalTime                              @?
+  ds_GetSystemDate                             @?
+  ds_GetLocalDate                              @?
+  ds_GetCurrentEXEDate                         @?
+  ds_CopyDirectory                             @?
+  ds_GetUserAccountName                        @?
+  ds_GetWinVersionEx                           @?
+  WinAlertMouseZoom                            @?
+  ds_NoPaint                                   @?
+  ds_SetApplicationWindow                      @?
+  ds_GetApplicationWindow                      @?
+  ds_CloseWindow                               @?
+  ds_Round                                     @?
+  ds_WindowsProductInfo                        @?
+  ds_OSBits                                    @?
+  ds_SetFocus                                  @?
+  ds_ExpandDirectory                           @?
+  countport                                    @?
+   ; end of exporting WinEvent functions
+   ; exporting classes from csGPF.Inc
+   VMT$GPFREPORTERCLASS                                              @?
+   TYPE$GPFREPORTERCLASS                                             @?
+   CONSTRUCT@F16GPFREPORTERCLASS   @?
+   DESTRUCT@F16GPFREPORTERCLASS   @?
+   _GETSYMBOL@F16GPFREPORTERCLASSUlUc   @?
+   _LOOKUPEXCEPTIONCODE@F16GPFREPORTERCLASSUl   @?
+   _VECTOREDEXCEPTIONHANDLER_@F16GPFREPORTERCLASSUl   @?
+   _STACKDETAILS@F16GPFREPORTERCLASSUlUcUl   @?
+   _LOCATEDEBUGSYMBOLS@F16GPFREPORTERCLASSl   @?
+   _READBLOCKFROMFILE@F16GPFREPORTERCLASSUllRsbRsb   @?
+   _GETMODULENAME@F16GPFREPORTERCLASSl   @?
+   _GETMODULEHANDLE@F16GPFREPORTERCLASSUl   @?
+   LOOKUPADDRESS@F16GPFREPORTERCLASS   @?
+   INITIALIZE@F16GPFREPORTERCLASS   @?
+   FILTEREXCEPTIONS@F16GPFREPORTERCLASSUl   @?
+   _ENCODEEMAIL@F16GPFREPORTERCLASSsb   @?
+   _FINDFIRSTBREAK@F16GPFREPORTERCLASSsbl   @?
+   EXTRAREPORTTEXT@F16GPFREPORTERCLASS   @?
+   _GETDLLVERSION@F16GPFREPORTERCLASSsb   @?
+   _SETFILENAMES@F16GPFREPORTERCLASS   @?
+   DELETEDUMPFILE@F16GPFREPORTERCLASS   @?
+   _INITREPORTTEXT@F16GPFREPORTERCLASS   @?
+   _EXECUTECOMMANDS@F16GPFREPORTERCLASS   @?
+   _STACKDUMP@F16GPFREPORTERCLASSlll   @?
+   _FINDLINEPOSITION@F16GPFREPORTERCLASSsbl   @?
+   _DEBUGLOG@F16GPFREPORTERCLASSsbUc   @?
+   _FORMATLINEINFO@F16GPFREPORTERCLASSlsbsbsbUcUcUcUc   @?
+   _GETASSERT@F16GPFREPORTERCLASSll   @?
+   _GETOTHERMESSAGE@F16GPFREPORTERCLASSll   @?
+   _RESTARTPROGRAM@F16GPFREPORTERCLASS   @?
+   ; end of csGPF.Inc classes
+  ; exporting classes from Hyper.Inc
+  VMT$CSHYPERACTIVECLASS                                              @?
+  TYPE$CSHYPERACTIVECLASS                                             @?
+  ADDITEM@F18CSHYPERACTIVECLASSlOsbOlOlOll   @?
+  INIT@F18CSHYPERACTIVECLASSOlUc   @?
+  TAKELISTEVENT@F18CSHYPERACTIVECLASS   @?
+  REFRESH@F18CSHYPERACTIVECLASSl   @?
+  RUN@F18CSHYPERACTIVECLASSOll   @?
+  SETSTYLE@F18CSHYPERACTIVECLASSllll   @?
+  WHEREISCOLUMN@F18CSHYPERACTIVECLASSl   @?
+  WHATISATCOLUMN@F18CSHYPERACTIVECLASSl   @?
+  TAKEEVENT@F18CSHYPERACTIVECLASS   @?
+  GETLISTURL@F18CSHYPERACTIVECLASSlsbOsbOsb   @?
+  CHANGEURL@F18CSHYPERACTIVECLASSlOsb   @?
+  GETHTMLSTRING@F18CSHYPERACTIVECLASSsbOlOsb   @?
+  CHANGECOLUMN@F18CSHYPERACTIVECLASSlOsbOsbOl   @?
+  SETCONTROLPROPERTIES@F18CSHYPERACTIVECLASSlOl   @?
+  SAVEFORMAT@F18CSHYPERACTIVECLASSlOl   @?
+  ADDSTRING@F18CSHYPERACTIVECLASSlOsbOlOlOlOlOl   @?
+  REGCHECK@F18CSHYPERACTIVECLASSsbl   @?
+  SETACTIVE@F18CSHYPERACTIVECLASSlUc   @?
+  DEBUG@F18CSHYPERACTIVECLASSsb   @?
+  TRACE@F18CSHYPERACTIVECLASSsb   @?
+  FORMATSTRING@F18CSHYPERACTIVECLASSsbsb   @?
+  HANDLEERROR@F18CSHYPERACTIVECLASSlsbsb   @?
+  REFRESHURL@F18CSHYPERACTIVECLASSl   @?
+  ISFOLDER@F18CSHYPERACTIVECLASSsb   @?
+  ; end of Hyper.Inc classes
+;==================== Class: RefreshtijdSlotClass ====================
+   VMT$REFRESHTIJDSLOTCLASS                                @?
+   TYPE$REFRESHTIJDSLOTCLASS                               @?
+   TIJDSLOTBOEKEN@F20REFRESHTIJDSLOTCLASSsbl               @?
+   BEPAALTIJDSLOT@F20REFRESHTIJDSLOTCLASSbtl               @?
+   CONSTRUCT@F20REFRESHTIJDSLOTCLASS                       @?
+   DESTRUCT@F20REFRESHTIJDSLOTCLASS                        @?
+   INIT@F20REFRESHTIJDSLOTCLASS                            @?
+   KILL@F20REFRESHTIJDSLOTCLASS                            @?
+; NamedSymbols:  REFRESHTIJDSLOTCLASS
+   
 
 

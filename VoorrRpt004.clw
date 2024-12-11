@@ -85,41 +85,43 @@ Report               REPORT,AT(510,3010,7271,7750),PRE(RPT),PAPER(PAPER:A4),FONT
                          STRING('5715 PD Lierop'),AT(219,948,1260,198),USE(?STRING3)
                          STRING('Tel 0492-537066'),AT(219,1177),USE(?STRING4)
                          STRING('Fax 0492-529655'),AT(219,1396),USE(?STRING5)
-                         STRING('Netto (KG)'),AT(6500,2240),USE(?STRING7)
-                         STRING('Tarra (KG)'),AT(5698,2240),USE(?STRING8)
-                         STRING('Bruto (KG)'),AT(4375,2240),USE(?STRING9)
-                         STRING('Artikel'),AT(448,2240),USE(?STRING6)
+                         STRING('Netto (KG)'),AT(5104,2240),USE(?STRING7)
+                         STRING('Tarra (KG)'),AT(4385,2240),USE(?STRING8)
+                         STRING('Bruto (KG)'),AT(3344,2240),USE(?STRING9),RIGHT
+                         STRING('Artikel'),AT(344,2240),USE(?STRING6)
                          LINE,AT(42,2479,7125,0),USE(?LINE1)
-                         STRING('Intern Partijnr.'),AT(2500,2240),USE(?STRING14)
-                         STRING('Extern Partijnr.'),AT(3396,2240),USE(?STRING15)
+                         STRING('Partijnr.'),AT(2729,2240),USE(?STRING14),RIGHT
                          STRING(@s20),AT(5458,510),USE(LOC:WeeglijstKop),RIGHT
+                         STRING('Prod. date'),AT(5844,2250,656,198),USE(?STRING7:2),RIGHT
+                         STRING('Exp. date'),AT(6562,2250,656,198),USE(?STRING7:3),RIGHT
                        END
-WeegDetail             DETAIL,AT(0,0,7271,190),USE(?Detail)
-                         STRING(@n10`2B),AT(4219,0),USE(Weg:BrutoGewicht),RIGHT
-                         STRING(@n10`2B),AT(6375,0),USE(Weg:NettoGewicht),RIGHT
-                         STRING(@s20),AT(5125,0,1292),USE(LOC:WegTarra),RIGHT
-                         STRING(@s60),AT(1062,0,1792),USE(Art:ArtikelOms)
-                         STRING(@s20),AT(3479,0,771),USE(LOC:ExternPartijID),LEFT
-                         STRING(@n_10B),AT(2927,0,437),USE(LOC:PartijID),RIGHT
-                         STRING(@s40),AT(4344,0),USE(LOC:GewichtTekst,,?LOC:GewichtTekst:2)
-                         STRING(@s30),AT(375,0,635),USE(Art:ArtikelID)
+WeegDetail             DETAIL,AT(0,0,7271,190),USE(?Detail),FONT(,8)
+                         STRING(@n10`2B),AT(3323,0),USE(Weg:BrutoGewicht),RIGHT
+                         STRING(@n10`2B),AT(5083,0),USE(Weg:NettoGewicht),RIGHT
+                         STRING(@s20),AT(4323,0,677),USE(LOC:WegTarra),RIGHT
+                         STRING(@s60),AT(937,0,1792),USE(Art:ArtikelOms)
+                         STRING(@n_10B),AT(2729,0,437),USE(LOC:PartijID),RIGHT
+                         STRING(@s40),AT(3271,0,1031),USE(LOC:GewichtTekst,,?LOC:GewichtTekst:2)
+                         STRING(@s30),AT(271,0,635),USE(Art:ArtikelID)
                          STRING(@n_3B),AT(-52,0),USE(LOC:NR,,?LOC:NR:2),RIGHT(1)
+                         STRING(@d06-),AT(5844,10),USE(Weg:ProductionDate_DATE,,?Weg:ProductionDate_DATE:2)
+                         STRING(@d06-),AT(6562,10),USE(Weg:THTDate_DATE)
                        END
 ArtikelWeegFooter      DETAIL,AT(0,0,7271,365),USE(?DETAIL3)
                          LINE,AT(31,42,7135,0),USE(?LINE2)
-                         STRING(@n10`2B),AT(4219,115,844,198),USE(LOC:TotaalBrutoGewicht),RIGHT
-                         STRING(@n10`2B),AT(5573,115,844,198),USE(LOC:TotaalTarraGewicht),RIGHT
-                         STRING(@n10`2B),AT(6375,115,844,198),USE(LOC:TotaalNettoGewicht),RIGHT
+                         STRING(@n10`2B),AT(3156,115,844,198),USE(LOC:TotaalBrutoGewicht),RIGHT
+                         STRING(@n10`2B),AT(4177,115,844,198),USE(LOC:TotaalTarraGewicht),RIGHT
+                         STRING(@n10`2B),AT(5083,115,677,198),USE(LOC:TotaalNettoGewicht),RIGHT
                        END
 ArtikelWeegHeader      DETAIL,AT(0,0,7271,615),USE(?DETAIL2)
                          STRING('Totaal per artikel:'),AT(42,333,1448,229),USE(?STRING12)
                        END
 ArtikelWeegDetail      DETAIL,AT(0,0,7271,312),USE(?DETAIL1)
                          STRING(@s30),AT(42,52,771),USE(LAT:ArtikelID)
-                         STRING(@s60),AT(875,52,3448),USE(LAT:ArtikelOms)
-                         STRING(@n10`2B),AT(4219,52),USE(LAT:BrutoGewicht),RIGHT
-                         STRING(@n10`2B),AT(5573,52),USE(LAT:TarraGewicht),RIGHT
-                         STRING(@n10`2B),AT(6375,52),USE(LAT:NettoGewicht),RIGHT
+                         STRING(@s60),AT(875,52,2448),USE(LAT:ArtikelOms)
+                         STRING(@n10`2B),AT(3156,52),USE(LAT:BrutoGewicht),RIGHT
+                         STRING(@n10`2B),AT(4177,52),USE(LAT:TarraGewicht),RIGHT
+                         STRING(@n10`2B),AT(5083,52,677),USE(LAT:NettoGewicht),RIGHT
                        END
                        FOOTER,AT(510,10750,7271,510),USE(?Footer)
                          STRING(@N3),AT(6802,208),USE(ReportPageNumber)
@@ -128,18 +130,12 @@ ArtikelWeegDetail      DETAIL,AT(0,0,7271,312),USE(?DETAIL1)
                          STRING(@t7),AT(1000,187),USE(Loc:TijdNu)
                        END
                      END
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(ReportManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Init                   PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 OpenReport             PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
 TakeNoRecords          PROCEDURE(),DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 ThisReport           CLASS(ProcessClass)                   ! Process Manager
@@ -160,6 +156,15 @@ SetUp                  PROCEDURE(),DERIVED
 
 
   CODE
+? DEBUGHOOK(ARelatie:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(PalletSoort:Record)
+? DEBUGHOOK(Partij:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(RelatieAdres:Record)
+? DEBUGHOOK(ViewArtikel:Record)
+? DEBUGHOOK(Weging:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -175,7 +180,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportWeeglijst','VoorrRpt004.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'ReportWeeglijst','VoorrRpt004.clw','VoorrRpt.DLL','07/02/2024 @ 12:23PM')    
              
   GlobalErrors.SetProcedureName('ReportWeeglijst')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -186,7 +191,7 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:TypeID',LOC:TypeID)                            ! Added by: Report
   BIND('LOC:ID',LOC:ID)                                    ! Added by: Report
-  BIND('PLA:PlanningID',PLA:PlanningID)                    ! Added by: SVReportToPDF(SVReportToPDFSupport)
+  BIND('PLA:PlanningID',PLA:PlanningID)                    ! Added by: WinEvent(WinEvent)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
   LOC:TypeID = PRM:TypeID
@@ -217,7 +222,7 @@ ReturnValue          BYTE,AUTO
   Relate:Weging.Open                                       ! File Weging used by this procedure, so make sure it's RelationManager is open
   Access:Relatie.UseFile                                   ! File referenced in 'Other Files' so need to inform it's FileManager
   SELF.FilesOpened = True
-  LOC:WeeglijstPrinter=GETINI('Printer','Weeglijst',,'.\Voorraad.ini')
+  LOC:WeeglijstPrinter=GETINI('Printer','Weeglijst',,PQ:IniFile)
   
   ! Bepaal het aantal planning-records dat aan de filter voldoet
   ! (LOC:TypeID='Inkoop' AND PLA:InkoopID=LOC:ID) OR (LOC:TypeID='Verkoop' AND PLA:VerkoopID=LOC:ID) OR (LOC:TypeID='Planning' AND PLA:PlanningID=LOC:ID)
@@ -244,7 +249,6 @@ ReturnValue          BYTE,AUTO
   	LOC:AantalRecords = 1
   END
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportWeeglijst',ProgressWindow)           ! Restore window settings from non-volatile store
@@ -265,13 +269,6 @@ ReturnValue          BYTE,AUTO
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
   RETURN ReturnValue
-
-
-ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
-
-  CODE
-  PARENT.Init(PC,R,PV)
-  WinAlertMouseZoom()
 
 
 ThisWindow.Kill PROCEDURE
@@ -299,7 +296,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportWeeglijst',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('ReportWeeglijst',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','07/02/2024 @ 12:23PM','10/11/2024 @ 01:54PM')  
     
   END
   RETURN ReturnValue
@@ -341,9 +338,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -357,39 +351,6 @@ ThisWindow.TakeNoRecords PROCEDURE
   
   Return  
   PARENT.TakeNoRecords
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
 
 
 ThisReport.Close PROCEDURE
@@ -500,7 +461,8 @@ SkipDetails BYTE
   				Access:PalletSoort.TryFetch(PalSrt:PK_PalletSoort)
   				
   				IF CLIP(PalSrt:PalletOmschrijving) <> '' THEN
-  					LOC:WegTarra = CLIP(PalSrt:PalletOmschrijving) & ' / ' & CLIP(LEFT(FORMAT(Weg:Tarra, @N10`2)))
+  				!	LOC:WegTarra = CLIP(PalSrt:PalletOmschrijving) & ' / ' & CLIP(LEFT(FORMAT(Weg:Tarra, @N10`2)))
+  					LOC:WegTarra = CLIP(PalSrt:PalletOmschrijving) 
   				ELSE
   					LOC:WegTarra = CLIP(LEFT(FORMAT(Weg:Tarra, @N10`2)))
   				END

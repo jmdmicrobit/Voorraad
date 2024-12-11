@@ -241,30 +241,6 @@ DeferedAddRelations    PROCEDURE(),DERIVED
 Kill                   PROCEDURE(),DERIVED
                      END
 
-Hide:Access:ViewArtikel_Exact CLASS(FileManager),TYPE      ! FileManager for ViewArtikel_Exact
-Init                   PROCEDURE(),DERIVED
-Kill                   PROCEDURE(),DERIVED
-UseFile                PROCEDURE(BYTE UseType = UseType:Uses),BYTE,PROC,DERIVED
-                     END
-
-
-Hide:Relate:ViewArtikel_Exact CLASS(RelationManager),TYPE  ! RelationManager for ViewArtikel_Exact
-Init                   PROCEDURE
-Kill                   PROCEDURE(),DERIVED
-                     END
-
-Hide:Access:Relatie_Exact CLASS(FileManager),TYPE          ! FileManager for Relatie_Exact
-Init                   PROCEDURE(),DERIVED
-Kill                   PROCEDURE(),DERIVED
-UseFile                PROCEDURE(BYTE UseType = UseType:Uses),BYTE,PROC,DERIVED
-                     END
-
-
-Hide:Relate:Relatie_Exact CLASS(RelationManager),TYPE      ! RelationManager for Relatie_Exact
-Init                   PROCEDURE
-Kill                   PROCEDURE(),DERIVED
-                     END
-
 Hide:Access:ViewPalletTegoeden CLASS(FileManager),TYPE     ! FileManager for ViewPalletTegoeden
 Init                   PROCEDURE(),DERIVED
 Kill                   PROCEDURE(),DERIVED
@@ -288,6 +264,32 @@ UseFile                PROCEDURE(BYTE UseType = UseType:Uses),BYTE,PROC,DERIVED
 Hide:Relate:ViewPlanningPartijTotaal CLASS(RelationManager),TYPE ! RelationManager for ViewPlanningPartijTotaal
 Init                   PROCEDURE
 DeferedAddRelations    PROCEDURE(),DERIVED
+Kill                   PROCEDURE(),DERIVED
+                     END
+
+Hide:Access:ViewVoorraadPartijTotaal CLASS(FileManager),TYPE ! FileManager for ViewVoorraadPartijTotaal
+Init                   PROCEDURE(),DERIVED
+Kill                   PROCEDURE(),DERIVED
+UseFile                PROCEDURE(BYTE UseType = UseType:Uses),BYTE,PROC,DERIVED
+                     END
+
+
+Hide:Relate:ViewVoorraadPartijTotaal CLASS(RelationManager),TYPE ! RelationManager for ViewVoorraadPartijTotaal
+Init                   PROCEDURE
+DeferedAddRelations    PROCEDURE(),DERIVED
+Kill                   PROCEDURE(),DERIVED
+                     END
+
+Hide:Access:Gebruiker CLASS(FileManager),TYPE              ! FileManager for Gebruiker
+Init                   PROCEDURE(),DERIVED
+Kill                   PROCEDURE(),DERIVED
+PreInsert              PROCEDURE(SIGNED OpCode,UNSIGNED AddLen,*CSTRING ErrCode,*CSTRING ErrMsg),BYTE,DERIVED
+UseFile                PROCEDURE(BYTE UseType = UseType:Uses),BYTE,PROC,DERIVED
+                     END
+
+
+Hide:Relate:Gebruiker CLASS(RelationManager),TYPE          ! RelationManager for Gebruiker
+Init                   PROCEDURE
 Kill                   PROCEDURE(),DERIVED
                      END
 
@@ -324,14 +326,14 @@ _Hide:Access:ViewPartijCelLocaties &Hide:Access:ViewPartijCelLocaties,AUTO,THREA
 _Hide:Relate:ViewPartijCelLocaties &Hide:Relate:ViewPartijCelLocaties,AUTO,THREAD
 _Hide:Access:ViewVoorraadPartij_INDEXED &Hide:Access:ViewVoorraadPartij_INDEXED,AUTO,THREAD
 _Hide:Relate:ViewVoorraadPartij_INDEXED &Hide:Relate:ViewVoorraadPartij_INDEXED,AUTO,THREAD
-_Hide:Access:ViewArtikel_Exact &Hide:Access:ViewArtikel_Exact,AUTO,THREAD
-_Hide:Relate:ViewArtikel_Exact &Hide:Relate:ViewArtikel_Exact,AUTO,THREAD
-_Hide:Access:Relatie_Exact &Hide:Access:Relatie_Exact,AUTO,THREAD
-_Hide:Relate:Relatie_Exact &Hide:Relate:Relatie_Exact,AUTO,THREAD
 _Hide:Access:ViewPalletTegoeden &Hide:Access:ViewPalletTegoeden,AUTO,THREAD
 _Hide:Relate:ViewPalletTegoeden &Hide:Relate:ViewPalletTegoeden,AUTO,THREAD
 _Hide:Access:ViewPlanningPartijTotaal &Hide:Access:ViewPlanningPartijTotaal,AUTO,THREAD
 _Hide:Relate:ViewPlanningPartijTotaal &Hide:Relate:ViewPlanningPartijTotaal,AUTO,THREAD
+_Hide:Access:ViewVoorraadPartijTotaal &Hide:Access:ViewVoorraadPartijTotaal,AUTO,THREAD
+_Hide:Relate:ViewVoorraadPartijTotaal &Hide:Relate:ViewVoorraadPartijTotaal,AUTO,THREAD
+_Hide:Access:Gebruiker &Hide:Access:Gebruiker,AUTO,THREAD
+_Hide:Relate:Gebruiker &Hide:Relate:Gebruiker,AUTO,THREAD
 
 
 VoorrDct_BC1:DctInit PROCEDURE()
@@ -368,14 +370,14 @@ VoorrDct_BC1:DctInit PROCEDURE()
   _Hide:Relate:ViewPartijCelLocaties &= NEW(Hide:Relate:ViewPartijCelLocaties)
   _Hide:Access:ViewVoorraadPartij_INDEXED &= NEW(Hide:Access:ViewVoorraadPartij_INDEXED)
   _Hide:Relate:ViewVoorraadPartij_INDEXED &= NEW(Hide:Relate:ViewVoorraadPartij_INDEXED)
-  _Hide:Access:ViewArtikel_Exact &= NEW(Hide:Access:ViewArtikel_Exact)
-  _Hide:Relate:ViewArtikel_Exact &= NEW(Hide:Relate:ViewArtikel_Exact)
-  _Hide:Access:Relatie_Exact &= NEW(Hide:Access:Relatie_Exact)
-  _Hide:Relate:Relatie_Exact &= NEW(Hide:Relate:Relatie_Exact)
   _Hide:Access:ViewPalletTegoeden &= NEW(Hide:Access:ViewPalletTegoeden)
   _Hide:Relate:ViewPalletTegoeden &= NEW(Hide:Relate:ViewPalletTegoeden)
   _Hide:Access:ViewPlanningPartijTotaal &= NEW(Hide:Access:ViewPlanningPartijTotaal)
   _Hide:Relate:ViewPlanningPartijTotaal &= NEW(Hide:Relate:ViewPlanningPartijTotaal)
+  _Hide:Access:ViewVoorraadPartijTotaal &= NEW(Hide:Access:ViewVoorraadPartijTotaal)
+  _Hide:Relate:ViewVoorraadPartijTotaal &= NEW(Hide:Relate:ViewVoorraadPartijTotaal)
+  _Hide:Access:Gebruiker &= NEW(Hide:Access:Gebruiker)
+  _Hide:Relate:Gebruiker &= NEW(Hide:Relate:Gebruiker)
   Relate:ViewVoorraadPartij &= _Hide:Relate:ViewVoorraadPartij
   Relate:CMR &= _Hide:Relate:CMR
   Relate:ViewPlanningPartij &= _Hide:Relate:ViewPlanningPartij
@@ -392,10 +394,10 @@ VoorrDct_BC1:DctInit PROCEDURE()
   Relate:Versie &= _Hide:Relate:Versie
   Relate:ViewPartijCelLocaties &= _Hide:Relate:ViewPartijCelLocaties
   Relate:ViewVoorraadPartij_INDEXED &= _Hide:Relate:ViewVoorraadPartij_INDEXED
-  Relate:ViewArtikel_Exact &= _Hide:Relate:ViewArtikel_Exact
-  Relate:Relatie_Exact &= _Hide:Relate:Relatie_Exact
   Relate:ViewPalletTegoeden &= _Hide:Relate:ViewPalletTegoeden
   Relate:ViewPlanningPartijTotaal &= _Hide:Relate:ViewPlanningPartijTotaal
+  Relate:ViewVoorraadPartijTotaal &= _Hide:Relate:ViewVoorraadPartijTotaal
+  Relate:Gebruiker &= _Hide:Relate:Gebruiker
 
 
 VoorrDct_BC1:FilesInit PROCEDURE()
@@ -416,10 +418,10 @@ VoorrDct_BC1:FilesInit PROCEDURE()
   _Hide:Relate:Versie.Init
   _Hide:Relate:ViewPartijCelLocaties.Init
   _Hide:Relate:ViewVoorraadPartij_INDEXED.Init
-  _Hide:Relate:ViewArtikel_Exact.Init
-  _Hide:Relate:Relatie_Exact.Init
   _Hide:Relate:ViewPalletTegoeden.Init
   _Hide:Relate:ViewPlanningPartijTotaal.Init
+  _Hide:Relate:ViewVoorraadPartijTotaal.Init
+  _Hide:Relate:Gebruiker.Init
 
 
 VoorrDct_BC1:DctKill PROCEDURE()
@@ -456,14 +458,14 @@ VoorrDct_BC1:DctKill PROCEDURE()
   DISPOSE(_Hide:Relate:ViewPartijCelLocaties)
   _Hide:Relate:ViewVoorraadPartij_INDEXED.Kill
   DISPOSE(_Hide:Relate:ViewVoorraadPartij_INDEXED)
-  _Hide:Relate:ViewArtikel_Exact.Kill
-  DISPOSE(_Hide:Relate:ViewArtikel_Exact)
-  _Hide:Relate:Relatie_Exact.Kill
-  DISPOSE(_Hide:Relate:Relatie_Exact)
   _Hide:Relate:ViewPalletTegoeden.Kill
   DISPOSE(_Hide:Relate:ViewPalletTegoeden)
   _Hide:Relate:ViewPlanningPartijTotaal.Kill
   DISPOSE(_Hide:Relate:ViewPlanningPartijTotaal)
+  _Hide:Relate:ViewVoorraadPartijTotaal.Kill
+  DISPOSE(_Hide:Relate:ViewVoorraadPartijTotaal)
+  _Hide:Relate:Gebruiker.Kill
+  DISPOSE(_Hide:Relate:Gebruiker)
 
 
 Hide:Relate:ViewVoorraadPartij.Init PROCEDURE()
@@ -483,6 +485,8 @@ Hide:Access:ViewVoorraadPartij.Init PROCEDURE
   PARENT.Init
   Access:ViewVoorraadPartij &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewVoorraadPartij.Kill PROCEDURE
@@ -513,6 +517,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VVPar:ArtikelID_CelID_PartijID_K,'VVPar:ArtikelID_CelID_PartijID_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -582,6 +587,8 @@ Hide:Access:CMR.Init PROCEDURE
   PARENT.Init
   Access:CMR &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:CMR.Insert PROCEDURE
@@ -670,6 +677,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(CMR:CMR_FK1,'Op VerkoopID/CMRID',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -700,6 +708,8 @@ Hide:Access:ViewPlanningPartij.Init PROCEDURE
   PARENT.Init
   Access:ViewPlanningPartij &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewPlanningPartij.Kill PROCEDURE
@@ -728,6 +738,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VPPar:ArtikelOms_PartijID_CelID_K,'VPPar:ArtikelOms_PartijID_CelID_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -786,6 +797,8 @@ Hide:Access:OverboekingRit.Init PROCEDURE
   PARENT.Init
   Access:OverboekingRit &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:OverboekingRit.Kill PROCEDURE
@@ -834,6 +847,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(OR:FK_OverboekingRit,'OR:FK_OverboekingRit',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -876,6 +890,8 @@ Hide:Access:OverboekingRitRegel.Init PROCEDURE
   PARENT.Init
   Access:OverboekingRitRegel &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:OverboekingRitRegel.Kill PROCEDURE
@@ -925,6 +941,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(ORR:FK2_OverboekingRitRegel,'ORR:FK2_OverboekingRitRegel',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -979,6 +996,8 @@ Hide:Access:BulkOverboeking.Init PROCEDURE
   PARENT.Init
   Access:BulkOverboeking &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:BulkOverboeking.Insert PROCEDURE
@@ -1045,6 +1064,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(BOV:FK1_BulkOverboeking,'BOV:FK1_BulkOverboeking',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1142,6 +1162,8 @@ Hide:Access:PlanningOverboeking.Init PROCEDURE
   PARENT.Init
   Access:PlanningOverboeking &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:PlanningOverboeking.Kill PROCEDURE
@@ -1171,6 +1193,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Pla4:Verwerkt_Planning_FirmaNaam_K,'Pla4:Verwerkt_Planning_FirmaNaam_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1201,6 +1224,8 @@ Hide:Access:DubbeleInslagMutaties.Init PROCEDURE
   PARENT.Init
   Access:DubbeleInslagMutaties &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:DubbeleInslagMutaties.Kill PROCEDURE
@@ -1226,6 +1251,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Dub:Partij_CelID_K,'Dub:Partij_CelID_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1256,6 +1282,8 @@ Hide:Access:ArtikelOmschrijvingExtra.Init PROCEDURE
   PARENT.Init
   Access:ArtikelOmschrijvingExtra &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ArtikelOmschrijvingExtra.Kill PROCEDURE
@@ -1281,6 +1309,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Art2:PK_ArtikelOmschrijvingExtra,'Op ex_artcode / artcode',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1311,6 +1340,8 @@ Hide:Access:ArtikelOmschrijvingExtraGroep.Init PROCEDURE
   PARENT.Init
   Access:ArtikelOmschrijvingExtraGroep &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ArtikelOmschrijvingExtraGroep.Kill PROCEDURE
@@ -1337,6 +1368,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Art3:FK_ArtikelOmschrijvingExtraGroep,'Art3:FK_ArtikelOmschrijvingExtraGroep',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1388,6 +1420,8 @@ Hide:Access:PalletSoort.Init PROCEDURE
   PARENT.Init
   Access:PalletSoort &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:PalletSoort.Insert PROCEDURE
@@ -1476,6 +1510,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(PalSrt:FK_PalletSoort,'Op PalletOmschrijving/PalletSoortID',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1516,6 +1551,8 @@ Hide:Access:Weging.Init PROCEDURE
   PARENT.Init
   Access:Weging &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Weging.Insert PROCEDURE
@@ -1604,6 +1641,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Weg:FK_Weging,'Weg:FK_Weging',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1644,6 +1682,8 @@ Hide:Access:CelLocatie.Init PROCEDURE
   PARENT.Init
   Access:CelLocatie &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:CelLocatie.Insert PROCEDURE
@@ -1732,6 +1772,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(CL:FK_CelLocatie,'CL:FK_CelLocatie',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1785,6 +1826,8 @@ Hide:Access:Versie.Init PROCEDURE
   PARENT.Init
   Access:Versie &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Versie.Kill PROCEDURE
@@ -1810,6 +1853,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VRS:Versie_PK,'VRS:Versie_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1840,6 +1884,8 @@ Hide:Access:ViewPartijCelLocaties.Init PROCEDURE
   PARENT.Init
   Access:ViewPartijCelLocaties &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewPartijCelLocaties.Kill PROCEDURE
@@ -1865,6 +1911,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VPCL:ViewPartijCelLocaties_PK,'VPCL:ViewPartijCelLocaties_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1895,6 +1942,8 @@ Hide:Access:ViewVoorraadPartij_INDEXED.Init PROCEDURE
   PARENT.Init
   Access:ViewVoorraadPartij_INDEXED &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewVoorraadPartij_INDEXED.Kill PROCEDURE
@@ -1924,6 +1973,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VVParI:ArtikelID_CelID_PartijID_K,'VVParI:ArtikelID_CelID_PartijID_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1952,118 +2002,6 @@ Hide:Relate:ViewVoorraadPartij_INDEXED.Kill PROCEDURE
   DISPOSE(_Hide:Access:ViewVoorraadPartij_INDEXED)         ! destroy the file manager
 
 
-Hide:Relate:ViewArtikel_Exact.Init PROCEDURE()
-  CODE
-  _Hide:Access:ViewArtikel_Exact.Init
-  SELF.Init(Access:ViewArtikel_Exact,1)
-
-
-Hide:Access:ViewArtikel_Exact.Init PROCEDURE
-
-  CODE
-  SELF.Initialized = False
-  SELF.Buffer &= ARTE:Record
-  SELF.FileNameValue = 'ViewArtikel_Exact'
-  SELF.SetErrors(GlobalErrors)
-  SELF.File &= ViewArtikel_Exact
-  PARENT.Init
-  Access:ViewArtikel_Exact &= SELF
-  SELF.LazyOpen = False
-
-
-Hide:Access:ViewArtikel_Exact.Kill PROCEDURE
-
-  CODE
-  PARENT.Kill
-  Access:ViewArtikel_Exact &= NULL                         ! File manager has been destroyed to assign null, it is an error to reference this after this point
-
-
-Hide:Access:ViewArtikel_Exact.UseFile PROCEDURE(BYTE UseType = UseType:Uses)
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  IF UseType ~= UseType:Initialize
-    SELF.UseFile(UseType:Initialize)                       !Recursive call to ensure initialization takes place
-  END
-  IF UseType = UseType:Initialize AND ~SELF.Initialized
-    SELF.InUseFile = True
-    SELF.Init(ViewArtikel_Exact,GlobalErrors)
-    SELF.Create = 0
-    SELF.LockRecover = 10
-    SELF.AddKey(ARTE:Artikel_PK,'ARTE:Artikel_PK',0)
-    SELF.AddKey(ARTE:Artikel_FK01,'ARTE:Artikel_FK01',0)
-  END
-                                                           !SELF.InUseFile will be set to False in PARENT
-  ReturnValue = PARENT.UseFile(UseType)
-  RETURN ReturnValue
-
-
-Hide:Relate:ViewArtikel_Exact.Kill PROCEDURE
-
-  CODE
-  _Hide:Access:ViewArtikel_Exact.Kill                      ! Kill the file manager
-  PARENT.Kill
-  Relate:ViewArtikel_Exact &= NULL                         ! Assign NULL to the RelationManager's FileManager reference, it is an error to reference this after this point
-  DISPOSE(_Hide:Access:ViewArtikel_Exact)                  ! destroy the file manager
-
-
-Hide:Relate:Relatie_Exact.Init PROCEDURE()
-  CODE
-  _Hide:Access:Relatie_Exact.Init
-  SELF.Init(Access:Relatie_Exact,1)
-
-
-Hide:Access:Relatie_Exact.Init PROCEDURE
-
-  CODE
-  SELF.Initialized = False
-  SELF.Buffer &= RelE:Record
-  SELF.FileNameValue = 'Relatie_Exact'
-  SELF.SetErrors(GlobalErrors)
-  SELF.File &= Relatie_Exact
-  PARENT.Init
-  Access:Relatie_Exact &= SELF
-  SELF.LazyOpen = False
-
-
-Hide:Access:Relatie_Exact.Kill PROCEDURE
-
-  CODE
-  PARENT.Kill
-  Access:Relatie_Exact &= NULL                             ! File manager has been destroyed to assign null, it is an error to reference this after this point
-
-
-Hide:Access:Relatie_Exact.UseFile PROCEDURE(BYTE UseType = UseType:Uses)
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  IF UseType ~= UseType:Initialize
-    SELF.UseFile(UseType:Initialize)                       !Recursive call to ensure initialization takes place
-  END
-  IF UseType = UseType:Initialize AND ~SELF.Initialized
-    SELF.InUseFile = True
-    SELF.Init(Relatie_Exact,GlobalErrors)
-    SELF.Create = 0
-    SELF.LockRecover = 10
-    SELF.AddKey(RelE:Relatie_FK01,'RelE:Relatie_FK01',0)
-    SELF.AddKey(RelE:Relatie_PK,'RelE:Relatie_PK',0)
-  END
-                                                           !SELF.InUseFile will be set to False in PARENT
-  ReturnValue = PARENT.UseFile(UseType)
-  RETURN ReturnValue
-
-
-Hide:Relate:Relatie_Exact.Kill PROCEDURE
-
-  CODE
-  _Hide:Access:Relatie_Exact.Kill                          ! Kill the file manager
-  PARENT.Kill
-  Relate:Relatie_Exact &= NULL                             ! Assign NULL to the RelationManager's FileManager reference, it is an error to reference this after this point
-  DISPOSE(_Hide:Access:Relatie_Exact)                      ! destroy the file manager
-
-
 Hide:Relate:ViewPalletTegoeden.Init PROCEDURE()
   CODE
   _Hide:Access:ViewPalletTegoeden.Init
@@ -2081,6 +2019,8 @@ Hide:Access:ViewPalletTegoeden.Init PROCEDURE
   PARENT.Init
   Access:ViewPalletTegoeden &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewPalletTegoeden.Kill PROCEDURE
@@ -2106,6 +2046,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(PTG:ViewPalletTegoeden_PK,'PTG:ViewPalletTegoeden_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2149,6 +2090,8 @@ Hide:Access:ViewPlanningPartijTotaal.Init PROCEDURE
   PARENT.Init
   Access:ViewPlanningPartijTotaal &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewPlanningPartijTotaal.Kill PROCEDURE
@@ -2175,6 +2118,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VPParT:FK1_ViewPlanningPartijTotaal,'VPParT:FK1_ViewPlanningPartijTotaal',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2204,4 +2148,160 @@ Hide:Relate:ViewPlanningPartijTotaal.Kill PROCEDURE
   PARENT.Kill
   Relate:ViewPlanningPartijTotaal &= NULL                  ! Assign NULL to the RelationManager's FileManager reference, it is an error to reference this after this point
   DISPOSE(_Hide:Access:ViewPlanningPartijTotaal)           ! destroy the file manager
+
+
+Hide:Relate:ViewVoorraadPartijTotaal.Init PROCEDURE()
+  CODE
+  _Hide:Access:ViewVoorraadPartijTotaal.Init
+  SELF.Init(Access:ViewVoorraadPartijTotaal,1)
+
+
+Hide:Access:ViewVoorraadPartijTotaal.Init PROCEDURE
+
+  CODE
+  SELF.Initialized = False
+  SELF.Buffer &= VVParT:Record
+  SELF.FileNameValue = 'ViewVoorraadPartijTotaal'
+  SELF.SetErrors(GlobalErrors)
+  SELF.File &= ViewVoorraadPartijTotaal
+  PARENT.Init
+  Access:ViewVoorraadPartijTotaal &= SELF
+  SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
+
+
+Hide:Access:ViewVoorraadPartijTotaal.Kill PROCEDURE
+
+  CODE
+  PARENT.Kill
+  Access:ViewVoorraadPartijTotaal &= NULL                  ! File manager has been destroyed to assign null, it is an error to reference this after this point
+
+
+Hide:Access:ViewVoorraadPartijTotaal.UseFile PROCEDURE(BYTE UseType = UseType:Uses)
+
+ReturnValue          BYTE,AUTO
+
+  CODE
+  IF UseType ~= UseType:Initialize
+    SELF.UseFile(UseType:Initialize)                       !Recursive call to ensure initialization takes place
+  END
+  IF UseType = UseType:Initialize AND ~SELF.Initialized
+    SELF.InUseFile = True
+    SELF.Init(ViewVoorraadPartijTotaal,GlobalErrors)
+    SELF.Create = 0
+    SELF.LockRecover = 10
+    SELF.AddKey(VVParT:PK_ViewVoorraadPartijTotaal,'VVParT:PK_ViewVoorraadPartijTotaal',0)
+    SELF.AddKey(VVParT:FK1_ViewVoorraadPartijTotaal,'VVParT:FK1_ViewVoorraadPartijTotaal',0)
+  END
+                                                           !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
+  ReturnValue = PARENT.UseFile(UseType)
+  RETURN ReturnValue
+
+
+Hide:Relate:ViewVoorraadPartijTotaal.DeferedAddRelations PROCEDURE
+
+  CODE
+  DO AddRelations_1
+  
+  PARENT.DeferedAddRelations
+
+AddRelations_1 ROUTINE
+  SELF.AddRelation(Relate:ViewVoorraadPartij,RI:None,RI:None,VVPar:PartijID_CelID_K)
+  SELF.AddRelationLink(VVParT:PartijID,VVPar:PartijID)
+
+  SELF.AddRelation(Relate:ViewVoorraadPartij_INDEXED,RI:None,RI:None,VVParI:PartijID_CelID_K)
+  SELF.AddRelationLink(VVParT:PartijID,VVParI:PartijID)
+
+
+Hide:Relate:ViewVoorraadPartijTotaal.Kill PROCEDURE
+
+  CODE
+  _Hide:Access:ViewVoorraadPartijTotaal.Kill               ! Kill the file manager
+  PARENT.Kill
+  Relate:ViewVoorraadPartijTotaal &= NULL                  ! Assign NULL to the RelationManager's FileManager reference, it is an error to reference this after this point
+  DISPOSE(_Hide:Access:ViewVoorraadPartijTotaal)           ! destroy the file manager
+
+
+Hide:Relate:Gebruiker.Init PROCEDURE()
+  CODE
+  _Hide:Access:Gebruiker.Init
+  SELF.Init(Access:Gebruiker,1)
+
+
+Hide:Access:Gebruiker.Init PROCEDURE
+
+  CODE
+  SELF.Initialized = False
+  SELF.Buffer &= Geb:Record
+  SELF.FileNameValue = 'Gebruiker'
+  SELF.SetErrors(GlobalErrors)
+  SELF.File &= Gebruiker
+  PARENT.Init
+  Access:Gebruiker &= SELF
+  SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
+
+
+Hide:Access:Gebruiker.Kill PROCEDURE
+
+  CODE
+  PARENT.Kill
+  Access:Gebruiker &= NULL                                 ! File manager has been destroyed to assign null, it is an error to reference this after this point
+
+
+Hide:Access:Gebruiker.PreInsert PROCEDURE(SIGNED OpCode,UNSIGNED AddLen,*CSTRING ErrCode,*CSTRING ErrMsg)
+
+ReturnValue          BYTE,AUTO
+
+Buffer LIKE(Geb:RECORD)
+  CODE
+  PUSHERRORS()
+  IF SELF.SavePreviousBuffer AND NOT(SELF.PreviousBuffer &= NULL)
+     Buffer = SELF.PreviousBuffer
+  END
+  Gebruiker{PROP:ServerAutoInc}
+  Gebruiker{PROP:ServerAutoInc,1}=1 !Geb:ID
+  ReturnValue = PARENT.PreInsert(OpCode,AddLen,ErrCode,ErrMsg)
+  POPERRORS()
+  RETURN ReturnValue
+
+
+Hide:Access:Gebruiker.UseFile PROCEDURE(BYTE UseType = UseType:Uses)
+
+ReturnValue          BYTE,AUTO
+
+  CODE
+  ! EmulateAutoNumKey, this will force the FM to auto insert the record and
+  ! recover the Identity column
+  IF UseType = UseType:Initialize AND ~SELF.Initialized
+     SELF.HasAutoInc = True
+  END
+  IF UseType ~= UseType:Initialize
+    SELF.UseFile(UseType:Initialize)                       !Recursive call to ensure initialization takes place
+  END
+  IF UseType = UseType:Initialize AND ~SELF.Initialized
+    SELF.InUseFile = True
+    SELF.Init(Gebruiker,GlobalErrors)
+    SELF.Create = 0
+    SELF.LockRecover = 10
+    SELF.AddKey(Geb:PK_Gebruiker,'Geb:PK_Gebruiker',0)
+    SELF.AddKey(Geb:FK1_Gebruiker,'Geb:FK1_Gebruiker',0)
+    SELF.AddKey(Geb:FK2_Gebruiker,'Geb:FK2_Gebruiker',0)
+  END
+                                                           !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
+  ReturnValue = PARENT.UseFile(UseType)
+  RETURN ReturnValue
+
+
+Hide:Relate:Gebruiker.Kill PROCEDURE
+
+  CODE
+  _Hide:Access:Gebruiker.Kill                              ! Kill the file manager
+  PARENT.Kill
+  Relate:Gebruiker &= NULL                                 ! Assign NULL to the RelationManager's FileManager reference, it is an error to reference this after this point
+  DISPOSE(_Hide:Access:Gebruiker)                          ! destroy the file manager
 

@@ -35,9 +35,14 @@ BRW1::View:Browse    VIEW(ARelatie)
                        PROJECT(AREL:Type)
                        PROJECT(AREL:Note)
                        PROJECT(AREL:LotID)
+                       PROJECT(AREL:NietActief)
                      END
 Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?Browse:1
 AREL:FirmaNaam         LIKE(AREL:FirmaNaam)           !List box control field - type derived from field
+AREL:FirmaNaam_NormalFG LONG                          !Normal forground color
+AREL:FirmaNaam_NormalBG LONG                          !Normal background color
+AREL:FirmaNaam_SelectedFG LONG                        !Selected forground color
+AREL:FirmaNaam_SelectedBG LONG                        !Selected background color
 AREL:Adres1            LIKE(AREL:Adres1)              !List box control field - type derived from field
 AREL:Adres2            LIKE(AREL:Adres2)              !List box control field - type derived from field
 AREL:Plaats            LIKE(AREL:Plaats)              !List box control field - type derived from field
@@ -49,14 +54,12 @@ AREL:Fax               LIKE(AREL:Fax)                 !List box control field - 
 AREL:Type              LIKE(AREL:Type)                !Browse hot field - type derived from field
 AREL:Note              LIKE(AREL:Note)                !Browse hot field - type derived from field
 AREL:LotID             LIKE(AREL:LotID)               !Browse hot field - type derived from field
+AREL:NietActief        LIKE(AREL:NietActief)          !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
-NetLocalRefreshTime     Long
-NetLocalDependancies    String('|ARelatie|')
 QuickWindow          WINDOW('Selecteren Relatie'),AT(,,366,434),FONT('MS Sans Serif',8,,FONT:regular,CHARSET:DEFAULT), |
   RESIZE,CENTER,GRAY,IMM,HLP('SelectArelatie'),SYSTEM
                        GROUP('Fu&zzy Search Options'),AT(10,25,199,24),USE(?FuzzyGroup),BOXED
@@ -64,9 +67,9 @@ QuickWindow          WINDOW('Selecteren Relatie'),AT(,,366,434),FONT('MS Sans Se
                          BUTTON('&Search'),AT(118,33,42,12),USE(?FuzzyGo)
                          BUTTON('&Clear'),AT(162,33,42,12),USE(?FuzzyClear)
                        END
-                       LIST,AT(11,53,333,326),USE(?Browse:1),VSCROLL,FORMAT('100L(2)|M~Firma Naam~@s50@80L(2)|' & |
-  'M~Adres 1~@s100@80L(2)|M~Adres 2~@s100@80L(2)|M~Plaats~@s100@80L(2)|M~Postcode~@s20@' & |
-  '64R(2)|M~Relatie ID~C(0)@n-14@80L(2)|M~Telefoon~@s25@80L(2)|M~Mobiel~@s30@80L(2)|M~Fax~@s25@'), |
+                       LIST,AT(11,53,333,326),USE(?Browse:1),VSCROLL,FORMAT('100L(2)|M*~Firma Naam~@s50@80L(2)' & |
+  '|M~Adres 1~@s100@80L(2)|M~Adres 2~@s100@80L(2)|M~Plaats~@s100@80L(2)|M~Postcode~@s20' & |
+  '@64R(2)|M~Relatie ID~C(0)@n-14@80L(2)|M~Telefoon~@s25@80L(2)|M~Mobiel~@s30@80L(2)|M~Fax~@s25@'), |
   FROM(Queue:Browse:1),IMM,MSG('Browsing the ARelatie file')
                        BUTTON('&Select'),AT(295,383,49,14),USE(?Select:2),LEFT,ICON('WASELECT.ICO'),FLAT,MSG('Select the Record'), |
   TIP('Select the Record')
@@ -80,18 +83,12 @@ QuickWindow          WINDOW('Selecteren Relatie'),AT(,,366,434),FONT('MS Sans Se
 FuzzyOrder6          BYTE,AUTO
 FuzzyQuery6          STRING(255)
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-Reset                  PROCEDURE(BYTE Force=0),DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
 TakeSelected           PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -99,6 +96,7 @@ BRW1                 CLASS(BrowseClass)                    ! Browse using ?Brows
 Q                      &Queue:Browse:1                !Reference to browse queue
 Init                   PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
 ResetSort              PROCEDURE(BYTE Force),BYTE,PROC,DERIVED
+SetQueueRecord         PROCEDURE(),DERIVED
 ValidateRecord         PROCEDURE(),BYTE,DERIVED
                      END
 
@@ -109,6 +107,7 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
 
 
   CODE
+? DEBUGHOOK(ARelatie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -147,7 +146,6 @@ ReturnValue          BYTE,AUTO
   SELF.FilesOpened = True
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:ARelatie,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   BRW1.Q &= Queue:Browse:1
   BRW1.ActiveInvisible = 1
@@ -155,7 +153,7 @@ ReturnValue          BYTE,AUTO
   BRW1.AddSortOrder(,AREL:Relatie_FK01)                    ! Add the sort order for AREL:Relatie_FK01 for sort order 1
   BRW1.AddLocator(BRW1::Sort0:Locator)                     ! Browse has a locator for sort order 1
   BRW1::Sort0:Locator.Init(,AREL:FirmaNaam,,BRW1)          ! Initialize the browse locator using  using key: AREL:Relatie_FK01 , AREL:FirmaNaam
-  BRW1.SetFilter('(AREL:Type=Loc:Type)')                   ! Apply filter expression to browse
+  BRW1.SetFilter('(AREL:Type=Loc:Type AND NOT AREL:NietActief)') ! Apply filter expression to browse
   BRW1.AddField(AREL:FirmaNaam,BRW1.Q.AREL:FirmaNaam)      ! Field AREL:FirmaNaam is a hot field or requires assignment from browse
   BRW1.AddField(AREL:Adres1,BRW1.Q.AREL:Adres1)            ! Field AREL:Adres1 is a hot field or requires assignment from browse
   BRW1.AddField(AREL:Adres2,BRW1.Q.AREL:Adres2)            ! Field AREL:Adres2 is a hot field or requires assignment from browse
@@ -168,18 +166,17 @@ ReturnValue          BYTE,AUTO
   BRW1.AddField(AREL:Type,BRW1.Q.AREL:Type)                ! Field AREL:Type is a hot field or requires assignment from browse
   BRW1.AddField(AREL:Note,BRW1.Q.AREL:Note)                ! Field AREL:Note is a hot field or requires assignment from browse
   BRW1.AddField(AREL:LotID,BRW1.Q.AREL:LotID)              ! Field AREL:LotID is a hot field or requires assignment from browse
+  BRW1.AddField(AREL:NietActief,BRW1.Q.AREL:NietActief)    ! Field AREL:NietActief is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
   ?FuzzyQuery{PROP:Use} = FuzzyQuery6
   FuzzyOrder6 = BRW1.AddSortOrder()
-  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type&'' ''&AREL:Note&'' ''&AREL:LotID)')
-  BRW1.SetFilter('FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type&'' ''&AREL:Note&'' ''&AREL:LotID)>=1', 'FuzzyFilter')
+  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type&'' ''&AREL:Note&'' ''&AREL:LotID&'' ''&AREL:NietActief)')
+  BRW1.SetFilter('FuzzyMatch(FuzzyQuery6,AREL:FirmaNaam&'' ''&AREL:Adres1&'' ''&AREL:Adres2&'' ''&AREL:Plaats&'' ''&AREL:Postcode&'' ''&AREL:RelatieID&'' ''&AREL:Telefoon&'' ''&AREL:Mobiel&'' ''&AREL:Fax&'' ''&AREL:Type&'' ''&AREL:Note&'' ''&AREL:LotID&'' ''&AREL:NietActief)>=1', 'FuzzyFilter')
   INIMgr.Fetch('SelectARelatie',QuickWindow)               ! Restore window settings from non-volatile store
   Resizer.Resize                                           ! Reset required after window size altered by INI manager
   BRW1.AddToolbarTarget(Toolbar)                           ! Browse accepts toolbar control
   SELF.SetAlerts()
-  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-  NetLocalRefreshTime = clock()
   EnterByTabManager.Init(False)
   RETURN ReturnValue
 
@@ -199,16 +196,6 @@ ReturnValue          BYTE,AUTO
   END
   GlobalErrors.SetProcedureName
   RETURN ReturnValue
-
-
-ThisWindow.Reset PROCEDURE(BYTE Force=0)
-
-  CODE
-  SELF.ForcedReset += Force
-  IF QuickWindow{Prop:AcceptAll} THEN RETURN.
-    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-    NetLocalRefreshTime = clock()
-  PARENT.Reset(Force)
 
 
 ThisWindow.TakeAccepted PROCEDURE
@@ -245,9 +232,6 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
-    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
-      Self.Reset(1)                      ! NetTalk (NetRefresh)
-    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -258,9 +242,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -283,39 +264,6 @@ Looped BYTE
     CASE FIELD()
     OF ?FuzzyQuery
       POST(EVENT:Accepted, ?FuzzyClear)
-    END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
     END
     RETURN ReturnValue
   END
@@ -353,6 +301,24 @@ FuzzyMatched         BYTE(False),STATIC
   RETURN SELF.SetSort(1,Force)
   ReturnValue = PARENT.ResetSort(Force)
   RETURN ReturnValue
+
+
+BRW1.SetQueueRecord PROCEDURE
+
+  CODE
+  PARENT.SetQueueRecord
+  
+  IF (AREL:NietActief)
+    SELF.Q.AREL:FirmaNaam_NormalFG = -1                    ! Set conditional color values for AREL:FirmaNaam
+    SELF.Q.AREL:FirmaNaam_NormalBG = 255
+    SELF.Q.AREL:FirmaNaam_SelectedFG = 255
+    SELF.Q.AREL:FirmaNaam_SelectedBG = -1
+  ELSE
+    SELF.Q.AREL:FirmaNaam_NormalFG = -1                    ! Set color values for AREL:FirmaNaam
+    SELF.Q.AREL:FirmaNaam_NormalBG = -1
+    SELF.Q.AREL:FirmaNaam_SelectedFG = -1
+    SELF.Q.AREL:FirmaNaam_SelectedBG = -1
+  END
 
 
 BRW1.ValidateRecord PROCEDURE

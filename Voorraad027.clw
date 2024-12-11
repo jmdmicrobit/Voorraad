@@ -70,6 +70,7 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(GebruikerLog:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -105,7 +106,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'UpdateGebruikerLog','Voorraad027.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+        udpt.Init(UD,'UpdateGebruikerLog','Voorraad027.clw','Voorraad.EXE','07/01/2024 @ 05:23PM')    
              
   GlobalErrors.SetProcedureName('UpdateGebruikerLog')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -114,10 +115,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?OK
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:GebruikerLog)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Log:Record,History::Log:Record)
   SELF.AddHistoryField(?Log:Uitgevoerd_TIME,7)
@@ -128,6 +128,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Log:Tabel,10)
   SELF.AddHistoryField(?Log:Werkstation,3)
   SELF.AddHistoryField(?Log:RecordInhoudPre:2,11)
+  SELF.AddUpdateFile(Access:GebruikerLog)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:GebruikerLog.Open                                 ! File GebruikerLog used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
@@ -147,8 +148,15 @@ ReturnValue          BYTE,AUTO
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?Log:Uitgevoerd_TIME{PROP:ReadOnly} = True
@@ -173,6 +181,7 @@ ThisWindow.Kill PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -273,14 +282,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateGebruikerLog',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 04:17PM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
+        UD.ShowProcedureInfo('UpdateGebruikerLog',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 04:17PM','07/01/2024 @ 05:23PM','10/11/2024 @ 01:55PM')  
     
        CYCLE
      END

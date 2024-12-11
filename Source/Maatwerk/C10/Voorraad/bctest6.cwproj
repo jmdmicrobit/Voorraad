@@ -1,0 +1,56 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{3ABDB005-8003-4597-ADB3-EB014E2FAE3E}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>bctest6</AssemblyName>
+    <OutputName>bctest</OutputName>
+    <DefineConstants>_ABCDllMode_=&gt;0%3b_ABCLinkMode_=&gt;1</DefineConstants>
+    <Model>Lib</Model>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <vid>full</vid>
+    <check_stack>True</check_stack>
+    <check_index>True</check_index>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <vid>off</vid>
+    <check_stack>False</check_stack>
+    <check_index>False</check_index>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="bctest6.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6003.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6004.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="bctest6008.clw">
+      <Generated>true</Generated>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
+</Project>

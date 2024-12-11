@@ -37,9 +37,6 @@ ViewPosition           STRING(1024)                   !Entry's view position
                      END
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
-NetLocalRefreshTime     Long
-NetLocalDependancies    String('|Sjabloon|')
 QuickWindow          WINDOW('Browse the Sjabloon file'),AT(,,228,198),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT), |
   RESIZE,CENTER,GRAY,IMM,MDI,HLP('BrowseSjablonen'),SYSTEM
                        LIST,AT(8,30,212,124),USE(?Browse:1),HVSCROLL,FORMAT('80L(2)|M~Sjabloon ID~L(2)@s19@80L' & |
@@ -64,18 +61,12 @@ QuickWindow          WINDOW('Browse the Sjabloon file'),AT(,,228,198),FONT('MS S
                        BUTTON('Word'),AT(5,182),USE(?BUTTON1)
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-Reset                  PROCEDURE(BYTE Force=0),DERIVED
 Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -91,6 +82,7 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
 
 
   CODE
+? DEBUGHOOK(Sjabloon:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -115,9 +107,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Browse:1
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -127,7 +119,6 @@ ReturnValue          BYTE,AUTO
   SELF.FilesOpened = True
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:Sjabloon,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
@@ -147,8 +138,6 @@ ReturnValue          BYTE,AUTO
   BRW1.AddToolbarTarget(Toolbar)                           ! Browse accepts toolbar control
   BRW1.ToolbarItem.HelpButton = ?Help
   SELF.SetAlerts()
-  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-  NetLocalRefreshTime = clock()
   EnterByTabManager.Init(False)
   RETURN ReturnValue
 
@@ -170,16 +159,6 @@ ReturnValue          BYTE,AUTO
             
    
   RETURN ReturnValue
-
-
-ThisWindow.Reset PROCEDURE(BYTE Force=0)
-
-  CODE
-  SELF.ForcedReset += Force
-  IF QuickWindow{Prop:AcceptAll} THEN RETURN.
-    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-    NetLocalRefreshTime = clock()
-  PARENT.Reset(Force)
 
 
 ThisWindow.Run PROCEDURE(USHORT Number,BYTE Request)
@@ -255,9 +234,6 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
-    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
-      Self.Reset(1)                      ! NetTalk (NetRefresh)
-    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -268,50 +244,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('BrowseSjablonen',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','04/11/2014 @ 11:38AM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('BrowseSjablonen',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','04/11/2014 @ 11:38AM','10/11/2024 @ 01:54PM')  
     
        CYCLE
      END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

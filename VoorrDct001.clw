@@ -40,6 +40,7 @@ TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
 Toolbar              ToolbarClass
 
   CODE
+? DEBUGHOOK(AVerpakking:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -55,7 +56,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'MainDCT','VoorrDct001.clw','VoorrDct.DLL','10/02/2017 @ 11:47AM')    
+        udpt.Init(UD,'MainDCT','VoorrDct001.clw','VoorrDct.DLL','09/02/2021 @ 05:01PM')    
              
   GlobalErrors.SetProcedureName('MainDCT')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -70,9 +71,15 @@ ReturnValue          BYTE,AUTO
   Relate:AVerpakking.Open                                  ! File AVerpakking used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
-  Window{Prop:Alrt,255} = CtrlShiftP
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   INIMgr.Fetch('MainDCT',Window)                           ! Restore window settings from non-volatile store
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
@@ -84,6 +91,7 @@ ThisWindow.Kill PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -114,17 +122,9 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
-     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
-       CYCLE
-     END
-     IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('MainDCT',UD.SetApplicationName('VoorrDct','DLL'),Window{PROP:Hlp},'06/09/2011 @ 12:13PM','10/02/2017 @ 11:47AM','06/02/2020 @ 10:31PM')  
-    
-       CYCLE
-     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

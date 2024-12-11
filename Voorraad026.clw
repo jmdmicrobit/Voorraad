@@ -34,6 +34,7 @@ QuickWindow          WINDOW('Form Gebruiker'),AT(,,358,205),FONT('MS Sans Serif'
                          CHECK('Uitslagen doen'),AT(71,39,100,8),USE(Geb:MakenVerkoopMutatie),VALUE('1','0')
                          CHECK('Administrator'),AT(71,50),USE(Geb:Administrator,,?Geb:Administrator:2),VALUE('1','0')
                          CHECK('Verwerken'),AT(155,28),USE(Geb:Verwerken),VALUE('1','0')
+                         CHECK('Geen toegang tot deze administratie:'),AT(155,39),USE(Geb:GeenToegang),VALUE('1','0')
                        END
                        PROMPT('Volledige Naam:'),AT(1,71),USE(?Geb:VolledigeNaam:Prompt)
                        ENTRY(@s50),AT(61,70,291,10),USE(Geb:VolledigeNaam)
@@ -50,6 +51,7 @@ QuickWindow          WINDOW('Form Gebruiker'),AT(,,358,205),FONT('MS Sans Serif'
                        ENTRY(@s100),AT(61,118,209,10),USE(Geb:Email)
                        PROMPT('Telefoon:'),AT(2,137),USE(?Geb:Telefoon:Prompt)
                        ENTRY(@s20),AT(61,136,60,10),USE(Geb:Telefoon)
+                       CHECK('Niet Actief:'),AT(60,153),USE(Geb:NietActief)
                      END
 
     omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
@@ -74,6 +76,9 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
                      END
 
 FileLookup4          SelectFileClass
+LocalClass          CLASS
+CheckVerwijdering       Procedure(Geb:Record GebruikerRecord), Byte
+                    END
 CurCtrlFeq          LONG
 FieldColorQueue     QUEUE
 Feq                   LONG
@@ -81,6 +86,9 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(Gebruiker:Record)
+? DEBUGHOOK(Inkoop:Record)
+? DEBUGHOOK(Verkoop:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -102,9 +110,6 @@ ThisWindow.Ask PROCEDURE
     RETURN
   OF ChangeRecord
     ActionMessage = 'Record Will Be Changed'
-  OF DeleteRecord
-    GlobalErrors.Throw(Msg:DeleteIllegal)
-    RETURN
   END
   QuickWindow{PROP:Text} = ActionMessage                   ! Display status message in title bar
   PARENT.Ask
@@ -115,7 +120,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'UpdateGebruiker','Voorraad026.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+        udpt.Init(UD,'UpdateGebruiker','Voorraad026.clw','Voorraad.EXE','07/01/2024 @ 05:23PM')    
              
   GlobalErrors.SetProcedureName('UpdateGebruiker')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -124,10 +129,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Geb:WindowsInlog
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Gebruiker)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Geb:Record,History::Geb:Record)
   SELF.AddHistoryField(?Geb:WindowsInlog,2)
@@ -135,13 +139,19 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryField(?Geb:MakenVerkoopMutatie,5)
   SELF.AddHistoryField(?Geb:Administrator:2,3)
   SELF.AddHistoryField(?Geb:Verwerken,6)
+  SELF.AddHistoryField(?Geb:GeenToegang,12)
   SELF.AddHistoryField(?Geb:VolledigeNaam,7)
   SELF.AddHistoryField(?Geb:Handtekening,8)
   SELF.AddHistoryField(?Geb:res_id,9)
   SELF.AddHistoryField(?Geb:Email,10)
   SELF.AddHistoryField(?Geb:Telefoon,11)
+  SELF.AddHistoryField(?Geb:NietActief,13)
+  SELF.AddUpdateFile(Access:Gebruiker)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Gebruiker.Open                                    ! File Gebruiker used by this procedure, so make sure it's RelationManager is open
+  Relate:Inkoop.SetOpenRelated()
+  Relate:Inkoop.Open                                       ! File Inkoop used by this procedure, so make sure it's RelationManager is open
+  Access:Verkoop.UseFile                                   ! File referenced in 'Other Files' so need to inform it's FileManager
   SELF.FilesOpened = True
   SELF.Primary &= Relate:Gebruiker
   IF SELF.Request = ViewRecord AND NOT SELF.BatchProcessing ! Setup actions for ViewOnly Mode
@@ -152,15 +162,21 @@ ReturnValue          BYTE,AUTO
     SELF.OkControl = 0
   ELSE
     SELF.InsertAction = Insert:None                        ! Inserts not allowed
-    SELF.DeleteAction = Delete:None                        ! Deletes not allowed
     SELF.ChangeAction = Change:Caller                      ! Changes allowed
     SELF.CancelAction = Cancel:Cancel+Cancel:Query         ! Confirm cancel
     SELF.OkControl = ?OK
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?Geb:WindowsInlog{PROP:ReadOnly} = True
@@ -191,10 +207,12 @@ ThisWindow.Kill PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
     Relate:Gebruiker.Close
+    Relate:Inkoop.Close
   END
   IF SELF.Opened
     INIMgr.Update('UpdateGebruiker',QuickWindow)           ! Save window data to non-volatile store
@@ -222,6 +240,20 @@ ThisWindow.Run PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+     
+  ! [Priority 4500]
+    if GlobalRequest=DELETERECORD
+          CASE Message('Weet u zeker dat de gebruiker verwijderd moet worden','Akkoord verwijderen?',,BUTTON:YES+BUTTON:NO,bUTTON:NO)
+           OF BUTTON:No
+                Return ReturnValue
+          END
+          0{Prop:Cursor}=Cursor:Wait
+          IF NOT LocalClass.CheckVerwijdering(Geb:Record)=Level:Benign
+             0{Prop:Cursor}=Cursor:Arrow
+             Return ReturnValue
+         END
+        
+    end
   ReturnValue = PARENT.Run()
   IF SELF.Request = ViewRecord                             ! In View Only mode always signal RequestCancelled
     ReturnValue = RequestCancelled
@@ -295,14 +327,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateGebruiker',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:46PM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
+        UD.ShowProcedureInfo('UpdateGebruiker',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:46PM','07/01/2024 @ 05:23PM','10/11/2024 @ 01:55PM')  
     
        CYCLE
      END
@@ -344,6 +376,46 @@ Looped BYTE
   ReturnValue = Level:Fatal
   RETURN ReturnValue
 
+LocalClass.CheckVerwijdering        PROCEDURE(Geb:Record GebruikerRecord)  !, Byte
+RETURNVALUE             BYTE 
+CODE
+    RETURNVALUE = Level:Benign
+    ! okay wordt die nummer ergens gebruiker
+    UD.Debug(GebruikerRecord.ID)
+    if Access:Inkoop.IsOpened()=FALSE
+        Access:Inkoop.Open()
+        Access:Inkoop.UseFile()
+    END
+    
+    Clear(Ink:Record)
+    Set(Ink:PK_Inkoop)
+    Inkoop{Prop:Where}='GebruikerID = '&GebruikerRecord.ID
+    IF Access:Inkoop.Next()=Level:Benign
+        Message('Gebruiker '&GebruikerRecord.ID&' komt voor in inkoop '&Ink:InkoopID,'Gebruiker controle',Icon:Cross)
+        RETURNVALUE = Level:Notify
+    END
+    Set(Ink:PK_Inkoop)
+
+    if Access:Verkoop.IsOpened()=FALSE
+        Access:Verkoop.Open()
+        Access:Verkoop.UseFile()
+    END
+
+    Clear(VeR:Record)
+    Set(Ver2:PK_Verkoop)
+    Verkoop{Prop:Where}='GebruikerID = '&GebruikerRecord.ID
+    IF Access:Verkoop.Next()=Level:Benign
+        Message('Gebruiker '&GebruikerRecord.ID&' komt voor in verkoop '&Ver2:VerkoopID,'Gebruiker controle',Icon:Cross)
+        RETURNVALUE = Level:Notify
+    END
+    Set(Ver2:PK_Verkoop)
+    
+    IF ReturnValue=Level:Benign
+        Access:Gebruiker.DeleteRecord(FALSE)  
+        RETURNVALUE = Level:Notify
+    END
+    RETURN ReturnValue
+    
 
 Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
 

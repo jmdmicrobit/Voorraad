@@ -17,10 +17,11 @@
 
 !!! <summary>
 !!! Generated from procedure template - Window
-!!! Browse the PalletVerloop file
+!!! PalletAdministratie Verloop
 !!! </summary>
 BrowsePallets PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 LOC:PalletSoort      STRING(20)                            ! 
 LOC:Saldo            DECIMAL(9,2)                          ! 
@@ -60,27 +61,89 @@ BRW1::View:Browse    VIEW(PalletVerloop)
                      END
 Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?Browse:1
 Pal3:FirmaNaam         LIKE(Pal3:FirmaNaam)           !List box control field - type derived from field
+Pal3:FirmaNaam_NormalFG LONG                          !Normal forground color
+Pal3:FirmaNaam_NormalBG LONG                          !Normal background color
+Pal3:FirmaNaam_SelectedFG LONG                        !Selected forground color
+Pal3:FirmaNaam_SelectedBG LONG                        !Selected background color
+Pal3:FirmaNaam_Style   LONG                           !Field style
 Pal3:Transporteur      LIKE(Pal3:Transporteur)        !List box control field - type derived from field
+Pal3:Transporteur_NormalFG LONG                       !Normal forground color
+Pal3:Transporteur_NormalBG LONG                       !Normal background color
+Pal3:Transporteur_SelectedFG LONG                     !Selected forground color
+Pal3:Transporteur_SelectedBG LONG                     !Selected background color
 Pal3:Transporteur_Icon LONG                           !Entry's icon ID
 LOC:PalletSoort        LIKE(LOC:PalletSoort)          !List box control field - type derived from local data
+LOC:PalletSoort_NormalFG LONG                         !Normal forground color
+LOC:PalletSoort_NormalBG LONG                         !Normal background color
+LOC:PalletSoort_SelectedFG LONG                       !Selected forground color
+LOC:PalletSoort_SelectedBG LONG                       !Selected background color
 Pal3:Planning_DATE     LIKE(Pal3:Planning_DATE)       !List box control field - type derived from field
+Pal3:Planning_DATE_NormalFG LONG                      !Normal forground color
+Pal3:Planning_DATE_NormalBG LONG                      !Normal background color
+Pal3:Planning_DATE_SelectedFG LONG                    !Selected forground color
+Pal3:Planning_DATE_SelectedBG LONG                    !Selected background color
 Pal3:Planning_TIME     LIKE(Pal3:Planning_TIME)       !List box control field - type derived from field
+Pal3:Planning_TIME_NormalFG LONG                      !Normal forground color
+Pal3:Planning_TIME_NormalBG LONG                      !Normal background color
+Pal3:Planning_TIME_SelectedFG LONG                    !Selected forground color
+Pal3:Planning_TIME_SelectedBG LONG                    !Selected background color
 Pal3:Inkomend          LIKE(Pal3:Inkomend)            !List box control field - type derived from field
+Pal3:Inkomend_NormalFG LONG                           !Normal forground color
+Pal3:Inkomend_NormalBG LONG                           !Normal background color
+Pal3:Inkomend_SelectedFG LONG                         !Selected forground color
+Pal3:Inkomend_SelectedBG LONG                         !Selected background color
 Pal3:Uitgaand          LIKE(Pal3:Uitgaand)            !List box control field - type derived from field
+Pal3:Uitgaand_NormalFG LONG                           !Normal forground color
+Pal3:Uitgaand_NormalBG LONG                           !Normal background color
+Pal3:Uitgaand_SelectedFG LONG                         !Selected forground color
+Pal3:Uitgaand_SelectedBG LONG                         !Selected background color
 LOC:Saldo              LIKE(LOC:Saldo)                !List box control field - type derived from local data
+LOC:Saldo_NormalFG     LONG                           !Normal forground color
+LOC:Saldo_NormalBG     LONG                           !Normal background color
+LOC:Saldo_SelectedFG   LONG                           !Selected forground color
+LOC:Saldo_SelectedBG   LONG                           !Selected background color
 LOC:KlantSaldoIn       LIKE(LOC:KlantSaldoIn)         !List box control field - type derived from local data
+LOC:KlantSaldoIn_NormalFG LONG                        !Normal forground color
+LOC:KlantSaldoIn_NormalBG LONG                        !Normal background color
+LOC:KlantSaldoIn_SelectedFG LONG                      !Selected forground color
+LOC:KlantSaldoIn_SelectedBG LONG                      !Selected background color
 LOC:Firmanaam          LIKE(LOC:Firmanaam)            !List box control field - type derived from local data
+LOC:Firmanaam_NormalFG LONG                           !Normal forground color
+LOC:Firmanaam_NormalBG LONG                           !Normal background color
+LOC:Firmanaam_SelectedFG LONG                         !Selected forground color
+LOC:Firmanaam_SelectedBG LONG                         !Selected background color
 LOC:MatchingMutatie    LIKE(LOC:MatchingMutatie)      !List box control field - type derived from local data
+LOC:MatchingMutatie_NormalFG LONG                     !Normal forground color
+LOC:MatchingMutatie_NormalBG LONG                     !Normal background color
+LOC:MatchingMutatie_SelectedFG LONG                   !Selected forground color
+LOC:MatchingMutatie_SelectedBG LONG                   !Selected background color
 LOC:MatchingMutatie_Icon LONG                         !Entry's icon ID
 LOC:HandmatigMutatie   LIKE(LOC:HandmatigMutatie)     !List box control field - type derived from local data
+LOC:HandmatigMutatie_NormalFG LONG                    !Normal forground color
+LOC:HandmatigMutatie_NormalBG LONG                    !Normal background color
+LOC:HandmatigMutatie_SelectedFG LONG                  !Selected forground color
+LOC:HandmatigMutatie_SelectedBG LONG                  !Selected background color
 LOC:HandmatigMutatie_Icon LONG                        !Entry's icon ID
 Pal3:Opmerking         LIKE(Pal3:Opmerking)           !List box control field - type derived from field
+Pal3:Opmerking_NormalFG LONG                          !Normal forground color
+Pal3:Opmerking_NormalBG LONG                          !Normal background color
+Pal3:Opmerking_SelectedFG LONG                        !Selected forground color
+Pal3:Opmerking_SelectedBG LONG                        !Selected background color
 Pal:PalletMutatieID    LIKE(Pal:PalletMutatieID)      !List box control field - type derived from field
+Pal:PalletMutatieID_NormalFG LONG                     !Normal forground color
+Pal:PalletMutatieID_NormalBG LONG                     !Normal background color
+Pal:PalletMutatieID_SelectedFG LONG                   !Selected forground color
+Pal:PalletMutatieID_SelectedBG LONG                   !Selected background color
 Pal3:PalletSoortID     LIKE(Pal3:PalletSoortID)       !List box control field - type derived from field
+Pal3:PalletSoortID_NormalFG LONG                      !Normal forground color
+Pal3:PalletSoortID_NormalBG LONG                      !Normal background color
+Pal3:PalletSoortID_SelectedFG LONG                    !Selected forground color
+Pal3:PalletSoortID_SelectedBG LONG                    !Selected background color
 Pal3:Saldo             LIKE(Pal3:Saldo)               !Browse hot field - type derived from field
 Pal3:SaldoTotaal       LIKE(Pal3:SaldoTotaal)         !Browse hot field - type derived from field
 Pal3:RelatieID         LIKE(Pal3:RelatieID)           !Browse hot field - type derived from field
 Pal3:VerkoopID         LIKE(Pal3:VerkoopID)           !Browse hot field - type derived from field
+AARel:NietActief       LIKE(AARel:NietActief)         !Browse hot field - type derived from field
 Pal3:Planning          LIKE(Pal3:Planning)            !Browse key field - type derived from field
 Pal3:PalletMutatieID   LIKE(Pal3:PalletMutatieID)     !Browse key field - type derived from field
 Mark                   BYTE                           !Entry's marked status
@@ -90,6 +153,7 @@ FDCB3::View:FileDropCombo VIEW(Relatie)
                        PROJECT(Rel:FirmaNaam)
                        PROJECT(Rel:Type)
                        PROJECT(Rel:RelatieID)
+                       PROJECT(Rel:NietActief)
                      END
 FDCB5::View:FileDropCombo VIEW(ViewTransporteur)
                        PROJECT(VTRA:FirmaNaam)
@@ -100,16 +164,26 @@ FDCB6::View:FileDropCombo VIEW(AARelatie)
                        PROJECT(AARel:FirmaNaam)
                        PROJECT(AARel:Type)
                        PROJECT(AARel:RelatieID)
+                       PROJECT(AARel:NietActief)
                      END
 Queue:FileDropCombo  QUEUE                            !
 Rel:FirmaNaam          LIKE(Rel:FirmaNaam)            !List box control field - type derived from field
+Rel:FirmaNaam_NormalFG LONG                           !Normal forground color
+Rel:FirmaNaam_NormalBG LONG                           !Normal background color
+Rel:FirmaNaam_SelectedFG LONG                         !Selected forground color
+Rel:FirmaNaam_SelectedBG LONG                         !Selected background color
 Rel:Type               LIKE(Rel:Type)                 !Browse hot field - type derived from field
 Rel:RelatieID          LIKE(Rel:RelatieID)            !Browse hot field - type derived from field
+Rel:NietActief         LIKE(Rel:NietActief)           !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
 Queue:FileDropCombo:1 QUEUE                           !
 VTRA:FirmaNaam         LIKE(VTRA:FirmaNaam)           !List box control field - type derived from field
+VTRA:FirmaNaam_NormalFG LONG                          !Normal forground color
+VTRA:FirmaNaam_NormalBG LONG                          !Normal background color
+VTRA:FirmaNaam_SelectedFG LONG                        !Selected forground color
+VTRA:FirmaNaam_SelectedBG LONG                        !Selected background color
 VTRA:Plaats            LIKE(VTRA:Plaats)              !List box control field - type derived from field
 VTRA:RelatieID         LIKE(VTRA:RelatieID)           !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
@@ -117,8 +191,13 @@ ViewPosition           STRING(1024)                   !Entry's view position
                      END
 Queue:FileDropCombo:2 QUEUE                           !
 AARel:FirmaNaam        LIKE(AARel:FirmaNaam)          !List box control field - type derived from field
+AARel:FirmaNaam_NormalFG LONG                         !Normal forground color
+AARel:FirmaNaam_NormalBG LONG                         !Normal background color
+AARel:FirmaNaam_SelectedFG LONG                       !Selected forground color
+AARel:FirmaNaam_SelectedBG LONG                       !Selected background color
 AARel:Type             LIKE(AARel:Type)               !Browse hot field - type derived from field
 AARel:RelatieID        LIKE(AARel:RelatieID)          !Browse hot field - type derived from field
+AARel:NietActief       LIKE(AARel:NietActief)         !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -131,38 +210,38 @@ QuickWindow          WINDOW('Pallet-Administratieverloop'),AT(,,453,291),FONT('M
   RESIZE,CENTER,GRAY,MAX,MDI,HLP('BrowsePallets'),SYSTEM,IMM
                        SHEET,AT(3,25,447,244),USE(?CurrentTab)
                          TAB('&1) Per klant'),USE(?Tab:2)
-                           COMBO(@s50),AT(39,46,219,11),USE(Rel:FirmaNaam),DROP(25),FORMAT('200L(2)|M~Firmanaam~C(0)@s50@'), |
+                           COMBO(@s50),AT(39,46,219,11),USE(Rel:FirmaNaam),DROP(25),FORMAT('200L(2)|M*~Firmanaam~C(0)@s50@'), |
   FROM(Queue:FileDropCombo),IMM
                            PROMPT('Klant:'),AT(13,47),USE(?PROMPT1)
                            BUTTON('Excel'),AT(12,250,55,15),USE(?Excel:1),LEFT,ICON('Excel.ico')
                            BUTTON('...'),AT(265,45,22,14),USE(?Lookup:1),HIDE
                          END
                          TAB('&2) Per leverancier'),USE(?TAB2)
-                           COMBO(@s100),AT(59,47,196,10),USE(AARel:FirmaNaam),DROP(25),FORMAT('200L(2)|M~Firmanaam' & |
-  '~C(0)@s50@'),FROM(Queue:FileDropCombo:2)
+                           COMBO(@s100),AT(59,47,196,10),USE(AARel:FirmaNaam),DROP(25),FORMAT('200L(2)|M*~Firmanaa' & |
+  'm~C(0)@s50@'),FROM(Queue:FileDropCombo:2)
                            STRING('Leverancier:'),AT(15,47),USE(?STRING2)
                            BUTTON('...'),AT(261,45,21),USE(?Lookup:2),HIDE
                            BUTTON('Excel'),AT(13,249,55,15),USE(?Excel:2),LEFT,ICON('Excel.ico')
                          END
                          TAB('&3) Per Transporteur'),USE(?TAB1)
                            PROMPT('Transporteur:'),AT(12,46),USE(?PROMPT2)
-                           COMBO(@s50),AT(61,46,207,10),USE(VTRA:FirmaNaam),DROP(25),FORMAT('200L(2)|M~Firma Naam~' & |
-  'C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo:1),IMM
+                           COMBO(@s50),AT(61,46,207,10),USE(VTRA:FirmaNaam),DROP(25),FORMAT('200L(2)|M*~Firma Naam' & |
+  '~C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo:1),IMM
                            BUTTON('Excel'),AT(13,249,55,15),USE(?Excel:3),LEFT,ICON('Excel.ico')
                          END
                          TAB('&4) Alle'),USE(?Tab:3)
                          END
                        END
                        LIST,AT(336,46,101,11),USE(LOC:PalletSoortChoice),DROP(10),FROM('H1|#1|1-way|#2|Euro|#3' & |
-  '|CKW|#4|BLOK|#5|CHEP|#6')
+  '|CKW|#4|BLOK|#5|CHEP|#6|E2|#7')
                        PROMPT('Pallet Soort:'),AT(289,47),USE(?LOC:PalletSoortChoice:Prompt)
-                       LIST,AT(13,63,429,182),USE(?Browse:1),HVSCROLL,FORMAT('160L(2)|M~Firmanaam~C(0)@s50@50C' & |
-  '|MI~Transporteur~C(0)@p p@60L(2)|M~Palletsoort~C(0)@s20@[45R(2)|M@d6-@40R(2)|M@t1@](' & |
-  '73)|~Datum~[54R(2)|M~IN~C(0)@n-14.@51R(2)|M~UIT~C(0)@n-14.@56R(2)|M~Saldo*~C(0)@n-14' & |
-  '.@](158)|~ ~55R(2)|~IN (Klant)~C(1)@n-14.@80L(2)|M~Klant~C(0)@s50@40L(2)|I~Controle~' & |
-  'C(0)@PP@45L(2)|I~Handmatig~C(0)@PP@100L(2)|~Omschrijving~C(0)@s50@0L(2)~Pallet Mutat' & |
-  'ie ID~C(0)@n-14@0L(-50)|M@n-14@'),FROM(Queue:Browse:1),IMM,MSG('Browsing the PalletV' & |
-  'erloop file')
+                       LIST,AT(13,63,429,182),USE(?Browse:1),HVSCROLL,FORMAT('160L(2)|M*Y~Firmanaam~C(0)@s50@5' & |
+  '0C|M*I~Transporteur~@p p@60L(2)|M*~Palletsoort~C(0)@s20@[45R(2)|M*@d6-@40R(2)|M*@t1@' & |
+  '](73)|~Datum~[54R(2)|M*~IN~C(0)@n-14.@51R(2)|M*~UIT~C(0)@n-14.@56R(2)|M*~Saldo*~C(0)' & |
+  '@n-14.@](158)|~ ~55R(2)|*~IN (Klant)~C(1)@n-14.@80L(2)|M*~Klant~C(0)@s50@40L(2)|*I~C' & |
+  'ontrole~C(0)@PP@45L(2)|*I~Handmatig~C(0)@PP@100L(2)|*~Omschrijving~C(0)@s50@0L(2)*~P' & |
+  'allet Mutatie ID~C(0)@n-14@0L(-50)|M*@n-14@'),FROM(Queue:Browse:1),IMM,MSG('Browsing t' & |
+  'he PalletVerloop file')
                        BUTTON('&Toevoegen'),AT(305,249,43,15),USE(?Insert)
                        BUTTON('&Wijzigen'),AT(353,249,43,15),USE(?Change)
                        BUTTON('&Verwijderen'),AT(401,249,43,15),USE(?Delete)
@@ -176,10 +255,6 @@ QuickWindow          WINDOW('Pallet-Administratieverloop'),AT(,,453,291),FONT('M
                        SPIN(@d6-),AT(146,3,60,10),USE(LOC:TMDatum)
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -196,10 +271,12 @@ Toolbar              ToolbarClass
 BRW1                 CLASS(BrowseClass)                    ! Browse using ?Browse:1
 Q                      &Queue:Browse:1                !Reference to browse queue
 ApplyRange             PROCEDURE(),BYTE,PROC,DERIVED
+Fetch                  PROCEDURE(BYTE Direction),DERIVED
 Init                   PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
 ResetQueue             PROCEDURE(BYTE ResetMode),DERIVED
 ResetSort              PROCEDURE(BYTE Force),BYTE,PROC,DERIVED
 SetQueueRecord         PROCEDURE(),DERIVED
+SetSort                PROCEDURE(BYTE NewOrder,BYTE Force),BYTE,PROC,DERIVED
                      END
 
 BRW1::Sort3:Locator  StepLocatorClass                      ! Conditional Locator - CHOICE(?CurrentTab) = 2
@@ -211,14 +288,17 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
 
 FDCB3                CLASS(FileDropComboClass)             ! File drop combo manager
 Q                      &Queue:FileDropCombo           !Reference to browse queue type
+SetQueueRecord         PROCEDURE(),DERIVED
                      END
 
 FDCB5                CLASS(FileDropComboClass)             ! File drop combo manager
 Q                      &Queue:FileDropCombo:1         !Reference to browse queue type
+SetQueueRecord         PROCEDURE(),DERIVED
                      END
 
 FDCB6                CLASS(FileDropComboClass)             ! File drop combo manager
 Q                      &Queue:FileDropCombo:2         !Reference to browse queue type
+SetQueueRecord         PROCEDURE(),DERIVED
                      END
 
 PalletMutatieQueue QUEUE, PRE(PMQ)
@@ -231,6 +311,14 @@ KlantSaldoIn            LONG
 					END
 
   CODE
+? DEBUGHOOK(AARelatie:Record)
+? DEBUGHOOK(APalletMutatie:Record)
+? DEBUGHOOK(APalletVerloop:Record)
+? DEBUGHOOK(ARelatie:Record)
+? DEBUGHOOK(PalletVerloop:Record)
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(SnelheidLogging:Record)
+? DEBUGHOOK(ViewTransporteur:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -239,6 +327,10 @@ DefineListboxStyle ROUTINE
 !| This routine create all the styles to be shared in this window
 !| It`s called after the window open
 !|
+ ?Browse:1{PROPSTYLE:TextColor, 1}     = Color:Red
+  !------------------------------------
+  !Style for ?Browse:1
+  !------------------------------------
 !---------------------------------------------------------------------------
 VulPalletMutatieQueue       ROUTINE
     IF LOC:VanafDatum <> LOC:VanafDatumOLD OR LOC:TMDatum <> LOC:TMDatumOLD THEN
@@ -331,10 +423,12 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'BrowsePallets','VoorrVrd005.clw','VoorrVrd.DLL','02/21/2023 @ 03:36PM')    
+             
   GlobalErrors.SetProcedureName('BrowsePallets')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
-  StandaardPalletverloopPeriode#=GETINI('Voorraad','StandaardPalletverloopPeriode',60,'.\Voorraad.ini')
+  StandaardPalletverloopPeriode#=GETINI('Voorraad','StandaardPalletverloopPeriode',60,PQ:IniFile)
   
   GLO:PalletAdministratie_ThreadID = THREAD()
   LOC:PalletSoortChoice = 1
@@ -352,9 +446,9 @@ ReturnValue          BYTE,AUTO
   BIND('LOC:Firmanaam',LOC:Firmanaam)                      ! Added by: BrowseBox(ABC)
   BIND('LOC:MatchingMutatie',LOC:MatchingMutatie)          ! Added by: BrowseBox(ABC)
   BIND('LOC:HandmatigMutatie',LOC:HandmatigMutatie)        ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -372,8 +466,8 @@ ReturnValue          BYTE,AUTO
   SELF.FilesOpened = True
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:PalletVerloop,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
   BRW1.AddSortOrder(,Pal3:PalletVerloop_FK2)               ! Add the sort order for Pal3:PalletVerloop_FK2 for sort order 1
@@ -419,6 +513,7 @@ ReturnValue          BYTE,AUTO
   BRW1.AddField(Pal3:SaldoTotaal,BRW1.Q.Pal3:SaldoTotaal)  ! Field Pal3:SaldoTotaal is a hot field or requires assignment from browse
   BRW1.AddField(Pal3:RelatieID,BRW1.Q.Pal3:RelatieID)      ! Field Pal3:RelatieID is a hot field or requires assignment from browse
   BRW1.AddField(Pal3:VerkoopID,BRW1.Q.Pal3:VerkoopID)      ! Field Pal3:VerkoopID is a hot field or requires assignment from browse
+  BRW1.AddField(AARel:NietActief,BRW1.Q.AARel:NietActief)  ! Field AARel:NietActief is a hot field or requires assignment from browse
   BRW1.AddField(Pal3:Planning,BRW1.Q.Pal3:Planning)        ! Field Pal3:Planning is a hot field or requires assignment from browse
   BRW1.AddField(Pal3:PalletMutatieID,BRW1.Q.Pal3:PalletMutatieID) ! Field Pal3:PalletMutatieID is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
@@ -434,6 +529,7 @@ ReturnValue          BYTE,AUTO
   FDCB3.AddField(Rel:FirmaNaam,FDCB3.Q.Rel:FirmaNaam) !List box control field - type derived from field
   FDCB3.AddField(Rel:Type,FDCB3.Q.Rel:Type) !Browse hot field - type derived from field
   FDCB3.AddField(Rel:RelatieID,FDCB3.Q.Rel:RelatieID) !Browse hot field - type derived from field
+  FDCB3.AddField(Rel:NietActief,FDCB3.Q.Rel:NietActief) !Browse hot field - type derived from field
   FDCB3.AddUpdateField(Rel:RelatieID,LOC:RelatieID1)
   ThisWindow.AddItem(FDCB3.WindowComponent)
   FDCB3.DefaultFill = 0
@@ -454,6 +550,7 @@ ReturnValue          BYTE,AUTO
   FDCB6.AddField(AARel:FirmaNaam,FDCB6.Q.AARel:FirmaNaam) !List box control field - type derived from field
   FDCB6.AddField(AARel:Type,FDCB6.Q.AARel:Type) !Browse hot field - type derived from field
   FDCB6.AddField(AARel:RelatieID,FDCB6.Q.AARel:RelatieID) !Browse hot field - type derived from field
+  FDCB6.AddField(AARel:NietActief,FDCB6.Q.AARel:NietActief) !Browse hot field - type derived from field
   FDCB6.AddUpdateField(AARel:RelatieID,LOC:RelatieID2)
   ThisWindow.AddItem(FDCB6.WindowComponent)
   FDCB6.DefaultFill = 0
@@ -492,6 +589,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowsePallets',QuickWindow)             ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -618,9 +717,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowsePallets',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/07/2011 @ 08:55AM','02/21/2023 @ 03:36PM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -669,14 +773,6 @@ Looped BYTE
       Looped = 1
     END
     CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
     OF EVENT:Notify
       	NOTIFICATION(NotifyCode#)
       	IF NotifyCode# = 1
@@ -686,10 +782,6 @@ Looped BYTE
       	.
     END
   ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -706,11 +798,19 @@ ThisWindow.Export2Excel PROCEDURE(Long pTab)
   Loc:Ole{'Sheets.Add'}
   Loc:Ole{'Sheets("Blad1").Name'} = 'H1'
   Loc:Ole{'Sheets("Blad2").Name'} = '1-way'
+  Loc:Ole{'Sheets.Add'}
   Loc:Ole{'Sheets("Blad3").Name'} = 'Euro'
+  Loc:Ole{'Sheets.Add'}
   Loc:Ole{'Sheets("Blad4").Name'} = 'CKW'
+  Loc:Ole{'Sheets.Add'}
+  Loc:Ole{'Sheets("Blad5").Name'} = 'BLOK'
+  Loc:Ole{'Sheets.Add'}
+  Loc:Ole{'Sheets("Blad6").Name'} = 'CHEP'
+  Loc:Ole{'Sheets.Add'}
+  Loc:Ole{'Sheets("Blad7").Name'} = 'E2'
   
   palletsoort# = 1
-  LOOP UNTIL palletsoort# = 5
+  LOOP UNTIL palletsoort# > 7
       CASE palletsoort#
       OF 1
           Loc:Ole{'Sheets("H1").Select'}
@@ -720,6 +820,12 @@ ThisWindow.Export2Excel PROCEDURE(Long pTab)
           Loc:Ole{'Sheets("Euro").Select'}
       OF 4
           Loc:Ole{'Sheets("CKW").Select'}
+      OF 5
+          Loc:Ole{'Sheets("BLOK").Select'}
+      OF 6
+          Loc:Ole{'Sheets("CHEP").Select'}
+      OF 7
+          Loc:Ole{'Sheets("E2").Select'}
       .
   		
       LOC:Rij = 1
@@ -728,15 +834,16 @@ ThisWindow.Export2Excel PROCEDURE(Long pTab)
       Do Vet
           
       LOC:Rij += 1
-      Execute  (Loc:DAtumNU%7 )+ 1
-          Loc:Ole{'Application.Range(A2).Value'}='Zondag '&Format(Loc:DAtumNU,@d6-) 
-          Loc:Ole{'Application.Range(A2).Value'}='Maandag '&Format(Loc:DAtumNU,@d6-) 
-          Loc:Ole{'Application.Range(A2).Value'}='Dinsdag '&Format(Loc:DAtumNU,@d6-) 
-          Loc:Ole{'Application.Range(A2).Value'}='Woensdag '&Format(Loc:DAtumNU,@d6-) 
-          Loc:Ole{'Application.Range(A2).Value'}='Donderdag '&Format(Loc:DAtumNU,@d6-) 
-          Loc:Ole{'Application.Range(A2).Value'}='Vrijdag '&Format(Loc:DAtumNU,@d6-) 
-          Loc:Ole{'Application.Range(A2).Value'}='Zaterdag '&Format(Loc:DAtumNU,@d6-) 
-      End
+  !    Execute  (Loc:DAtumNU%7 )+ 1
+  !        Loc:Ole{'Application.Range(A2).Value'}='Zondag '&Format(Loc:DAtumNU,@d6-) 
+  !        Loc:Ole{'Application.Range(A2).Value'}='Maandag '&Format(Loc:DAtumNU,@d6-) 
+  !        Loc:Ole{'Application.Range(A2).Value'}='Dinsdag '&Format(Loc:DAtumNU,@d6-) 
+  !        Loc:Ole{'Application.Range(A2).Value'}='Woensdag '&Format(Loc:DAtumNU,@d6-) 
+  !        Loc:Ole{'Application.Range(A2).Value'}='Donderdag '&Format(Loc:DAtumNU,@d6-) 
+  !        Loc:Ole{'Application.Range(A2).Value'}='Vrijdag '&Format(Loc:DAtumNU,@d6-) 
+  !        Loc:Ole{'Application.Range(A2).Value'}='Zaterdag '&Format(Loc:DAtumNU,@d6-) 
+  !    End
+      Loc:Ole{'Application.Range(A2).Value'}='Vanaf '&Format(LOC:VanafDatum,@d6-)&' t/m '&Format(LOC:TMDatum,@d6-)  
       Do Vet
   		
       LOC:Rij += 1
@@ -764,6 +871,12 @@ ThisWindow.Export2Excel PROCEDURE(Long pTab)
           Loc:Ole{'Application.Range(A4).Value'}='Euro'
       OF 4
           Loc:Ole{'Application.Range(A4).Value'}='CKW'
+      OF 5
+          Loc:Ole{'Application.Range(A4).Value'}='BLOK'
+      OF 6
+          Loc:Ole{'Application.Range(A4).Value'}='CHEP'
+      OF 7
+          Loc:Ole{'Application.Range(A4).Value'}='E2'
       .	
       DO Vet
           
@@ -810,12 +923,16 @@ ThisWindow.Export2Excel PROCEDURE(Long pTab)
       APalletVerloop{PROP:SQL} = 'SELECT * FROM PalletVerloop '&|
           'WHERE RelatieID = ' & CLIP(FORMAT(relatieid#, @N_10)) &|
           ' AND Transporteur = ' & CLIP(FORMAT(transporteur#, @N_10)) &|
-          ' AND PalletSoortID = ' & CLIP(FORMAT(palletsoort#, @N_10)) & ' ORDER BY Planning DESC, PalletMutatieID DESC'
+          ' AND Planning >= <39>' & CLIP(FORMAT(LOC:VanafDatum, @D10-)) &|
+          ' <39> AND Planning <=  <39>' & CLIP(FORMAT(LOC:TMDatum, @D10-)) &|
+          ' <39> AND PalletSoortID = ' & CLIP(FORMAT(palletsoort#, @N_10)) & ' ORDER BY Planning DESC, PalletMutatieID DESC'
           
       db.DebugOut('SELECT * FROM PalletVerloop '&|
           'WHERE RelatieID = ' & CLIP(FORMAT(relatieid#, @N_10)) &|
           ' AND Transporteur = ' & CLIP(FORMAT(transporteur#, @N_10)) &|
-          ' AND PalletSoortID = ' & CLIP(FORMAT(palletsoort#, @N_10)) & ' ORDER BY Planning DESC, PalletMutatieID DESC')
+          ' AND Planning >=  <39>' & CLIP(FORMAT(LOC:VanafDatum, @D10-)) &|
+          ' <39> AND Planning <=  <39>' & CLIP(FORMAT(LOC:TMDatum, @D10-)) &|
+          ' <39> AND PalletSoortID = ' & CLIP(FORMAT(palletsoort#, @N_10)) & ' ORDER BY Planning DESC, PalletMutatieID DESC')
           
       LOOP UNTIL Access:APalletVerloop.Next()
       	! Ophalen bijbehorende palletmutatie voor APM:PlanningID/APM:Opmerking
@@ -913,6 +1030,79 @@ ReturnValue          BYTE,AUTO
   END
   ReturnValue = PARENT.ApplyRange()
   RETURN ReturnValue
+
+
+BRW1.Fetch PROCEDURE(BYTE Direction)
+
+GreenBarIndex   LONG,AUTO
+  CODE
+  PARENT.Fetch(Direction)
+  !----------------------------------------------------------------------
+    LOOP GreenBarIndex=1 TO RECORDS(SELF.Q)
+      GET(SELF.Q,GreenBarIndex)
+      SELF.Q.Pal3:FirmaNaam_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:FirmaNaam
+      SELF.Q.Pal3:FirmaNaam_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:FirmaNaam_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:FirmaNaam_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal3:Transporteur_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:Transporteur
+      SELF.Q.Pal3:Transporteur_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Transporteur_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Transporteur_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.LOC:PalletSoort_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for LOC:PalletSoort
+      SELF.Q.LOC:PalletSoort_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:PalletSoort_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:PalletSoort_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal3:Planning_DATE_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:Planning_DATE
+      SELF.Q.Pal3:Planning_DATE_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_DATE_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_DATE_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal3:Planning_TIME_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:Planning_TIME
+      SELF.Q.Pal3:Planning_TIME_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_TIME_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_TIME_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal3:Inkomend_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:Inkomend
+      SELF.Q.Pal3:Inkomend_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Inkomend_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Inkomend_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal3:Uitgaand_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:Uitgaand
+      SELF.Q.Pal3:Uitgaand_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Uitgaand_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Uitgaand_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.LOC:Saldo_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for LOC:Saldo
+      SELF.Q.LOC:Saldo_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:Saldo_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:Saldo_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.LOC:KlantSaldoIn_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for LOC:KlantSaldoIn
+      SELF.Q.LOC:KlantSaldoIn_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:KlantSaldoIn_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:KlantSaldoIn_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.LOC:Firmanaam_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for LOC:Firmanaam
+      SELF.Q.LOC:Firmanaam_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:Firmanaam_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:Firmanaam_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.LOC:MatchingMutatie_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for LOC:MatchingMutatie
+      SELF.Q.LOC:MatchingMutatie_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:MatchingMutatie_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:MatchingMutatie_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.LOC:HandmatigMutatie_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for LOC:HandmatigMutatie
+      SELF.Q.LOC:HandmatigMutatie_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:HandmatigMutatie_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.LOC:HandmatigMutatie_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal3:Opmerking_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:Opmerking
+      SELF.Q.Pal3:Opmerking_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Opmerking_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:Opmerking_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal:PalletMutatieID_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal:PalletMutatieID
+      SELF.Q.Pal:PalletMutatieID_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal:PalletMutatieID_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal:PalletMutatieID_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Pal3:PalletSoortID_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Pal3:PalletSoortID
+      SELF.Q.Pal3:PalletSoortID_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:PalletSoortID_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Pal3:PalletSoortID_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      PUT(SELF.Q)
+    END
+  !----------------------------------------------------------------------
 
 
 BRW1.Init PROCEDURE(SIGNED ListBox,*STRING Posit,VIEW V,QUEUE Q,RelationManager RM,WindowManager WM)
@@ -1021,13 +1211,19 @@ BRW1.SetQueueRecord PROCEDURE
   	OF 5
   		LOC:PalletSoort = 'BLOK'
   	OF 6
-  		LOC:PalletSoort = 'CHEP'
+        LOC:PalletSoort = 'CHEP'
+    OF 7
+  		LOC:PalletSoort = 'E2'
       .
   
-      LOC:TimingMeting[1] += CLOCK() - timingmetinglos#
-      timingmetinglos# = CLOCK()
+     
   PARENT.SetQueueRecord
   
+  IF (AARel:NietActief)
+    SELF.Q.Pal3:FirmaNaam_Style = 1 ! 1
+  ELSE
+    SELF.Q.Pal3:FirmaNaam_Style = 0 ! 0
+  END
   IF (Pal3:Transporteur)
     SELF.Q.Pal3:Transporteur_Icon = 2                      ! Set icon from icon list
   ELSE
@@ -1043,6 +1239,82 @@ BRW1.SetQueueRecord PROCEDURE
   ELSE
     SELF.Q.LOC:HandmatigMutatie_Icon = 1                   ! Set icon from icon list
   END
+  !----------------------------------------------------------------------
+      SELF.Q.Pal3:FirmaNaam_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:FirmaNaam
+      SELF.Q.Pal3:FirmaNaam_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:FirmaNaam_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:FirmaNaam_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal3:Transporteur_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:Transporteur
+      SELF.Q.Pal3:Transporteur_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Transporteur_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Transporteur_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.LOC:PalletSoort_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for LOC:PalletSoort
+      SELF.Q.LOC:PalletSoort_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:PalletSoort_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:PalletSoort_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal3:Planning_DATE_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:Planning_DATE
+      SELF.Q.Pal3:Planning_DATE_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_DATE_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_DATE_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal3:Planning_TIME_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:Planning_TIME
+      SELF.Q.Pal3:Planning_TIME_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_TIME_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Planning_TIME_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal3:Inkomend_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:Inkomend
+      SELF.Q.Pal3:Inkomend_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Inkomend_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Inkomend_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal3:Uitgaand_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:Uitgaand
+      SELF.Q.Pal3:Uitgaand_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Uitgaand_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Uitgaand_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.LOC:Saldo_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for LOC:Saldo
+      SELF.Q.LOC:Saldo_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:Saldo_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:Saldo_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.LOC:KlantSaldoIn_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for LOC:KlantSaldoIn
+      SELF.Q.LOC:KlantSaldoIn_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:KlantSaldoIn_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:KlantSaldoIn_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.LOC:Firmanaam_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for LOC:Firmanaam
+      SELF.Q.LOC:Firmanaam_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:Firmanaam_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:Firmanaam_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.LOC:MatchingMutatie_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for LOC:MatchingMutatie
+      SELF.Q.LOC:MatchingMutatie_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:MatchingMutatie_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:MatchingMutatie_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.LOC:HandmatigMutatie_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for LOC:HandmatigMutatie
+      SELF.Q.LOC:HandmatigMutatie_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:HandmatigMutatie_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.LOC:HandmatigMutatie_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal3:Opmerking_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:Opmerking
+      SELF.Q.Pal3:Opmerking_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Opmerking_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:Opmerking_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal:PalletMutatieID_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal:PalletMutatieID
+      SELF.Q.Pal:PalletMutatieID_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal:PalletMutatieID_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal:PalletMutatieID_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Pal3:PalletSoortID_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Pal3:PalletSoortID
+      SELF.Q.Pal3:PalletSoortID_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:PalletSoortID_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Pal3:PalletSoortID_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+  !----------------------------------------------------------------------
+
+
+BRW1.SetSort PROCEDURE(BYTE NewOrder,BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+_starttijd              TIME
+  CODE
+  _starttijd = CLOCK()
+  ReturnValue = PARENT.SetSort(NewOrder,Force)
+  IF ReturnValue
+      LogSetSort('Pallet',' NewOrder: '&NewOrder&' Force: '&Force& ' ReturnValue: '&ReturnValue&' '&(Clock()-_starttijd)/100&' sec')
+  END
+  RETURN ReturnValue
 
 
 Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
@@ -1066,4 +1338,51 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   SELF.SetStrategy(?Excel:1, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?Excel:1
   SELF.SetStrategy(?Excel:3, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?Excel:3
   SELF.SetStrategy(?Excel:2, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?Excel:2
+
+
+FDCB3.SetQueueRecord PROCEDURE
+
+  CODE
+  PARENT.SetQueueRecord
+  
+  IF (Rel:NietActief)
+    SELF.Q.Rel:FirmaNaam_NormalFG = -1                     ! Set conditional color values for Rel:FirmaNaam
+    SELF.Q.Rel:FirmaNaam_NormalBG = 255
+    SELF.Q.Rel:FirmaNaam_SelectedFG = 255
+    SELF.Q.Rel:FirmaNaam_SelectedBG = -1
+  ELSE
+    SELF.Q.Rel:FirmaNaam_NormalFG = -1                     ! Set color values for Rel:FirmaNaam
+    SELF.Q.Rel:FirmaNaam_NormalBG = -1
+    SELF.Q.Rel:FirmaNaam_SelectedFG = -1
+    SELF.Q.Rel:FirmaNaam_SelectedBG = -1
+  END
+
+
+FDCB5.SetQueueRecord PROCEDURE
+
+  CODE
+  PARENT.SetQueueRecord
+  
+  SELF.Q.VTRA:FirmaNaam_NormalFG = -1                      ! Set color values for VTRA:FirmaNaam
+  SELF.Q.VTRA:FirmaNaam_NormalBG = -1
+  SELF.Q.VTRA:FirmaNaam_SelectedFG = -1
+  SELF.Q.VTRA:FirmaNaam_SelectedBG = -1
+
+
+FDCB6.SetQueueRecord PROCEDURE
+
+  CODE
+  PARENT.SetQueueRecord
+  
+  IF (AARel:NietActief)
+    SELF.Q.AARel:FirmaNaam_NormalFG = -1                   ! Set conditional color values for AARel:FirmaNaam
+    SELF.Q.AARel:FirmaNaam_NormalBG = 255
+    SELF.Q.AARel:FirmaNaam_SelectedFG = 255
+    SELF.Q.AARel:FirmaNaam_SelectedBG = -1
+  ELSE
+    SELF.Q.AARel:FirmaNaam_NormalFG = -1                   ! Set color values for AARel:FirmaNaam
+    SELF.Q.AARel:FirmaNaam_NormalBG = -1
+    SELF.Q.AARel:FirmaNaam_SelectedFG = -1
+    SELF.Q.AARel:FirmaNaam_SelectedBG = -1
+  END
 

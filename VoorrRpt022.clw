@@ -57,13 +57,8 @@ ProgressWindow       WINDOW('Voortgang Palletbladen...'),AT(,,236,203),DOUBLE,CE
                        BUTTON('Pause'),AT(56,179,50,15),USE(?Pause),DEFAULT
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(ReportManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Init                   PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 Paused                 BYTE
 Timer                  LONG
@@ -79,6 +74,14 @@ TakeRecord             PROCEDURE(),BYTE,PROC,DERIVED
 ProgressMgr          StepLongClass                         ! Progress Manager
 
   CODE
+? DEBUGHOOK(AAPlanning:Record)
+? DEBUGHOOK(AARelatie:Record)
+? DEBUGHOOK(AAViewArtikel:Record)
+? DEBUGHOOK(AMutatie:Record)
+? DEBUGHOOK(AVerkoop:Record)
+? DEBUGHOOK(ArtikelOmschrijvingExtra:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(Weging:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -94,7 +97,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportPalletBlad','VoorrRpt022.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'ReportPalletBlad','VoorrRpt022.clw','VoorrRpt.DLL','07/01/2024 @ 08:52PM')    
              
   GlobalErrors.SetProcedureName('ReportPalletBlad')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -229,7 +232,6 @@ ReturnValue          BYTE,AUTO
       END    
   END
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportPalletBlad',ProgressWindow)          ! Restore window settings from non-volatile store
@@ -258,19 +260,11 @@ ReturnValue          BYTE,AUTO
   RETURN ReturnValue
 
 
-ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
-
-  CODE
-  PARENT.Init(PC,R,PV)
-  WinAlertMouseZoom()
-
-
 ThisWindow.Kill PROCEDURE
 
 ReturnValue          BYTE,AUTO
 
   CODE
-        ThisNetRefresh.Send('|Mutatie|') ! NetTalk (NetRefresh)
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -291,7 +285,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportPalletBlad',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/29/2013 @ 03:46PM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('ReportPalletBlad',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/29/2013 @ 03:46PM','07/01/2024 @ 08:52PM','10/11/2024 @ 01:54PM')  
     
   END
   RETURN ReturnValue
@@ -346,9 +340,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -368,30 +359,10 @@ Looped BYTE
       Looped = 1
     END
     CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    OF EVENT:OpenWindow
-        WE::CantCloseNow += 1
-        WE::CantCloseNowSetHere = 1
     OF EVENT:Timer
       IF SELF.Paused THEN RETURN Level:Benign .
     END
   ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:CloseWindow
-      if WE::CantCloseNow > 0 and ReturnValue = Level:Benign and WE::CantCloseNowSetHere
-        WE::CantCloseNow -= 1
-        WE::CantCloseNowSetHere = 0
-      end
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -454,6 +425,16 @@ ReturnValue          BYTE,AUTO
   LOOP UNTIL Access:Weging.Next()
       IF Weg:MutatieID <> Mut:MutatieID THEN BREAK.
       
+      IF WEG:ProductionDate_DATE
+          GLO:UitslagPalletbladProductionDate11 = WEG:ProductionDate_DATE
+      END
+      IF WEG:THTDate_DATE
+          GLO:UitslagPalletbladSellByDate15 = WEG:THTDate_DATE
+      END
+      IF WEG:HarvastDate_DATE
+          GLO:UitslagPalletbladHarvastDate7007 = WEG:HarvastDate_DATE
+      END
+  
       ReportPalletBladEnkel(Weg:PalletID, Weg:NettoGewicht, False, 1) ! Geen preview
       !ReportPalletBladEnkel(Weg:PalletID, Weg:NettoGewicht, True, 1) ! preview
   END

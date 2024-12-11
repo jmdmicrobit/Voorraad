@@ -54,20 +54,13 @@ QuickWindow          WINDOW('Form CelLocatie'),AT(,,284,185),FONT('MS Sans Serif
   TIP('Cancel operation')
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-PrimeUpdate            PROCEDURE(),BYTE,PROC,DERIVED
 Run                    PROCEDURE(),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
-TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -82,6 +75,7 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(CelLocatie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -152,7 +146,6 @@ ReturnValue          BYTE,AUTO
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?CL:CelLocatieID{PROP:ReadOnly} = True
@@ -190,18 +183,6 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('UpdateCelLocatie',QuickWindow)          ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
-  RETURN ReturnValue
-
-
-ThisWindow.PrimeUpdate PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  ReturnValue = PARENT.PrimeUpdate()
-    If returnValue = Level:Fatal  ! delete just occured
-      ThisNetRefresh.Send('|CelLocatie|') ! NetTalk (NetRefresh)
-    End
   RETURN ReturnValue
 
 
@@ -243,26 +224,6 @@ Looped BYTE
   RETURN ReturnValue
 
 
-ThisWindow.TakeCompleted PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  ReturnValue = PARENT.TakeCompleted()
-    ThisNetRefresh.Send('|CelLocatie|') ! NetTalk (NetRefresh)
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
 ThisWindow.TakeEvent PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -279,42 +240,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

@@ -69,9 +69,6 @@ ViewPosition           STRING(1024)                   !Entry's view position
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 History::Rel:Record  LIKE(Rel:RECORD),THREAD
-NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
-NetLocalRefreshTime     Long
-NetLocalDependancies    String('|Relatie|ArtikelOmschrijvingExtraGroep|RelatieAdres|RelatieArtikelOmschrijving|')
 QuickWindow          WINDOW('Overzicht Klantadressen / Artikelnamen'),AT(,,501,343),FONT('MS Sans Serif',8,,FONT:regular, |
   CHARSET:DEFAULT),RESIZE,CENTER,GRAY,IMM,MDI,HLP('ViewRelatie'),SYSTEM
                        SHEET,AT(4,4,493,153),USE(?CurrentTab)
@@ -121,22 +118,16 @@ QuickWindow          WINDOW('Overzicht Klantadressen / Artikelnamen'),AT(,,501,3
   'a and close the window'),TIP('Accept data and close the window')
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-PrimeUpdate            PROCEDURE(),BYTE,PROC,DERIVED
 Reset                  PROCEDURE(BYTE Force=0),DERIVED
 Run                    PROCEDURE(),BYTE,PROC,DERIVED
 Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -164,6 +155,9 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(RelatieAdres:Record)
+? DEBUGHOOK(RelatieArtikelOmschrijving:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -238,7 +232,6 @@ ReturnValue          BYTE,AUTO
   BRW8.Init(?List,Queue:Browse.ViewPosition,BRW8::View:Browse,Queue:Browse,Relate:RelatieAdres,SELF) ! Initialize the browse manager
   BRW10.Init(?List:2,Queue:Browse:1.ViewPosition,BRW10::View:Browse,Queue:Browse:1,Relate:RelatieArtikelOmschrijving,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?Rel:FirmaNaam{PROP:ReadOnly} = True
@@ -298,8 +291,6 @@ ReturnValue          BYTE,AUTO
   BRW8.AddToolbarTarget(Toolbar)                           ! Browse accepts toolbar control
   BRW10.AddToolbarTarget(Toolbar)                          ! Browse accepts toolbar control
   SELF.SetAlerts()
-  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-  NetLocalRefreshTime = clock()
   EnterByTabManager.ExcludeControl(?OK)
   EnterByTabManager.Init(False)
   RETURN ReturnValue
@@ -324,18 +315,6 @@ ReturnValue          BYTE,AUTO
   RETURN ReturnValue
 
 
-ThisWindow.PrimeUpdate PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  ReturnValue = PARENT.PrimeUpdate()
-    If returnValue = Level:Fatal  ! delete just occured
-      ThisNetRefresh.Send('|Relatie|RelatieAdres|RelatieArtikelOmschrijving|Relatie|RelatieAdres|RelatieArtikelOmschrijving|') ! NetTalk (NetRefresh)
-    End
-  RETURN ReturnValue
-
-
 ThisWindow.Reset PROCEDURE(BYTE Force=0)
 
   CODE
@@ -343,8 +322,6 @@ ThisWindow.Reset PROCEDURE(BYTE Force=0)
   IF QuickWindow{Prop:AcceptAll} THEN RETURN.
   Art3:ID = Rel:ItemCode                                   ! Assign linking field value
   Access:ArtikelOmschrijvingExtraGroep.Fetch(Art3:PK_ArtikelOmschrijvingExtraGroep)
-    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-    NetLocalRefreshTime = clock()
   PARENT.Reset(Force)
 
 
@@ -419,7 +396,6 @@ Looped BYTE
     END
   RETURN Level:Fatal
   ReturnValue = PARENT.TakeCompleted()
-    ThisNetRefresh.Send('|Relatie|RelatieAdres|RelatieArtikelOmschrijving|Relatie|RelatieAdres|RelatieArtikelOmschrijving|') ! NetTalk (NetRefresh)
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -432,9 +408,6 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
-    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
-      Self.Reset(1)                      ! NetTalk (NetRefresh)
-    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -445,42 +418,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

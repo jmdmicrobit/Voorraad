@@ -32,6 +32,7 @@ BRW1::View:Browse    VIEW(AAARelatie)
                        PROJECT(AAARel:Telefoon)
                        PROJECT(AAARel:Mobiel)
                        PROJECT(AAARel:Fax)
+                       PROJECT(AAARel:NietActief)
                      END
 Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?Browse:1
 AAARel:RelatieID       LIKE(AAARel:RelatieID)         !List box control field - type derived from field
@@ -43,14 +44,12 @@ AAARel:Plaats          LIKE(AAARel:Plaats)            !List box control field - 
 AAARel:Telefoon        LIKE(AAARel:Telefoon)          !List box control field - type derived from field
 AAARel:Mobiel          LIKE(AAARel:Mobiel)            !List box control field - type derived from field
 AAARel:Fax             LIKE(AAARel:Fax)               !List box control field - type derived from field
+AAARel:NietActief      LIKE(AAARel:NietActief)        !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
-NetLocalRefreshTime     Long
-NetLocalDependancies    String('|AAARelatie|')
 QuickWindow          WINDOW('Browse the AAARelatie file'),AT(,,358,198),FONT('MS Sans Serif',8,,FONT:regular,CHARSET:DEFAULT), |
   RESIZE,CENTER,GRAY,IMM,MDI,HLP('SelectAAARelatie'),SYSTEM
                        LIST,AT(8,30,342,124),USE(?Browse:1),HVSCROLL,FORMAT('64R(2)|M~Relatie ID~C(0)@n-14@80L' & |
@@ -70,16 +69,10 @@ QuickWindow          WINDOW('Browse the AAARelatie file'),AT(,,358,198),FONT('MS
   STD(STD:Help),TIP('See Help Window')
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-Reset                  PROCEDURE(BYTE Force=0),DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -96,6 +89,7 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
 
 
   CODE
+? DEBUGHOOK(AAARelatie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -131,7 +125,6 @@ ReturnValue          BYTE,AUTO
   SELF.FilesOpened = True
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:AAARelatie,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   BRW1.Q &= Queue:Browse:1
   BRW1.ActiveInvisible = 1
@@ -139,6 +132,7 @@ ReturnValue          BYTE,AUTO
   BRW1.AddSortOrder(,AAARel:Relatie_FK01)                  ! Add the sort order for AAARel:Relatie_FK01 for sort order 1
   BRW1.AddLocator(BRW1::Sort0:Locator)                     ! Browse has a locator for sort order 1
   BRW1::Sort0:Locator.Init(,AAARel:FirmaNaam,,BRW1)        ! Initialize the browse locator using  using key: AAARel:Relatie_FK01 , AAARel:FirmaNaam
+  BRW1.SetFilter('(NOT AAARel:NietActief)')                ! Apply filter expression to browse
   BRW1.AddField(AAARel:RelatieID,BRW1.Q.AAARel:RelatieID)  ! Field AAARel:RelatieID is a hot field or requires assignment from browse
   BRW1.AddField(AAARel:FirmaNaam,BRW1.Q.AAARel:FirmaNaam)  ! Field AAARel:FirmaNaam is a hot field or requires assignment from browse
   BRW1.AddField(AAARel:Adres1,BRW1.Q.AAARel:Adres1)        ! Field AAARel:Adres1 is a hot field or requires assignment from browse
@@ -148,13 +142,12 @@ ReturnValue          BYTE,AUTO
   BRW1.AddField(AAARel:Telefoon,BRW1.Q.AAARel:Telefoon)    ! Field AAARel:Telefoon is a hot field or requires assignment from browse
   BRW1.AddField(AAARel:Mobiel,BRW1.Q.AAARel:Mobiel)        ! Field AAARel:Mobiel is a hot field or requires assignment from browse
   BRW1.AddField(AAARel:Fax,BRW1.Q.AAARel:Fax)              ! Field AAARel:Fax is a hot field or requires assignment from browse
+  BRW1.AddField(AAARel:NietActief,BRW1.Q.AAARel:NietActief) ! Field AAARel:NietActief is a hot field or requires assignment from browse
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
   INIMgr.Fetch('SelectAAARelatie',QuickWindow)             ! Restore window settings from non-volatile store
   Resizer.Resize                                           ! Reset required after window size altered by INI manager
   SELF.SetAlerts()
-  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-  NetLocalRefreshTime = clock()
   EnterByTabManager.Init(False)
   RETURN ReturnValue
 
@@ -176,25 +169,12 @@ ReturnValue          BYTE,AUTO
   RETURN ReturnValue
 
 
-ThisWindow.Reset PROCEDURE(BYTE Force=0)
-
-  CODE
-  SELF.ForcedReset += Force
-  IF QuickWindow{Prop:AcceptAll} THEN RETURN.
-    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-    NetLocalRefreshTime = clock()
-  PARENT.Reset(Force)
-
-
 ThisWindow.TakeEvent PROCEDURE
 
 ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
-    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
-      Self.Reset(1)                      ! NetTalk (NetRefresh)
-    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -205,42 +185,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

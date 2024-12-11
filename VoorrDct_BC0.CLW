@@ -131,6 +131,7 @@ Init                   PROCEDURE(),DERIVED
 Insert                 PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),DERIVED
 PreInsert              PROCEDURE(SIGNED OpCode,UNSIGNED AddLen,*CSTRING ErrCode,*CSTRING ErrMsg),BYTE,DERIVED
+PrimeFields            PROCEDURE(),PROC,DERIVED
 TryInsert              PROCEDURE(),BYTE,PROC,DERIVED
 TryUpdate              PROCEDURE(),BYTE,PROC,DERIVED
 Update                 PROCEDURE(),BYTE,PROC,DERIVED
@@ -522,6 +523,8 @@ Hide:Access:ViewArtikel.Init PROCEDURE
   PARENT.Init
   Access:ViewArtikel &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewArtikel.Kill PROCEDURE
@@ -548,6 +551,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Art:Artikel_FK01,'Art:Artikel_FK01',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -624,6 +628,8 @@ Hide:Access:Partij.Init PROCEDURE
   PARENT.Init
   Access:Partij &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Partij.Insert PROCEDURE
@@ -721,6 +727,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Par:Partij_PK,'Par:Partij_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -794,6 +801,8 @@ Hide:Access:Relatie.Init PROCEDURE
   PARENT.Init
   Access:Relatie &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Relatie.Kill PROCEDURE
@@ -821,6 +830,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Rel:Relatie_PK,'Rel:Relatie_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -892,6 +902,8 @@ Hide:Access:Verpakking.Init PROCEDURE
   PARENT.Init
   Access:Verpakking &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Verpakking.Insert PROCEDURE
@@ -979,6 +991,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Ver:Verpakking_PK,'Ver:Verpakking_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1022,6 +1035,8 @@ Hide:Access:ViewVoorraadPlanning.Init PROCEDURE
   PARENT.Init
   Access:ViewVoorraadPlanning &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewVoorraadPlanning.Kill PROCEDURE
@@ -1048,6 +1063,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VVP:ViewVoorraad_FK2,'VVP:ViewVoorraad_FK2',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1100,6 +1116,8 @@ Hide:Access:Cel.Init PROCEDURE
   PARENT.Init
   Access:Cel &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Cel.Insert PROCEDURE
@@ -1185,8 +1203,10 @@ ReturnValue          BYTE,AUTO
     SELF.Create = 0
     SELF.LockRecover = 10
     SELF.AddKey(CEL:CEL_PK,'CEL:CEL_PK',0)
+    SELF.AddKey(CEL:Cel_FK1,'Op Volgnr, CelID',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1259,6 +1279,8 @@ Hide:Access:Mutatie.Init PROCEDURE
   PARENT.Init
   Access:Mutatie &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Mutatie.Insert PROCEDURE
@@ -1358,6 +1380,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Mut:Mutatie_FK04,'Mut:Mutatie_FK04',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1427,6 +1450,8 @@ Hide:Access:Inkoop.Init PROCEDURE
   PARENT.Init
   Access:Inkoop &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Inkoop.Insert PROCEDURE
@@ -1461,6 +1486,14 @@ Buffer LIKE(Ink:RECORD)
   ReturnValue = PARENT.PreInsert(OpCode,AddLen,ErrCode,ErrMsg)
   POPERRORS()
   RETURN ReturnValue
+
+
+Hide:Access:Inkoop.PrimeFields PROCEDURE
+
+  CODE
+  Ink:Valuta = 'Euro'                                      ! Assign initial field value
+  Ink:Koersverschil = 1                                    ! Assign initial field value
+  PARENT.PrimeFields
 
 
 Hide:Access:Inkoop.TryInsert PROCEDURE
@@ -1522,6 +1555,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Ink:LeverancierAlternatiefAdres_K,'Ink:LeverancierAlternatiefAdres_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1534,7 +1568,7 @@ Hide:Relate:Inkoop.DeferedAddRelations PROCEDURE
   PARENT.DeferedAddRelations
 
 AddRelations_1 ROUTINE
-  SELF.AddRelation(Relate:Planning,RI:CASCADE,RI:CASCADE,Pla:Planning_FK01)
+  SELF.AddRelation(Relate:Planning,RI:CASCADE,RI:CASCADE,Pla:Planning_FK05)
   SELF.AddRelationLink(Ink:InkoopID,Pla:InkoopID)
 
   SELF.AddRelation(Relate:Relatie,RI:None,RI:None,Rel:Relatie_PK)
@@ -1581,6 +1615,8 @@ Hide:Access:Planning.Init PROCEDURE
   PARENT.Init
   Access:Planning &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Planning.Insert PROCEDURE
@@ -1671,10 +1707,13 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Pla:Planning_FK01,'Op InkoopID/Planning',0)
     SELF.AddKey(Pla:Planning_FK02,'Op VerkoopID. PlanningID',0)
     SELF.AddKey(Pla:Planning_FK03,'Op Planning',0)
+    SELF.AddKey(Pla:Planning_FK04,'Pla:Planning_FK04',0)
+    SELF.AddKey(Pla:Planning_FK05,'Pla:Planning_FK05',0)
     SELF.AddKey(Pla:Verwerkt_Artikel_Planning_K,'Pla:Verwerkt_Artikel_Planning_K',0)
     SELF.AddKey(Pla:Verwerkt_OverboekingCelID_Planning_K,'Pla:Verwerkt_OverboekingCelID_Planning_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1782,6 +1821,8 @@ Hide:Access:Verkoop.Init PROCEDURE
   PARENT.Init
   Access:Verkoop &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Verkoop.Insert PROCEDURE
@@ -1887,6 +1928,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Ver2:KlantAlternatiefAdres_K,'Ver2:KlantAlternatiefAdres_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -1941,6 +1983,8 @@ Hide:Access:Sjabloon.Init PROCEDURE
   PARENT.Init
   Access:Sjabloon &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Sjabloon.Kill PROCEDURE
@@ -1988,6 +2032,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Sja:Sjabloon_PK,'Sja:Sjabloon_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2039,6 +2084,8 @@ Hide:Access:ViewVoorraadCelTotaal.Init PROCEDURE
   PARENT.Init
   Access:ViewVoorraadCelTotaal &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewVoorraadCelTotaal.Kill PROCEDURE
@@ -2064,6 +2111,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VVCT:ViewVoorraadCelTotaal_PK,'VVCT:ViewVoorraadCelTotaal_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2112,6 +2160,8 @@ Hide:Access:PlanningInkoop.Init PROCEDURE
   PARENT.Init
   Access:PlanningInkoop &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:PlanningInkoop.Kill PROCEDURE
@@ -2141,6 +2191,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Pla2:Verwerkt_Planning_K,'Pla2:Verwerkt_Planning_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2204,6 +2255,8 @@ Hide:Access:PlanningVerkoop.Init PROCEDURE
   PARENT.Init
   Access:PlanningVerkoop &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:PlanningVerkoop.Kill PROCEDURE
@@ -2233,6 +2286,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Pla3:Verwerkt_Planning_K,'Pla3:Verwerkt_Planning_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2290,6 +2344,8 @@ Hide:Access:VoorraadVerloop.Init PROCEDURE
   PARENT.Init
   Access:VoorraadVerloop &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:VoorraadVerloop.Kill PROCEDURE
@@ -2322,6 +2378,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VVL:ArtikelID_CelID_DatumTijdD_MutatieID_K,'VVL:ArtikelID_CelID_DatumTijdD_MutatieID_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2377,6 +2434,8 @@ Hide:Access:RelatieAdres.Init PROCEDURE
   PARENT.Init
   Access:RelatieAdres &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:RelatieAdres.Insert PROCEDURE
@@ -2465,6 +2524,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(RAD:RelatieID_ID_K,'RAD:RelatieID_ID_K',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2520,6 +2580,8 @@ Hide:Access:PalletMutatie.Init PROCEDURE
   PARENT.Init
   Access:PalletMutatie &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:PalletMutatie.Insert PROCEDURE
@@ -2612,6 +2674,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Pal:PalletMutatie_FK5,'Pal:PalletMutatie_FK5',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2661,6 +2724,8 @@ Hide:Access:PalletVerloop.Init PROCEDURE
   PARENT.Init
   Access:PalletVerloop &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:PalletVerloop.Kill PROCEDURE
@@ -2688,6 +2753,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Pal3:PalletVerloop_PK,'Pal3:PalletVerloop_PK',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2739,6 +2805,8 @@ Hide:Access:Transporteur.Init PROCEDURE
   PARENT.Init
   Access:Transporteur &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:Transporteur.Insert PROCEDURE
@@ -2805,6 +2873,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(Tra:PK_Transporteur,'Tra:PK_Transporteur',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 
@@ -2847,6 +2916,8 @@ Hide:Access:ViewTransporteur.Init PROCEDURE
   PARENT.Init
   Access:ViewTransporteur &= SELF
   SELF.LazyOpen = False
+  SELF.DoNotAssertOnCloseMisuse = 1  ! ABCDefaults
+   IF SELF.File{prop:sqldriver} THEN SELF.create = 0.         ! ABCDefaults
 
 
 Hide:Access:ViewTransporteur.Kill PROCEDURE
@@ -2873,6 +2944,7 @@ ReturnValue          BYTE,AUTO
     SELF.AddKey(VTRA:ViewTransporteur_FK1,'Op RelatieID',0)
   END
                                                            !SELF.InUseFile will be set to False in PARENT
+  IF SELF.File{prop:sqldriver} THEN SELF.create = 0.          ! ABCDefaults
   ReturnValue = PARENT.UseFile(UseType)
   RETURN ReturnValue
 

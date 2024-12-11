@@ -161,6 +161,12 @@ StVeld              StringTheory
 Loc:SQLCommando     CString(4000)
 
   CODE
+? DEBUGHOOK(Gebruiker:Record)
+? DEBUGHOOK(GebruikerLog:Record)
+? DEBUGHOOK(Partij:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(Verkoop:Record)
+? DEBUGHOOK(Verpakking:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -176,7 +182,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'BrowseGebruikerLog','Voorraad025.clw','Voorraad.EXE','05/25/2020 @ 08:55PM')    
+        udpt.Init(UD,'BrowseGebruikerLog','Voorraad025.clw','Voorraad.EXE','06/01/2021 @ 06:42PM')    
              
   GlobalErrors.SetProcedureName('BrowseGebruikerLog')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -186,9 +192,9 @@ ReturnValue          BYTE,AUTO
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:Datum',LOC:Datum)                              ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -204,8 +210,15 @@ ReturnValue          BYTE,AUTO
   SELF.FilesOpened = True
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:GebruikerLog,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   ?FilterList:2{prop:dropid, 255} = 'FilterObj'
   ?Browse:1{prop:dragid, 255} = 'FilterObj'
   FilterObj.Init(?FilterList:2, QuickWindow)
@@ -276,6 +289,7 @@ ThisWindow.Kill PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -398,14 +412,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('BrowseGebruikerLog',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:44PM','05/25/2020 @ 08:55PM','06/02/2020 @ 10:33PM')  
+        UD.ShowProcedureInfo('BrowseGebruikerLog',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'09/08/2011 @ 03:44PM','06/01/2021 @ 06:42PM','10/11/2024 @ 01:55PM')  
     
        CYCLE
      END
@@ -1109,4 +1123,6 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   SELF.SetStrategy(?Group1:2, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?Group1:2
   SELF.SetStrategy(?Close, Resize:FixRight+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?Close
   SELF.SetStrategy(?CurrentTab, Resize:FixLeft+Resize:FixTop, Resize:ConstantRight+Resize:ConstantBottom) ! Override strategy for ?CurrentTab
+  SELF.SetStrategy(?LOC:Datum:Prompt:2, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?LOC:Datum:Prompt:2
+  SELF.SetStrategy(?LOC:Datum:2, Resize:FixLeft+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?LOC:Datum:2
 

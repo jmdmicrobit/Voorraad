@@ -11,7 +11,7 @@
     <Model>Dll</Model>
     <stack_size>16384</stack_size>
     <CopyCore>False</CopyCore>
-    <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bStringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0%3b_NetTalkDllMode_=&gt;1%3b_NetTalkLinkMode_=&gt;0%3b_TBARDllMode_=&gt;1%3b_TBARLinkMode_=&gt;0%3b_svDllMode_=&gt;1%3b_svLinkMode_=&gt;0%3b_MSSQLDateTime_=&gt;1%3b_ORACLEDateTime_=&gt;0</DefineConstants>
+    <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bStringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3bGPFReporterLinkMode=&gt;0%3bGPFReporterDllMode=&gt;1%3bWinEventLinkMode=&gt;0%3bWinEventDLLMode=&gt;1%3bHyperLM=&gt;0%3bHyperDM=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0%3b_NetTalkDllMode_=&gt;1%3b_NetTalkLinkMode_=&gt;0%3b_TBARDllMode_=&gt;1%3b_TBARLinkMode_=&gt;0%3b_svDllMode_=&gt;1%3b_svLinkMode_=&gt;0%3b_MSSQLDateTime_=&gt;1%3b_ORACLEDateTime_=&gt;0</DefineConstants>
     <StartArguments>/Debuger</StartArguments>
     <StartWorkingDirectory>werk</StartWorkingDirectory>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -50,6 +50,99 @@
     <Compile Include="Voorraad.clw">
       <Generated>true</Generated>
     </Compile>
+    <Compile Include="Voorraad002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad004.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad008.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad009.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad010.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad011.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad012.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad013.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad014.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad015.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad016.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad017.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad018.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad019.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad020.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad021.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad022.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad023.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad024.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad025.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad026.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad027.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad028.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad029.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad030.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad031.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad032.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="Voorraad033.clw">
+      <Generated>true</Generated>
+    </Compile>
     <ProjectReference Include="VoorrDct.cwproj">
       <Project>{148B4D9D-7E61-422E-B76E-8034DAC73042}</Project>
       <Name>VoorrDct</Name>
@@ -81,9 +174,10 @@
       <CopyReferencesToOutputDirectory>Never</CopyReferencesToOutputDirectory>
     </ProjectReference>
     <Library Include="C%25V%25DF%25X%25.LIB" />
-    <Library Include="C%25V%25WE%25X%25%25L%25.Lib" />
     <Library Include="clanet.lib" />
-    <Library Include="CLAWE.Lib" />
+    <Library Include="hand2.cur" />
+    <Library Include="off.ico" />
+    <Library Include="on.ico" />
     <Library Include="Voorraad.EXE.manifest" />
     <Library Include="Voorraad.Version" />
     <Library Include="Win32Ext.LIB" />
@@ -120,6 +214,6 @@
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /as /fd sha256 /f "H:\Certificates\info@microbit_nl\info@microbit_nl.p12" /tr http://timestamp.digicert.com /td sha256 $(SolutionDir)werk\Voorraad.EXE</PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /t http://timestamp.digicert.com $(SolutionDir)ontw\Voorraad.EXE</PostBuildEvent>
   </PropertyGroup>
 </Project>

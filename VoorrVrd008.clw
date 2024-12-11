@@ -19,6 +19,7 @@
 !!! </summary>
 UpdatePalletMutatie PROCEDURE (LONG PalletSoortID, LONG RelatieSoort, LONG KlantID, LONG LeverancierID, LONG TransporteurID)
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 ActionMessage        CSTRING(40)                           ! 
 LOC:TransporteurID   LONG                                  ! 
@@ -36,6 +37,7 @@ FDCB4::View:FileDropCombo VIEW(ARelatie)
                        PROJECT(AREL:FirmaNaam)
                        PROJECT(AREL:Plaats)
                        PROJECT(AREL:Type)
+                       PROJECT(AREL:NietActief)
                      END
 FDCB9::View:FileDropCombo VIEW(AAViewTransporteur)
                        PROJECT(AAVTRA:FirmaNaam)
@@ -57,8 +59,13 @@ ViewPosition           STRING(1024)                   !Entry's view position
                      END
 Queue:FileDropCombo:1 QUEUE                           !
 AREL:FirmaNaam         LIKE(AREL:FirmaNaam)           !List box control field - type derived from field
+AREL:FirmaNaam_NormalFG LONG                          !Normal forground color
+AREL:FirmaNaam_NormalBG LONG                          !Normal background color
+AREL:FirmaNaam_SelectedFG LONG                        !Selected forground color
+AREL:FirmaNaam_SelectedBG LONG                        !Selected background color
 AREL:Plaats            LIKE(AREL:Plaats)              !List box control field - type derived from field
 AREL:Type              LIKE(AREL:Type)                !Browse hot field - type derived from field
+AREL:NietActief        LIKE(AREL:NietActief)          !Browse hot field - type derived from field
 Mark                   BYTE                           !Entry's marked status
 ViewPosition           STRING(1024)                   !Entry's view position
                      END
@@ -86,17 +93,18 @@ QuickWindow          WINDOW('Form PalletMutatie'),AT(,,267,169),FONT('MS Sans Se
   'rmanaam~C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo),IMM
                        STRING('Klant:'),AT(7,22),USE(?STRING1)
                        STRING('Leverancier:'),AT(7,22),USE(?STRING2)
-                       COMBO(@s50),AT(94,22,135,10),USE(AREL:FirmaNaam),DROP(25,200),FORMAT('200L(2)|M~Firmana' & |
-  'am~C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo:1),IMM
+                       COMBO(@s50),AT(94,22,135,10),USE(AREL:FirmaNaam),DROP(25,200),FORMAT('200L(2)|M*~Firman' & |
+  'aam~C(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo:1),IMM
                        BUTTON('...'),AT(234,20,27),USE(?BUTTON1)
                        PROMPT('Datum:'),AT(7,38),USE(?PROMPT2)
                        ENTRY(@d06-),AT(94,38,64,10),USE(Pal:DatumTijd_DATE),REQ
                        ENTRY(@T01),AT(170,38,39,10),USE(Pal:DatumTijd_TIME),REQ
+                       PROMPT('Opmerking:'),AT(7,53),USE(?Pal:Opmerking:Prompt)
+                       ENTRY(@s50),AT(94,53,166,10),USE(Pal:Opmerking)
                        PROMPT('Inkomend:'),AT(7,66),USE(?Pal:Inkomend:Prompt),TRN
                        ENTRY(@n-14.),AT(94,68,64,10),USE(Pal:Inkomend),RIGHT
                        PROMPT('Uitgaand:'),AT(7,82),USE(?Pal:Uitgaand:Prompt),TRN
                        ENTRY(@n-14.),AT(94,82,64,10),USE(Pal:Uitgaand),RIGHT
-                       PROMPT('Opmerking:'),AT(7,53),USE(?Pal:Opmerking:Prompt)
                        CHECK('Overboeken Transporteur:'),AT(7,102,96),USE(Loc:OverboekenTransporteur),LEFT
                        GROUP,AT(5,94,260,53),USE(?GROUPTransporteur),TRN
                          PROMPT('Inkomend:'),AT(7,116),USE(?Loc:TransporteurInkomend:Prompt)
@@ -106,18 +114,13 @@ QuickWindow          WINDOW('Form PalletMutatie'),AT(,,267,169),FONT('MS Sans Se
                          COMBO(@s50),AT(105,102,155,10),USE(AAVTRA:FirmaNaam),DROP(25,200),FORMAT('200L(2)|M~Fir' & |
   'ma Naam~@s50@'),FROM(Queue:FileDropCombo:3),IMM
                        END
-                       ENTRY(@s50),AT(94,53,166,10),USE(Pal:Opmerking)
                        BUTTON('&OK'),AT(156,151,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
   'a and close the window'),TIP('Accept data and close the window')
                        BUTTON('&Cancel'),AT(211,151,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'), |
   TIP('Cancel operation')
-                       STRING(@n_6),AT(7,155),USE(Pal:VerkoopID)
+                       STRING(@n_6),AT(5,155),USE(Pal:VerkoopID)
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -127,7 +130,6 @@ Run                    PROCEDURE(),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -141,6 +143,7 @@ Q                      &Queue:FileDropCombo           !Reference to browse queue
 
 FDCB4                CLASS(FileDropComboClass)             ! File drop combo manager
 Q                      &Queue:FileDropCombo:1         !Reference to browse queue type
+SetQueueRecord         PROCEDURE(),DERIVED
                      END
 
 FDCB9                CLASS(FileDropComboClass)             ! File drop combo manager
@@ -157,6 +160,12 @@ BepaalNewMutatieID      PROCEDURE(), LONG
                     END
 
   CODE
+? DEBUGHOOK(AAARelatie:Record)
+? DEBUGHOOK(AAViewTransporteur:Record)
+? DEBUGHOOK(APalletMutatie:Record)
+? DEBUGHOOK(ARelatie:Record)
+? DEBUGHOOK(AViewTransporteur:Record)
+? DEBUGHOOK(PalletMutatie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -187,6 +196,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'UpdatePalletMutatie','VoorrVrd008.clw','VoorrVrd.DLL','07/01/2024 @ 05:44PM')    
+             
   GlobalErrors.SetProcedureName('UpdatePalletMutatie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -195,16 +206,16 @@ ReturnValue          BYTE,AUTO
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   BIND('LOC:Type',LOC:Type)                                ! Added by: FileDropCombo(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Pal:Record,History::Pal:Record)
   SELF.AddHistoryField(?Pal:DatumTijd_DATE,10)
   SELF.AddHistoryField(?Pal:DatumTijd_TIME,11)
+  SELF.AddHistoryField(?Pal:Opmerking,12)
   SELF.AddHistoryField(?Pal:Inkomend,5)
   SELF.AddHistoryField(?Pal:Uitgaand,6)
-  SELF.AddHistoryField(?Pal:Opmerking,12)
   SELF.AddHistoryField(?Pal:VerkoopID,13)
   SELF.AddUpdateFile(Access:PalletMutatie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
@@ -264,7 +275,7 @@ ReturnValue          BYTE,AUTO
           HIDE(?BUTTON1)
       .
   ELSE
-      db.DebugOut('ChangeRecord:' & Pal:PlanningID & ',' & FORMAT(Pal:DatumTijd_DATE, @d6-))
+      UD.Debug('ChangeRecord:' & Pal:PlanningID & ',' & FORMAT(Pal:DatumTijd_DATE, @d6-))
       If Pal:PlanningID > 0  THEN
           HIDE(?PROMPT1)
           HIDE(?AVTRA:FirmaNaam)
@@ -331,24 +342,28 @@ ReturnValue          BYTE,AUTO
                   DISPLAY(?AVTRA:FirmaNaam)
                   Loc:TransporteurInkomend=APM:Inkomend
                   Loc:TransporteurUitgaand=APM:Uitgaand
+              ELSE                ! 2021-3-20 Als hij de bijbehorende transporteurpalletmutatie niet kan vinden
+                  Loc:OverboekenTransporteur=FALSE
+                  Pal:TransporteurPalletMutatieID = 0             ! deze nu op zero zetten
+                  Clear(AVTRA:FirmaNaam)
               END
           END
       END
   .
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     DISABLE(?AVTRA:FirmaNaam)
     DISABLE(?AREL:FirmaNaam)
     DISABLE(?BUTTON1)
     ?Pal:DatumTijd_DATE{PROP:ReadOnly} = True
     ?Pal:DatumTijd_TIME{PROP:ReadOnly} = True
+    ?Pal:Opmerking{PROP:ReadOnly} = True
     ?Pal:Inkomend{PROP:ReadOnly} = True
     ?Pal:Uitgaand{PROP:ReadOnly} = True
     ?Loc:TransporteurInkomend{PROP:ReadOnly} = True
     ?Loc:TransporteurUitgaand{PROP:ReadOnly} = True
     DISABLE(?AAVTRA:FirmaNaam)
-    ?Pal:Opmerking{PROP:ReadOnly} = True
   END
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
@@ -383,6 +398,7 @@ ReturnValue          BYTE,AUTO
   FDCB4.AddField(AREL:FirmaNaam,FDCB4.Q.AREL:FirmaNaam) !List box control field - type derived from field
   FDCB4.AddField(AREL:Plaats,FDCB4.Q.AREL:Plaats) !List box control field - type derived from field
   FDCB4.AddField(AREL:Type,FDCB4.Q.AREL:Type) !Browse hot field - type derived from field
+  FDCB4.AddField(AREL:NietActief,FDCB4.Q.AREL:NietActief) !Browse hot field - type derived from field
   FDCB4.AddUpdateField(AREL:RelatieID,LOC:RelatieID)
   ThisWindow.AddItem(FDCB4.WindowComponent)
   FDCB4.DefaultFill = 0
@@ -431,6 +447,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('UpdatePalletMutatie',QuickWindow)       ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -658,42 +676,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('UpdatePalletMutatie',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/07/2011 @ 08:55AM','07/01/2024 @ 05:44PM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -717,4 +707,22 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   CODE
   PARENT.Init(AppStrategy,SetWindowMinSize,SetWindowMaxSize)
   SELF.SetParentDefaults()                                 ! Calculate default control parent-child relationships based upon their positions on the window
+
+
+FDCB4.SetQueueRecord PROCEDURE
+
+  CODE
+  PARENT.SetQueueRecord
+  
+  IF (AREL:NietActief)
+    SELF.Q.AREL:FirmaNaam_NormalFG = -1                    ! Set conditional color values for AREL:FirmaNaam
+    SELF.Q.AREL:FirmaNaam_NormalBG = 255
+    SELF.Q.AREL:FirmaNaam_SelectedFG = 255
+    SELF.Q.AREL:FirmaNaam_SelectedBG = -1
+  ELSE
+    SELF.Q.AREL:FirmaNaam_NormalFG = -1                    ! Set color values for AREL:FirmaNaam
+    SELF.Q.AREL:FirmaNaam_NormalBG = -1
+    SELF.Q.AREL:FirmaNaam_SelectedFG = -1
+    SELF.Q.AREL:FirmaNaam_SelectedBG = -1
+  END
 

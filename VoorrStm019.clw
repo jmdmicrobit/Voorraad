@@ -22,6 +22,7 @@ BrowseRelatie PROCEDURE
 
 CurrentTab           STRING(80)                            ! 
 BRW1::View:Browse    VIEW(Relatie)
+                       PROJECT(Rel:NietActief)
                        PROJECT(Rel:FirmaNaam)
                        PROJECT(Rel:Adres1)
                        PROJECT(Rel:Adres2)
@@ -43,6 +44,12 @@ BRW1::View:Browse    VIEW(Relatie)
                        PROJECT(Rel:Type)
                      END
 Queue:Browse:1       QUEUE                            !Queue declaration for browse/combo box using ?Browse:1
+Rel:NietActief         LIKE(Rel:NietActief)           !List box control field - type derived from field
+Rel:NietActief_NormalFG LONG                          !Normal forground color
+Rel:NietActief_NormalBG LONG                          !Normal background color
+Rel:NietActief_SelectedFG LONG                        !Selected forground color
+Rel:NietActief_SelectedBG LONG                        !Selected background color
+Rel:NietActief_Icon    LONG                           !Entry's icon ID
 Rel:FirmaNaam          LIKE(Rel:FirmaNaam)            !List box control field - type derived from field
 Rel:FirmaNaam_NormalFG LONG                           !Normal forground color
 Rel:FirmaNaam_NormalBG LONG                           !Normal background color
@@ -139,19 +146,16 @@ ViewPosition           STRING(1024)                   !Entry's view position
                      END
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
-NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
-NetLocalRefreshTime     Long
-NetLocalDependancies    String('|Relatie|')
 QuickWindow          WINDOW('Relaties'),AT(,,527,337),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),RESIZE,CENTER,GRAY, |
   IMM,MAX,MDI,HLP('BrowseRelatie'),SYSTEM
-                       LIST,AT(8,30,507,250),USE(?Browse:1),HVSCROLL,FORMAT('80L(2)|M*~Firma Naam~@s50@80L(2)|' & |
-  'M*~Adres 1~@s50@80L(2)|M*~Adres 2~@s50@44L(2)|M*~Postcode~@s10@80L(2)|M*~Plaats~@s50' & |
-  '@64L(2)|M*~Telefoon~@s15@64L(2)|M*~Mobiel~@s15@64L(2)|M*~Fax~@s15@64L(2)|M*~Land~@s6' & |
-  '0@102L(2)|M*~Palletbladreport-header Afbeelding~@s255@57L(2)|M*~Relatie ID~L(0)@n-14' & |
-  '@26L(2)|M*~Payment Condition~L(0)@s2@40L(2)|M*~Openstaand Saldo~D(14)@n10.2@40L(2)|M' & |
-  '*~Credit Line~D(14)@n10.2@80L(2)|M*~Code~D(0)@s20@38R(2)|M*~Acc Man~R(1)@n_6@30R(2)|' & |
-  'M*~Vat Code~R(0)@s3@12R(2)|M*~cmp_fctry~R(0)@s3@'),FROM(Queue:Browse:1),IMM,MSG('Browsing t' & |
-  'he Relatie file')
+                       LIST,AT(8,30,507,250),USE(?Browse:1),HVSCROLL,FORMAT('34L(2)|M*I~Niet Actief~L(0)@p p@8' & |
+  '0L(2)|M*~Firma Naam~@s50@80L(2)|M*~Adres 1~@s50@80L(2)|M*~Adres 2~@s50@44L(2)|M*~Pos' & |
+  'tcode~@s10@80L(2)|M*~Plaats~@s50@64L(2)|M*~Telefoon~@s15@64L(2)|M*~Mobiel~@s15@64L(2' & |
+  ')|M*~Fax~@s15@64L(2)|M*~Land~@s60@102L(2)|M*~Palletbladreport-header Afbeelding~@s25' & |
+  '5@57L(2)|M*~Relatie ID~L(0)@n-14@26L(2)|M*~Payment Condition~L(0)@s2@40L(2)|M*~Opens' & |
+  'taand Saldo~D(14)@n10.2@40L(2)|M*~Credit Line~D(14)@n10.2@80L(2)|M*~Code~D(0)@s20@38' & |
+  'R(2)|M*~Acc Man~R(1)@n_6@30R(2)|M*~Vat Code~R(0)@s3@12R(2)|M*~cmp_fctry~R(0)@s3@'),FROM(Queue:Browse:1), |
+  IMM,MSG('Browsing the Relatie file')
                        BUTTON('&Wijzigen'),AT(459,285,57,14),USE(?Change:3),LEFT,ICON('WACHANGE.ICO'),DEFAULT,FLAT, |
   MSG('Change the Record'),TIP('Change the Record')
                        SHEET,AT(4,4,521,303),USE(?CurrentTab)
@@ -174,18 +178,12 @@ QuickWindow          WINDOW('Relaties'),AT(,,527,337),FONT('MS Sans Serif',8,,,C
 FuzzyOrder7          BYTE,AUTO
 FuzzyQuery7          STRING(255)
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-Reset                  PROCEDURE(BYTE Force=0),DERIVED
 Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -204,21 +202,37 @@ Resizer              CLASS(WindowResizeClass)
 Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
                      END
 
+
+
 ExcelClass         Class
-InitOle                 Procedure()
-MaakExcel               Procedure()         ! Lege worksheey toevoegen
-OpenExcel               Procedure(String pBestandsnaam)
-SluitExcel              Procedure(Byte pCloseExcel)
-BepaalKolom             Procedure(LONG pKolomNr),String
-SchrijfExcel            Procedure(String pKolom, LONG pRij, String pValue)
-MaakWerkBlad            Procedure(<String pWerkbladNaam>)
+InitOle                 Procedure(<BYTE pDebug>)
+MaakExcel               Procedure()
+OpenExcel               Procedure(String)
+SluitExcel              Procedure(Byte)
+BepaalKolom             Procedure(LONG),String
+SchrijfExcel            Procedure(String, LONG, String)
+MaakWerkBlad            Procedure(<String>)
+NumberFormat            Procedure(String pKolomVanaf, LONG pRijVanaf, String pKolomTM, LONG pRijTM, String pNumberFormat)
+AutoFitColumns          Procedure(String pKolomVanaf, String pKolomTM)
+AutoFitRows             Procedure(LONG pRijVanaf,LONG pRijTM)
+
+FullDebug               BYTE
+
+Bedrag              STRING('Bedrag')
+Datum               STRING('Datum')
+
                    End
+                   
+                   
 Loc:Ole            CString(21)
 Loc:Rij            Long
 Loc:OleInit        Byte
 
 
   CODE
+? DEBUGHOOK(Inkoop:Record)
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(Verkoop:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -257,7 +271,6 @@ ReturnValue          BYTE,AUTO
   SELF.FilesOpened = True
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:Relatie,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   BRW1.Q &= Queue:Browse:1
   BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
@@ -274,6 +287,9 @@ ReturnValue          BYTE,AUTO
   BRW1.AddSortOrder(,Rel:Relatie_FK01)                     ! Add the sort order for Rel:Relatie_FK01 for sort order 3
   BRW1.AddLocator(BRW1::Sort0:Locator)                     ! Browse has a locator for sort order 3
   BRW1::Sort0:Locator.Init(,Rel:FirmaNaam,,BRW1)           ! Initialize the browse locator using  using key: Rel:Relatie_FK01 , Rel:FirmaNaam
+  ?Browse:1{PROP:IconList,1} = '~off.ico'
+  ?Browse:1{PROP:IconList,2} = '~on.ico'
+  BRW1.AddField(Rel:NietActief,BRW1.Q.Rel:NietActief)      ! Field Rel:NietActief is a hot field or requires assignment from browse
   BRW1.AddField(Rel:FirmaNaam,BRW1.Q.Rel:FirmaNaam)        ! Field Rel:FirmaNaam is a hot field or requires assignment from browse
   BRW1.AddField(Rel:Adres1,BRW1.Q.Rel:Adres1)              ! Field Rel:Adres1 is a hot field or requires assignment from browse
   BRW1.AddField(Rel:Adres2,BRW1.Q.Rel:Adres2)              ! Field Rel:Adres2 is a hot field or requires assignment from browse
@@ -297,14 +313,12 @@ ReturnValue          BYTE,AUTO
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
   ?FuzzyQuery{PROP:Use} = FuzzyQuery7
   FuzzyOrder7 = BRW1.AddSortOrder()
-  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery7,Rel:FirmaNaam&'' ''&Rel:Adres1&'' ''&Rel:Adres2&'' ''&Rel:Postcode&'' ''&Rel:Plaats&'' ''&Rel:Telefoon&'' ''&Rel:Mobiel&'' ''&Rel:Fax&'' ''&Rel:Country&'' ''&Rel:PalletBladRapportHeaderImage&'' ''&Rel:RelatieID&'' ''&Rel:PaymentCondition&'' ''&Rel:OpenstaandSaldo&'' ''&Rel:CreditLine&'' ''&Rel:Code&'' ''&Rel:Acc_Man&'' ''&Rel:VatCode&'' ''&Rel:cmp_fctry&'' ''&Rel:Type)')
-  BRW1.SetFilter('FuzzyMatch(FuzzyQuery7,Rel:FirmaNaam&'' ''&Rel:Adres1&'' ''&Rel:Adres2&'' ''&Rel:Postcode&'' ''&Rel:Plaats&'' ''&Rel:Telefoon&'' ''&Rel:Mobiel&'' ''&Rel:Fax&'' ''&Rel:Country&'' ''&Rel:PalletBladRapportHeaderImage&'' ''&Rel:RelatieID&'' ''&Rel:PaymentCondition&'' ''&Rel:OpenstaandSaldo&'' ''&Rel:CreditLine&'' ''&Rel:Code&'' ''&Rel:Acc_Man&'' ''&Rel:VatCode&'' ''&Rel:cmp_fctry&'' ''&Rel:Type)>=1', 'FuzzyFilter')
+  BRW1.AppendOrder('200-FuzzyMatch(FuzzyQuery7,Rel:NietActief&'' ''&Rel:FirmaNaam&'' ''&Rel:Adres1&'' ''&Rel:Adres2&'' ''&Rel:Postcode&'' ''&Rel:Plaats&'' ''&Rel:Telefoon&'' ''&Rel:Mobiel&'' ''&Rel:Fax&'' ''&Rel:Country&'' ''&Rel:PalletBladRapportHeaderImage&'' ''&Rel:RelatieID&'' ''&Rel:PaymentCondition&'' ''&Rel:OpenstaandSaldo&'' ''&Rel:CreditLine&'' ''&Rel:Code&'' ''&Rel:Acc_Man&'' ''&Rel:VatCode&'' ''&Rel:cmp_fctry&'' ''&Rel:Type)')
+  BRW1.SetFilter('FuzzyMatch(FuzzyQuery7,Rel:NietActief&'' ''&Rel:FirmaNaam&'' ''&Rel:Adres1&'' ''&Rel:Adres2&'' ''&Rel:Postcode&'' ''&Rel:Plaats&'' ''&Rel:Telefoon&'' ''&Rel:Mobiel&'' ''&Rel:Fax&'' ''&Rel:Country&'' ''&Rel:PalletBladRapportHeaderImage&'' ''&Rel:RelatieID&'' ''&Rel:PaymentCondition&'' ''&Rel:OpenstaandSaldo&'' ''&Rel:CreditLine&'' ''&Rel:Code&'' ''&Rel:Acc_Man&'' ''&Rel:VatCode&'' ''&Rel:cmp_fctry&'' ''&Rel:Type)>=1', 'FuzzyFilter')
   INIMgr.Fetch('BrowseRelatie',QuickWindow)                ! Restore window settings from non-volatile store
   Resizer.Resize                                           ! Reset required after window size altered by INI manager
   BRW1.AskProcedure = 1                                    ! Will call: UpdateRelatie
   SELF.SetAlerts()
-  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-  NetLocalRefreshTime = clock()
   EnterByTabManager.Init(False)
   RETURN ReturnValue
 
@@ -324,16 +338,6 @@ ReturnValue          BYTE,AUTO
   END
   GlobalErrors.SetProcedureName
   RETURN ReturnValue
-
-
-ThisWindow.Reset PROCEDURE(BYTE Force=0)
-
-  CODE
-  SELF.ForcedReset += Force
-  IF QuickWindow{Prop:AcceptAll} THEN RETURN.
-    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-    NetLocalRefreshTime = clock()
-  PARENT.Reset(Force)
 
 
 ThisWindow.Run PROCEDURE(USHORT Number,BYTE Request)
@@ -452,9 +456,6 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
-    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
-      Self.Reset(1)                      ! NetTalk (NetRefresh)
-    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -465,76 +466,41 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
   RETURN ReturnValue
 
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-ExcelClass.SluitExcel       Procedure(Byte pCloseExcel)
-   Code
-   If pCloseExcel
-       Loc:Ole{'Application.Workbooks.Close'}
-   END     
-   Loc:Ole{'Application.Visible'}=true  ! nu pas excel laten zien
-   Loc:Ole{'Prop:Deactivate'}
-   Destroy(Loc:Ole)
-   RETURN
-ExcelClass.SchrijfExcel         Procedure(String pKolom,LONG pRij, String pValue)
-   Code
-   Loc:Ole{'Application.Range('&Clip(pKolom)&pRij&').Value'}=pValue
-   RETURN
-ExcelClass.MaakWerkBlad         Procedure(<String pWerkbladNaam>)
+ExcelClass.MaakWerkBlad         Procedure(<String PRM:WerkBladNaam>)
    Code
    Loc:Ole{'Application.ActiveWorkBook.Sheets.Add'}
-   IF pWerkbladNaam<>''
-    Loc:Ole{'Application.ActiveWorkBook.ActiveSheet.Name'}=Clip(pWerkbladNaam)
+   IF PRM:WerkBladNaam<>''
+    Loc:Ole{'Application.ActiveWorkBook.ActiveSheet.Name'}=Clip(PRM:WerkBladNaam)
    End
    ! Loc:Ole{'Application.ActiveWorkBook.Sheets.Select'}
    RETURN
-ExcelClass.BepaalKolom    Procedure(LONG pKolomNr)
+ExcelClass.NumberFormat            Procedure(String pKolomVanaf, LONG pRijVanaf, String pKolomTM, LONG pRijTM, String pNumberFormat)
+   Code
+   Case pNumberFormat 
+   OF  Self.Bedrag
+       Loc:Ole{'Application.Range('&CLIP(pKolomVanaf)&pRijVanaf&':'&CLIP(pKolomTM)&pRijTM&').NumberFormat'}='#.##0,00'
+   OF  Self.Datum
+       Loc:Ole{'Application.Range('&CLIP(pKolomVanaf)&pRijVanaf&':'&CLIP(pKolomTM)&pRijTM&').NumberFormat'}='m/d/yyyy'
+   ELSE
+       !! foutmelding 
+       IF Self.FullDebug = TRUE
+           MESSAGE('Onbekende NumberFormat '&pNumberFormat,'ExcelClass.NumberFormat')
+       END
+   END
+   RETURN
+ExcelClass.BepaalKolom    Procedure(LONG PRM:Kolom )
 PRM:KolomString  string(3)
 Loc:TweedeLetter    Long
 Loc:EersteLetter    Long
     CODE
-    pKolomNr-=1
-    Loc:TweedeLetter=pKolomNr  % 26
-    Loc:EersteLetter=Int(pKolomNr /26)
+    PRM:Kolom-=1
+    Loc:TweedeLetter=PRM:Kolom  % 26
+    Loc:EersteLetter=Int(PRM:Kolom /26)
 
     if Loc:EersteLetter<>0
        PRM:KolomString[1]=Chr(64+Loc:EersteLetter)       ! chr(65)= 'A'
@@ -544,7 +510,15 @@ Loc:EersteLetter    Long
     End
 
     RETURN(PRM:KolomString)
-ExcelClass.InitOle     Procedure
+ExcelClass.AutoFitColumns          Procedure(String pKolomVanaf, String pKolomTM)
+   Code
+   Loc:Ole{'Application.Columns('&CLIP(pKolomVanaf)&':'&CLIP(pKolomTM)&').AutoFit'}
+   RETURN
+ExcelClass.AutoFitRows          Procedure(LONG pRijVanaf,LONG pRijTM)
+   Code
+   Loc:Ole{'Application.Rows('&pRijVanaf&':'&pRijTM&').AutoFit'}
+   RETURN
+ExcelClass.InitOle     Procedure(<BYTE pDebug>)
     code
     Loc:Ole  = Create(0,Create:Ole)
     Loc:Ole{Prop:Create}='Excel.Application'
@@ -552,15 +526,33 @@ ExcelClass.InitOle     Procedure
     Loc:Ole{Prop:DoVerb}=1                               !  dit doet iedereen dus ik ook
     Loc:Ole{'Application.WindowState'}=1                 !  maximaliseer scherm
     Loc:Ole{'Application.Visible'}=True ! nu pas excel laten zien
+    IF pDebug
+        Loc:Ole{Prop:ReportException}=True
+        Self.FullDebug = TRUE
+    END
+    
     RETURN
 ExcelClass.MaakExcel       Procedure
     CODE
     Loc:Ole{'Application.Workbooks.Add'}            ! leeg worksheet openen
     RETURN
-ExcelClass.OpenExcel       Procedure(String pBestandsnaam)
+ExcelClass.OpenExcel       Procedure(String prm:Bestandsnaam)
     Code
-    Loc:Ole{'Application.Workbooks.Open ("'&pBestandsnaam&'")'}           ! leeg worksheet openen
+    Loc:Ole{'Application.Workbooks.Open ("'&prm:Bestandsnaam&'")'}           ! leeg worksheet openen
     RETURN
+ExcelClass.SluitExcel       Procedure(Byte PRM:Close)
+   Code
+   If PRM:Close
+       Loc:Ole{'Application.Workbooks.Close'}
+   END     
+   Loc:Ole{'Application.Visible'}=true  ! nu pas excel laten zien
+   Loc:Ole{'Prop:Deactivate'}
+   Destroy(Loc:Ole)
+   RETURN
+ExcelClass.SchrijfExcel         Procedure(String PRM:Kolom,LONG PRM:Rij, String PRM:Value)
+   Code
+   Loc:Ole{'Application.Range('&Clip(PRM:Kolom)&Prm:Rij&').Value'}=PRM:Value
+   RETURN
 
 BRW1.Fetch PROCEDURE(BYTE Direction)
 
@@ -570,6 +562,10 @@ GreenBarIndex   LONG,AUTO
   !----------------------------------------------------------------------
     LOOP GreenBarIndex=1 TO RECORDS(SELF.Q)
       GET(SELF.Q,GreenBarIndex)
+      SELF.Q.Rel:NietActief_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Rel:NietActief
+      SELF.Q.Rel:NietActief_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
+      SELF.Q.Rel:NietActief_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
+      SELF.Q.Rel:NietActief_SelectedBG = CHOOSE(GreenBarIndex % 2,-1,-1)
       SELF.Q.Rel:FirmaNaam_NormalFG   = CHOOSE(GreenBarIndex % 2,-1,-1) ! Set color values for Rel:FirmaNaam
       SELF.Q.Rel:FirmaNaam_NormalBG   = CHOOSE(GreenBarIndex % 2,-1,8454143)
       SELF.Q.Rel:FirmaNaam_SelectedFG = CHOOSE(GreenBarIndex % 2,-1,-1)
@@ -691,7 +687,16 @@ BRW1.SetQueueRecord PROCEDURE
   CODE
   PARENT.SetQueueRecord
   
+  IF (Rel:NietActief)
+    SELF.Q.Rel:NietActief_Icon = 2                         ! Set icon from icon list
+  ELSE
+    SELF.Q.Rel:NietActief_Icon = 1                         ! Set icon from icon list
+  END
   !----------------------------------------------------------------------
+      SELF.Q.Rel:NietActief_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Rel:NietActief
+      SELF.Q.Rel:NietActief_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
+      SELF.Q.Rel:NietActief_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
+      SELF.Q.Rel:NietActief_SelectedBG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)
       SELF.Q.Rel:FirmaNaam_NormalFG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1) ! Set color values for Rel:FirmaNaam
       SELF.Q.Rel:FirmaNaam_NormalBG   = CHOOSE(CHOICE(?Browse:1) % 2,-1,8454143)
       SELF.Q.Rel:FirmaNaam_SelectedFG = CHOOSE(CHOICE(?Browse:1) % 2,-1,-1)

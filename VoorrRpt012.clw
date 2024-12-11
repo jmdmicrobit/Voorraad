@@ -47,20 +47,13 @@ QuickWindow          WINDOW('Form Sjabloon'),AT(,,358,134),FONT('MS Sans Serif',
   TIP('Cancel operation')
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-PrimeUpdate            PROCEDURE(),BYTE,PROC,DERIVED
 Run                    PROCEDURE(),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
-TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -77,6 +70,7 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(Sjabloon:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -107,7 +101,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'UpdateSjabloon','VoorrRpt012.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'UpdateSjabloon','VoorrRpt012.clw','VoorrRpt.DLL','06/28/2024 @ 02:30PM')    
              
   GlobalErrors.SetProcedureName('UpdateSjabloon')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -116,9 +110,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?Sja:SjabloonID:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
-  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
+  SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(Sja:Record,History::Sja:Record)
   SELF.AddHistoryField(?Sja:SjabloonID,1)
@@ -143,7 +137,6 @@ ReturnValue          BYTE,AUTO
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
@@ -185,18 +178,6 @@ ReturnValue          BYTE,AUTO
   GlobalErrors.SetProcedureName
             
    
-  RETURN ReturnValue
-
-
-ThisWindow.PrimeUpdate PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  ReturnValue = PARENT.PrimeUpdate()
-    If returnValue = Level:Fatal  ! delete just occured
-      ThisNetRefresh.Send('|Sjabloon|Sjabloon|') ! NetTalk (NetRefresh)
-    End
   RETURN ReturnValue
 
 
@@ -242,26 +223,6 @@ Looped BYTE
   RETURN ReturnValue
 
 
-ThisWindow.TakeCompleted PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  ReturnValue = PARENT.TakeCompleted()
-    ThisNetRefresh.Send('|Sjabloon|Sjabloon|') ! NetTalk (NetRefresh)
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
 ThisWindow.TakeEvent PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -278,50 +239,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('UpdateSjabloon',UD.SetApplicationName('VoorrRpt','DLL'),QuickWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/28/2024 @ 02:30PM','10/11/2024 @ 01:54PM')  
     
        CYCLE
      END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

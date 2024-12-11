@@ -16,6 +16,7 @@
 !!! </summary>
 MainPlanning PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 Window               WINDOW('Caption'),AT(,,260,100),GRAY
@@ -35,6 +36,8 @@ TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
 Toolbar              ToolbarClass
 
   CODE
+? DEBUGHOOK(PartijCelVoorraad:Record)
+? DEBUGHOOK(ViewPartijCelLocaties:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -50,6 +53,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'MainPlanning','VoorrPln002.clw','VoorrPln.DLL','06/05/2020 @ 05:18PM')    
+             
   GlobalErrors.SetProcedureName('MainPlanning')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -64,8 +69,15 @@ ReturnValue          BYTE,AUTO
   Relate:ViewPartijCelLocaties.Open                        ! File ViewPartijCelLocaties used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('MainPlanning',Window)                      ! Restore window settings from non-volatile store
   SELF.SetAlerts()
   EnterByTabManager.Init(False)
@@ -87,6 +99,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('MainPlanning',Window)                   ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -106,9 +120,17 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('MainPlanning',UD.SetApplicationName('VoorrPln','DLL'),Window{PROP:Hlp},'10/06/2011 @ 04:05PM','06/05/2020 @ 05:18PM','10/11/2024 @ 01:54PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

@@ -56,10 +56,12 @@ Loc:IsTruckClear     BYTE                                  !
 Loc:IsPackingGoodsOK BYTE                                  ! 
 Loc:ISDriverDressedCorrectly BYTE                          ! 
 Loc:EC_LabelsOnTheGoods BYTE                               ! 
+Loc:ProductLabelsOnGoods BYTE                              ! 
 LOC:PalletSoort1     STRING(10)                            ! 
 LOC:PalletSoort5     STRING(10)                            ! 
 LOC:PalletSoort3     STRING(10)                            ! 
 LOC:PalletSoort6     STRING(10)                            ! 
+LOC:PalletSoort7     STRING(10)                            ! 
 LOC:PalletSoort1_OUT LONG                                  ! 
 LOC:PalletSoort2_OUT LONG                                  ! 
 LOC:PalletSoort3_IN  LONG                                  ! 
@@ -137,7 +139,8 @@ ProgressWindow       WINDOW('Progress....'),AT(,,393,389),FONT('Microsoft Sans S
                        CHECK('Is Truck Clean ?'),AT(195,287),USE(Loc:IsTruckClear)
                        CHECK('Is Packing Goods OK?'),AT(195,297),USE(Loc:IsPackingGoodsOK)
                        CHECK('Is Driver Dressed Correctly?'),AT(195,307),USE(Loc:ISDriverDressedCorrectly)
-                       CHECK('EC Labels On The Goods?'),AT(195,319),USE(Loc:EC_LabelsOnTheGoods)
+                       CHECK('EC Labels On The Goods?'),AT(195,318),USE(Loc:EC_LabelsOnTheGoods)
+                       CHECK('Product Labels On Goods?'),AT(195,328),USE(Loc:ProductLabelsOnGoods)
                        TEXT,AT(15,297,178,18),USE(LOC:Frankeringsvoorschrift)
                        TEXT,AT(213,48,171,26),USE(LOC:Transporteur)
                        TEXT,AT(213,78,171,26),USE(LOC:TransporteurExtra)
@@ -166,7 +169,7 @@ ProgressWindow       WINDOW('Progress....'),AT(,,393,389),FONT('Microsoft Sans S
                        STRING(@s10),AT(242,179,40),USE(LOC:PalletSoort1)
                        STRING(@s10),AT(242,194,40),USE(LOC:PalletSoort5)
                        STRING(@s10),AT(242,208,40),USE(LOC:PalletSoort3)
-                       STRING(@s10),AT(242,223,40),USE(LOC:PalletSoort6)
+                       STRING(@s10),AT(242,223,40),USE(LOC:PalletSoort7)
                        PROMPT('Transporteur:'),AT(81,376),USE(?PROMPT1)
                        COMBO(@s50),AT(127,376,108,8),USE(VTRA:FirmaNaam),DROP(5),FORMAT('100L(2)|M~Firmanaam~C' & |
   '(0)@s50@400L(2)|M~Plaats~C(0)@s100@'),FROM(Queue:FileDropCombo),IMM
@@ -210,7 +213,7 @@ PlanningDetail           DETAIL,AT(0,0,7115,2854),USE(?DETAIL1)
                            STRING(@s10),AT(4719,1771),USE(LOC:PalletSoort1)
                            STRING(@s10),AT(4719,2010),USE(LOC:PalletSoort5)
                            STRING(@s10),AT(4719,2250),USE(LOC:PalletSoort3)
-                           STRING(@s10),AT(4719,2490),USE(LOC:PalletSoort6)
+                           STRING(@s10),AT(4719,2490),USE(LOC:PalletSoort7)
                          END
                          FOOTER,AT(0,0,7120,3800),USE(?GROUPFOOTER1)
                            TEXT,AT(80,0,3440,1719),USE(LOC:Instructie)
@@ -222,13 +225,8 @@ PlanningDetail           DETAIL,AT(0,0,7115,2854),USE(?DETAIL1)
                          END
                        END
                      END
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(ReportManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Init                   PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 OpenReport             PROCEDURE(),BYTE,PROC,DERIVED
 Paused                 BYTE
@@ -257,6 +255,24 @@ SchrijfPalletMutatie    Procedure(LONG, LONG, LONG, LONG, LONG)
                     END
 
   CODE
+? DEBUGHOOK(APlanning:Record)
+? DEBUGHOOK(AViewArtikel:Record)
+? DEBUGHOOK(ArtikelOmschrijvingExtra:Record)
+? DEBUGHOOK(ArtikelOmschrijvingExtraGroep:Record)
+? DEBUGHOOK(CMR:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(PalletMutatie:Record)
+? DEBUGHOOK(PalletVerloop:Record)
+? DEBUGHOOK(Partij:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(RelatieAdres:Record)
+? DEBUGHOOK(RelatieArtikelOmschrijving:Record)
+? DEBUGHOOK(Transporteur:Record)
+? DEBUGHOOK(Verpakking:Record)
+? DEBUGHOOK(ViewArtikel:Record)
+? DEBUGHOOK(ViewTransporteur:Record)
+? DEBUGHOOK(Weging:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -714,7 +730,8 @@ SavePalletAdministratie     ROUTINE
     LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,1, LOC:PalletSoort1_IN, LOC:PalletSoort1_OUT)
     LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,5, LOC:PalletSoort2_IN, LOC:PalletSoort2_OUT)
     LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,3, LOC:PalletSoort3_IN, LOC:PalletSoort3_OUT)
-    LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,6, LOC:PalletSoort4_IN, LOC:PalletSoort4_OUT)
+    !LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,6, LOC:PalletSoort4_IN, LOC:PalletSoort4_OUT)
+    LocalClass.SchrijfPalletMutatie(LOC:VerkoopID, LOC:PlanningID,7, LOC:PalletSoort4_IN, LOC:PalletSoort4_OUT)
 !	! Bijwerken Pallet administratie
 !    palletsoort# = 1
 !
@@ -828,6 +845,9 @@ LoadPalletAdministratie     ROUTINE
 	   OF 6
 		 LOC:PalletSoort4_OUT = Pal:Uitgaand
 		 LOC:PalletSoort4_IN = Pal:Inkomend
+	   OF 7
+		 LOC:PalletSoort4_OUT = Pal:Uitgaand
+		 LOC:PalletSoort4_IN = Pal:Inkomend
 		.
 		
 		IF Pal:Transporteur = 1 THEN
@@ -844,7 +864,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportCMR','VoorrRpt010.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'ReportCMR','VoorrRpt010.clw','VoorrRpt.DLL','06/28/2024 @ 02:30PM')    
              
   GlobalErrors.SetProcedureName('ReportCMR')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -852,7 +872,8 @@ ReturnValue          BYTE,AUTO
   	Loc:IsTruckClear = TRUE
   	Loc:IsPackingGoodsOK = TRUE
   	Loc:ISDriverDressedCorrectly = TRUE
-  	Loc:EC_LabelsOnTheGoods = TRUE
+      Loc:EC_LabelsOnTheGoods = TRUE
+      Loc:ProductLabelsOnGoods = TRUE
   	Loc:Printer='Kies Printer'
   IF ReturnValue THEN RETURN ReturnValue.
   SELF.FirstField = ?Progress:Thermometer
@@ -951,7 +972,7 @@ ReturnValue          BYTE,AUTO
   		Loc:AfkomstAdres='Lierop, Holland     ' & CLIP(FORMAT(TODAY(),'@d17'))
   		LOC:ExtraDocumenten=''
   		LOC:Transporteur='Transport:<13><10>Truck:<13><10>Container:'
-  		LOC:TransporteurExtra=''
+  		LOC:TransporteurExtra='Seal:'
   		LOC:OpmerkingenVervoerder='Geboekt<13><10>Aankomst<13><10>Vertrek'
   
   		DO VulArtikelQueue
@@ -964,7 +985,8 @@ ReturnValue          BYTE,AUTO
   			LOC:Instructie = 'Temperatuur: -18° Celsius'
   		!END
   		
-  		LOC:SpecialeOvereenkomst = 'Officiële dierenarts<13><10>AEM vd Pluijm NL0859'
+  		!LOC:SpecialeOvereenkomst = 'Officiële dierenarts<13><10>AEM vd Pluijm NL0859'
+  		LOC:SpecialeOvereenkomst = ''
   		LOC:Frankeringsvoorschrift = 'Franco '& CLIP(LOC:AfleveringsPlaats)
   		LOC:OpgemaaktTe = 'Lierop, Holland     ' & CLIP(FORMAT(TODAY(),'@d17'))
   		LOC:HandtekeningStempelAfzender = 'Ven Poultry B.V.<13><10>P.O. Box 467<13><10>NL-5700 AL Helmond<13><10>Tel:+31 (0)492-537066<13><10>www.venpoultry.nl'
@@ -991,7 +1013,8 @@ ReturnValue          BYTE,AUTO
   		Loc:IsTruckClear=CMR:IsTruckClean
   		Loc:IsPackingGoodsOK=CMR:IsPackingGoodsOK
   		Loc:ISDriverDressedCorrectly=CMR:ISDriverDressedCorrectly
-  		Loc:EC_LabelsOnTheGoods=CMR:EC_LabelsOnTheGoods
+          Loc:EC_LabelsOnTheGoods=CMR:EC_LabelsOnTheGoods
+          Loc:ProductLabelsOnGoods=CMR:ProductLabelsOnGoods
   		LOC:OpgemaaktTe=CMR:OpgemaaktTe
   		LOC:HandtekeningStempelAfzender=CMR:HandtekeningStempelAfzender
   		LOC:Kenteken=CMR:Kenteken
@@ -1001,11 +1024,11 @@ ReturnValue          BYTE,AUTO
   	LOC:PalletSoort1 = 'H1'
   	LOC:PalletSoort5 = 'BLOK'
   	LOC:PalletSoort3 = 'Euro'
-  	LOC:PalletSoort6 = 'CHEP'
+  	LOC:PalletSoort6 = 'CHEP'       ! deze gebruiken we niet meer 2022-11-01
+  	LOC:PalletSoort7 = 'E2'       ! deze gebruiken we niet meer 2022-11-01
   		
   	DO LoadPalletAdministratie
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   Resizer.Init(AppStrategy:Surface)                        ! Controls like list boxes will resize, whilst controls like buttons will move
@@ -1040,13 +1063,6 @@ ReturnValue          BYTE,AUTO
   RETURN ReturnValue
 
 
-ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
-
-  CODE
-  PARENT.Init(PC,R,PV)
-  WinAlertMouseZoom()
-
-
 ThisWindow.Kill PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -1077,7 +1093,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportCMR',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('ReportCMR',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/28/2024 @ 02:30PM','10/11/2024 @ 01:54PM')  
     
   END
   RETURN ReturnValue
@@ -1091,9 +1107,9 @@ ReturnValue          BYTE,AUTO
       SAV:Printer=PRINTER{PROPPRINT:Device}
   	Case Loc:Printer
   	of 'Receptie'
-  		Loc:CMRPrinter=GETINI('Printer','CMR',,'.\Voorraad.ini')
+  		Loc:CMRPrinter=GETINI('Printer','CMR',,PQ:IniFile)
   	of 'Vrieshuis'
-          Loc:CMRPrinter=GETINI('Printer','CMR-Vrieshuis',,'.\Voorraad.ini')
+          Loc:CMRPrinter=GETINI('Printer','CMR-Vrieshuis',,PQ:IniFile)
           !SAV:PaperBin = PRINTER{PROPPRINT:PaperBin} ! Niet meer via deze prop regelen (vaak problemen), maar door deze printer in te stellen op de server met standaard deze paperbin
   		!PRINTER{PROPPRINT:PaperBin}=GETINI('Printer','CMR-Vrieshuis Lade',,'.\Voorraad.ini')
           !PRINTER{PROPPRINT:Copies}=GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini') ! werkt niet meer goed in de C8-versie?
@@ -1103,10 +1119,10 @@ ReturnValue          BYTE,AUTO
   	End
   ReturnValue = PARENT.OpenReport()
       If CLIP(LOC:Printer) = 'Vrieshuis' THEN
-          REPORT{PROPPRINT:Copies} = GETINI('Printer','CMR-Vrieshuis Kopie',1,'.\Voorraad.ini')    
+          REPORT{PROPPRINT:Copies} = GETINI('Printer','CMR-Vrieshuis Kopie',1,PQ:IniFile)    
       END
       If CLIP(LOC:Printer) = 'Receptie' THEN
-          REPORT{PROPPRINT:Copies} = GETINI('Printer','CMR Kopie',1,'.\Voorraad.ini')    
+          REPORT{PROPPRINT:Copies} = GETINI('Printer','CMR Kopie',1,PQ:IniFile)    
       END
   
       If Not RETURNValue				! Instructie memo vullen
@@ -1130,14 +1146,19 @@ ReturnValue          BYTE,AUTO
   		ELSE
   			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> EC Labels on the goods: No'
   		END
+  		if Loc:ProductLabelsOnGoods
+  			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Productlabels on the goods: Yes'
+  		ELSE
+  			LOC:Instructie = Clip(LOC:Instructie)&'<13><10> Productlabels on the goods: No'
+  		END
   
   		if LOC:AantalRegels > 7
   			LOC:ArtikelWide = Loc:Artikel
   			LOC:Artikel = ''
   		END
   		IF Loc:Printer= 'Vrieshuis'
-  			Loc:CMRnr=GETINI('Printer','CMRnr',0,'.\Voorraad.ini')
-  			PUTINI('Printer','CMRnr',Loc:CMRnr+1,'.\Voorraad.ini')
+  			Loc:CMRnr=GETINI('Printer','CMRnr',0,PQ:IniFile)
+  			PUTINI('Printer','CMRnr',Loc:CMRnr+1,PQ:IniFile)
   			! in de layout van de laserprinter moet alles 5 MM naar rechts = 0,200 Inch
   			Report$?Loc:Expediteur{PROP:Xpos}=Report$?Loc:Expediteur{PROP:Xpos}+200
   			Report$?Loc:Geadresseerde{Prop:Xpos}=Report$?Loc:Geadresseerde{Prop:Xpos}+200
@@ -1234,7 +1255,8 @@ Looped BYTE
       	CMR:IsTruckClean=Loc:IsTruckClear
       	CMR:IsPackingGoodsOK=Loc:IsPackingGoodsOK
       	CMR:ISDriverDressedCorrectly=Loc:ISDriverDressedCorrectly
-      	CMR:EC_LabelsOnTheGoods=Loc:EC_LabelsOnTheGoods
+      CMR:EC_LabelsOnTheGoods=Loc:EC_LabelsOnTheGoods
+      CMR:ProductLabelsOnGoods=Loc:ProductLabelsOnGoods
       	CMR:OpgemaaktTe=LOC:OpgemaaktTe
       	CMR:HandtekeningStempelAfzender=LOC:HandtekeningStempelAfzender
       	CMR:Kenteken=LOC:Kenteken
@@ -1287,7 +1309,8 @@ Looped BYTE
       	CMR:EC_LabelsOnTheGoods=Loc:EC_LabelsOnTheGoods
       	CMR:OpgemaaktTe=LOC:OpgemaaktTe
       	CMR:HandtekeningStempelAfzender=LOC:HandtekeningStempelAfzender
-      	CMR:Kenteken=LOC:Kenteken
+          CMR:Kenteken=LOC:Kenteken
+          CMR:ProductLabelsOnGoods=Loc:ProductLabelsOnGoods
       
       	IF (NOT(found#))
       		db.Debugout('CMR ' & LOC:VerkoopID & ' inserten:' & found#)
@@ -1326,9 +1349,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -1348,22 +1368,10 @@ Looped BYTE
       Looped = 1
     END
     CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
     OF EVENT:Timer
       IF SELF.Paused THEN RETURN Level:Benign .
     END
   ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

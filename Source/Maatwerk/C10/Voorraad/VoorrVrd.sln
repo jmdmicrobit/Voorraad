@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+# Clarion 2.1.0.2447
+Project("{12B76EC0-1D7B-4FA7-A7D0-C524288B48A1}") = "VoorrVrd", "VoorrVrd.cwproj", "{53C4F69C-F6D0-4557-89A7-29D4CF499522}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{{2150E333-8FDC-42A3-9474-1A3956D46DE8}}"
+	ProjectSection(SolutionItems) = postProject
+		VoorrVrd.app = VoorrVrd.app
+		VoorrDct.app = VoorrDct.app
+		VoorrPln.app = VoorrPln.app
+		VoorrRpt.app = VoorrRpt.app
+		VoorrStm.app = VoorrStm.app
+	EndProjectSection
+EndProject
+Project("{12B76EC0-1D7B-4FA7-A7D0-C524288B48A1}") = "VoorrDct", "VoorrDct.cwproj", "{148B4D9D-7E61-422E-B76E-8034DAC73042}"
+EndProject
+Project("{12B76EC0-1D7B-4FA7-A7D0-C524288B48A1}") = "VoorrPln", "VoorrPln.cwproj", "{9A0BC9CB-5F3D-411C-840C-EC207496F394}"
+EndProject
+Project("{12B76EC0-1D7B-4FA7-A7D0-C524288B48A1}") = "VoorrRpt", "VoorrRpt.cwproj", "{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}"
+EndProject
+Project("{12B76EC0-1D7B-4FA7-A7D0-C524288B48A1}") = "VoorrStm", "VoorrStm.cwproj", "{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53C4F69C-F6D0-4557-89A7-29D4CF499522}.Debug|Win32.Build.0 = Debug|Win32
+		{53C4F69C-F6D0-4557-89A7-29D4CF499522}.Debug|Win32.ActiveCfg = Debug|Win32
+		{53C4F69C-F6D0-4557-89A7-29D4CF499522}.Release|Win32.Build.0 = Release|Win32
+		{53C4F69C-F6D0-4557-89A7-29D4CF499522}.Release|Win32.ActiveCfg = Release|Win32
+		{148B4D9D-7E61-422E-B76E-8034DAC73042}.Debug|Win32.Build.0 = Debug|Win32
+		{148B4D9D-7E61-422E-B76E-8034DAC73042}.Debug|Win32.ActiveCfg = Debug|Win32
+		{148B4D9D-7E61-422E-B76E-8034DAC73042}.Release|Win32.Build.0 = Release|Win32
+		{148B4D9D-7E61-422E-B76E-8034DAC73042}.Release|Win32.ActiveCfg = Release|Win32
+		{9A0BC9CB-5F3D-411C-840C-EC207496F394}.Debug|Win32.Build.0 = Debug|Win32
+		{9A0BC9CB-5F3D-411C-840C-EC207496F394}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9A0BC9CB-5F3D-411C-840C-EC207496F394}.Release|Win32.Build.0 = Release|Win32
+		{9A0BC9CB-5F3D-411C-840C-EC207496F394}.Release|Win32.ActiveCfg = Release|Win32
+		{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}.Debug|Win32.Build.0 = Debug|Win32
+		{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}.Release|Win32.Build.0 = Release|Win32
+		{9BEE3D31-8468-461B-A69C-B3F9CCFB6D94}.Release|Win32.ActiveCfg = Release|Win32
+		{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}.Debug|Win32.Build.0 = Debug|Win32
+		{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}.Release|Win32.Build.0 = Release|Win32
+		{F2A09B76-3ADA-41E4-A0EC-1B26203C3CC0}.Release|Win32.ActiveCfg = Release|Win32
+	EndGlobalSection
+EndGlobal

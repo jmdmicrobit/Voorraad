@@ -20,6 +20,7 @@
 !!! </summary>
 BrowsePartijVoorraadVIEW PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 LOC:TempFormat       STRING(2000)                          ! 
 Loc:Start            LONG                                  ! 
 LOC:CelLocatieNamen  CSTRING('<0>{50}')                    ! 
@@ -62,6 +63,8 @@ Loc:PeilDatum        DATE                                  !
 Loc:RegelKG          LONG                                  ! 
 Loc:RegelVerkoop     REAL                                  ! 
 Loc:SaldoKG          DECIMAL(9,2)                          ! 
+Loc:NetRefreshByTimer BYTE                                 ! 
+Loc:Timer            LONG                                  ! 
 BRW2::View:Browse    VIEW(ViewVoorraadPartij_INDEXED)
                        PROJECT(VVParI:ArtikelID)
                        PROJECT(VVParI:ArtikelOms)
@@ -185,7 +188,7 @@ NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
 NetLocalRefreshTime     Long
 NetLocalDependancies    String('|ViewVoorraadPartij_INDEXED|ViewPlanningPartij|ViewVoorraadPartijTotaal|ViewPlanningPartijTotaal|')
 QuickWindow          WINDOW('Partij-Voorraad (View)'),AT(,,609,282),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),RESIZE, |
-  CENTER,GRAY,IMM,MAX,MDI,HLP('BrowseVoorraad'),SYSTEM
+  CENTER,GRAY,IMM,MAX,MDI,HLP('BrowseVoorraad'),SYSTEM,TIMER(100)
                        SHEET,AT(4,4,603,250),USE(?CurrentTab)
                          TAB('Partij-voorraden'),USE(?TAB1)
                            ENTRY(@s20),AT(364,30,88),USE(LOC:ZoekVak)
@@ -202,7 +205,7 @@ QuickWindow          WINDOW('Partij-Voorraad (View)'),AT(,,609,282),FONT('MS San
                        END
                        BUTTON('&Sluiten'),AT(555,257,49,14),USE(?Close),LEFT,ICON('WACLOSE.ICO'),FLAT,MSG('Close Window'), |
   TIP('Close Window')
-                       BUTTON('&Ververs Scherm'),AT(469,257,83,14),USE(?Close:2),LEFT,ICON('REFRESH.ICO'),FLAT,MSG('Close Window'), |
+                       BUTTON('&Ververs Scherm'),AT(469,257,83,14),USE(?Refresh),LEFT,ICON('REFRESH.ICO'),FLAT,MSG('Close Window'), |
   TIP('Close Window')
                        BUTTON('Partij-voorraad verloop'),AT(5,26),USE(?PartijVoorraadVerloop)
                        LIST,AT(5,47,587,199),USE(?List),HVSCROLL,FORMAT('[50L(2)|M*~ID~C(0)@s30@240L(2)|M*~Oms' & |
@@ -219,10 +222,6 @@ QuickWindow          WINDOW('Partij-Voorraad (View)'),AT(,,609,282),FONT('MS San
                        BUTTON('Excel'),AT(5,257,55,14),USE(?Excel),LEFT,ICON('Excel.ico')
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -240,6 +239,7 @@ Q                      &Queue:Browse                  !Reference to browse queue
 Fetch                  PROCEDURE(BYTE Direction),DERIVED
 ResetSort              PROCEDURE(BYTE Force),BYTE,PROC,DERIVED
 SetQueueRecord         PROCEDURE(),DERIVED
+SetSort                PROCEDURE(BYTE NewOrder,BYTE Force),BYTE,PROC,DERIVED
 ValidateRecord         PROCEDURE(),BYTE,DERIVED
                      END
 
@@ -252,11 +252,20 @@ Resizer              CLASS(WindowResizeClass)
 Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
                      END
 
+RefreshtijdSlotCs         RefreshtijdSlotClass
+    
+!RefreshtijdSlotCs         CLASS(RefreshtijdSlotClass),EXTERNAL,DLL(dll_mode)
+!                     END   
+           
 LocalClass          CLASS
 PartijVoorraadopPeilDatum       Procedure(*CString, Long, Long, *LONG, *REAL)
                     END
 
   CODE
+? DEBUGHOOK(AACel:Record)
+? DEBUGHOOK(AViewVoorraadCelTotaal:Record)
+? DEBUGHOOK(ViewPartijCelLocaties:Record)
+? DEBUGHOOK(ViewVoorraadPartij_INDEXED:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -313,9 +322,9 @@ VulCelKG ROUTINE
 	EXIT
 TrekLijntjes        ROUTINE
     If IGB:BekijkenPrijzen = 1 Then
-        Loc:Ole{'Application.Range(A'&Loc:Rij&':M'&Loc:Rij&').Select'}
+        Loc:Ole{'Application.Range(A'&Loc:Rij&':O'&Loc:Rij&').Select'}
     Else
-        Loc:Ole{'Application.Range(A'&Loc:Rij&':O'&Loc:Rij&').Select'}    
+        Loc:Ole{'Application.Range(A'&Loc:Rij&':N'&Loc:Rij&').Select'}    
     End
     
     Loc:Ole{'Application.Selection.Borders(9).Weight'}=2 ! xlEdgeBottom
@@ -328,9 +337,9 @@ TrekLijntjes        ROUTINE
     EXIT    
 Vet ROUTINE    
     If IGB:BekijkenPrijzen = 1 Then
-        Loc:Ole{'Application.Range(A'&Loc:Rij&':M'&Loc:Rij&').Font.Bold'}=True
-    Else
         Loc:Ole{'Application.Range(A'&Loc:Rij&':O'&Loc:Rij&').Font.Bold'}=True
+    Else
+        Loc:Ole{'Application.Range(A'&Loc:Rij&':N'&Loc:Rij&').Font.Bold'}=True
     End
     
     EXIT
@@ -341,6 +350,8 @@ ReturnValue          BYTE,AUTO
 
 TempFormat CSTRING(10000)
   CODE
+        udpt.Init(UD,'BrowsePartijVoorraadVIEW','VoorrVrd012.clw','VoorrVrd.DLL','02/21/2023 @ 02:18PM')    
+             
   GlobalErrors.SetProcedureName('BrowsePartijVoorraadVIEW')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -357,9 +368,9 @@ TempFormat CSTRING(10000)
   BIND('LOC:CelLocatieNamen',LOC:CelLocatieNamen)          ! Added by: BrowseBox(ABC)
   BIND('LOC:VoorraadKG',LOC:VoorraadKG)                    ! Added by: BrowseBox(ABC)
   BIND('Loc:SaldoKG',Loc:SaldoKG)                          ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -370,16 +381,28 @@ TempFormat CSTRING(10000)
   Relate:ViewPartijCelLocaties.Open                        ! File ViewPartijCelLocaties used by this procedure, so make sure it's RelationManager is open
   Relate:ViewVoorraadPartij_INDEXED.Open                   ! File ViewVoorraadPartij_INDEXED used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
-  LOC:PartijRoodkleurenNaDagen = GETINI('Voorraad','PartijRoodkleurenNaDagen',180,'.\Voorraad.ini')
+  LOC:PartijRoodkleurenNaDagen = GETINI('Voorraad','PartijRoodkleurenNaDagen',180,PQ:IniFile)
+  
+  Loc:Timer = GETINI('TIMER','Partij',100,PQ:IniFile)
   BRW2.Init(?List,Queue:Browse.ViewPosition,BRW2::View:Browse,Queue:Browse,Relate:ViewVoorraadPartij_INDEXED,SELF) ! Initialize the browse manager
   BRW2.SetUseMRP(False)
   SELF.Open(QuickWindow)                                   ! Open window
-  !0{Prop:Text}=CLIP(0{Prop:Text}) & '(' & CLIP(LEFT(FORMAT(GLO:PartijVoorraad_ThreadID,@N_10))) & ')'
-  
+! OKAY scherm is geopend wat is het tijdslot
+
+  TijdSlot#=RefreshtijdSlotCs.TijdSlotBoeken(GlobalErrors.GetProcedureName(), Loc:Timer)
+  CurrentTijdSlot#=Clock()%Loc:Timer
+  IF CurrentTijdSlot#<TijdSlot#
+        Timer#=TijdSlot#-CurrentTijdSlot#
+    ELSE
+        Timer#=Loc:Timer+TijdSlot#-CurrentTijdSlot#
+    END
+    UD.Debug('TijdSlot# '&TijdSlot#&' CurrentTijdSlot# '&CurrentTijdSlot#&' Timer# '&Timer#)
+    0{Prop:Timer}=Timer#
+
   IF IGB:BekijkenPrijzen <> 1 THEN
-  	! Prijzen niet tonen, format string wijzigen 53R(2)|M*~Inkoop KG-Prijs
+      ! Prijzen niet tonen, format string wijzigen 53R(2)|M*~Inkoop KG-Prijs
       startidx# = INSTRING(CLIP('Inkoop KG-Prijs'), CLIP(?List{PROP:Format}), 1, 1)
-  
+
       IF (startidx# - 10 > 0)
           ! Gevonden
           TempFormat = ?List{PROP:Format}
@@ -387,8 +410,8 @@ TempFormat CSTRING(10000)
           !?List{PROP:Format} = SUB(TempFormat, 1, (startidx# - 10) - 1) & '0' & SUB(TempFormat, (startidx# - 10) + 2, LEN(TempFormat) - (startidx# - 10) + 2)
       END
   END
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW2.Q &= Queue:Browse
   BRW2.FileLoaded = 1                                      ! This is a 'file loaded' browse
   BRW2.AddSortOrder(,VVParI:ArtikelOms_PartijID_CelID_K)   ! Add the sort order for VVParI:ArtikelOms_PartijID_CelID_K for sort order 1
@@ -467,13 +490,17 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowsePartijVoorraadVIEW',QuickWindow)  ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
 ThisWindow.Reset PROCEDURE(BYTE Force=0)
 
   CODE
-  FREE(CelLocatieQueue)
+  !UD.Debug('ThisWindow.Reset('&Force&') Choice(?CurrentTab):'&Choice(?CurrentTab)&' NetLocalRefreshDate:'&Format(NetLocalRefreshDate,@d6-)&'NetLocalRefreshTime'&Format(NetLocalRefreshTime,@t4))
+     
+        !FREE(CelLocatieQueue)          ! TODO FREE(CelLocatieQueue)
   SELF.ForcedReset += Force
   IF QuickWindow{Prop:AcceptAll} THEN RETURN.
     NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
@@ -551,8 +578,13 @@ Looped BYTE
     END
   ReturnValue = PARENT.TakeAccepted()
     CASE ACCEPTED()
-    OF ?Close:2
+    OF ?Refresh
       ThisWindow.Update()
+      ?Refresh{PROP:Font}=Font:Regular
+      ?Refresh{PROP:FontColor}=Color:None
+      ?Refresh{Prop:Flat}=TRUE
+      !0{Prop:Timer}=Loc:Timer                     ! eens kijken of dit werkt dan wordt de timer meer random
+      
       ThisWindow.Reset(1)
     OF ?Overboeken2
       ThisWindow.Update()
@@ -580,6 +612,29 @@ ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
+    ! Netrefesh
+    IF Event()=1170           ! Refresh is Send
+       UD.DebugEvent()
+       
+        IF Choice(?CurrentTab)=2                ! dit is op peildatum dan geen refresh accepteren
+                ! do nothing
+           ?Refresh{PROP:Font}=Font:Bold
+           ?Refresh{PROP:FontColor}=Color:Red
+            LogSetSort('Voorraad','NeedReset color Refresh Button ')                
+        ELSE 
+            Loc:NetRefreshByTimer=RANDOM(1,5)
+            UD.Debug('NetLocalRefreshDate: '&Format(NetLocalRefreshDate,@d6-)&', NetLocalRefreshTime: '&Format(NetLocalRefreshTime,@t4)&|
+            ', ThisNetRefresh.Date: '&Format(ThisNetRefresh.Date,@d6-)&' ThisNetRefresh.Time: '& Format(ThisNetRefresh.Time,@t4)&|
+                ' WaitThisLong: '&ThisNetRefresh.WaitThisLong&' Loc:NetRefreshByTimer: '&Loc:NetRefreshByTimer&' Loc:Timer: '&Loc:Timer)
+              ?Refresh{PROP:Font}=Font:Bold
+              ?Refresh{PROP:FontColor}=Color:Red
+              ?Refresh{PROP:Background}=COLOR:Lime
+              ?Refresh{Prop:Flat}=TRUE
+        END  
+        RETURN Level:Notify
+    END  
+          
+  
     If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
       Self.Reset(1)                      ! NetTalk (NetRefresh)
     End
@@ -593,9 +648,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowsePartijVoorraadVIEW',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/02/2012 @ 02:05PM','02/21/2023 @ 02:18PM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -614,16 +674,6 @@ Looped BYTE
     ELSE
       Looped = 1
     END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
   ReturnValue = PARENT.TakeWindowEvent()
     CASE EVENT()
     OF EVENT:Notify
@@ -632,8 +682,24 @@ Looped BYTE
         !IF LOC:NotifyCode = 1 THEN
             ThisWindow{Prop:Active} = 1
         !END
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
+    OF EVENT:Timer
+      UD.Debug('Timer Event Loc:NetRefreshByTimer:'&Loc:NetRefreshByTimer&' Prop:Timer '&0{Prop:Timer}& ' Loc:Timer '&Loc:Timer)
+      IF 0{Prop:Timer} <>0
+          0{Prop:Timer}=Loc:Timer
+      END
+      
+      IF Loc:NetRefreshByTimer
+          0{Prop:Timer}=0
+          
+          ?Refresh{PROP:Font}=Font:Regular
+          ?Refresh{PROP:FontColor}=Color:None
+          ?Refresh{Prop:Flat}=TRUE
+          
+          ThisWindow.Reset(1)
+          
+          Loc:NetRefreshByTimer = FALSE
+          0{Prop:Timer}=Loc:Timer
+      END
     END
     RETURN ReturnValue
   END
@@ -647,11 +713,12 @@ ThisWindow.Export2Excel PROCEDURE(LONG pTab, STRING pSortering)
   CODE
   !ThisWindow.Export2Excel PROCEDURE(LONG pTab, STRING pSortering) - CODE
   !Message('Export2Excel PROCEDURE(LONG pTab = '& pTab &', STRING pSortering = '''& pSortering &''') - QRec = '& Records(BRW2.Q))
-  db.DebugOut('Export2Excel PROCEDURE(LONG pTab = '& pTab &', STRING pSortering = '''& pSortering &''')')
+  !db.DebugOut('Export2Excel PROCEDURE(LONG pTab = '& pTab &', STRING pSortering = '''& pSortering &''')')
+  
   SETCURSOR(CURSOR:Wait)
   GlobalClass.InitExcelOle
   GlobalClass.MaakExcel('')
-      
+     
   !Loc:Ole{'Sheets.Add'}
   Case pTab
   Of 1
@@ -697,32 +764,66 @@ ThisWindow.Export2Excel PROCEDURE(LONG pTab, STRING pSortering)
   
   Do Vet        
   !Do TrekLijntjes        
+  
+  Set(BRW2::View:Browse)              ! de View nemen omdat de Queu Page Loaded is...
+  Loop 
+      Next(BRW2::View:Browse)
+      IF ERROR() THEN BREAK.
+  !END
+  !
+  !LOOP i# = 1 TO Records(BRW2.Q)
+  !    GET(BRW2.Q, i#)
+  !    If Error() Then Break.
+      UD.Debug('CHOICE(?CurrentTab):'& CHOICE(?CurrentTab)&' VVParI:ArtikelID: '&VVParI:ArtikelID&' VVParI:PartijID:'&VVParI:PartijID)
+      IF CHOICE(?CurrentTab)=2 AND Loc:PeilDatum<>TODAY()
+          ! getVoorraad met peildatum
+          LocalClass.PartijVoorraadopPeilDatum(VVParI:ArtikelID ,VVParI:PartijID ,VVParI:CelID , |
+              Loc:RegelKG, Loc:RegelVerkoop)
           
-  LOOP i# = 1 TO Records(BRW2.Q)
-      GET(BRW2.Q, i#)
-      If Error() Then Break.
+          db.DebugOut('ValQ '&CHOICE(?CurrentTab)&' '&Loc:RegelKG&'-'&|
+              Loc:RegelVerkoop&' '&VVParI:ArtikelID&' ,'&VVParI:PartijID&' ,'&VVParI:CelID&|
+              ', '&LOC:VoorraadKG&', '&VPPar:VerkoopKG)
+          
+          IF Loc:RegelKG = Loc:RegelVerkoop THEN CYCLE.
+      ELSE
+          IF VVParI:InslagKG=VVParI:UitslagKG AND VPPar:VerkoopKG = 0 THEN CYCLE.
+      END
       
       Loc:Rij+=1
-      Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}=BRW2.Q.VVParI:ArtikelID    
-      Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}=BRW2.Q.VVParI:ArtikelOms
+      Loc:Ole{'Application.Range(A'&Loc:Rij&').Value'}=VVParI:ArtikelID    
+      Loc:Ole{'Application.Range(B'&Loc:Rij&').Value'}=VVParI:ArtikelOms
   
-      Loc:Ole{'Application.Range(C'&Loc:Rij&').Value'}=BRW2.Q.VVParI:PartijID
-      Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}=BRW2.Q.VVParI:ExternPartijnr
-      Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}=BRW2.Q.VVParT:VoorraadKG
-      Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=BRW2.Q.VPParT:VerkoopKG
+      Loc:Ole{'Application.Range(C'&Loc:Rij&').Value'}=VVParI:PartijID
+      Loc:Ole{'Application.Range(D'&Loc:Rij&').Value'}=VVParI:ExternPartijnr
+      Loc:Ole{'Application.Range(E'&Loc:Rij&').Value'}=VVParT:VoorraadKG
+      Loc:Ole{'Application.Range(F'&Loc:Rij&').Value'}=VPParT:VerkoopKG
+      ! uit de validate Queue
   
-      Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}=BRW2.Q.VVParI:CelOms
-      Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}=BRW2.Q.LOC:CelLocatieNamen
-      Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}=BRW2.Q.LOC:VoorraadKG
-      Loc:Ole{'Application.Range(J'&Loc:Rij&').Value'}=BRW2.Q.VPPar:VerkoopKG
-      Loc:Ole{'Application.Range(K'&Loc:Rij&').Value'}=BRW2.Q.Loc:SaldoKG
+      ! uit de SetQueue
+      IF CHOICE(?CurrentTab)=2 AND Loc:PeilDatum<>TODAY()
+              ! getVoorraad met peildatum
+          !LocalClass.PartijVoorraadopPeilDatum(VVParI:ArtikelID ,VVParI:PartijID ,VVParI:CelID,  VVParT:VoorraadKG, VPParT:VerkoopKG, LOC:VoorraadKG, VPPar:VerkoopKG)
+          LOC:VoorraadKG = Loc:RegelKG
+          !VPPar:VerkoopKg=Loc:RegelVerkoop
+         ! db.DebugOut('SetQ '&CHOICE(?CurrentTab)&' '&Loc:RegelKG&'-'&Loc:RegelVerkoop)
+      ELSE
+          LOC:VoorraadKG = VVParI:InslagKG - VVParI:UitslagKG
+      END
+      LOC:CelLocatieNamen = CLIP(CachingClass.GetCelLocatieNaam(VVParI:PartijID, VVParI:CelID))
+      Loc:SaldoKG=LOC:VoorraadKG-VPPar:VerkoopKG    
+      
+      Loc:Ole{'Application.Range(G'&Loc:Rij&').Value'}=VVParI:CelOms
+      Loc:Ole{'Application.Range(H'&Loc:Rij&').Value'}=LOC:CelLocatieNamen
+      Loc:Ole{'Application.Range(I'&Loc:Rij&').Value'}=LOC:VoorraadKG
+      Loc:Ole{'Application.Range(J'&Loc:Rij&').Value'}=VPPar:VerkoopKG
+      Loc:Ole{'Application.Range(K'&Loc:Rij&').Value'}=Loc:SaldoKG
   
-      Loc:Ole{'Application.Range(L'&Loc:Rij&').Value'}=Format(BRW2.Q.VVParI:AanmaakDatum_DATE,@D06-)
-      Loc:Ole{'Application.Range(M'&Loc:Rij&').Value'}=BRW2.Q.VVParI:VerpakkingOmschrijving
-      Loc:Ole{'Application.Range(N'&Loc:Rij&').Value'}=BRW2.Q.VVParI:LeverancierFirmanaam
+      Loc:Ole{'Application.Range(L'&Loc:Rij&').Value'}=Format(VVParI:AanmaakDatum_DATE,@D06-)
+      Loc:Ole{'Application.Range(M'&Loc:Rij&').Value'}=VVParI:VerpakkingOmschrijving
+      Loc:Ole{'Application.Range(N'&Loc:Rij&').Value'}=VVParI:LeverancierFirmanaam
       
       If IGB:BekijkenPrijzen = 1 Then
-          Loc:Ole{'Application.Range(O'&Loc:Rij&').Value'}=FORMAT(BRW2.Q.VVParI:BerekendeInkoopKGPrijs, @n-13`2)
+          Loc:Ole{'Application.Range(O'&Loc:Rij&').Value'}=FORMAT(VVParI:BerekendeInkoopKGPrijs, @n-13`2)
       End
       
       Do TrekLijntjes
@@ -795,12 +896,12 @@ CODE
             'END) AS pallets, '&|
         '0 AS VerkoopKG, '&|
         '0 AS VerkoopPallet, '&|
-        'dbo.ViewArtikel.ArtikelOms FROM dbo.Mutatie INNER JOIN ' & |
-	'dbo.ViewArtikel ON dbo.Mutatie.ArtikelID = dbo.ViewArtikel.ArtikelID LEFT OUTER JOIN ' & |
+        'dbo.Artikel_SyncExact.ArtikelOms FROM dbo.Mutatie INNER JOIN ' & |
+	'dbo.Artikel_SyncExact ON dbo.Mutatie.ArtikelID = dbo.Artikel_SyncExact.ArtikelID LEFT OUTER JOIN ' & |
 	'dbo.Partij ON dbo.Mutatie.PartijID = dbo.Partij.PartijID ' & |
         'WHERE dbo.Mutatie.ArtikelID = <39>'&pArtikelID&'<39> AND dbo.Mutatie.PartijID = '&pPartijID& |
         ' AND dbo.Mutatie.CelID = '&pCelID&' AND (dbo.Mutatie.DatumTijd is NULL OR dbo.Mutatie.DatumTijd <= ' & CHR(39) & CLIP(FORMAT(LOC:PeilDatum,@d2-)) & ' 23:59' & CHR(39) & ') ' & |
-	'GROUP BY dbo.Mutatie.CelID, dbo.Mutatie.ArtikelID, dbo.ViewArtikel.ArtikelOms ' & |
+	'GROUP BY dbo.Mutatie.CelID, dbo.Mutatie.ArtikelID, dbo.Artikel_SyncExact.ArtikelOms ' & |
         'ORDER BY dbo.Mutatie.CelID'
     IF ERRORCODE()=90
         Message('File Error '&FILEERROR())
@@ -1006,6 +1107,21 @@ BRW2.SetQueueRecord PROCEDURE
   !----------------------------------------------------------------------
 
 
+BRW2.SetSort PROCEDURE(BYTE NewOrder,BYTE Force)
+
+ReturnValue          BYTE,AUTO
+
+_starttijd              TIME
+  CODE
+  _starttijd = CLOCK()
+  ReturnValue = PARENT.SetSort(NewOrder,Force)
+  IF ReturnValue
+      LogSetSort('Voorraad','NewOrder: '&NewOrder&' Force: '&Force& ' ReturnValue: '&ReturnValue&' '&(Clock()-_starttijd)/100&' sec')
+      Free(CelLocatieQueue)
+  END
+  RETURN ReturnValue
+
+
 BRW2.ValidateRecord PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -1046,5 +1162,4 @@ Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize
   SELF.SetStrategy(?LOC:PartijVoorraadSortering:Prompt, Resize:FixRight+Resize:FixTop, Resize:LockSize) ! Override strategy for ?LOC:PartijVoorraadSortering:Prompt
   SELF.SetStrategy(?LOC:PartijVoorraadSortering, Resize:FixRight+Resize:FixTop, Resize:LockSize) ! Override strategy for ?LOC:PartijVoorraadSortering
   SELF.SetStrategy(?Close, Resize:FixRight+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?Close
-  SELF.SetStrategy(?Close:2, Resize:FixRight+Resize:FixBottom, Resize:LockSize) ! Override strategy for ?Close:2
 

@@ -18,6 +18,7 @@
 !!! </summary>
 WijzigLocatie PROCEDURE (LONG PRM:PartijID,LONG PRM:CelID)
 
+udpt            UltimateDebugProcedureTracker
 LOC:PartijID         LONG                                  ! 
 Loc:CelKG            LONG                                  ! 
 Loc:CelPallet        LONG                                  ! 
@@ -42,6 +43,7 @@ Loc:HuidgeCelLocatieNamen CSTRING(255)                     !
 Loc:HuidigeCelNaam   CSTRING(51)                           ! 
 Loc:HuidigeCelLocatieID LONG                               ! 
 Loc:GekozenCel       STRING(20)                            ! 
+Loc:TempCelID        LONG                                  ! 
 Loc:HuidigeLocatieQ  QUEUE,PRE(HLQ)                        ! 
 LocatieNaam          CSTRING(51)                           ! 
 KG                   LONG                                  ! 
@@ -59,7 +61,7 @@ CelLocatieID         LONG                                  !
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 QuickWindow          WINDOW('Cel / Locatie wijzigen'),AT(,,436,168),FONT('MS Sans Serif',8,,FONT:regular,CHARSET:DEFAULT), |
-  DOUBLE,CENTER,GRAY,IMM,HLP('WijzigLocatie'),SYSTEM
+  DOUBLE,CENTER,GRAY,IMM,MDI,MODAL,HLP('WijzigLocatie'),SYSTEM
                        GROUP('Cel / Partij'),AT(4,4,169,46),USE(?GROUP1),BOXED,TRN
                        END
                        PROMPT('Huidige Cel:'),AT(9,12),USE(?PROMPT3:2)
@@ -164,10 +166,6 @@ SetReadOnly            PROCEDURE(BYTE State),DERIVED            ! Method added t
 TakeAccepted           PROCEDURE(BYTE Action),BYTE,DERIVED      ! Method added to host embed code
 TakeEvent              PROCEDURE(UNSIGNED Event),BYTE,DERIVED   ! Method added to host embed code
                      END
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -175,7 +173,6 @@ Reset                  PROCEDURE(BYTE Force=0),DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
 TakeFieldEvent         PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -185,6 +182,12 @@ Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWin
 
 
   CODE
+? DEBUGHOOK(Cel:Record)
+? DEBUGHOOK(CelLocatie:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(ViewPartijCelLocaties:Record)
+? DEBUGHOOK(ViewVoorraadPartij_INDEXED:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -261,6 +264,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'WijzigLocatie','VoorrVrd009.clw','VoorrVrd.DLL','02/01/2024 @ 03:08PM')    
+             
   GlobalErrors.SetProcedureName('WijzigLocatie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -268,9 +273,9 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?PROMPT3:2
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Ok,RequestCancelled)                    ! Add the close control to the window manger
   ELSE
@@ -280,6 +285,8 @@ ReturnValue          BYTE,AUTO
   Relate:Cel.SetOpenRelated()
   Relate:Cel.Open                                          ! File Cel used by this procedure, so make sure it's RelationManager is open
   Relate:Mutatie.Open                                      ! File Mutatie used by this procedure, so make sure it's RelationManager is open
+  Relate:Planning.SetOpenRelated()
+  Relate:Planning.Open                                     ! File Planning used by this procedure, so make sure it's RelationManager is open
   Relate:ViewPartijCelLocaties.Open                        ! File ViewPartijCelLocaties used by this procedure, so make sure it's RelationManager is open
   Relate:ViewVoorraadPartij_INDEXED.Open                   ! File ViewVoorraadPartij_INDEXED used by this procedure, so make sure it's RelationManager is open
   Access:CelLocatie.UseFile                                ! File referenced in 'Other Files' so need to inform it's FileManager
@@ -321,8 +328,8 @@ ReturnValue          BYTE,AUTO
   
   
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   Resizer.Init(AppStrategy:Surface,Resize:SetMinSize)      ! Controls like list boxes will resize, whilst controls like buttons will move
   SELF.AddItem(Resizer)                                    ! Add resizer to window manager
   INIMgr.Fetch('WijzigLocatie',QuickWindow)                ! Restore window settings from non-volatile store
@@ -360,6 +367,7 @@ ReturnValue          BYTE,AUTO
   IF SELF.FilesOpened
     Relate:Cel.Close
     Relate:Mutatie.Close
+    Relate:Planning.Close
     Relate:ViewPartijCelLocaties.Close
     Relate:ViewVoorraadPartij_INDEXED.Close
   END
@@ -367,6 +375,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('WijzigLocatie',QuickWindow)             ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -401,6 +411,19 @@ Looped BYTE
     CASE ACCEPTED()
     OF ?Ok
       ThisWindow.Update()
+      ! Eerst controle of alle CelID zijn gevuld
+      CelIDZero#=FALSE
+      Loop i#=1 to Records(Loc:NaarLocatieQ)
+          Get(Loc:NaarLocatieQ,i#)
+          IF NLQ:CelID = 0
+              Message('In regel: '&i#&' is de CelID gelijk aan 0','Controle correctie',ICON:Cross)
+              CelIDZero# = TRUE
+              BREAK                 
+          END
+      END
+      IF CelIDZero# = TRUE
+          CYCLE
+      END    
       ! Mutaties toevoegen voor het overboeken
       CLEAR(Mut:Record)
       Access:Mutatie.PrimeRecord(false)
@@ -421,6 +444,7 @@ Looped BYTE
       GLO:GebruikerLogHandelingOpmerking='Corrigeer Cel/Locatie van'	
       Access:Mutatie.Insert()
       
+      Clear(Loc:TempCelID)
       Loop i#=1 to Records(Loc:NaarLocatieQ)
           Get(Loc:NaarLocatieQ,i#)
           ! (1) Eerst  OUIT-mutatie
@@ -430,6 +454,9 @@ Looped BYTE
           Mut:DatumTijd_TIME=CLOCK()
           Mut:PartijID=PRM:PartijID
           Mut:CelID=NLQ:CelID
+          IF Loc:TempCelID=0
+             Loc:TempCelID=NLQ:CelID
+          END
           Mut:CelLocatieID=NLQ:CelLocatieID
           Mut:InslagKG=NLQ:Kg
           Mut:InslagPallet=NLQ:Pallet
@@ -442,7 +469,20 @@ Looped BYTE
           Mut:PlanningID=0
           GLO:GebruikerLogHandelingOpmerking='Corrigeer Cel/Locatie naar'	
           Access:Mutatie.Insert()
+      END
       
+      
+      ! Als er een Verkoopplanning dan, de cel overnemen
+      if Loc:TempCelID
+          Clear(Pla:Record)
+          Set(Pla:PK_Planning,Pla:PK_Planning)
+          Planning{Prop:Where}='ArtikelID = <39>'&CLIP(VVParI:ArtikelID)&'<39> AND PartijID = '&PRM:PartijID&' AND MutatieGemaakt = 0 AND CelID='&PRM:CelID&|
+              ' AND InkoopID=0'
+          Loop UNTIL Access:Planning.Next()
+              Pla:CelID = Loc:TempCelID
+              Access:Planning.Update()
+          END
+          Set(Pla:PK_Planning,Pla:PK_Planning)
       END
     OF ?Loc:HuidgeCelLocatieNamen
           ! Huidige cellocatie opslaan
@@ -518,9 +558,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('WijzigLocatie',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/07/2011 @ 08:55AM','02/01/2024 @ 03:08PM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -560,39 +605,6 @@ Looped BYTE
   RETURN ReturnValue
 
 
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
 Resizer.Init PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
 
 
@@ -622,8 +634,8 @@ QEIP3:EM.Init                  PROCEDURE
 RetVal BYTE(RequestCancelled)
 AtEnd  BYTE,AUTO
   CODE
-  SELF.TabAction = EIPAction:Always+EIPAction:Remain
-  SELF.EnterAction = EIPAction:Always+EIPAction:Remain
+  SELF.TabAction = EIPAction:Always
+  SELF.EnterAction = EIPAction:Always
   SELF.FocusLossAction = EIPAction:Always
   SELF.ArrowAction = EIPAction:Always+EIPAction:Remain
   SELF.Insert = EIPAction:Append
@@ -849,8 +861,8 @@ QEIP3::NLQ:CelOmschrijving.CreateControl    PROCEDURE
   PARENT.CreateControl()
       ! De Cel dropdown vullen
   Self.Feq{Prop:From}=LCQ:CelNaam
-  Self.Feq{Prop:Drop}=20
-  Self.Feq{PROP:Width}=100
+  Self.Feq{Prop:Drop}=25
+  Self.Feq{PROP:Width}=200
   !Self.Feq{Prop:Use}=Loc:GekozenCel
   RETURN
 
@@ -879,12 +891,14 @@ ReturnValue BYTE
   CODE
   ReturnValue = PARENT.TakeAccepted(Action)
   ! welke cel heb ik gekozen ?Loc:NaarLocatieQ.NLQ:CelOmschrijving
+  UD.Debug(Loc:NaarLocatieQ.NLQ:CelOmschrijving)
   LCQ:CelNaam=Loc:NaarLocatieQ.NLQ:CelOmschrijving
   Get(Loc:CelQ,+LCQ:CelNaam)
   IF ERROR()
       Message('Error '&Loc:NaarLocatieQ.NLQ:CelOmschrijving&' error '&Error())
   END 
   NLQ:CelID=LCQ:CelID
+  
   Free(Loc:CelLocatieQ)
   Clear(CL:Record)
   CL:CelID=LCQ:CelID
@@ -893,13 +907,17 @@ ReturnValue BYTE
       IF NOT CL:CelID=LCQ:CelID THEN BREAK.
       CLQ:LocatieNaam=CL:Locatienaam
       CLQ:CelLocatieID=CL:CelLocatieID
-      CLQ:CelID=LCQ:CelID
+      !CLQ:CelID=LCQ:CelID      ! TODO nog nakijken naar de Q definite
       Add(Loc:CelLocatieQ)
   END
   
-  QEIP3::NLQ:LocatieNaam.Feq{Prop:From}=CLQ:LocatieNaam
-  QEIP3::NLQ:LocatieNaam.Feq{Prop:Drop}=20
-  QEIP3::NLQ:LocatieNaam.Feq{PROP:Width}=100
+  IF RECORDS(Loc:CelLocatieQ)=0
+      QEIP3::NLQ:LocatieNaam.Feq{Prop:Drop}=0
+  ELSE    
+      QEIP3::NLQ:LocatieNaam.Feq{Prop:From}=CLQ:LocatieNaam
+      QEIP3::NLQ:LocatieNaam.Feq{Prop:Drop}=20
+      QEIP3::NLQ:LocatieNaam.Feq{PROP:Width}=100
+  END
   RETURN(ReturnValue)
 
 QEIP3::NLQ:CelOmschrijving.TakeEvent    PROCEDURE(UNSIGNED Event)
@@ -938,14 +956,24 @@ QEIP3::NLQ:LocatieNaam.SetReadOnly    PROCEDURE(BYTE State)
 QEIP3::NLQ:LocatieNaam.TakeAccepted    PROCEDURE(BYTE Action)
 ReturnValue BYTE
   CODE
+        
   ReturnValue = PARENT.TakeAccepted(Action)
-  ! welke cel heb ik gekozen ?Loc:NaarLocatieQ.NLQ:CelOmschrijving
-  CLQ:LocatieNaam=Loc:NaarLocatieQ.NLQ:LocatieNaam
-  Get(Loc:CelLocatieQ,+CLQ:LocatieNaam)
-  IF ERROR()
-      Message('Error '&Loc:NaarLocatieQ.NLQ:LocatieNaam&' error '&Error())
-  END 
-  NLQ:CelLocatieID=CLQ:CelLocatieID
+  ! welke Locatie heb ik gekozen ?Loc:NaarLocatieQ.NLQ:CelOmschrijving
+  IF RECORDS(Loc:CelLocatieQ)=0
+      NLQ:CelLocatieID=0
+  ELSE    
+      IF Loc:NaarLocatieQ.NLQ:LocatieNaam<>''
+          CLQ:LocatieNaam=Loc:NaarLocatieQ.NLQ:LocatieNaam
+          Get(Loc:CelLocatieQ,+CLQ:LocatieNaam)
+          IF ERROR()
+              Message('Error '&Loc:NaarLocatieQ.NLQ:LocatieNaam&' error '&Error())
+          END 
+          NLQ:CelLocatieID=CLQ:CelLocatieID
+        ELSE
+          Message('Cel locaties bestaan, dan ook verplicht om in te vullen','Cellocatie',ICON:Cross)
+          RETURN Level:Cancel
+      END
+  END
   RETURN(ReturnValue)
 
 QEIP3::NLQ:LocatieNaam.TakeEvent    PROCEDURE(UNSIGNED Event)

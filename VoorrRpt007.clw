@@ -47,14 +47,9 @@ Detail                 DETAIL,AT(0,0),USE(?Detail)
                          STRING(@s255),AT(0,0,7365),USE(Loc:AansturingsString)
                        END
                      END
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ReportMemoryRecords     BYTE(0)                            ! Used to do the first Next call
 ThisWindow           CLASS(ReportManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Init                   PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 Next                   PROCEDURE(),BYTE,PROC,DERIVED
 OpenReport             PROCEDURE(),BYTE,PROC,DERIVED
@@ -73,6 +68,7 @@ TakeRecord             PROCEDURE(),BYTE,PROC,DERIVED
 ProgressMgr          StepLongClass                         ! Progress Manager
 
   CODE
+? DEBUGHOOK(Partij:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
   RETURN(Loc:AantalPallets)
 
@@ -89,7 +85,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportPalletStickers','VoorrRpt007.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'ReportPalletStickers','VoorrRpt007.clw','VoorrRpt.DLL','06/28/2024 @ 02:30PM')    
              
   GlobalErrors.SetProcedureName('ReportPalletStickers')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -100,10 +96,10 @@ ReturnValue          BYTE,AUTO
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  Loc:PalletEtiketPrinter=GETINI('Printer','PalletEtiket',,'.\Voorraad.ini')
-  LOC:LabelLength=GETINI('Printer','LabelLength',104, '.\Voorraad.ini')
+  Loc:PalletEtiketPrinter=GETINI('Printer','PalletEtiket',,PQ:IniFile)
+  LOC:LabelLength=GETINI('Printer','LabelLength',104, PQ:IniFile)
   LOC:LabelLengthZPL=ROUND(LOC:LabelLength*8.8173,1)
-  LOC:LabelPositieZPL=GETINI('Printer','LabelPositieZPL','^FO100,120^AFR,560,200^FD','.\Voorraad.ini')
+  LOC:LabelPositieZPL=GETINI('Printer','LabelPositieZPL','^FO100,120^AFR,560,200^FD',PQ:IniFile)
   db.DebugOut('LOC:LabelLengthZPL:'&LOC:LabelLengthZPL)
   Relate:Partij.Open                                       ! File Partij used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
@@ -114,7 +110,6 @@ ReturnValue          BYTE,AUTO
   	Loc:AantalPallets=0
   END
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportPalletStickers',ProgressWindow)      ! Restore window settings from non-volatile store
@@ -138,13 +133,6 @@ ReturnValue          BYTE,AUTO
   RETURN ReturnValue
 
 
-ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
-
-  CODE
-  PARENT.Init(PC,R,PV)
-  WinAlertMouseZoom()
-
-
 ThisWindow.Kill PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -163,7 +151,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportPalletStickers',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('ReportPalletStickers',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'06/10/2011 @ 11:53AM','06/28/2024 @ 02:30PM','10/11/2024 @ 01:54PM')  
     
   END
   RETURN ReturnValue
@@ -246,9 +234,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -268,22 +253,10 @@ Looped BYTE
       Looped = 1
     END
     CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
     OF EVENT:Timer
       IF SELF.Paused THEN RETURN Level:Benign .
     END
   ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

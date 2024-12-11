@@ -116,7 +116,9 @@ CODE
     CLEAR(Pla:Record)
     Pla:PlanningID = PRM:PlanningID
     IF (Access:Planning.Fetch(Pla:PK_Planning) = Level:Benign)
-        IF Pla:VerkoopID <> 0 THEN
+    	GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.VerwijderPlanningMutaties('&PRM:PlanningID&','&PRM:TestOnly&')'
+
+        IF Pla:VerkoopID <> 0 THEN          !VERKOOP------------------------------------------------------------------------------------------------------
 			! Mutaties behorende bij een verkoop-regel zijn UITslagen.
 			! Deze kunnen zonder verdere voorraad-controle worden verwijderd.
             CLEAR(Mut:Record)
@@ -149,13 +151,19 @@ CODE
                 Access:Planning.Update()
             END
             PlanningVerwerkt=FALSE
-            VERKOOPID=Pla:VerkoopID
-            Clear(PLA:Record)
-            Pla:VerkoopID=VerkoopID
-            Set(Pla:Planning_FK02,Pla:Planning_FK02)
-            Loop Until Access:Planning.Next()
-                IF NOT Pla:InkoopID=VERkoopID THEN BREAK.
-                IF (Pla:Verwerkt)
+!            VERKOOPID=APla:VerkoopID                ! Waarom pak ik hier de alias?????
+!            Clear(APLA:Record)
+!            APla:VerkoopID=VerkoopID
+!            Set(APla:Planning_FK02,APla:Planning_FK02)
+!            Loop Until Access:APlanning.Next()
+!                IF NOT APla:InkoopID=VERkoopID THEN BREAK.
+            VerkoopID = Pla:VerkoopID
+            Clear(APLA:Record)
+            APla:VerkoopID=VerkoopID
+            Set(APla:Planning_FK02,APla:Planning_FK02)
+            Loop Until Access:APlanning.Next()
+                IF NOT APla:InkoopID=VerkoopID THEN BREAK.
+                IF (APla:Verwerkt)
                     PlanningVerwerkt=TRUE
                     Break
                 END    
@@ -170,7 +178,7 @@ CODE
             END
 
             RETURN True
-        ELSIF Pla:InkoopID <> 0 THEN
+        ELSIF Pla:InkoopID <> 0 THEN              !INKOOP ------------------------------------------------------------------------------------------------------
 			! Controleren of de bijbehorende mutaties allemaal inslagen zijn
             PartijID = -1
 			! Mutaties behorende bij een inkoop-regel zijn INslagen.
@@ -193,7 +201,7 @@ CODE
                 END
             END
             IF PartijID <> -1 THEN
-                IF PartijID<>0          ! toegoeved 13-1-2020
+                IF PartijID<>0          ! toegevoegd 13-1-2020
 				! Controleren of er nog andere mutaties zijn met de ingeslagen partij, dan deze inslagen
                     CLEAR(Mut:Record)
                     Mut:PartijID = PartijID
@@ -208,12 +216,12 @@ CODE
                 ! Nu kijken of de verwerkt flag van de inkoop teruggedraaid moet worden
                 PlanningVerwerkt=FALSE
                 INKOOPID=Pla:InkoopID
-                Clear(PLA:Record)
-                Pla:InkoopID=InkoopID
-                Set(Pla:Planning_FK01,Pla:Planning_FK01)
-                Loop Until Access:Planning.Next()
-                    IF NOT Pla:InkoopID=InkoopID THEN BREAK.
-                    IF (Pla:Verwerkt)
+                Clear(APLA:Record)
+                Ink:InkoopID=InkoopID
+                Set(APla:Planning_FK01,APla:Planning_FK01)
+                Loop Until Access:APlanning.Next()
+                    IF NOT APla:InkoopID=InkoopID THEN BREAK.
+                    IF (APla:Verwerkt)
                         PlanningVerwerkt=FALSE
                         Break
                     END    
@@ -240,6 +248,7 @@ CODE
             END
 				
             IF NOT(PRM:TestOnly)
+    	        GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.VerwijderPlanningMutaties UpdatePlanning('&PRM:PlanningID&','&PRM:TestOnly&')'
                 Pla:MutatieGemaakt = 0
                 Pla:Verwerkt = 0
                 Pla:Gewogen = 0
@@ -247,14 +256,16 @@ CODE
                 Pla:MutatiePallets = 0
                 Access:Planning.Update()
             END
-        ELSE
+        ELSE              !------------------------------------------------------------------------------------------------------        
             MESSAGE('VoorraadClass.VerwijderPlanningMutaties ondersteunt alleen inkopen / verkopen')
             RETURN False
         END
+        GLO:GebruikerLogHandelingOpmerking = ''
     ELSE
         RETURN False
     END
 	
+    RETURN TRUE
 	
 	
 	
@@ -264,6 +275,7 @@ CODE
 	CLEAR(Ver2:Record)
 	Ver2:VerkoopID = PRM:VerkoopID
 	IF (Access:Verkoop.Fetch(Ver2:PK_Verkoop) = Level:Benign) THEN
+    	GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.VerwijderVerkoopMutaties('&PRM:VerkoopID&','&PRM:TestOnly&')'
 		GeenFouten = True
 		
 		CLEAR(Pla:Record)
@@ -287,7 +299,8 @@ CODE
 			RETURN True
 		ELSE
 			RETURN GeenFouten
-		END
+        END
+        GLO:GebruikerLogHandelingOpmerking = ''
 	ELSE
 		RETURN False
 	END
@@ -297,6 +310,7 @@ CODE
 	CLEAR(Ink:Record)
 	Ink:InkoopID = PRM:InkoopID
 	IF (Access:Inkoop.Fetch(Ink:PK_Inkoop) = Level:Benign) THEN
+    	GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.VerwijderInkoopMutaties('&PRM:InkoopID&','&PRM:TestOnly&')'
 		GeenFouten = True
 		
 		CLEAR(Pla:Record)
@@ -322,6 +336,7 @@ CODE
 		ELSE
 			RETURN GeenFouten
 		END
+    	GLO:GebruikerLogHandelingOpmerking = ''
 	ELSE
 		RETURN False
 	END
@@ -333,9 +348,13 @@ PlanningKG                                      DECIMAL(11,2)
 
 SavedInkoopBuffer                               USHORT
 SavedInkoopFile                                 USHORT
+
+SAV:InkoopKGPrijs                               LIKE(Par:InkoopKGPrijs)
+SAV:BerekendeInkoopKGPrijs                      LIKE(Par:BerekendeInkoopKGPrijs)
+
 CODE
     UD.Debug('VoorraadClass.BerekenPartijInkoopPrijs :'&PRM:PartijID)
-	GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.BerekenPartijInkoopPrijs'
+	GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.BerekenPartijInkoopPrijs ('&PRM:PartijID&')'
 	
 	SavedInkoopBuffer = Access:Inkoop.SaveBuffer()
 	SavedInkoopFile = Access:Inkoop.SaveFile()
@@ -343,7 +362,10 @@ CODE
 	IF NOT(OMITTED(2)) THEN
 		CLEAR(Par:Record)
 		Par:PartijID = PRM:PartijID
-		IF (Access:Partij.Fetch(Par:Partij_PK) <> Level:Benign) THEN RETURN.
+        IF (Access:Partij.Fetch(Par:Partij_PK) <> Level:Benign) THEN RETURN.
+        ! Partijdata voordat ze geupdated wordt
+		SAV:InkoopKGPrijs = Par:InkoopKGPrijs
+		SAV:BerekendeInkoopKGPrijs = Par:BerekendeInkoopKGPrijs
 	END
 
 	TotaalKG = 0
@@ -391,8 +413,12 @@ CODE
 		Par:BerekendeInkoopKGPrijs = 0
 	END
 	
-	IF NOT(OMITTED(2)) THEN
-		Access:Partij.Update()
+    IF NOT(OMITTED(2)) THEN
+        ! alleen als de gegevens zijn gewijzigd 
+        if NOT (SAV:InkoopKGPrijs = Par:InkoopKGPrijs AND SAV:BerekendeInkoopKGPrijs = Par:BerekendeInkoopKGPrijs)
+            Access:Partij.Update()
+        END
+        
 	END
 	
 	Access:Inkoop.RestoreBuffer(SavedInkoopBuffer)
@@ -420,8 +446,9 @@ CODE
 	SET(Pla:Planning_FK01, Pla:Planning_FK01)
 	LOOP UNTIL Access:Planning.Next()
 		IF Pla:InkoopID <> Ink:InkoopID THEN BREAK.
+	    GLO:GebruikerLogHandelingOpmerking = 'VoorraadClass.BerekenPartijInkoopPrijs ('&PRM:InkoopID&','&PRM:UitgezonderdPartij&')'
 		
-        UD.Debug('VoorraadClass.BerekenPartijenInkoopPrijs Pla:PlanningID'&Pla:PlanningID&' inkoopid '&Pla:InkoopId)
+        UD.Debug('VoorraadClass.BerekenPartijenInkoopPrijs PRM:InkoopID'&PRM:InkoopID&' inkoopid '&Pla:InkoopId)
         ! de eerste keer krijgen we errorcode()33 Record Not Available, eens kijken of ik kan testen of Mutatie bestand geopend is
 		CLEAR(Mut:Record)
         Mut:PlanningID = Pla:PlanningID
@@ -442,6 +469,7 @@ CODE
 			Access:Planning.RestoreFile(SavedPlanningFile)
         END
         UD.Debug('VoorraadClass.BerekenPartijenInkoopPrijs Mutatieloop'&CLIP(ERROR())&'|'&CLIP(FileERROR()))
+	    GLO:GebruikerLogHandelingOpmerking = ''
         
     END
 VoorraadClass.ControleerCelLocatie      PROCEDURE(LONG PRM:CelID, LONG PRM:CelLocatieID)

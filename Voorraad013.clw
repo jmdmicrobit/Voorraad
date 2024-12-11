@@ -51,6 +51,7 @@ TakeRecord             PROCEDURE(),BYTE,PROC,DERIVED
 ProgressMgr          StepLongClass                         ! Progress Manager
 
   CODE
+? DEBUGHOOK(Verkoop:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -66,7 +67,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ConvertVerkoopStatus','Voorraad013.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+        udpt.Init(UD,'ConvertVerkoopStatus','Voorraad013.clw','Voorraad.EXE','07/01/2024 @ 05:23PM')    
              
   GlobalErrors.SetProcedureName('ConvertVerkoopStatus')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -80,8 +81,15 @@ ReturnValue          BYTE,AUTO
   Relate:Verkoop.Open                                      ! File Verkoop used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ConvertVerkoopStatus',ProgressWindow)      ! Restore window settings from non-volatile store
   ProgressWindow{Prop:Timer} = 10                          ! Assign timer interval
@@ -104,7 +112,14 @@ ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 
   CODE
   PARENT.Init(PC,R,PV)
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
   WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
 
 
 ThisWindow.Kill PROCEDURE
@@ -113,6 +128,7 @@ ReturnValue          BYTE,AUTO
 
   CODE
         ThisNetRefresh.Send('|Verkoop|') ! NetTalk (NetRefresh)
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -126,7 +142,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ConvertVerkoopStatus',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'06/22/2010 @ 10:17AM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
+        UD.ShowProcedureInfo('ConvertVerkoopStatus',UD.SetApplicationName('Voorraad','EXE'),ProgressWindow{PROP:Hlp},'06/22/2010 @ 10:17AM','07/01/2024 @ 05:23PM','10/11/2024 @ 01:55PM')  
     
   END
   RETURN ReturnValue
@@ -148,7 +164,7 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
     RETURN ReturnValue

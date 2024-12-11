@@ -49,51 +49,42 @@ ViewPosition           STRING(1024)                   !Entry's view position
 LocEnableEnterByTab  BYTE(1)                               !Used by the ENTER Instead of Tab template
 EnterByTabManager    EnterByTabClass
 History::CEL:Record  LIKE(CEL:RECORD),THREAD
-NetLocalRefreshDate     Long     ! NetTalk (NetRefresh)
-NetLocalRefreshTime     Long
-NetLocalDependancies    String('|Cel|CelLocatie|')
-QuickWindow          WINDOW('Form Cel'),AT(,,273,244),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),DOUBLE,CENTER,GRAY, |
+QuickWindow          WINDOW('Form Cel'),AT(,,309,265),FONT('MS Sans Serif',8,,,CHARSET:DEFAULT),DOUBLE,CENTER,GRAY, |
   IMM,MDI,HLP('UpdateCel'),SYSTEM
-                       SHEET,AT(4,4,265,214),USE(?CurrentTab)
+                       SHEET,AT(4,4,294,241),USE(?CurrentTab)
                          TAB('&1) General'),USE(?Tab:1)
                            PROMPT('Cel ID:'),AT(8,20),USE(?CEL:CelID:Prompt),RIGHT,TRN
-                           ENTRY(@n-14),AT(61,20,64,10),USE(CEL:CelID),RIGHT(1),DISABLE
+                           ENTRY(@n-14),AT(74,20,64,10),USE(CEL:CelID),RIGHT(1),DISABLE
                            PROMPT('Cel Omschrijving:'),AT(8,34),USE(?CEL:CelOms:Prompt),TRN
-                           ENTRY(@s50),AT(61,34,204,10),USE(CEL:CelOms),REQ
-                           PROMPT('Breedte:'),AT(8,47),USE(?CEL:Breedte:Prompt)
-                           ENTRY(@n-14),AT(61,46,60,10),USE(CEL:Breedte),RIGHT(1)
-                           PROMPT('Lengte:'),AT(8,59),USE(?CEL:Lengte:Prompt)
-                           ENTRY(@n-14),AT(61,58,60,10),USE(CEL:Lengte),RIGHT(1)
-                           LIST,AT(61,73,204,122),USE(?List),FORMAT('47L(2)|M~Locatienaam~@s50@26L(2)|M~XPos~L(1)@' & |
+                           ENTRY(@s50),AT(74,34,204,10),USE(CEL:CelOms),REQ
+                           ENTRY(@n-14),AT(74,47,60,10),USE(CEL:Volgnr),RIGHT(1)
+                           PROMPT('Breedte:'),AT(8,63),USE(?CEL:Breedte:Prompt)
+                           ENTRY(@n-14),AT(74,62,60,10),USE(CEL:Breedte),RIGHT(1)
+                           PROMPT('Lengte:'),AT(8,74),USE(?CEL:Lengte:Prompt)
+                           ENTRY(@n-14),AT(74,73,60,10),USE(CEL:Lengte),RIGHT(1)
+                           LIST,AT(76,89,204,122),USE(?List),FORMAT('47L(2)|M~Locatienaam~@s50@26L(2)|M~XPos~L(1)@' & |
   'n4@27L(2)|M~YPos~L(1)@n4@31L(2)|M~Breedte~L(1)@n4@26L(2)|M~Lengte~L(1)@n4@28L(2)|M~H' & |
   'oogte~L(1)@n4@200L(2)|M~Direction~L(0)@s50@'),FROM(Queue:Browse),IMM
-                           BUTTON('&Change'),AT(179,199,42,12),USE(?Change)
-                           BUTTON('&Insert'),AT(139,199,42,12),USE(?Insert)
-                           BUTTON('&Delete'),AT(223,199,42,12),USE(?Delete)
+                           BUTTON('&Change'),AT(193,214,42,12),USE(?Change)
+                           BUTTON('&Insert'),AT(153,214,42,12),USE(?Insert)
+                           BUTTON('&Delete'),AT(237,214,42,12),USE(?Delete)
+                           PROMPT('Volgnr Voorraadlijst:'),AT(8,48),USE(?CEL:Volgnr:Prompt)
                          END
                        END
-                       BUTTON('&OK'),AT(165,221,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
+                       BUTTON('&OK'),AT(166,249,49,14),USE(?OK),LEFT,ICON('WAOK.ICO'),DEFAULT,FLAT,MSG('Accept dat' & |
   'a and close the window'),TIP('Accept data and close the window')
-                       BUTTON('&Cancel'),AT(217,221,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'), |
+                       BUTTON('&Cancel'),AT(218,249,49,14),USE(?Cancel),LEFT,ICON('WACANCEL.ICO'),FLAT,MSG('Cancel operation'), |
   TIP('Cancel operation')
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
-PrimeUpdate            PROCEDURE(),BYTE,PROC,DERIVED
-Reset                  PROCEDURE(BYTE Force=0),DERIVED
 Run                    PROCEDURE(),BYTE,PROC,DERIVED
 Run                    PROCEDURE(USHORT Number,BYTE Request),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
-TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -114,6 +105,8 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(Cel:Record)
+? DEBUGHOOK(CelLocatie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -158,6 +151,7 @@ ReturnValue          BYTE,AUTO
   SELF.AddHistoryFile(CEL:Record,History::CEL:Record)
   SELF.AddHistoryField(?CEL:CelID,1)
   SELF.AddHistoryField(?CEL:CelOms,2)
+  SELF.AddHistoryField(?CEL:Volgnr,5)
   SELF.AddHistoryField(?CEL:Breedte,3)
   SELF.AddHistoryField(?CEL:Lengte,4)
   SELF.AddUpdateFile(Access:Cel)
@@ -180,11 +174,11 @@ ReturnValue          BYTE,AUTO
   END
   BRW10.Init(?List,Queue:Browse.ViewPosition,BRW10::View:Browse,Queue:Browse,Relate:CelLocatie,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?CEL:CelID{PROP:ReadOnly} = True
     ?CEL:CelOms{PROP:ReadOnly} = True
+    ?CEL:Volgnr{PROP:ReadOnly} = True
     ?CEL:Breedte{PROP:ReadOnly} = True
     ?CEL:Lengte{PROP:ReadOnly} = True
     DISABLE(?Change)
@@ -214,8 +208,6 @@ ReturnValue          BYTE,AUTO
   BRW10.AskProcedure = 1                                   ! Will call: UpdateCelLocatie
   BRW10.AddToolbarTarget(Toolbar)                          ! Browse accepts toolbar control
   SELF.SetAlerts()
-  NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-  NetLocalRefreshTime = clock()
   EnterByTabManager.ExcludeControl(?Cancel)
   EnterByTabManager.ExcludeControl(?OK)
   EnterByTabManager.Init(False)
@@ -237,28 +229,6 @@ ReturnValue          BYTE,AUTO
   END
   GlobalErrors.SetProcedureName
   RETURN ReturnValue
-
-
-ThisWindow.PrimeUpdate PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-  CODE
-  ReturnValue = PARENT.PrimeUpdate()
-    If returnValue = Level:Fatal  ! delete just occured
-      ThisNetRefresh.Send('|Cel|CelLocatie|CelLocatie|') ! NetTalk (NetRefresh)
-    End
-  RETURN ReturnValue
-
-
-ThisWindow.Reset PROCEDURE(BYTE Force=0)
-
-  CODE
-  SELF.ForcedReset += Force
-  IF QuickWindow{Prop:AcceptAll} THEN RETURN.
-    NetLocalRefreshDate = today()         ! NetTalk (NetRefresh)
-    NetLocalRefreshTime = clock()
-  PARENT.Reset(Force)
 
 
 ThisWindow.Run PROCEDURE
@@ -315,35 +285,12 @@ Looped BYTE
   RETURN ReturnValue
 
 
-ThisWindow.TakeCompleted PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-  ReturnValue = PARENT.TakeCompleted()
-    ThisNetRefresh.Send('|Cel|CelLocatie|CelLocatie|') ! NetTalk (NetRefresh)
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
 ThisWindow.TakeEvent PROCEDURE
 
 ReturnValue          BYTE,AUTO
 
 Looped BYTE
   CODE
-    If ThisNetRefresh.NeedReset(NetLocalRefreshDate,NetLocalRefreshTime,NetLocalDependancies) ! NetTalk (NetRefresh)
-      Self.Reset(1)                      ! NetTalk (NetRefresh)
-    End
   LOOP                                                     ! This method receives all events
     IF Looped
       RETURN Level:Notify
@@ -354,42 +301,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

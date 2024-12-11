@@ -19,6 +19,7 @@
 !!! </summary>
 UpdateOverboekPlanningVanuitVV PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 Loc:Memo             CSTRING(101)                          ! 
 Loc:Transport        CSTRING(101)                          ! 
@@ -151,6 +152,10 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(ACel:Record)
+? DEBUGHOOK(ACelLocatie:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(Planning:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -181,6 +186,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'UpdateOverboekPlanningVanuitVV','VoorrPln003.clw','VoorrPln.DLL','06/28/2024 @ 01:22PM')    
+             
   GlobalErrors.SetProcedureName('UpdateOverboekPlanningVanuitVV')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -245,8 +252,15 @@ ReturnValue          BYTE,AUTO
       HIDE(?LOC:Instructie)
       HIDE(?LOC:Instructie:Prompt)
   END
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?Mut:DatumTijd_DATE{PROP:ReadOnly} = True
     ?Mut:DatumTijd_TIME{PROP:ReadOnly} = True
@@ -312,6 +326,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('UpdateOverboekPlanningVanuitVV',QuickWindow) ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -455,9 +471,17 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('UpdateOverboekPlanningVanuitVV',UD.SetApplicationName('VoorrPln','DLL'),QuickWindow{PROP:Hlp},'10/06/2011 @ 04:10PM','06/28/2024 @ 01:22PM','10/11/2024 @ 01:54PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

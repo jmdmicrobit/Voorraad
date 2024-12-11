@@ -16,10 +16,11 @@ ActivateNetTalk   EQUATE(1)
   include('NetEmail.inc'),once
   include('NetFile.inc'),once
   include('NetWebSms.inc'),once
-StringTheory:TemplateVersion equate('3.13')
-WINEVENT:Version              equate ('3.97')   !Deprecated
-WinEvent:TemplateVersion      equate('3.97')
-event:WinEventTaskbarLoadIcon equate(0500h+5510)
+StringTheory:TemplateVersion equate('3.46')
+GPFRep:Version equate ('2.36')           !Deprecated - but exists for backward compatibility
+GPFReporter:TemplateVersion equate ('2.36')
+HyperActive:TemplateVersion equate('2.28')
+WinEvent:TemplateVersion      equate('5.35')
 
    INCLUDE('ABERROR.INC'),ONCE
    INCLUDE('ABFILE.INC'),ONCE
@@ -36,7 +37,9 @@ event:WinEventTaskbarLoadIcon equate(0500h+5510)
    INCLUDE('ultimateversion.inc'),ONCE  
   INCLUDE('UltimateDebug.INC'),ONCE
   INCLUDE('UltimateDebugProcedureTracker.INC'),ONCE
-   Include('EventEqu.Clw'),Once
+  include('csGPF.Inc'),ONCE
+   include('Hyper.Inc'),ONCE
+    Include('WinEvent.Inc'),Once
 
    MAP
     MODULE('VOORRSTM.DLL')
@@ -82,7 +85,6 @@ BrowseVoorraadVIEW     PROCEDURE,DLL                       !
      MODULE('VOORRAAD002.CLW')
 MainFrame              PROCEDURE   !
      END
-     include('eventmap.clw')
 	INCLUDE('CWUTIL.INC'),ONCE
 
 	MODULE('win32')
@@ -107,6 +109,8 @@ MainFrame              PROCEDURE   !
 DebugABCGlobalInformation_Voorraad PROCEDURE()                                           ! DEBUG Prototype
 DebugABCGlobalVariables_Voorraad PROCEDURE()                                             ! DEBUG Prototype
 
+       MyOKToEndSessionHandler(long pLogoff),long,pascal
+       MyEndSessionHandler(long pLogoff),pascal
     ! Declare init functions defined in a different dll
      MODULE('VOORRSTM.DLL')
 VoorrStm:Init          PROCEDURE(<ErrorClass curGlobalErrors>, <INIClass curINIMgr>),DLL
@@ -127,7 +131,7 @@ VoorrVrd:Kill          PROCEDURE,DLL
    END
 
   include('StringTheory.Inc'),ONCE
-GLO:OWNER            CSTRING(199),EXTERNAL,DLL(_ABCDllMode_)
+GLO:OWNER            STRING(200),EXTERNAL,DLL(_ABCDllMode_)
 GLO:Versie           CSTRING(10),EXTERNAL,DLL(_ABCDllMode_)
 GLO:BepaalTotaal     LONG,THREAD,EXTERNAL,DLL(_ABCDllMode_)
 GLO:TotaalWegingKG   DECIMAL(10,2),THREAD,EXTERNAL,DLL(_ABCDllMode_)
@@ -141,6 +145,9 @@ NettoGewichtKG         DECIMAL(10,2)
 Datum                  DATE
 Tijd                   TIME
 PalletID               LONG
+ProductionDate         DATE
+THTDate                DATE
+HarvastDate            DATE
                      END
 GLO:WegingQueue      QUEUE,PRE(WGQ),THREAD,EXTERNAL,DLL(_ABCDllMode_)
 BrutoGewichtKG         DECIMAL(10,2)
@@ -150,6 +157,9 @@ NettoGewichtKG         DECIMAL(10,2)
 Datum                  DATE
 Tijd                   TIME
 PalletID               LONG
+ProductionDate         DATE
+THTDate                DATE
+HarvastDate            DATE
                      END
 GLO:UitslagMutatieQueue QUEUE,PRE(UMQ),THREAD,EXTERNAL,DLL(_ABCDllMode_)
 PartijCelID            STRING(25)
@@ -213,6 +223,17 @@ KG                     DECIMAL(9,2)
 Pallets                LONG
                      END
 GLO:HidePlanningInstructie BYTE,EXTERNAL,DLL(_ABCDllMode_)
+GLO:PartnerQ         QUEUE,PRE(PQ),EXTERNAL,DLL(_ABCDllMode_)
+PartnerID              LONG
+PartnerName            CSTRING(100)
+ConnectionString       CSTRING(255)
+ArtikelEval            CSTRING(255)
+RelatieEval            CSTRING(255)
+Titel                  CSTRING(100)
+Achtergrond            LONG
+IniFile                CSTRING(256)
+StandaardEenheid       CSTRING(21)
+                     END
 LOC:OrigineelPartijCelID STRING(25),DIM(100),EXTERNAL,DLL(_ABCDllMode_)
 LOC:OrigineelKG      DECIMAL(10,2),DIM(100),EXTERNAL,DLL(_ABCDllMode_)
 LOC:OrigineelPallets LONG,DIM(100),EXTERNAL,DLL(_ABCDllMode_)
@@ -288,6 +309,16 @@ InslagQATemperatuurVervoermiddel CSTRING(21)               !
 CorrectieveMaatregel        CSTRING(2001)                  !                     
 Oorzaak                     CSTRING(2001)                  !                     
 TransportBedrijf            CSTRING(2001)                  !                     
+Blokkade                    STRING(8)                      !                     
+Blokkade_GROUP              GROUP,OVER(Blokkade)           !                     
+Blokkade_DATE                 DATE                         !                     
+Blokkade_TIME                 TIME                         !                     
+                            END                            !                     
+deBlokkade                  STRING(8)                      !                     
+deBlokkade_GROUP            GROUP,OVER(deBlokkade)         !                     
+deBlokkade_DATE               DATE                         !                     
+deBlokkade_TIME               TIME                         !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -321,6 +352,7 @@ VatCode                     STRING(3)                      !
 cmp_fctry                   STRING(3)                      !                     
 CMROpmerking                CSTRING(1001)                  !                     
 PalletBladLayout            CSTRING(51)                    !                     
+NietActief                  BYTE                           !                     
                          END
                      END                       
 
@@ -336,11 +368,13 @@ InhoudKG                    DECIMAL(7,3)                   !
 
 Cel                  FILE,DRIVER('MSSQL'),PRE(CEL),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 CEL_PK                   KEY(CEL:CelID),NOCASE,PRIMARY     !                     
+Cel_FK1                  KEY(CEL:Volgnr,CEL:CelID),NOCASE  ! Op Volgnr, CelID    
 Record                   RECORD,PRE()
 CelID                       LONG                           !                     
 CelOms                      CSTRING(51)                    !                     
 Breedte                     LONG                           !                     
 Lengte                      LONG                           !                     
+Volgnr                      LONG                           !                     
                          END
                      END                       
 
@@ -464,6 +498,8 @@ BevestigingGeprint_TIME       TIME                         !
                             END                            !                     
 DeliveryTermsID             LONG                           !                     
 LoadingDate                 CSTRING(51)                    !                     
+Valuta                      CSTRING(51)                    !                     
+Koersverschil               DECIMAL(11,3)                  !                     
                          END
                      END                       
 
@@ -474,6 +510,8 @@ PK_Planning              KEY(Pla:PlanningID),PRIMARY       !
 Planning_FK01            KEY(Pla:InkoopID,Pla:PlanningID),DUP,NOCASE ! Op InkoopID/Planning
 Planning_FK02            KEY(Pla:VerkoopID,Pla:PlanningID),DUP ! Op VerkoopID. PlanningID
 Planning_FK03            KEY(Pla:Planning),DUP             ! Op Planning         
+Planning_FK04            KEY(Pla:OverboekingPlanningID),DUP,NOCASE !                     
+Planning_FK05            KEY(Pla:InkoopID),DUP,NOCASE      !                     
 Verwerkt_Artikel_Planning_K KEY(Pla:Verwerkt,Pla:ArtikelID,Pla:PlanningID),DUP !                     
 Verwerkt_OverboekingCelID_Planning_K KEY(Pla:Verwerkt,Pla:OverboekingCelID,Pla:Planning,Pla:PlanningID),DUP !                     
 Record                   RECORD,PRE()
@@ -557,7 +595,7 @@ UitslagPalletbladHarvastDate7007_TIME TIME                 !
 
 Verkoop              FILE,DRIVER('MSSQL'),PRE(Ver2),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 Verkoop_FK2              KEY(Ver2:Exported,Ver2:VerkoopID),DUP ! Op Exported/VerkoopID
-Verkoop_FK3              KEY(Ver2:Exported,Ver2:Klant,-Ver2:VerkoopID),DUP ! Op Exported, Klant, Verkoop
+Verkoop_FK3              KEY(Ver2:Exported,Ver2:Klant,-Ver2:Planning),DUP ! Op Exported, Klant, Verkoop
 PK_Verkoop               KEY(Ver2:VerkoopID),PRIMARY       !                     
 Verkoop_FK01             KEY(Ver2:Planning),DUP            !                     
 Klant_Verwerkt_Planning_K KEY(Ver2:Klant,Ver2:Verwerkt,Ver2:Planning,Ver2:VerkoopID),DUP,NOCASE !                     
@@ -867,6 +905,16 @@ PartijCelID                 CSTRING(26)                    !
 CelLocatieID                LONG                           !                     
 Locatienaam                 CSTRING(51)                    !                     
 BerekendeInkoopKGPrijs      DECIMAL(10,3)                  !                     
+Blokkade                    STRING(8)                      !                     
+Blokkade_GROUP              GROUP,OVER(Blokkade)           !                     
+Blokkade_DATE                 DATE                         !                     
+Blokkade_TIME                 TIME                         !                     
+                            END                            !                     
+deBlokkade                  STRING(8)                      !                     
+deBlokkade_GROUP            GROUP,OVER(deBlokkade)         !                     
+deBlokkade_DATE               DATE                         !                     
+deBlokkade_TIME               TIME                         !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -895,6 +943,7 @@ EC_LabelsOnTheGoods         LONG                           !
 OpgemaaktTe                 CSTRING(1001)                  !                     
 HandtekeningStempelAfzender CSTRING(1001)                  !                     
 Kenteken                    CSTRING(1001)                  !                     
+ProductLabelsOnGoods        BYTE                           !                     
                          END
                      END                       
 
@@ -1039,6 +1088,21 @@ WeegDatum                     DATE                         !
 WeegTijdstip                  TIME                         !                     
                             END                            !                     
 PalletID                    LONG                           ! Niet veranderde identifier om een weging / pallet te identificieren
+ProductionDate              STRING(8)                      !                     
+ProductionDate_GROUP        GROUP,OVER(ProductionDate)     !                     
+ProductionDate_DATE           DATE                         !                     
+ProductionDate_TIME           TIME                         !                     
+                            END                            !                     
+THTDate                     STRING(8)                      !                     
+THTDate_GROUP               GROUP,OVER(THTDate)            !                     
+THTDate_DATE                  DATE                         !                     
+THTDate_TIME                  TIME                         !                     
+                            END                            !                     
+HarvastDate                 STRING(8)                      !                     
+HarvastDate_GROUP           GROUP,OVER(HarvastDate)        !                     
+HarvastDate_DATE              DATE                         !                     
+HarvastDate_TIME              TIME                         !                     
+                            END                            !                     
                          END
                      END                       
 
@@ -1071,42 +1135,6 @@ Wijzigingen                 CSTRING(1000)                  ! Aanpassingen in dez
                          END
                      END                       
 
-ViewArtikel_Exact    FILE,DRIVER('MSSQL'),PRE(ARTE),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
-Artikel_PK               KEY(ARTE:ArtikelID)               !                     
-Artikel_FK01             KEY(ARTE:ArtikelOms),DUP,NOCASE   !                     
-Record                   RECORD,PRE()
-ArtikelID                   CSTRING(31)                    !                     
-ArtikelOms                  CSTRING(61)                    !                     
-ArtikelGroep                LONG                           !                     
-Prijs                       SREAL                          !                     
-                         END
-                     END                       
-
-Relatie_Exact        FILE,DRIVER('MSSQL'),PRE(RelE),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
-Relatie_FK01             KEY(RelE:FirmaNaam),DUP,NOCASE    !                     
-Relatie_PK               KEY(RelE:RelatieID)               !                     
-Record                   RECORD,PRE()
-RelatieID                   LONG                           !                     
-FirmaNaam                   STRING(50)                     !                     
-Adres1                      CSTRING(101)                   !                     
-Adres2                      CSTRING(101)                   !                     
-Postcode                    CSTRING(21)                    !                     
-Plaats                      CSTRING(101)                   !                     
-Telefoon                    STRING(25)                     !                     
-Mobiel                      CSTRING(31)                    !                     
-Fax                         STRING(25)                     !                     
-Type                        STRING(1)                      !                     
-Country                     CSTRING(61)                    !                     
-ItemCode                    STRING(2)                      !                     
-PaymentCondition            STRING(2)                      !                     
-Code                        STRING(20)                     !                     
-CreditLine                  REAL                           !                     
-Acc_Man                     LONG                           !                     
-VatCode                     STRING(3)                      !                     
-cmp_fctry                   STRING(3)                      !                     
-                         END
-                     END                       
-
 Gebruiker            FILE,DRIVER('MSSQL'),PRE(Geb),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 PK_Gebruiker             KEY(Geb:ID),NOCASE,PRIMARY        !                     
 FK1_Gebruiker            KEY(Geb:WindowsInlog),NOCASE      !                     
@@ -1123,6 +1151,8 @@ Handtekening                CSTRING(101)                   !
 res_id                      LONG                           !                     
 Email                       CSTRING(101)                   !                     
 Telefoon                    CSTRING(21)                    !                     
+GeenToegang                 BYTE                           !                     
+NietActief                  BYTE                           !                     
                          END
                      END                       
 
@@ -1226,6 +1256,7 @@ VatCode                     STRING(3)                      !
 cmp_fctry                   STRING(3)                      !                     
 CMROpmerking                CSTRING(1001)                  !                     
 PalletBladLayout            CSTRING(51)                    !                     
+NietActief                  BYTE                           !                     
                          END
                      END                       
 
@@ -1236,6 +1267,8 @@ PK_Planning              KEY(APla:PlanningID),PRIMARY      !
 Planning_FK01            KEY(APla:InkoopID,APla:PlanningID),DUP,NOCASE ! Op InkoopID/Planning
 Planning_FK02            KEY(APla:VerkoopID,APla:PlanningID),DUP ! Op VerkoopID. PlanningID
 Planning_FK03            KEY(APla:Planning),DUP            ! Op Planning         
+Planning_FK04            KEY(APla:OverboekingPlanningID),DUP,NOCASE !                     
+Planning_FK05            KEY(APla:InkoopID),DUP,NOCASE     !                     
 Verwerkt_Artikel_Planning_K KEY(APla:Verwerkt,APla:ArtikelID,APla:PlanningID),DUP !                     
 Verwerkt_OverboekingCelID_Planning_K KEY(APla:Verwerkt,APla:OverboekingCelID,APla:Planning,APla:PlanningID),DUP !                     
 Record                   RECORD,PRE()
@@ -1330,22 +1363,57 @@ Prijs                       SREAL                          !
 
 ACel                 FILE,DRIVER('MSSQL'),PRE(ACel),BINDABLE,THREAD,EXTERNAL(''),DLL(dll_mode) !                     
 CEL_PK                   KEY(ACel:CelID),NOCASE,PRIMARY    !                     
+Cel_FK1                  KEY(ACel:Volgnr,ACel:CelID),NOCASE ! Op Volgnr, CelID    
 Record                   RECORD,PRE()
 CelID                       LONG                           !                     
 CelOms                      CSTRING(51)                    !                     
 Breedte                     LONG                           !                     
 Lengte                      LONG                           !                     
+Volgnr                      LONG                           !                     
                          END
                      END                       
 
 !endregion
 
-WE::MustClose       long,external,dll
-WE::CantCloseNow    long,external,dll
+! ----- ThisGPF --------------------------------------------------------------------------
+ThisGPF              Class(GPFReporterClass)
+    ! derived method declarations
+Construct              PROCEDURE ()
+Destruct               PROCEDURE ()
+_GetSymbol             PROCEDURE (ulong pAddress,byte pStackTrace=1),string ,VIRTUAL
+_LookupExceptionCode   PROCEDURE (ulong p_ExceptionCode),string ,VIRTUAL
+_VectoredExceptionHandler_ PROCEDURE (ulong p_e),long ,VIRTUAL
+_StackDetails          PROCEDURE (ulong p_e,byte p_details,ulong p_hProcess),string ,VIRTUAL
+_LocateDebugSymbols    PROCEDURE (long phModule),byte ,VIRTUAL
+_ReadBlockFromFile     PROCEDURE (ulong pOffset,long pReadBytes,*string pFileBlock,*string pFileName) ,VIRTUAL
+_GetModuleName         PROCEDURE (long phModule),string ,VIRTUAL
+_GetModuleHandle       PROCEDURE (ulong pAddress),long ,VIRTUAL
+LookupAddress          PROCEDURE () ,VIRTUAL
+Initialize             PROCEDURE () ,VIRTUAL
+FilterExceptions       PROCEDURE (ulong pException) ,VIRTUAL
+_EncodeEmail           PROCEDURE (string pEmailText),string ,VIRTUAL
+_FindFirstBreak        PROCEDURE (string pText,long pMaxLen),long ,VIRTUAL
+ExtraReportText        PROCEDURE () ,VIRTUAL
+_GetDLLVersion         PROCEDURE (string pDLLName),string ,VIRTUAL
+_SetFileNames          PROCEDURE () ,VIRTUAL
+DeleteDumpFile         PROCEDURE () ,VIRTUAL
+_InitReportText        PROCEDURE () ,VIRTUAL
+_ExecuteCommands       PROCEDURE () ,VIRTUAL
+_StackDump             PROCEDURE (long pStart,long pEnd,long pStackLevel),string ,VIRTUAL
+_FindLinePosition      PROCEDURE (string pText,long pLineNumber),long ,VIRTUAL
+_DebugLog              PROCEDURE (string pDebugData,byte pFirstLine=0) ,VIRTUAL
+_FormatLineInfo        PROCEDURE (long pLineNumber,string pProcName,string pSourceName,string pModuleName,byte pStackTrace,byte pNoProcFound,byte pExactAddress,byte pNoLineNumber),string ,VIRTUAL
+_GetAssert             PROCEDURE (long pSP,long pBP),long ,VIRTUAL
+_GetOtherMessage       PROCEDURE (long pSP,long pBP),long ,VIRTUAL
+_RestartProgram        PROCEDURE () ,VIRTUAL
+                     End  ! ThisGPF
+! ----- end ThisGPF -----------------------------------------------------------------------
 gv         ultimateversion
 UD         CLASS(UltimateDebug),EXTERNAL,DLL(dll_mode)
                      END   
  
+WE::MustClose       long,external,dll
+WE::CantCloseNow    long,external,dll
 include('VoorraadClassDef.inc')
 include('GlobalClassDef.inc')
 ! GetComputerName()
@@ -1412,10 +1480,6 @@ Access:CelLocatie    &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager fo
 Relate:CelLocatie    &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for CelLocatie
 Access:Versie        &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for Versie
 Relate:Versie        &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for Versie
-Access:ViewArtikel_Exact &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for ViewArtikel_Exact
-Relate:ViewArtikel_Exact &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for ViewArtikel_Exact
-Access:Relatie_Exact &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for Relatie_Exact
-Relate:Relatie_Exact &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for Relatie_Exact
 Access:Gebruiker     &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for Gebruiker
 Relate:Gebruiker     &RelationManager,THREAD,EXTERNAL,DLL(dll_mode) ! RelationManager for Gebruiker
 Access:GebruikerLog  &FileManager,THREAD,EXTERNAL,DLL(dll_mode) ! FileManager for GebruikerLog
@@ -1469,6 +1533,8 @@ VCRRequest           LONG,EXTERNAL,DLL(dll_mode),THREAD    ! Exported from a dll
       NetDebugTrace ('[Nettalk Template] ABC Template Chain')
     end
                              ! End Generated by Extension Template
+    ds_SetOKToEndSessionHandler(address(MyOKToEndSessionHandler))
+    ds_SetEndSessionHandler(address(MyEndSessionHandler))
   VoorrStm:Init(GlobalErrors, INIMgr)                      ! Initialise dll (ABC)
   VoorrRpt:Init(GlobalErrors, INIMgr)                      ! Initialise dll (ABC)
   VoorrPln:Init(GlobalErrors, INIMgr)                      ! Initialise dll (ABC)
@@ -1479,6 +1545,7 @@ VCRRequest           LONG,EXTERNAL,DLL(dll_mode),THREAD    ! Exported from a dll
   VoorrRpt:Kill()                                          ! Kill dll (ABC)
   VoorrPln:Kill()                                          ! Kill dll (ABC)
   VoorrVrd:Kill()                                          ! Kill dll (ABC)
+    ThisGPF.RestartProgram = 0
                              ! Begin Generated by NetTalk Extension Template
     NetCloseCallBackWindow() ! Tell NetTalk DLL to shutdown it's WinSock Call Back Window
   
@@ -1491,6 +1558,159 @@ VCRRequest           LONG,EXTERNAL,DLL(dll_mode),THREAD    ! Exported from a dll
   INIMgr.Kill                                              ! Destroy INI manager
   FuzzyMatcher.Kill                                        ! Destroy fuzzy matcher
     
+!----------------------------------------------------
+ThisGPF.Construct     PROCEDURE ()
+  CODE
+!----------------------------------------------------
+ThisGPF.Destruct     PROCEDURE ()
+  CODE
+!----------------------------------------------------
+ThisGPF._GetSymbol     PROCEDURE (ulong pAddress,byte pStackTrace=1)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._GetSymbol (pAddress,pStackTrace)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._LookupExceptionCode     PROCEDURE (ulong p_ExceptionCode)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._LookupExceptionCode (p_ExceptionCode)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._VectoredExceptionHandler_     PROCEDURE (ulong p_e)
+ReturnValue   long
+  CODE
+  ReturnValue = PARENT._VectoredExceptionHandler_ (p_e)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._StackDetails     PROCEDURE (ulong p_e,byte p_details,ulong p_hProcess)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._StackDetails (p_e,p_details,p_hProcess)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._LocateDebugSymbols     PROCEDURE (long phModule)
+ReturnValue   byte
+  CODE
+  ReturnValue = PARENT._LocateDebugSymbols (phModule)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._ReadBlockFromFile     PROCEDURE (ulong pOffset,long pReadBytes,*string pFileBlock,*string pFileName)
+  CODE
+  PARENT._ReadBlockFromFile (pOffset,pReadBytes,pFileBlock,pFileName)
+!----------------------------------------------------
+ThisGPF._GetModuleName     PROCEDURE (long phModule)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._GetModuleName (phModule)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._GetModuleHandle     PROCEDURE (ulong pAddress)
+ReturnValue   long
+  CODE
+  ReturnValue = PARENT._GetModuleHandle (pAddress)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF.LookupAddress     PROCEDURE ()
+  CODE
+  PARENT.LookupAddress ()
+!----------------------------------------------------
+ThisGPF.Initialize     PROCEDURE ()
+  CODE
+  ThisGPF.EmailAddress = 'JMD Microbit <har@microbit.nl>'
+  ThisGPF.WindowTitle = ''
+  ThisGPF.DumpFileName = 'GPFReport.log'
+  ThisGPF.AllowEmail = 1
+  ThisGPF.DumpFileAppend = 1
+  ThisGPF.RestartProgram = 1
+  ThisGPF.ShowDetails = 0
+  ThisGPF.DebugEmail = 0
+  ThisGPF.DebugLogEnabled = 0
+  ThisGPF.WaitWinEnabled = 0
+  ThisGPF.Workstation = ds_GetWorkstationName()     ! requires winevent ver 3.61 or later
+  ThisGPF.UserName = ds_GetUserName()               ! requires winevent ver 3.61 or later
+  PARENT.Initialize ()
+!----------------------------------------------------
+ThisGPF.FilterExceptions     PROCEDURE (ulong pException)
+  CODE
+  PARENT.FilterExceptions (pException)
+!----------------------------------------------------
+ThisGPF._EncodeEmail     PROCEDURE (string pEmailText)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._EncodeEmail (pEmailText)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._FindFirstBreak     PROCEDURE (string pText,long pMaxLen)
+ReturnValue   long
+  CODE
+  ReturnValue = PARENT._FindFirstBreak (pText,pMaxLen)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF.ExtraReportText     PROCEDURE ()
+  CODE
+  ! ThisGPF.ReportText = 'Add your own report text here.'<13,10>This is on the next line.'
+  PARENT.ExtraReportText ()
+!----------------------------------------------------
+ThisGPF._GetDLLVersion     PROCEDURE (string pDLLName)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._GetDLLVersion (pDLLName)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._SetFileNames     PROCEDURE ()
+  CODE
+  PARENT._SetFileNames ()
+!----------------------------------------------------
+ThisGPF.DeleteDumpFile     PROCEDURE ()
+  CODE
+  PARENT.DeleteDumpFile ()
+!----------------------------------------------------
+ThisGPF._InitReportText     PROCEDURE ()
+  CODE
+  PARENT._InitReportText ()
+!----------------------------------------------------
+ThisGPF._ExecuteCommands     PROCEDURE ()
+  CODE
+  PARENT._ExecuteCommands ()
+!----------------------------------------------------
+ThisGPF._StackDump     PROCEDURE (long pStart,long pEnd,long pStackLevel)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._StackDump (pStart,pEnd,pStackLevel)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._FindLinePosition     PROCEDURE (string pText,long pLineNumber)
+ReturnValue   long
+  CODE
+  ReturnValue = PARENT._FindLinePosition (pText,pLineNumber)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._DebugLog     PROCEDURE (string pDebugData,byte pFirstLine=0)
+  CODE
+  PARENT._DebugLog (pDebugData,pFirstLine)
+!----------------------------------------------------
+ThisGPF._FormatLineInfo     PROCEDURE (long pLineNumber,string pProcName,string pSourceName,string pModuleName,byte pStackTrace,byte pNoProcFound,byte pExactAddress,byte pNoLineNumber)
+ReturnValue   any
+  CODE
+  ReturnValue = PARENT._FormatLineInfo (pLineNumber,pProcName,pSourceName,pModuleName,pStackTrace,pNoProcFound,pExactAddress,pNoLineNumber)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._GetAssert     PROCEDURE (long pSP,long pBP)
+ReturnValue   long
+  CODE
+  ReturnValue = PARENT._GetAssert (pSP,pBP)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._GetOtherMessage     PROCEDURE (long pSP,long pBP)
+ReturnValue   long
+  CODE
+  ReturnValue = PARENT._GetOtherMessage (pSP,pBP)
+    Return ReturnValue
+!----------------------------------------------------
+ThisGPF._RestartProgram     PROCEDURE ()
+  CODE
+  PARENT._RestartProgram ()
 NetRefreshPlanningViews PROCEDURE
 	CODE
 		ThisNetRefresh.Send('|Planning|APlanning|AAPlanning|ViewPlanningPartij|ViewVoorraadPlanning|PlanningInkoop|PlanningVerkoop|PlanningOverboeking|APlanningInkoop|APlanningVerkoop|APlanningOverboeking|Inkoop|AInkoop|Verkoop|AVerkoop|') ! NetTalk (NetRefresh)
@@ -1501,6 +1721,21 @@ NetRefreshVoorraadViews PROCEDURE
 	!END
 include('VoorraadClassSrc.inc')
 include('GlobalClassSrc.inc')
+! ------ winevent -------------------------------------------------------------------
+MyOKToEndSessionHandler procedure(long pLogoff)
+OKToEndSession    long(TRUE)
+! Setting the return value OKToEndSession = FALSE
+! will tell windows not to shutdown / logoff now.
+! If parameter pLogoff = TRUE if the user is logging off.
+
+  code
+  return(OKToEndSession)
+
+! ------ winevent -------------------------------------------------------------------
+MyEndSessionHandler procedure(long pLogoff)
+! If parameter pLogoff = TRUE if the user is logging off.
+
+  code
  
 !BOE: DEBUG Global
 DebugABCGlobalInformation_Voorraad PROCEDURE()

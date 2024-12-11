@@ -8,7 +8,7 @@
     <AssemblyName>VoorrPln</AssemblyName>
     <OutputName>VoorrPln</OutputName>
     <CWOutputType>Exe</CWOutputType>
-    <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bStringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0%3b_NetTalkDllMode_=&gt;1%3b_NetTalkLinkMode_=&gt;0</DefineConstants>
+    <DefineConstants>NETTALKLOG=&gt;1%3b_ODDJOB_=&gt;0%3b_CRYPTONITE_=&gt;0%3bWinEventLinkMode=&gt;0%3bWinEventDLLMode=&gt;1%3bStringTheoryLinkMode=&gt;0%3bStringTheoryDllMode=&gt;1%3b_ABCDllMode_=&gt;1%3b_ABCLinkMode_=&gt;0%3b_NetTalkDllMode_=&gt;1%3b_NetTalkLinkMode_=&gt;0</DefineConstants>
     <Model>Dll</Model>
     <stack_size>16384</stack_size>
     <CopyCore>False</CopyCore>
@@ -41,10 +41,134 @@
     <FileDriver Include="MEMORY" />
     <FileDriver Include="MEMORY" />
     <FileDriver Include="MSSQL" />
+    <FileDriver Include="TOPSPEED" />
+    <Compile Include="CachingClass_Src.clw">
+      <Generated>true</Generated>
+    </Compile>
     <Compile Include="EFOCUS.CLW">
       <Generated>true</Generated>
     </Compile>
     <Compile Include="VoorrPln.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln003.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln004.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln008.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln009.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln010.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln011.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln012.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln013.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln014.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln015.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln016.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln017.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln018.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln019.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln020.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln021.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln022.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln023.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln024.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln025.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln026.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln027.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln028.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln029.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln030.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln031.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln032.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln033.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln034.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln035.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln036.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln037.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln038.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln039.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrPln040.clw">
       <Generated>true</Generated>
     </Compile>
     <ProjectReference Include="VoorrDct.cwproj">
@@ -63,19 +187,12 @@
     </ProjectReference>
     <Library Include="C%25V%25DF%25X%25.LIB" />
     <Library Include="c%25V%25net.lib" />
-    <Library Include="C%25V%25WE%25X%25%25L%25.Lib" />
     <Library Include="clanet.lib" />
-    <Library Include="CLAWE.Lib" />
     <Library Include="off.ico" />
     <Library Include="on.ico" />
     <Library Include="VoorrPln.Version" />
     <Library Include="Win32Ext.LIB" />
     <None Include="caroot.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Generated>True</Generated>
-      <ProjectGenerated>True</ProjectGenerated>
-    </None>
-    <None Include="clawe.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generated>True</Generated>
       <ProjectGenerated>True</ProjectGenerated>
@@ -108,6 +225,6 @@
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /as /fd sha256 /f "H:\Certificates\info@microbit_nl\info@microbit_nl.p12" /tr http://timestamp.digicert.com /td sha256 $(SolutionDir)werk\VoorrPln.DLL</PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /t http://timestamp.digicert.com $(SolutionDir)ontw\VoorrPln.DLL</PostBuildEvent>
   </PropertyGroup>
 </Project>

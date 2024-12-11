@@ -106,16 +106,11 @@ Detail                 DETAIL,AT(0,500,7250,9760),USE(?Detail),PAGEAFTER(1)
                        FOOTER,AT(521,11156,7250,156),USE(?Footer)
                        END
                      END
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 TBarcode                  BarcodeClass
 TBarcode:2                BarcodeClass
 TBarcode:3                BarcodeClass
 ThisWindow           CLASS(ReportManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
-Init                   PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
 OpenReport             PROCEDURE(),BYTE,PROC,DERIVED
 Paused                 BYTE
@@ -138,6 +133,14 @@ SetUp                  PROCEDURE(),DERIVED
 
 
   CODE
+? DEBUGHOOK(AAPlanning:Record)
+? DEBUGHOOK(AARelatie:Record)
+? DEBUGHOOK(AAViewArtikel:Record)
+? DEBUGHOOK(AMutatie:Record)
+? DEBUGHOOK(AVerkoop:Record)
+? DEBUGHOOK(ArtikelOmschrijvingExtra:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(Weging:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -159,7 +162,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'ReportPalletBladMeerdere_WERKTNIET','VoorrRpt021.clw','VoorrRpt.DLL','06/02/2020 @ 02:25PM')    
+        udpt.Init(UD,'ReportPalletBladMeerdere_WERKTNIET','VoorrRpt021.clw','VoorrRpt.DLL','06/28/2024 @ 02:30PM')    
              
   GlobalErrors.SetProcedureName('ReportPalletBladMeerdere_WERKTNIET')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -205,7 +208,6 @@ ReturnValue          BYTE,AUTO
   
   
   SELF.Open(ProgressWindow)                                ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
   ProgressWindow{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('ReportPalletBladMeerdere_WERKTNIET',ProgressWindow) ! Restore window settings from non-volatile store
@@ -236,13 +238,6 @@ ReturnValue          BYTE,AUTO
   RETURN ReturnValue
 
 
-ThisWindow.Init PROCEDURE(ProcessClass PC,<REPORT R>,<PrintPreviewClass PV>)
-
-  CODE
-  PARENT.Init(PC,R,PV)
-  WinAlertMouseZoom()
-
-
 ThisWindow.Kill PROCEDURE
 
 ReturnValue          BYTE,AUTO
@@ -268,7 +263,7 @@ ReturnValue          BYTE,AUTO
             
    
   IF BAND(Keystate(),KeyStateUD:Shift) 
-        UD.ShowProcedureInfo('ReportPalletBladMeerdere_WERKTNIET',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/29/2013 @ 01:03PM','06/02/2020 @ 02:25PM','06/03/2020 @ 11:38AM')  
+        UD.ShowProcedureInfo('ReportPalletBladMeerdere_WERKTNIET',UD.SetApplicationName('VoorrRpt','DLL'),ProgressWindow{PROP:Hlp},'03/29/2013 @ 01:03PM','06/28/2024 @ 02:30PM','10/11/2024 @ 01:54PM')  
     
   END
   RETURN ReturnValue
@@ -358,9 +353,6 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -380,22 +372,10 @@ Looped BYTE
       Looped = 1
     END
     CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
     OF EVENT:Timer
       IF SELF.Paused THEN RETURN Level:Benign .
     END
   ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

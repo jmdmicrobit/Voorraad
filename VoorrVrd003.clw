@@ -21,6 +21,7 @@
 !!! </summary>
 BrowseVoorraadVerloop PROCEDURE (ArtikelID)
 
+udpt            UltimateDebugProcedureTracker
 LOC:ArtikelID        CSTRING(31)                           ! 
 LOC:LeverancierID    LONG                                  ! 
 LOC:Klant            STRING(40)                            ! 
@@ -287,10 +288,6 @@ QuickWindow          WINDOW('Voorraad-verloop'),AT(,,586,329),FONT('MS Sans Seri
                        BUTTON('Excel'),AT(300,311,43,14),USE(?Excel)
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
 Kill                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -298,7 +295,6 @@ Reset                  PROCEDURE(BYTE Force=0),DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
 TakeNewSelection       PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -328,21 +324,46 @@ Resizer              CLASS(WindowResizeClass)
 Init                   PROCEDURE(BYTE AppStrategy=AppStrategy:Resize,BYTE SetWindowMinSize=False,BYTE SetWindowMaxSize=False)
                      END
 
+
+
 ExcelClass         Class
-InitOle                 Procedure()
-MaakExcel               Procedure()         ! Lege worksheey toevoegen
-OpenExcel               Procedure(String pBestandsnaam)
-SluitExcel              Procedure(Byte pCloseExcel)
-BepaalKolom             Procedure(LONG pKolomNr),String
-SchrijfExcel            Procedure(String pKolom, LONG pRij, String pValue)
-MaakWerkBlad            Procedure(<String pWerkbladNaam>)
+InitOle                 Procedure(<BYTE pDebug>)
+MaakExcel               Procedure()
+OpenExcel               Procedure(String)
+SluitExcel              Procedure(Byte)
+BepaalKolom             Procedure(LONG),String
+SchrijfExcel            Procedure(String, LONG, String)
+MaakWerkBlad            Procedure(<String>)
+NumberFormat            Procedure(String pKolomVanaf, LONG pRijVanaf, String pKolomTM, LONG pRijTM, String pNumberFormat)
+AutoFitColumns          Procedure(String pKolomVanaf, String pKolomTM)
+AutoFitRows             Procedure(LONG pRijVanaf,LONG pRijTM)
+
+FullDebug               BYTE
+
+Bedrag              STRING('Bedrag')
+Datum               STRING('Datum')
+
                    End
+                   
+                   
 Loc:Ole            CString(21)
 Loc:Rij            Long
 Loc:OleInit        Byte
 
 
   CODE
+? DEBUGHOOK(AARelatie:Record)
+? DEBUGHOOK(ARelatie:Record)
+? DEBUGHOOK(AVoorraadVerloop:Record)
+? DEBUGHOOK(Inkoop:Record)
+? DEBUGHOOK(Mutatie:Record)
+? DEBUGHOOK(Partij:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(Relatie:Record)
+? DEBUGHOOK(SnelheidLogging:Record)
+? DEBUGHOOK(Verpakking:Record)
+? DEBUGHOOK(ViewArtikel:Record)
+? DEBUGHOOK(VoorraadVerloop:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -750,6 +771,8 @@ ReturnValue          BYTE,AUTO
 TempFormat          CSTRING(10000)
 SearchString CSTRING(1000)
   CODE
+        udpt.Init(UD,'BrowseVoorraadVerloop','VoorrVrd003.clw','VoorrVrd.DLL','06/25/2020 @ 10:56AM')    
+             
   GlobalErrors.SetProcedureName('BrowseVoorraadVerloop')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -768,9 +791,9 @@ SearchString CSTRING(1000)
   BIND('LOC:VerpakkingOmschrijving',LOC:VerpakkingOmschrijving) ! Added by: BrowseBox(ABC)
   BIND('LOC:TotaalKG',LOC:TotaalKG)                        ! Added by: BrowseBox(ABC)
   BIND('LOC:TotaalPallets',LOC:TotaalPallets)              ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   IF SELF.Request = SelectRecord
      SELF.AddItem(?Close,RequestCancelled)                 ! Add the close control to the window manger
   ELSE
@@ -825,12 +848,11 @@ SearchString CSTRING(1000)
       LOC:KlantNaam = ''
   END    
   
-  StandaardVoorraadverloopPeriode#=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,'.\Voorraad.ini')
+  StandaardVoorraadverloopPeriode#=GETINI('Voorraad','StandaardVoorraadverloopPeriode',60,PQ:IniFile)
   LOC:VanDatum = TODAY() - StandaardVoorraadverloopPeriode#
   LOC:TMDatum = TODAY()
   BRW1.Init(?Browse:1,Queue:Browse:1.ViewPosition,BRW1::View:Browse,Queue:Browse:1,Relate:VoorraadVerloop,SELF) ! Initialize the browse manager
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   ! SELECT(?CurrentTab, 3)			! uitgeschakeld HG) 6-8-2012
   SELECT(?CurrentTab, 1)
   Do RefreshQueues
@@ -859,6 +881,7 @@ SearchString CSTRING(1000)
       END
   END
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   BRW1.Q &= Queue:Browse:1
   BRW1.FileLoaded = 1                                      ! This is a 'file loaded' browse
   BRW1.AddSortOrder(,VVL:ArtikelID_DatumTijdD_MutatieID_K) ! Add the sort order for VVL:ArtikelID_DatumTijdD_MutatieID_K for sort order 1
@@ -985,6 +1008,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('BrowseVoorraadVerloop',QuickWindow)     ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -1217,9 +1242,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('BrowseVoorraadVerloop',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/07/2011 @ 08:55AM','06/25/2020 @ 10:56AM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
@@ -1253,68 +1283,36 @@ Looped BYTE
   ReturnValue = Level:Fatal
   RETURN ReturnValue
 
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-ExcelClass.SluitExcel       Procedure(Byte pCloseExcel)
-   Code
-   If pCloseExcel
-       Loc:Ole{'Application.Workbooks.Close'}
-   END     
-   Loc:Ole{'Application.Visible'}=true  ! nu pas excel laten zien
-   Loc:Ole{'Prop:Deactivate'}
-   Destroy(Loc:Ole)
-   RETURN
-ExcelClass.SchrijfExcel         Procedure(String pKolom,LONG pRij, String pValue)
-   Code
-   Loc:Ole{'Application.Range('&Clip(pKolom)&pRij&').Value'}=pValue
-   RETURN
-ExcelClass.MaakWerkBlad         Procedure(<String pWerkbladNaam>)
+ExcelClass.MaakWerkBlad         Procedure(<String PRM:WerkBladNaam>)
    Code
    Loc:Ole{'Application.ActiveWorkBook.Sheets.Add'}
-   IF pWerkbladNaam<>''
-    Loc:Ole{'Application.ActiveWorkBook.ActiveSheet.Name'}=Clip(pWerkbladNaam)
+   IF PRM:WerkBladNaam<>''
+    Loc:Ole{'Application.ActiveWorkBook.ActiveSheet.Name'}=Clip(PRM:WerkBladNaam)
    End
    ! Loc:Ole{'Application.ActiveWorkBook.Sheets.Select'}
    RETURN
-ExcelClass.BepaalKolom    Procedure(LONG pKolomNr)
+ExcelClass.NumberFormat            Procedure(String pKolomVanaf, LONG pRijVanaf, String pKolomTM, LONG pRijTM, String pNumberFormat)
+   Code
+   Case pNumberFormat 
+   OF  Self.Bedrag
+       Loc:Ole{'Application.Range('&CLIP(pKolomVanaf)&pRijVanaf&':'&CLIP(pKolomTM)&pRijTM&').NumberFormat'}='#.##0,00'
+   OF  Self.Datum
+       Loc:Ole{'Application.Range('&CLIP(pKolomVanaf)&pRijVanaf&':'&CLIP(pKolomTM)&pRijTM&').NumberFormat'}='m/d/yyyy'
+   ELSE
+       !! foutmelding 
+       IF Self.FullDebug = TRUE
+           MESSAGE('Onbekende NumberFormat '&pNumberFormat,'ExcelClass.NumberFormat')
+       END
+   END
+   RETURN
+ExcelClass.BepaalKolom    Procedure(LONG PRM:Kolom )
 PRM:KolomString  string(3)
 Loc:TweedeLetter    Long
 Loc:EersteLetter    Long
     CODE
-    pKolomNr-=1
-    Loc:TweedeLetter=pKolomNr  % 26
-    Loc:EersteLetter=Int(pKolomNr /26)
+    PRM:Kolom-=1
+    Loc:TweedeLetter=PRM:Kolom  % 26
+    Loc:EersteLetter=Int(PRM:Kolom /26)
 
     if Loc:EersteLetter<>0
        PRM:KolomString[1]=Chr(64+Loc:EersteLetter)       ! chr(65)= 'A'
@@ -1324,7 +1322,15 @@ Loc:EersteLetter    Long
     End
 
     RETURN(PRM:KolomString)
-ExcelClass.InitOle     Procedure
+ExcelClass.AutoFitColumns          Procedure(String pKolomVanaf, String pKolomTM)
+   Code
+   Loc:Ole{'Application.Columns('&CLIP(pKolomVanaf)&':'&CLIP(pKolomTM)&').AutoFit'}
+   RETURN
+ExcelClass.AutoFitRows          Procedure(LONG pRijVanaf,LONG pRijTM)
+   Code
+   Loc:Ole{'Application.Rows('&pRijVanaf&':'&pRijTM&').AutoFit'}
+   RETURN
+ExcelClass.InitOle     Procedure(<BYTE pDebug>)
     code
     Loc:Ole  = Create(0,Create:Ole)
     Loc:Ole{Prop:Create}='Excel.Application'
@@ -1332,15 +1338,33 @@ ExcelClass.InitOle     Procedure
     Loc:Ole{Prop:DoVerb}=1                               !  dit doet iedereen dus ik ook
     Loc:Ole{'Application.WindowState'}=1                 !  maximaliseer scherm
     Loc:Ole{'Application.Visible'}=True ! nu pas excel laten zien
+    IF pDebug
+        Loc:Ole{Prop:ReportException}=True
+        Self.FullDebug = TRUE
+    END
+    
     RETURN
 ExcelClass.MaakExcel       Procedure
     CODE
     Loc:Ole{'Application.Workbooks.Add'}            ! leeg worksheet openen
     RETURN
-ExcelClass.OpenExcel       Procedure(String pBestandsnaam)
+ExcelClass.OpenExcel       Procedure(String prm:Bestandsnaam)
     Code
-    Loc:Ole{'Application.Workbooks.Open ("'&pBestandsnaam&'")'}           ! leeg worksheet openen
+    Loc:Ole{'Application.Workbooks.Open ("'&prm:Bestandsnaam&'")'}           ! leeg worksheet openen
     RETURN
+ExcelClass.SluitExcel       Procedure(Byte PRM:Close)
+   Code
+   If PRM:Close
+       Loc:Ole{'Application.Workbooks.Close'}
+   END     
+   Loc:Ole{'Application.Visible'}=true  ! nu pas excel laten zien
+   Loc:Ole{'Prop:Deactivate'}
+   Destroy(Loc:Ole)
+   RETURN
+ExcelClass.SchrijfExcel         Procedure(String PRM:Kolom,LONG PRM:Rij, String PRM:Value)
+   Code
+   Loc:Ole{'Application.Range('&Clip(PRM:Kolom)&Prm:Rij&').Value'}=PRM:Value
+   RETURN
 
 BRW1.Fetch PROCEDURE(BYTE Direction)
 

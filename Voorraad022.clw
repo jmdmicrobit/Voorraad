@@ -72,6 +72,7 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(Versie:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -102,7 +103,7 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
-        udpt.Init(UD,'UpdateVersie','Voorraad022.clw','Voorraad.EXE','05/26/2020 @ 12:06PM')    
+        udpt.Init(UD,'UpdateVersie','Voorraad022.clw','Voorraad.EXE','07/01/2024 @ 05:23PM')    
              
   GlobalErrors.SetProcedureName('UpdateVersie')
   SELF.Request = GlobalRequest                             ! Store the incoming request
@@ -111,16 +112,16 @@ ReturnValue          BYTE,AUTO
   SELF.FirstField = ?VRS:Versie:Prompt
   SELF.VCRRequest &= VCRRequest
   SELF.Errors &= GlobalErrors                              ! Set this windows ErrorManager to the global ErrorManager
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
-  SELF.AddUpdateFile(Access:Versie)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(VRS:Record,History::VRS:Record)
   SELF.AddHistoryField(?VRS:Versie,1)
   SELF.AddHistoryField(?VRS:DatumTijd_DATE,4)
   SELF.AddHistoryField(?VRS:DatumTijd_TIME,5)
   SELF.AddHistoryField(?VRS:Wijzigingen:2,6)
+  SELF.AddUpdateFile(Access:Versie)
   SELF.AddItem(?Cancel,RequestCancelled)                   ! Add the cancel control to the window manager
   Relate:Versie.Open                                       ! File Versie used by this procedure, so make sure it's RelationManager is open
   SELF.FilesOpened = True
@@ -138,8 +139,15 @@ ReturnValue          BYTE,AUTO
     IF SELF.PrimeUpdate() THEN RETURN Level:Notify.
   END
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  WinAlert(WE::WM_QueryEndSession,,Return1+PostUser)
   QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?VRS:Versie{PROP:ReadOnly} = True
@@ -162,6 +170,7 @@ ThisWindow.Kill PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+  If self.opened Then WinAlert().
   ReturnValue = PARENT.Kill()
   IF ReturnValue THEN RETURN ReturnValue.
   IF SELF.FilesOpened
@@ -262,14 +271,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
      IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
        CYCLE
      END
      IF KEYCODE()=CtrlShiftP  
-        UD.ShowProcedureInfo('UpdateVersie',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'12/24/2010 @ 12:19PM','05/26/2020 @ 12:06PM','06/02/2020 @ 10:33PM')  
+        UD.ShowProcedureInfo('UpdateVersie',UD.SetApplicationName('Voorraad','EXE'),QuickWindow{PROP:Hlp},'12/24/2010 @ 12:19PM','07/01/2024 @ 05:23PM','10/11/2024 @ 01:55PM')  
     
        CYCLE
      END

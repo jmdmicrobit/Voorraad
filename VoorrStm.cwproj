@@ -44,24 +44,140 @@
     <Compile Include="VoorrStm.clw">
       <Generated>true</Generated>
     </Compile>
+    <Compile Include="VoorrStm001.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm002.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm003.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm004.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm005.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm006.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm007.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm008.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm009.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm010.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm011.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm012.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm013.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm014.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm015.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm016.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm017.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm018.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm019.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm020.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm021.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm022.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm023.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm024.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm025.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm026.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm027.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm028.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm029.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm030.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm031.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm032.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm033.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm034.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm035.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm036.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm037.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm038.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm039.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm040.clw">
+      <Generated>true</Generated>
+    </Compile>
+    <Compile Include="VoorrStm041.clw">
+      <Generated>true</Generated>
+    </Compile>
     <ProjectReference Include="VoorrDct.cwproj">
       <Project>{148B4D9D-7E61-422E-B76E-8034DAC73042}</Project>
       <Name>VoorrDct</Name>
     </ProjectReference>
     <Library Include="c%25V%25net.lib" />
-    <Library Include="C%25V%25WE%25X%25%25L%25.Lib" />
     <Library Include="clanet.lib" />
-    <Library Include="CLAWE.Lib" />
     <Library Include="off.ico" />
     <Library Include="on.ico" />
     <Library Include="VoorrStm.Version" />
     <Library Include="Win32Ext.LIB" />
     <None Include="caroot.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Generated>True</Generated>
-      <ProjectGenerated>True</ProjectGenerated>
-    </None>
-    <None Include="clawe.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generated>True</Generated>
       <ProjectGenerated>True</ProjectGenerated>
@@ -94,6 +210,6 @@
   </ItemGroup>
   <Import Project="$(ClarionBinPath)\SoftVelocity.Build.Clarion.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /as /fd sha256 /f "H:\Certificates\info@microbit_nl\info@microbit_nl.p12" /tr http://timestamp.digicert.com /td sha256 $(SolutionDir)werk\VoorrStm.DLL</PostBuildEvent>
+    <PostBuildEvent>"C:\Program Files (x86)\Windows Kits\8.1\bin\x64\signtool.exe" sign /t http://timestamp.digicert.com $(SolutionDir)ontw\VoorrStm.DLL</PostBuildEvent>
   </PropertyGroup>
 </Project>

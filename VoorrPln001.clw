@@ -17,6 +17,7 @@
 !!! </summary>
 WindowCelLocaties PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 Loc:Zoom             LONG(300)                             ! 
 Loc:Lagen            BYTE                                  ! 
 Loc:CelID            LONG                                  ! 
@@ -122,6 +123,12 @@ _boxcs                  GROUP(BoxGroup)
 END
 
   CODE
+? DEBUGHOOK(ACelLocatie:Record)
+? DEBUGHOOK(Cel:Record)
+? DEBUGHOOK(CelLocatie:Record)
+? DEBUGHOOK(PlanningVerkoop:Record)
+? DEBUGHOOK(ViewPartijCelLocaties:Record)
+? DEBUGHOOK(ViewVoorraadPartij:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -137,6 +144,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'WindowCelLocaties','VoorrPln001.clw','VoorrPln.DLL','09/02/2021 @ 01:29PM')    
+             
   GlobalErrors.SetProcedureName('WindowCelLocaties')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -156,8 +165,15 @@ ReturnValue          BYTE,AUTO
   Access:CelLocatie.UseFile                                ! File referenced in 'Other Files' so need to inform it's FileManager
   SELF.FilesOpened = True
   SELF.Open(Window)                                        ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  Alert(AltKeyPressed)  ! WinEvent : These keys cause a program to crash on Windows 7 and Windows 10.
+  Alert(F10Key)         !
+  Alert(CtrlF10)        !
+  Alert(ShiftF10)       !
+  Alert(CtrlShiftF10)   !
+  Alert(AltSpace)       !
+  WinAlertMouseZoom()
+  Window{Prop:Alrt,255} = CtrlShiftP
   INIMgr.Fetch('WindowCelLocaties',Window)                 ! Restore window settings from non-volatile store
   FDB3.Init(?CEL:CelOms,Queue:FileDrop.ViewPosition,FDB3::View:FileDrop,Queue:FileDrop,Relate:Cel,ThisWindow)
   FDB3.Q &= Queue:FileDrop
@@ -192,6 +208,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('WindowCelLocaties',Window)              ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -241,9 +259,17 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
+  If event() = event:VisibleOnDesktop !or event() = event:moved
     ds_VisibleOnDesktop()
   end
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('WindowCelLocaties',UD.SetApplicationName('VoorrPln','DLL'),Window{PROP:Hlp},'06/03/2019 @ 03:23PM','09/02/2021 @ 01:29PM','10/11/2024 @ 01:54PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal

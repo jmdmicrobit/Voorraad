@@ -6,11 +6,8 @@
 
 GlobalClass.InitWordOle     Procedure
 code
-	UD.Debug('GlobalClass.InitWordOle(1)')
 	Loc:Ole  = Create(0,Create:Ole)
-	UD.Debug('GlobalClass.InitWordOle(2)')	
 	Loc:Ole{Prop:Create}='Word.Application'
-	UD.Debug('GlobalClass.InitWordOle(3)')	
     Loc:Ole{Prop:ReportException}=False                   !  dwz fouten worden niet genegeerd
 
     Loc:Ole{Prop:DoVerb}=1                               !  dit doet iedereen dus ik ook
@@ -194,3 +191,11 @@ CODE
     END
     
     RETURN ''
+GlobalClass.ReplaceKG       Procedure(String pFormatString)
+st          StringTheory
+CODE
+    st.SetValue(pFormatString)
+?    UD.Debug('pFormatString:'&pFormatString)
+    st.Replace('~KG~','~'&CLIP(PQ:StandaardEenheid)&'~')
+?    UD.Debug('Na replace:'&st.Str())
+    Return st.Str()

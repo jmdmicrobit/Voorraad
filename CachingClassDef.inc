@@ -1,6 +1,6 @@
 
-  OMIT('_EndOfInclude_',_CachingClass_Def)
-_CachingClass_Def  EQUATE(1)
+  OMIT('_EndOfInclude_',_CachingClassT_Def)
+_CachingClassT_Def  EQUATE(1)
 
 !--------------------------------------------------------------------
 ! APPLICATION:  VoorrDct.APP   
@@ -8,27 +8,32 @@ _CachingClass_Def  EQUATE(1)
 ! INC file:     CachingClassDef.inc
 !--------------------------------------------------------------------
 
-VerkoopArtikelQueue  QUEUE,PRE(VAQ),THREAD
-VerkoopID               LONG
-Artikelen				CSTRING(512)
-					END
-InkoopArtikelQueue  QUEUE,PRE(IAQ),THREAD
-InkoopID                LONG
-Artikelen				CSTRING(512)
-					END
-CelLocatieQueue		QUEUE,PRE(CLQ),THREAD
-PartijID                LONG
-CelID                   LONG
-LocatieNaam				CSTRING(50)
-					END
+!VerkoopArtikelQueue  QUEUE,PRE(VAQ),THREAD
+!VerkoopID               LONG
+!Artikelen				CSTRING(512)
+!					END
+!InkoopArtikelQueue  QUEUE,PRE(IAQ),THREAD
+!InkoopID                LONG
+!Artikelen				CSTRING(512)
+!					END
+!CelLocatieQueue		QUEUE,PRE(CLQ),THREAD
+!PartijID                LONG
+!CelID                   LONG
+!LocatieNaam				CSTRING(50)
+!					END
 !--------------------------------------------------------------------
-! CachingClass
+! CachingClassT
 !--------------------------------------------------------------------
-CachingClass         CLASS
-GetInkoopArtikelen	PROCEDURE(LONG PRM:InkoopID), STRING
-GetVerkoopArtikelen PROCEDURE(LONG PRM:VerkoopID), STRING
-GetCelLocatieNaam   PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID), STRING
-                     END ! CLASS: CachingClass
+CachingClassT        CLASS
+!GetInkoopArtikelen	PROCEDURE(LONG PRM:InkoopID, Long pCurrentTab,LONG pLeverancierID), STRING
+!GetVerkoopArtikelen PROCEDURE(LONG PRM:VerkoopID, Long pCurrentTab, Long pKlantID), STRING
+!GetCelLocatieNaam   PROCEDURE(LONG PRM:PartijID, LONG PRM:CelID), STRING
+!
+!CurrentInkoopTab        LONG
+!CurrentLeverancierID    LONG
+!CurrentVerkoopTab        LONG
+!CurrentKlantID    LONG
+                     END ! CLASS: CachingClassT
 
 
 _EndOfInclude_

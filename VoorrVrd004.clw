@@ -20,6 +20,7 @@
 !!! </summary>
 UpdateViewVoorraad PROCEDURE 
 
+udpt            UltimateDebugProcedureTracker
 CurrentTab           STRING(80)                            ! 
 Loc:KG               DECIMAL(7,2)                          ! 
 Loc:Pallets          LONG                                  ! 
@@ -252,10 +253,6 @@ QuickWindow          WINDOW('Form ViewVoorraad'),AT(,,556,389),FONT('MS Sans Ser
                        PROMPT('Geplande Verkopen'),AT(8,218),USE(?PROMPT1:2),FONT('Microsoft Sans Serif',,,FONT:bold)
                      END
 
-    omit('***',WE::CantCloseNowSetHereDone=1)  !Getting Nested omit compile error, then uncheck the "Check for duplicate CantCloseNowSetHere variable declaration" in the WinEvent local template
-WE::CantCloseNowSetHereDone equate(1)
-WE::CantCloseNowSetHere     long
-    !***
 ThisWindow           CLASS(WindowManager)
 Ask                    PROCEDURE(),DERIVED
 Init                   PROCEDURE(),BYTE,PROC,DERIVED
@@ -266,7 +263,6 @@ Run                    PROCEDURE(),BYTE,PROC,DERIVED
 TakeAccepted           PROCEDURE(),BYTE,PROC,DERIVED
 TakeCompleted          PROCEDURE(),BYTE,PROC,DERIVED
 TakeEvent              PROCEDURE(),BYTE,PROC,DERIVED
-TakeWindowEvent        PROCEDURE(),BYTE,PROC,DERIVED
                      END
 
 Toolbar              ToolbarClass
@@ -293,6 +289,9 @@ OldColor              LONG
                     END
 
   CODE
+? DEBUGHOOK(APlanning:Record)
+? DEBUGHOOK(Planning:Record)
+? DEBUGHOOK(ViewVoorraadPlanning:Record)
   GlobalResponse = ThisWindow.Run()                        ! Opens the window and starts an Accept Loop
 
 !---------------------------------------------------------------------------
@@ -323,6 +322,8 @@ ThisWindow.Init PROCEDURE
 ReturnValue          BYTE,AUTO
 
   CODE
+        udpt.Init(UD,'UpdateViewVoorraad','VoorrVrd004.clw','VoorrVrd.DLL','07/01/2024 @ 05:44PM')    
+             
   GlobalErrors.SetProcedureName('UpdateViewVoorraad')
   SELF.Request = GlobalRequest                             ! Store the incoming request
   ReturnValue = PARENT.Init()
@@ -335,9 +336,9 @@ ReturnValue          BYTE,AUTO
   BIND('Pla:PlanningID',Pla:PlanningID)                    ! Added by: BrowseBox(ABC)
   BIND('AVE:VerkoopID',AVE:VerkoopID)                      ! Added by: BrowseBox(ABC)
   BIND('APla:PlanningID',APla:PlanningID)                  ! Added by: BrowseBox(ABC)
+  SELF.AddItem(Toolbar)
   CLEAR(GlobalRequest)                                     ! Clear GlobalRequest after storing locally
   CLEAR(GlobalResponse)
-  SELF.AddItem(Toolbar)
   SELF.HistoryKey = CtrlH
   SELF.AddHistoryFile(VVP:Record,History::VVP:Record)
   SELF.AddHistoryField(?VVP:ArtikelID,1)
@@ -367,8 +368,8 @@ ReturnValue          BYTE,AUTO
   Loc:KG = VVP:InslagKG - VVP:UitslagKG
   Loc:Pallets = VVP:InslagPallets - VVP:UitslagPallets
   SELF.Open(QuickWindow)                                   ! Open window
-  WinAlertMouseZoom()
   Do DefineListboxStyle
+  QuickWindow{Prop:Alrt,255} = CtrlShiftP
   IF SELF.Request = ViewRecord                             ! Configure controls for View Only mode
     ?VVP:ArtikelID{PROP:ReadOnly} = True
     ?VVP:ArtikelOms{PROP:ReadOnly} = True
@@ -456,6 +457,8 @@ ReturnValue          BYTE,AUTO
     INIMgr.Update('UpdateViewVoorraad',QuickWindow)        ! Save window data to non-volatile store
   END
   GlobalErrors.SetProcedureName
+            
+   
   RETURN ReturnValue
 
 
@@ -562,42 +565,14 @@ Looped BYTE
      RETURN(Level:Notify)
   END
   ReturnValue = PARENT.TakeEvent()
-  if event() = event:VisibleOnDesktop
-    ds_VisibleOnDesktop()
-  end
-    RETURN ReturnValue
-  END
-  ReturnValue = Level:Fatal
-  RETURN ReturnValue
-
-
-ThisWindow.TakeWindowEvent PROCEDURE
-
-ReturnValue          BYTE,AUTO
-
-Looped BYTE
-  CODE
-  LOOP                                                     ! This method receives all window specific events
-    IF Looped
-      RETURN Level:Notify
-    ELSE
-      Looped = 1
-    END
-    CASE EVENT()
-    OF EVENT:CloseDown
-      if WE::CantCloseNow
-        WE::MustClose = 1
-        cycle
-      else
-        self.CancelAction = cancel:cancel
-        self.response = requestcancelled
-      end
-    END
-  ReturnValue = PARENT.TakeWindowEvent()
-    CASE EVENT()
-    OF EVENT:OpenWindow
-        post(event:visibleondesktop)
-    END
+     IF KEYCODE()=CtrlShiftP AND EVENT() = Event:PreAlertKey
+       CYCLE
+     END
+     IF KEYCODE()=CtrlShiftP  
+        UD.ShowProcedureInfo('UpdateViewVoorraad',UD.SetApplicationName('VoorrVrd','DLL'),QuickWindow{PROP:Hlp},'10/07/2011 @ 08:55AM','07/01/2024 @ 05:44PM','10/11/2024 @ 01:55PM')  
+    
+       CYCLE
+     END
     RETURN ReturnValue
   END
   ReturnValue = Level:Fatal
